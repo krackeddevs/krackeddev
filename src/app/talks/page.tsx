@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useLanguage } from '@/app/context/LanguageContext';
 import PageHero from '@/components/PageHero';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,27 +10,25 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Mic2, Calendar, Radio } from 'lucide-react';
 
 export default function TalksPage() {
-  const { t } = useLanguage();
-
   const speakers = [
     {
       date: "Oct 12",
       name: "Sarah Jenkins",
-      role: t('talks.speaker1_role'),
+      role: 'Senior Engineer',
       desc: "Engineering maths into profit. How I used simple calculus to optimize logistics for a Grab competitor.",
       color: "neon-accent"
     },
     {
       date: "Oct 26",
       name: "Ahmad Razak",
-      role: t('talks.speaker2_role'),
+      role: 'Tech Lead',
       desc: "Automation is not just scripts. Building enterprise workflows with zero-code and low-code solutions.",
       color: "neon-primary"
     },
     {
       date: "Nov 15",
       name: "Jessica Lee",
-      role: t('talks.speaker3_role'),
+      role: 'Founder',
       desc: 'The "Vibe Code" philosophy. Selling the feeling, not just the functionality.',
       color: "neon-secondary"
     },
@@ -40,8 +37,8 @@ export default function TalksPage() {
   return (
     <main className="min-h-screen pb-20 overflow-hidden">
       <PageHero 
-        title={t('talks.title')} 
-        subtitle={t('talks.subtitle')}
+        title="Kracked Talks" 
+        subtitle="Hear from key figures in the industry."
       />
 
       <div className="container mx-auto px-4 py-10 relative z-10">
@@ -49,12 +46,12 @@ export default function TalksPage() {
         <Card className="mb-16 border-white/10 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-md overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,143,17,0.15)_0%,transparent_70%)] pointer-events-none" />
           <CardContent className="text-center pt-12 pb-12 relative z-10">
-             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">{t('talks.card_title')}</h2>
-               <p className="text-xl opacity-80 max-w-2xl mx-auto mb-8 font-light text-blue-100">{t('talks.card_desc')}</p>
+             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">Vibe Code & Value</h2>
+               <p className="text-xl opacity-80 max-w-2xl mx-auto mb-8 font-light text-blue-100">How non-coders can produce value with code.</p>
                <div className="flex flex-wrap justify-center gap-4 mt-6">
-                  <Badge variant="outline" className="text-lg py-2 px-4 border-neon-primary text-neon-primary shadow-[0_0_10px_rgba(0,255,65,0.2)] hover:bg-neon-primary/10 transition-colors">{t('talks.topic1')}</Badge>
-                  <Badge variant="outline" className="text-lg py-2 px-4 border-neon-accent text-neon-accent shadow-[0_0_10px_rgba(240,240,240,0.2)] hover:bg-neon-accent/10 transition-colors">{t('talks.topic2')}</Badge>
-                  <Badge variant="outline" className="text-lg py-2 px-4 border-neon-secondary text-neon-secondary shadow-[0_0_10px_rgba(0,143,17,0.2)] hover:bg-neon-secondary/10 transition-colors">{t('talks.topic3')}</Badge>
+                  <Badge variant="outline" className="text-lg py-2 px-4 border-neon-primary text-neon-primary shadow-[0_0_10px_rgba(0,255,65,0.2)] hover:bg-neon-primary/10 transition-colors">Math & Engineering</Badge>
+                  <Badge variant="outline" className="text-lg py-2 px-4 border-neon-accent text-neon-accent shadow-[0_0_10px_rgba(240,240,240,0.2)] hover:bg-neon-accent/10 transition-colors">Automation</Badge>
+                  <Badge variant="outline" className="text-lg py-2 px-4 border-neon-secondary text-neon-secondary shadow-[0_0_10px_rgba(0,143,17,0.2)] hover:bg-neon-secondary/10 transition-colors">Business Value</Badge>
                </div>
                <div className="mt-10">
                  <Button size="lg" variant="cyberpunk" asChild className="h-14 px-8 text-lg">

@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useLanguage } from '@/app/context/LanguageContext';
 import PageHero from '@/components/PageHero';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Radio, Users, Lightbulb } from 'lucide-react';
 
 export default function TalksSignupPage() {
-  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -98,7 +96,7 @@ export default function TalksSignupPage() {
   return (
     <main className="min-h-screen pb-20 overflow-hidden">
       <PageHero 
-        title={t('talks.title')} 
+        title="Kracked Talks" 
         subtitle="Join our community talks and learn from industry experts"
       />
 
@@ -174,9 +172,9 @@ export default function TalksSignupPage() {
                         className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-none focus:outline-none focus:border-neon-secondary focus:bg-white/10 transition-all text-white appearance-none font-mono"
                       >
                         <option value="" className="bg-black text-muted-foreground">SELECT TOPIC</option>
-                        <option value="math-engineering" className="bg-black text-white">{t('talks.topic1')}</option>
-                        <option value="automation" className="bg-black text-white">{t('talks.topic2')}</option>
-                        <option value="business-value" className="bg-black text-white">{t('talks.topic3')}</option>
+                        <option value="math-engineering" className="bg-black text-white">Math & Engineering</option>
+                        <option value="automation" className="bg-black text-white">Automation</option>
+                        <option value="business-value" className="bg-black text-white">Business Value</option>
                         <option value="all" className="bg-black text-white">All Topics</option>
                       </select>
                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/50">▼</div>

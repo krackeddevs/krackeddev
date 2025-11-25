@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useLanguage } from '@/app/context/LanguageContext';
 import PageHero from '@/components/PageHero';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Terminal, Code } from 'lucide-react';
 
 export default function BootcampSignupPage() {
-  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -103,11 +101,11 @@ export default function BootcampSignupPage() {
   return (
     <main className="min-h-screen pb-20 overflow-hidden">
       <PageHero 
-        title={t('bootcamp.title')} 
+        title="Vibe Code Bootcamp" 
         subtitle="Sign up for the 28-day bootcamp"
       >
         <Badge variant="outline" className="text-lg py-2 px-6 border-neon-accent text-neon-accent shadow-[0_0_10px_rgba(240,240,240,0.3)]">
-          {t('bootcamp.price')}
+          RM 999 / 28 days
         </Badge>
       </PageHero>
 

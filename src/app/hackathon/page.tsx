@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import PageHero from '@/components/PageHero';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,18 +23,17 @@ import {
 import { Trophy, Bug, Star, Code2 } from 'lucide-react';
 
 export default function HackathonPage() {
-  const { t } = useLanguage();
   const [isScopeOpen, setIsScopeOpen] = useState(false);
 
   return (
     <main className="min-h-screen pb-20 overflow-hidden">
       <PageHero 
-        title={t('hackathon.title')} 
-        subtitle={t('hackathon.desc')}
+        title="Kracked Hackathon" 
+        subtitle="Go crazy. Win AI credits."
       >
         <div className="relative inline-flex items-center justify-center text-lg py-3 px-8 rounded-none border border-neon-primary text-neon-primary bg-neon-primary/5 shadow-[0_0_20px_rgba(0,255,65,0.3)] animate-pulse hover:bg-neon-primary/10 hover:shadow-[0_0_30px_rgba(0,255,65,0.5)] transition-all cursor-default font-mono uppercase tracking-widest group">
           <span className="mr-2 animate-spin-slow"><Trophy className="w-5 h-5" /></span>
-          {t('hackathon.prize')}
+          Grand Prize: RM 1,200 in AI Credits
           <div className="absolute top-0 right-0 w-2 h-2 bg-neon-primary shadow-[0_0_5px_var(--neon-primary)]" />
           <div className="absolute bottom-0 left-0 w-2 h-2 bg-neon-primary shadow-[0_0_5px_var(--neon-primary)]" />
         </div>
@@ -48,11 +46,11 @@ export default function HackathonPage() {
             <CardHeader>
                <CardTitle className="text-neon-accent flex items-center gap-2">
                  <Bug className="w-5 h-5" />
-                 {t('hackathon.bug_bounty')}
+                 Bug Bounty Integrated
                </CardTitle>
             </CardHeader>
             <CardContent>
-               <p className="text-muted-foreground group-hover:text-foreground transition-colors">{t('hackathon.rules')}</p>
+               <p className="text-muted-foreground group-hover:text-foreground transition-colors">First winner gets sponsored credits. Increase likelihood of getting hired.</p>
             </CardContent>
             <CardFooter className="justify-end">
                <Button variant="cyberpunk" size="sm" onClick={() => setIsScopeOpen(true)} className="border-neon-accent text-neon-accent hover:bg-neon-accent/10 hover:shadow-[0_0_15px_var(--neon-accent)]">View Scope</Button>
@@ -83,7 +81,7 @@ export default function HackathonPage() {
           <CardHeader>
             <CardTitle className="text-center text-2xl font-mono uppercase tracking-widest flex items-center justify-center gap-3">
               <Code2 className="w-6 h-6 text-neon-primary" />
-              {t('hackathon.leaderboard')}
+              Leaderboard
               <Code2 className="w-6 h-6 text-neon-primary" />
             </CardTitle>
           </CardHeader>
@@ -96,7 +94,7 @@ export default function HackathonPage() {
                     <TableHead className="text-neon-primary font-mono">Name</TableHead>
                     <TableHead className="text-neon-primary font-mono">Project</TableHead>
                     <TableHead className="text-neon-primary font-mono">Focus</TableHead>
-                    <TableHead className="text-right text-neon-primary font-mono">{t('hackathon.points')}</TableHead>
+                    <TableHead className="text-right text-neon-primary font-mono">Points</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

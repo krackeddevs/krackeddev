@@ -1,11 +1,9 @@
 'use client';
 
 import React from 'react';
-import { useLanguage } from '@/app/context/LanguageContext';
 import Link from 'next/link';
 
 const Footer = () => {
-  const { t } = useLanguage();
 
   return (
     <footer className="relative border-t border-white/5 bg-background/50 backdrop-blur-sm pt-16 pb-8 overflow-hidden">
@@ -50,7 +48,7 @@ const Footer = () => {
         
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            {t('footer.copyright')}
+            © 2024 Kracked Devs. All rights reserved.
           </p>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { LanguageProvider } from "./context/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { cn } from "@/lib/utils";
@@ -22,13 +21,11 @@ export default function RootLayout({
           "min-h-screen bg-background font-mono antialiased flex flex-col"
         )}
       >
-        <LanguageProvider>
-          <Navbar />
-          <div className="flex-grow">
-            {children}
-          </div>
-          <Footer />
-        </LanguageProvider>
+        <Navbar />
+        <div className="flex-grow">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );

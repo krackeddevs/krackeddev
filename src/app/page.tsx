@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useLanguage } from './context/LanguageContext';
 import PageHero from '@/components/PageHero';
 import InfoPanel from '@/components/InfoPanel';
 import StatCard from '@/components/StatCard';
@@ -12,23 +11,22 @@ import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
 import { ArrowRight, Terminal, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function Home() {
-  const { t } = useLanguage();
 
   return (
     <main className="min-h-screen pb-20 overflow-hidden">
       {/* Hero Section */}
       <PageHero 
-        title={t('hero.title')} 
+        title="Want to be a Kracked Dev?" 
         subtitle="A community of cracked developers who want to level up together."
       >
         <div className="flex flex-wrap justify-center gap-4 md:gap-6 pt-6 w-full">
           <Button size="lg" variant="cyberpunk" asChild className="h-12 md:h-14 text-sm md:text-base px-6 md:px-8 w-full sm:w-auto">
             <Link href="/join">
-              {t('hero.cta_join')} <ArrowRight className="ml-2 w-4 h-4" />
+              Join Community <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </Button>
           <Button variant="ghost" size="lg" asChild className="h-12 md:h-14 text-sm md:text-base px-6 md:px-8 border border-white/10 hover:bg-white/5 w-full sm:w-auto">
-            <Link href="/talks">{t('hero.cta_explore')}</Link>
+            <Link href="/talks">Explore Bootcamps</Link>
           </Button>
         </div>
       </PageHero>
@@ -37,26 +35,26 @@ export default function Home() {
       <div className="container mx-auto px-4 mt-0 md:mt-10 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           {/* Program Info */}
-          <InfoPanel title={t('bootcamp.title')}>
-            <p className="text-base md:text-lg mb-6 text-muted-foreground leading-relaxed">{t('bootcamp.desc')}</p>
+          <InfoPanel title="Vibe Code Bootcamp">
+            <p className="text-base md:text-lg mb-6 text-muted-foreground leading-relaxed">Turn random vibes into real output in 28 days. No CS degree, just cracked execution.</p>
             <div className="flex flex-col gap-4 mb-8">
               <div className="flex items-center gap-3 group">
                  <div className="h-2 w-2 rounded-full bg-neon-primary shadow-[0_0_10px_var(--neon-primary)] group-hover:scale-150 transition-transform" />
-                 <span className="text-sm md:text-base text-foreground group-hover:text-neon-primary transition-colors">{t('bootcamp.feature1')}</span>
+                 <span className="text-sm md:text-base text-foreground group-hover:text-neon-primary transition-colors">Real-world projects</span>
               </div>
               <div className="flex items-center gap-3 group">
                  <div className="h-2 w-2 rounded-full bg-neon-secondary shadow-[0_0_10px_var(--neon-secondary)] group-hover:scale-150 transition-transform" />
-                 <span className="text-sm md:text-base text-foreground group-hover:text-neon-secondary transition-colors">{t('bootcamp.feature2')}</span>
+                 <span className="text-sm md:text-base text-foreground group-hover:text-neon-secondary transition-colors">Mentorship from industry leaders</span>
               </div>
               <div className="flex items-center gap-3 group">
                  <div className="h-2 w-2 rounded-full bg-neon-accent shadow-[0_0_10px_var(--neon-accent)] group-hover:scale-150 transition-transform" />
-                 <span className="text-sm md:text-base text-foreground group-hover:text-neon-accent transition-colors">{t('bootcamp.feature3')}</span>
+                 <span className="text-sm md:text-base text-foreground group-hover:text-neon-accent transition-colors">Earn "Cracked Dev" status</span>
               </div>
             </div>
             <div className="mt-auto">
               <Link href="/signup/bootcamp">
                 <Badge className="text-base md:text-lg py-2 px-4 md:px-6 cursor-pointer bg-gradient-to-r from-neon-secondary to-neon-primary hover:opacity-90 transition-opacity border-0 shadow-[0_0_15px_rgba(0,255,65,0.4)] text-black font-bold w-full justify-center sm:w-auto">
-                  {t('bootcamp.price')}
+                  RM 999 / 28 days
                 </Badge>
               </Link>
             </div>
