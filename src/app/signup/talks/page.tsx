@@ -41,6 +41,7 @@ export default function TalksSignupPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    window.open('https://x.com/i/communities/1983062242292822298', '_blank', 'noopener,noreferrer');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -84,7 +85,7 @@ export default function TalksSignupPage() {
               <p className="text-lg mb-4 text-white">Thank you for registering!</p>
               <p className="text-muted-foreground">We'll send you updates about upcoming talks and events.</p>
               <Button variant="cyberpunk" asChild className="w-full mt-6 border-neon-accent text-neon-accent hover:bg-neon-accent/10">
-                <a href="/">Return to Hub</a>
+                <a href="https://x.com/i/communities/1983062242292822298" target="_blank" rel="noopener noreferrer">Return to Hub</a>
               </Button>
             </CardContent>
           </Card>

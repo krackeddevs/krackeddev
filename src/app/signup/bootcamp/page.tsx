@@ -46,6 +46,7 @@ export default function BootcampSignupPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    window.open('https://x.com/i/communities/1983062242292822298', '_blank', 'noopener,noreferrer');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +90,7 @@ export default function BootcampSignupPage() {
               <p className="text-lg mb-4 text-white">Thank you for your interest in the Vibe Code Bootcamp!</p>
               <p className="text-muted-foreground">Our team will contact you shortly with next steps.</p>
               <Button variant="cyberpunk" asChild className="w-full mt-6 border-neon-secondary text-neon-secondary hover:bg-neon-secondary/10">
-                <a href="/">Return to HQ</a>
+                <a href="https://x.com/i/communities/1983062242292822298" target="_blank" rel="noopener noreferrer">Return to HQ</a>
               </Button>
             </CardContent>
           </Card>

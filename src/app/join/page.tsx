@@ -41,6 +41,7 @@ export default function JoinCommunityPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    window.open('https://x.com/i/communities/1983062242292822298', '_blank', 'noopener,noreferrer');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -84,7 +85,7 @@ export default function JoinCommunityPage() {
               <p className="text-2xl font-bold mb-4 text-white">Thank you for joining!</p>
               <p className="text-muted-foreground mb-6">We'll send you a welcome email with next steps and community access details.</p>
               <Button variant="cyberpunk" asChild className="w-full">
-                <a href="/">Return to Base</a>
+                <a href="https://x.com/i/communities/1983062242292822298" target="_blank" rel="noopener noreferrer">Return to Base</a>
               </Button>
             </CardContent>
           </Card>

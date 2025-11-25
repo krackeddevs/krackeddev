@@ -55,7 +55,7 @@ export default function TalksPage() {
                </div>
                <div className="mt-10">
                  <Button size="lg" variant="cyberpunk" asChild className="h-14 px-8 text-lg">
-                   <Link href="/signup/talks">Sign Up for Community Talks</Link>
+                   <Link href="https://x.com/i/communities/1983062242292822298" target="_blank" rel="noopener noreferrer">Sign Up for Community Talks</Link>
                  </Button>
                </div>
             </CardContent>
