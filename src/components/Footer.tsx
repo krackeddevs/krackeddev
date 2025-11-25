@@ -29,19 +29,18 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-foreground mb-4 uppercase tracking-widest text-sm">Links</h4>
             <ul className="space-y-2">
-              <FooterLink href="#">About Us</FooterLink>
-              <FooterLink href="#">Contact</FooterLink>
-              <FooterLink href="#">Jobs</FooterLink>
-              <FooterLink href="#">Press Kit</FooterLink>
+              <FooterLink href="/about">About Us</FooterLink>
+              <FooterLink href="/contact">Contact</FooterLink>
+              <FooterLink href="/jobs">Jobs</FooterLink>
             </ul>
           </div>
           
           <div>
             <h4 className="font-bold text-foreground mb-4 uppercase tracking-widest text-sm">Legal</h4>
             <ul className="space-y-2">
-              <FooterLink href="#">Privacy Policy</FooterLink>
-              <FooterLink href="#">Terms of Service</FooterLink>
-              <FooterLink href="#">Cookie Policy</FooterLink>
+              <FooterLink href="/privacy">Privacy Policy</FooterLink>
+              <FooterLink href="/terms">Terms of Service</FooterLink>
+              <FooterLink href="/cookies">Cookie Policy</FooterLink>
             </ul>
           </div>
         </div>
@@ -70,10 +69,10 @@ const SocialLink = ({ icon }: { icon: string }) => (
 
 const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <li>
-    <a href={href} className="text-sm text-muted-foreground hover:text-neon-pink transition-colors duration-300 flex items-center gap-2 group">
+    <Link href={href} className="text-sm text-muted-foreground hover:text-neon-pink transition-colors duration-300 flex items-center gap-2 group">
       <span className="w-0 h-px bg-neon-pink transition-all duration-300 group-hover:w-4" />
       {children}
-    </a>
+    </Link>
   </li>
 );
 
