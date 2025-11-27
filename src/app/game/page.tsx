@@ -76,11 +76,11 @@ export default function GamesPage() {
     {
       id: "game7",
       title: "Game 7",
-      description: "Coming soon - Locked",
-      status: "Locked",
-      color: "gray-500",
-      icon: Lock,
-      enabled: false,
+      description: "Nabil's second game - Active and ready!",
+      status: "Active",
+      color: "neon-secondary",
+      icon: Zap,
+      enabled: true,
     },
     {
       id: "game8",
