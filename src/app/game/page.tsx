@@ -66,8 +66,8 @@ export default function GamesPage() {
   const nabilGames = [
     {
       id: "game6",
-      title: "Game 6",
-      description: "Nabil's first game - Active and ready!",
+      title: "Kracked Dev Sprint",
+      description: "Survive the sprint. Ship features. Avoid burnout. An endless runner game where you dodge bugs and collect coffee!",
       status: "Active",
       color: "neon-secondary",
       icon: Zap,
@@ -75,8 +75,8 @@ export default function GamesPage() {
     },
     {
       id: "game7",
-      title: "Game 7",
-      description: "Nabil's second game - Active and ready!",
+      title: "2048",
+      description: "The classic sliding tile puzzle. Join the numbers to get to the 2048 tile!",
       status: "Active",
       color: "neon-secondary",
       icon: Zap,
