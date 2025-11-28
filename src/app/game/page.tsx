@@ -155,7 +155,7 @@ export default function GamesPage() {
                 <Card
                   className={`backdrop-blur-sm transition-all duration-300 h-full relative flex flex-col ${
                     game.enabled
-                      ? "border-2 border-green-700 bg-black/90 hover:border-green-600 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] cursor-pointer hover:scale-[1.02] group"
+                      ? "border-2 border-green-700 bg-black/90 hover:border-green-600 shadow-[0_0_20px_rgba(21,128,61,0.3)] hover:shadow-[0_0_30px_rgba(21,128,61,0.4)] cursor-pointer hover:scale-[1.02] group"
                       : "border-white/10 bg-black/30 opacity-50 cursor-not-allowed"
                   }`}
                 >
@@ -231,7 +231,7 @@ export default function GamesPage() {
                 <Card
                   className={`backdrop-blur-sm transition-all duration-300 h-full relative flex flex-col ${
                     game.enabled
-                      ? "border-2 border-green-700 bg-black/90 hover:border-green-600 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] cursor-pointer hover:scale-[1.02] group"
+                      ? "border-2 border-green-700 bg-black/90 hover:border-green-600 shadow-[0_0_20px_rgba(21,128,61,0.3)] hover:shadow-[0_0_30px_rgba(21,128,61,0.4)] cursor-pointer hover:scale-[1.02] group"
                       : "border-white/10 bg-black/30 opacity-50 cursor-not-allowed"
                   }`}
                 >

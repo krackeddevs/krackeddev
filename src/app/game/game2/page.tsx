@@ -1399,7 +1399,7 @@ export default function Game2Page() {
         </div>
         <div className="w-12 sm:w-28 h-1.5 sm:h-2 bg-white/10 rounded-full overflow-hidden">
           <div
-            className="h-full bg-linear-to-r from-green-500 to-emerald-400 transition-all"
+            className="h-full bg-linear-to-r from-green-700 to-green-700 transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -1454,7 +1454,7 @@ export default function Game2Page() {
               <p className="text-zinc-50/80 text-lg mb-4">Total: RM {money}</p>
               <button
                 onClick={restartGame}
-                className="px-6 py-3 bg-linear-to-r from-green-500 to-emerald-500 text-zinc-50 font-bold rounded-xl hover:scale-105 transition-transform"
+                className="px-6 py-3 bg-linear-to-r from-green-700 to-green-700 text-zinc-50 font-bold rounded-xl hover:scale-105 transition-transform"
               >
                 Play Again
               </button>

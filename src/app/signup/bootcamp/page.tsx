@@ -214,7 +214,7 @@ export default function BootcampSignupPage() {
           {/* Form Column */}
           <div>
             <div className="sticky top-24">
-               <Card className="border-neon-primary/30 bg-black/80 backdrop-blur-xl shadow-[0_0_50px_rgba(0,255,65,0.05)]">
+               <Card className="border-green-700/30 bg-black/80 backdrop-blur-xl shadow-[0_0_50px_rgba(21,128,61,0.05)]">
                 <CardHeader>
                   <CardTitle className="text-2xl font-mono uppercase tracking-widest text-neon-primary flex items-center gap-2">
                     <Code className="w-5 h-5" />
@@ -288,7 +288,7 @@ export default function BootcampSignupPage() {
                       </div>
                     </div>
 
-                    <Button type="submit" size="lg" variant="cyberpunk" className="w-full h-12 text-lg shadow-[0_0_20px_rgba(0,255,65,0.2)] hover:shadow-[0_0_30px_rgba(0,255,65,0.4)]">
+                    <Button type="submit" size="lg" variant="cyberpunk" className="w-full h-12 text-lg shadow-[0_0_20px_rgba(21,128,61,0.2)] hover:shadow-[0_0_30px_rgba(21,128,61,0.4)]">
                       Confirm Enrollment
                     </Button>
                     

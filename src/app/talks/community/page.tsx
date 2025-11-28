@@ -268,7 +268,7 @@ ${speakerFormData.description}
                 >
                   <Card className={`h-full group transition-all duration-300 ${
                     isDec5Event 
-                      ? 'border-2 border-neon-primary bg-black/90 hover:border-neon-primary shadow-[0_0_50px_rgba(0,255,65,0.6)] hover:shadow-[0_0_70px_rgba(0,255,65,0.8)] relative flex flex-col' 
+                      ? 'border-2 border-green-700 bg-black/90 hover:border-green-700 shadow-[0_0_50px_rgba(21,128,61,0.6)] hover:shadow-[0_0_70px_rgba(21,128,61,0.8)] relative flex flex-col' 
                       : 'border-white/5 hover:border-white/20 hover:bg-white/5'
                   }`}>
                     <CardHeader>
@@ -279,14 +279,14 @@ ${speakerFormData.description}
                             talk.color === 'neon-accent' 
                               ? 'border-neon-accent text-neon-accent shadow-[0_0_10px_rgba(240,240,240,0.2)]' 
                               : talk.color === 'neon-primary' 
-                              ? 'border-neon-primary text-neon-primary shadow-[0_0_10px_rgba(0,255,65,0.2)]'
-                              : 'border-neon-secondary text-neon-secondary shadow-[0_0_10px_rgba(0,143,17,0.2)]'
+                              ? 'border-green-700 text-green-700 shadow-[0_0_10px_rgba(21,128,61,0.2)]'
+                              : 'border-green-700 text-green-700 shadow-[0_0_10px_rgba(21,128,61,0.2)]'
                           }
                         >
                           {talk.date}
                         </Badge>
                       </div>
-                      <CardTitle className={`text-xl mb-2 ${isDec5Event ? 'text-neon-primary drop-shadow-[0_0_8px_rgba(0,255,65,0.8)]' : ''}`}>{talk.title}</CardTitle>
+                      <CardTitle className={`text-xl mb-2 ${isDec5Event ? 'text-green-700 drop-shadow-[0_0_8px_rgba(21,128,61,0.8)]' : ''}`}>{talk.title}</CardTitle>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Mic2 className="w-4 h-4" />
                         <span>{talk.speaker}</span>
@@ -295,7 +295,7 @@ ${speakerFormData.description}
                     <CardContent className={isDec5Event ? 'flex-1' : ''}>
                       <p className={`mb-4 transition-colors ${
                         isDec5Event 
-                          ? 'text-zinc-50 font-semibold group-hover:text-neon-primary drop-shadow-[0_0_4px_rgba(0,255,65,0.5)]' 
+                          ? 'text-zinc-50 font-semibold group-hover:text-green-700 drop-shadow-[0_0_4px_rgba(21,128,61,0.5)]' 
                           : 'text-muted-foreground group-hover:text-zinc-50/90'
                       }`}>
                         {talk.description}
@@ -467,7 +467,7 @@ ${speakerFormData.description}
       <section className="min-h-screen flex items-center justify-center relative z-10">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full py-12">
           <Card className="border-white/10 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-md overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,65,0.15)_0%,transparent_70%)] pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(21,128,61,0.15)_0%,transparent_70%)] pointer-events-none" />
             <CardContent className="pt-12 pb-12 relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">
                 Tell Us What Events You Want
@@ -535,7 +535,7 @@ ${speakerFormData.description}
                         onClick={() => toggleEventType(type)}
                         className={`px-4 py-2 rounded-lg border transition-all ${
                           eventFormData.eventTypes.includes(type)
-                            ? 'bg-neon-primary/20 border-neon-primary text-neon-primary shadow-[0_0_10px_rgba(0,255,65,0.3)]'
+                            ? 'bg-green-700/20 border-green-700 text-green-700 shadow-[0_0_10px_rgba(21,128,61,0.3)]'
                             : 'bg-black/40 border-white/10 text-muted-foreground hover:border-white/20'
                         }`}
                       >

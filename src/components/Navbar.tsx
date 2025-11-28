@@ -28,7 +28,7 @@ const Navbar = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
         isScrolled || isMobileMenuOpen
-          ? "bg-background/80 backdrop-blur-lg border-white/10 shadow-[0_0_20px_rgba(0,255,65,0.1)]" 
+          ? "bg-background/80 backdrop-blur-lg border-white/10 shadow-[0_0_20px_rgba(21,128,61,0.1)]" 
           : "bg-transparent"
       )}
     >

@@ -40,7 +40,7 @@ export default function ContactPage() {
           subtitle="We'll get back to you soon."
         />
         <div className="container mx-auto px-4 md:px-6 lg:px-8 mt-12 md:mt-16 lg:mt-20">
-          <Card className="max-w-md mx-auto border-neon-primary/50 bg-black/80 shadow-[0_0_30px_rgba(0,255,65,0.1)]">
+          <Card className="max-w-md mx-auto border-green-700/50 bg-black/80 shadow-[0_0_30px_rgba(21,128,61,0.1)]">
             <CardContent className="pt-12 pb-12 md:pt-16 md:pb-16 text-center flex flex-col items-center">
               <div className="w-16 h-16 rounded-full bg-neon-primary/10 flex items-center justify-center mb-6">
                 <CheckCircle className="w-8 h-8 text-neon-primary" />
