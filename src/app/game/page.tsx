@@ -142,8 +142,8 @@ export default function GamesPage() {
       <section className="min-h-screen flex items-center justify-center relative z-10">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full py-12 md:py-16 lg:py-20">
           <div className="flex items-center gap-3 mb-8 md:mb-10">
-            <User className="w-8 h-8 text-neon-primary" />
-            <h2 className="text-3xl font-bold text-neon-primary">
+            <User className="w-8 h-8 text-green-700" />
+            <h2 className="text-3xl font-bold text-green-700">
               Solah's Games
             </h2>
           </div>
@@ -153,10 +153,10 @@ export default function GamesPage() {
 
               const cardContent = (
                 <Card
-                  className={`border-white/10 backdrop-blur-sm transition-all duration-300 h-full ${
+                  className={`backdrop-blur-sm transition-all duration-300 h-full relative flex flex-col ${
                     game.enabled
-                      ? "bg-black/60 hover:border-neon-primary/50 cursor-pointer hover:scale-[1.02] group"
-                      : "bg-black/30 opacity-50 cursor-not-allowed"
+                      ? "border-2 border-green-700 bg-black/90 hover:border-green-600 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] cursor-pointer hover:scale-[1.02] group"
+                      : "border-white/10 bg-black/30 opacity-50 cursor-not-allowed"
                   }`}
                 >
                   <CardHeader>
@@ -165,35 +165,35 @@ export default function GamesPage() {
                         <IconComponent
                           className={`w-8 h-8 ${
                             game.enabled
-                              ? "text-neon-primary group-hover:scale-110"
+                              ? "text-green-700 group-hover:text-green-600 group-hover:scale-110"
                               : "text-gray-600"
                           } transition-transform`}
                         />
-                        <CardTitle className="text-xl">{game.title}</CardTitle>
+                        <CardTitle className={`text-xl ${game.enabled ? 'text-green-700' : 'text-zinc-50'}`}>{game.title}</CardTitle>
                       </div>
                       {game.enabled ? (
-                        <Play className="w-6 h-6 text-white/40 group-hover:text-white group-hover:scale-110 transition-all" />
+                        <Play className="w-6 h-6 text-green-700/70 group-hover:text-green-700 group-hover:scale-110 transition-all" />
                       ) : (
                         <Lock className="w-6 h-6 text-gray-600" />
                       )}
                     </div>
-                    <CardDescription className="text-sm">
+                    <CardDescription className={`text-sm ${game.enabled ? 'text-zinc-50/90' : 'text-zinc-50/80'}`}>
                       {game.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className={game.enabled ? 'flex-1' : ''}>
                     <div className="flex items-center justify-between">
                       <span
                         className={`text-xs px-3 py-1 rounded-full ${
                           game.enabled
-                            ? "bg-neon-primary/10 text-neon-primary border border-neon-primary/20"
+                            ? "bg-green-700/20 text-green-700 border border-green-700/40"
                             : "bg-gray-800 text-gray-600 border border-gray-700"
                         }`}
                       >
                         {game.status}
                       </span>
                       {game.enabled && (
-                        <span className="text-sm text-white/60 group-hover:text-white/90 transition-colors">
+                        <span className="text-sm text-green-700/80 group-hover:text-green-700 transition-colors">
                           Play →
                         </span>
                       )}
@@ -218,8 +218,8 @@ export default function GamesPage() {
       <section className="min-h-screen flex items-center justify-center relative z-10">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full py-12 md:py-16 lg:py-20">
           <div className="flex items-center gap-3 mb-8 md:mb-10">
-            <User className="w-8 h-8 text-neon-secondary" />
-            <h2 className="text-3xl font-bold text-neon-secondary">
+            <User className="w-8 h-8 text-green-700" />
+            <h2 className="text-3xl font-bold text-green-700">
               Nabil's Games
             </h2>
           </div>
@@ -229,10 +229,10 @@ export default function GamesPage() {
 
               const cardContent = (
                 <Card
-                  className={`border-white/10 backdrop-blur-sm transition-all duration-300 h-full ${
+                  className={`backdrop-blur-sm transition-all duration-300 h-full relative flex flex-col ${
                     game.enabled
-                      ? "bg-black/60 hover:border-neon-secondary/50 cursor-pointer hover:scale-[1.02] group"
-                      : "bg-black/30 opacity-50 cursor-not-allowed"
+                      ? "border-2 border-green-700 bg-black/90 hover:border-green-600 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] cursor-pointer hover:scale-[1.02] group"
+                      : "border-white/10 bg-black/30 opacity-50 cursor-not-allowed"
                   }`}
                 >
                   <CardHeader>
@@ -241,35 +241,35 @@ export default function GamesPage() {
                         <IconComponent
                           className={`w-8 h-8 ${
                             game.enabled
-                              ? "text-neon-secondary group-hover:scale-110"
+                              ? "text-green-700 group-hover:text-green-600 group-hover:scale-110"
                               : "text-gray-600"
                           } transition-transform`}
                         />
-                        <CardTitle className="text-xl">{game.title}</CardTitle>
+                        <CardTitle className={`text-xl ${game.enabled ? 'text-green-700' : 'text-zinc-50'}`}>{game.title}</CardTitle>
                       </div>
                       {game.enabled ? (
-                        <Play className="w-6 h-6 text-white/40 group-hover:text-white group-hover:scale-110 transition-all" />
+                        <Play className="w-6 h-6 text-green-700/70 group-hover:text-green-700 group-hover:scale-110 transition-all" />
                       ) : (
                         <Lock className="w-6 h-6 text-gray-600" />
                       )}
                     </div>
-                    <CardDescription className="text-sm">
+                    <CardDescription className={`text-sm ${game.enabled ? 'text-zinc-50/90' : 'text-zinc-50/80'}`}>
                       {game.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className={game.enabled ? 'flex-1' : ''}>
                     <div className="flex items-center justify-between">
                       <span
                         className={`text-xs px-3 py-1 rounded-full ${
                           game.enabled
-                            ? "bg-neon-secondary/10 text-neon-secondary border border-neon-secondary/20"
+                            ? "bg-green-700/20 text-green-700 border border-green-700/40"
                             : "bg-gray-800 text-gray-600 border border-gray-700"
                         }`}
                       >
                         {game.status}
                       </span>
                       {game.enabled && (
-                        <span className="text-sm text-white/60 group-hover:text-white/90 transition-colors">
+                        <span className="text-sm text-green-700/80 group-hover:text-green-700 transition-colors">
                           Play →
                         </span>
                       )}
@@ -311,13 +311,13 @@ export default function GamesPage() {
                 any game framework you want to try!
               </p>
               <div className="flex flex-wrap justify-center gap-3 mt-6">
-                <span className="text-xs px-3 py-1 rounded-full bg-neon-primary/10 text-neon-primary border border-neon-primary/20">
+                <span className="text-xs px-3 py-1 rounded-full bg-zinc-800/30 text-zinc-600 border border-zinc-700/30">
                   Next.js 15
                 </span>
-                <span className="text-xs px-3 py-1 rounded-full bg-neon-secondary/10 text-neon-secondary border border-neon-secondary/20">
+                <span className="text-xs px-3 py-1 rounded-full bg-zinc-800/30 text-zinc-600 border border-zinc-700/30">
                   TypeScript
                 </span>
-                <span className="text-xs px-3 py-1 rounded-full bg-neon-accent/10 text-neon-accent border border-neon-accent/20">
+                <span className="text-xs px-3 py-1 rounded-full bg-zinc-800/30 text-zinc-600 border border-zinc-700/30">
                   React
                 </span>
               </div>
