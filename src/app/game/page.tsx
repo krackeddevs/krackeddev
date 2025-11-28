@@ -139,8 +139,8 @@ export default function GamesPage() {
       </section>
 
       {/* Solah's Games Section */}
-      <div className="min-h-screen flex items-center justify-center relative z-10">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full">
+      <section className="min-h-screen flex items-center justify-center relative z-10">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full py-12 md:py-16 lg:py-20">
           <div className="flex items-center gap-3 mb-8 md:mb-10">
             <User className="w-8 h-8 text-neon-primary" />
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-primary to-white">
@@ -212,11 +212,11 @@ export default function GamesPage() {
             })}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Nabil's Games Section */}
-      <div className="min-h-screen flex items-center justify-center relative z-10">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full">
+      <section className="min-h-screen flex items-center justify-center relative z-10">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full py-12 md:py-16 lg:py-20">
           <div className="flex items-center gap-3 mb-8 md:mb-10">
             <User className="w-8 h-8 text-neon-secondary" />
             <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-secondary to-white">
@@ -288,12 +288,11 @@ export default function GamesPage() {
             })}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Dev Notes Section */}
-      <div className="min-h-screen flex items-center justify-center relative z-10">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full">
-          <Card className="border-white/10 bg-black/60 backdrop-blur-md">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16 lg:py-20 relative z-10">
+        <Card className="border-white/10 bg-black/60 backdrop-blur-md">
           <CardHeader>
             <CardTitle className="text-2xl text-center">
               🛠️ Developer Notes
@@ -325,7 +324,6 @@ export default function GamesPage() {
             </div>
           </CardContent>
         </Card>
-        </div>
       </div>
     </main>
   );
