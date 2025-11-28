@@ -216,7 +216,7 @@ function JobsPageContent() {
                       placeholder="Search jobs, companies, or keywords..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-black/50 border border-neon-primary/20 text-white placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary font-mono"
+                      className="w-full pl-10 pr-4 py-3 bg-black/50 border border-neon-primary/20 text-zinc-50 placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary font-mono"
                     />
                   </div>
 

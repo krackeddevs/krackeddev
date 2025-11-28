@@ -262,7 +262,7 @@ ${speakerFormData.description}
                 className={`px-4 md:px-6 py-3 font-mono text-xs md:text-sm uppercase tracking-wider transition-all relative whitespace-nowrap ${
                   activeTab === 'community'
                     ? 'text-neon-primary border-b-2 border-neon-primary'
-                    : 'text-muted-foreground hover:text-white'
+                    : 'text-muted-foreground hover:text-zinc-50'
                 }`}
               >
                 Community Talks
@@ -272,7 +272,7 @@ ${speakerFormData.description}
                 className={`px-4 md:px-6 py-3 font-mono text-xs md:text-sm uppercase tracking-wider transition-all relative whitespace-nowrap ${
                   activeTab === 'speaker'
                     ? 'text-neon-primary border-b-2 border-neon-primary'
-                    : 'text-muted-foreground hover:text-white'
+                    : 'text-muted-foreground hover:text-zinc-50'
                 }`}
               >
                 Request Speaker
@@ -282,7 +282,7 @@ ${speakerFormData.description}
                 className={`px-4 md:px-6 py-3 font-mono text-xs md:text-sm uppercase tracking-wider transition-all relative whitespace-nowrap ${
                   activeTab === 'events'
                     ? 'text-neon-primary border-b-2 border-neon-primary'
-                    : 'text-muted-foreground hover:text-white'
+                    : 'text-muted-foreground hover:text-zinc-50'
                 }`}
               >
                 Event Feedback
@@ -299,7 +299,7 @@ ${speakerFormData.description}
             <div className="space-y-20 md:space-y-24">
             {/* Upcoming Community Talks Section */}
             <section>
-              <h2 className="text-3xl font-bold mb-16 md:mb-20 text-center font-mono uppercase tracking-widest text-white/80 flex items-center justify-center gap-3">
+              <h2 className="text-3xl font-bold mb-16 md:mb-20 text-center font-mono uppercase tracking-widest text-zinc-50/80 flex items-center justify-center gap-3">
                 <Calendar className="w-6 h-6 text-neon-primary" />
                 Upcoming Community Talks
               </h2>
@@ -345,8 +345,8 @@ ${speakerFormData.description}
                         <CardContent className={isDec5Event ? 'flex-1' : ''}>
                           <p className={`mb-4 transition-colors ${
                             isDec5Event 
-                              ? 'text-white font-semibold group-hover:text-neon-primary drop-shadow-[0_0_4px_rgba(0,255,65,0.5)]' 
-                              : 'text-muted-foreground group-hover:text-white/90'
+                              ? 'text-zinc-50 font-semibold group-hover:text-neon-primary drop-shadow-[0_0_4px_rgba(0,255,65,0.5)]' 
+                              : 'text-muted-foreground group-hover:text-zinc-50/90'
                           }`}>
                             {talk.description}
                           </p>
@@ -425,7 +425,7 @@ ${speakerFormData.description}
                       autoComplete="name"
                       value={speakerFormData.name}
                       onChange={(e) => setSpeakerFormData({ ...speakerFormData, name: e.target.value })}
-                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
+                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
                     />
                     {speakerFormErrors.name && (
                       <p className="mt-1 text-sm text-red-500">{speakerFormErrors.name}</p>
@@ -443,7 +443,7 @@ ${speakerFormData.description}
                       autoComplete="email"
                       value={speakerFormData.email}
                       onChange={(e) => setSpeakerFormData({ ...speakerFormData, email: e.target.value })}
-                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
+                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
                     />
                     {speakerFormErrors.email && (
                       <p className="mt-1 text-sm text-red-500">{speakerFormErrors.email}</p>
@@ -460,7 +460,7 @@ ${speakerFormData.description}
                       type="text"
                       value={speakerFormData.talkTitle}
                       onChange={(e) => setSpeakerFormData({ ...speakerFormData, talkTitle: e.target.value })}
-                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
+                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
                     />
                     {speakerFormErrors.talkTitle && (
                       <p className="mt-1 text-sm text-red-500">{speakerFormErrors.talkTitle}</p>
@@ -477,7 +477,7 @@ ${speakerFormData.description}
                       rows={4}
                       value={speakerFormData.description}
                       onChange={(e) => setSpeakerFormData({ ...speakerFormData, description: e.target.value })}
-                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary resize-none"
+                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary resize-none"
                     />
                     {speakerFormErrors.description && (
                       <p className="mt-1 text-sm text-red-500">{speakerFormErrors.description}</p>
@@ -493,7 +493,7 @@ ${speakerFormData.description}
                       name="format"
                       value={speakerFormData.format}
                       onChange={(e) => setSpeakerFormData({ ...speakerFormData, format: e.target.value })}
-                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
+                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
                     >
                       <option value="">Select a format</option>
                       <option value="workshop">Workshop</option>
@@ -556,7 +556,7 @@ ${speakerFormData.description}
                         autoComplete="name"
                         value={eventFormData.name}
                         onChange={(e) => setEventFormData({ ...eventFormData, name: e.target.value })}
-                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
+                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
                       />
                     </div>
 
@@ -571,7 +571,7 @@ ${speakerFormData.description}
                         autoComplete="email"
                         value={eventFormData.email}
                         onChange={(e) => setEventFormData({ ...eventFormData, email: e.target.value })}
-                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
+                        className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary"
                       />
                       {eventFormErrors.email && (
                         <p className="mt-1 text-sm text-red-500">{eventFormErrors.email}</p>
@@ -611,7 +611,7 @@ ${speakerFormData.description}
                       rows={4}
                       value={eventFormData.suggestion}
                       onChange={(e) => setEventFormData({ ...eventFormData, suggestion: e.target.value })}
-                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary resize-none"
+                      className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-zinc-50 focus:outline-none focus:border-neon-primary focus:ring-1 focus:ring-neon-primary resize-none"
                       placeholder="Share your ideas for future events..."
                     />
                   </div>

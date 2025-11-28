@@ -100,7 +100,7 @@ const PageHero = ({ title, subtitle, children, backgroundImage }: PageHeroProps)
                 <motion.span 
                   key={index} 
                   variants={child}
-                  className="inline-block mr-2 md:mr-4 last:mr-0 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                  className="inline-block mr-2 md:mr-4 last:mr-0 text-zinc-50 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                 >
                   {word.toLowerCase() === 'kracked' ? (
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-primary to-neon-secondary drop-shadow-[0_0_10px_rgba(0,255,65,0.5)]">
@@ -119,7 +119,7 @@ const PageHero = ({ title, subtitle, children, backgroundImage }: PageHeroProps)
           </motion.div>
 
           <motion.div 
-            className="text-lg md:text-2xl text-white max-w-[800px] mx-auto font-light tracking-wide min-h-[4rem] md:min-h-[3rem]"
+            className="text-lg md:text-2xl text-zinc-50 max-w-[800px] mx-auto font-light tracking-wide min-h-[4rem] md:min-h-[3rem]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
