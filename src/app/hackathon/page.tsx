@@ -172,12 +172,12 @@ export default function HackathonPage() {
                 Bug Bounty #002
               </CardTitle>
               <div className="flex items-center gap-2 text-sm text-zinc-50/70">
-                <span>Gamified Tech Job Board</span>
+                <span><span className="text-green-700">Kracked</span> Jobs</span>
               </div>
             </CardHeader>
             <CardContent className="flex-1">
               <p className="mb-4 transition-colors text-zinc-50 font-semibold group-hover:text-green-700">
-                Community voted for a "Gamified Tech Job Board" theme. Winner gets RM150! Build something epic & submit your PR 🌟
+                Community voted for a "<span className="text-green-700">Kracked</span> Jobs" theme. Winner gets RM150! Build something epic & submit your PR 🌟
               </p>
             </CardContent>
             <CardFooter className="flex gap-2 mt-auto">
@@ -231,7 +231,7 @@ export default function HackathonPage() {
       </div>
 
       {/* How It Works Section */}
-      <div className="min-h-screen flex items-center justify-center relative z-10">
+      <div id="how-it-works" className="min-h-screen flex items-center justify-center relative z-10">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 w-full py-12">
           <Card className="border-white/10 bg-black/80 backdrop-blur-xl">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-700 via-green-600 to-green-700" />
@@ -450,12 +450,30 @@ export default function HackathonPage() {
                 Join the hackathon and compete for RM 1,200 + job opportunities with partner companies
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Button size="lg" variant="cyberpunk" asChild className="h-14 px-10 text-lg font-mono uppercase tracking-widest border-green-700 text-green-700 hover:bg-green-700/20 hover:text-green-600">
-                  <a href={twitterUrls.registerFinal} target="_blank" rel="noopener noreferrer">
-                    Register for Hackathon <ArrowRight className="ml-2 w-5 h-5" />
-                  </a>
+                <Button 
+                  size="lg" 
+                  variant="cyberpunk" 
+                  onClick={() => {
+                    const element = document.getElementById('bug-bounties');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className="h-14 px-10 text-lg font-mono uppercase tracking-widest border-green-700 text-green-700 hover:bg-green-700/20 hover:text-green-600"
+                >
+                  Register for Hackathon <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-                <Button variant="ghost" size="lg" onClick={() => setIsRulesOpen(true)} className="h-14 px-10 text-lg border border-green-700/50 text-green-700 hover:bg-green-700/10 hover:text-green-600">
+                <Button 
+                  variant="ghost" 
+                  size="lg" 
+                  onClick={() => {
+                    const element = document.getElementById('how-it-works');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className="h-14 px-10 text-lg border border-green-700/50 text-green-700 hover:bg-green-700/10 hover:text-green-600"
+                >
                   Learn More
                 </Button>
               </div>
@@ -645,7 +663,7 @@ export default function HackathonPage() {
               Bug Bounty #{comingSoonBounty}
             </DialogTitle>
             <DialogDescription className="text-center text-muted-foreground">
-              {comingSoonBounty === 2 && "Gamified Tech Job Board"}
+              {comingSoonBounty === 2 && <span><span className="text-green-700">Kracked</span> Jobs</span>}
               {comingSoonBounty === 3 && "Game Dev Design"}
             </DialogDescription>
           </DialogHeader>
@@ -663,7 +681,7 @@ export default function HackathonPage() {
                 <>
                   <h3 className="text-xl font-bold text-zinc-50 mb-2 font-mono">Active Now!</h3>
                   <p className="text-muted-foreground mb-4">
-                    Community voted for a "Gamified Tech Job Board" theme. Winner gets RM150! Build something epic & submit your PR 🌟
+                    Community voted for a "<span className="text-green-700">Kracked</span> Jobs" theme. Winner gets RM150! Build something epic & submit your PR 🌟
                   </p>
                   <Button
                     variant="cyberpunk"
