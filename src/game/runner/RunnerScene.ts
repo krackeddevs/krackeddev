@@ -39,9 +39,12 @@ export class RunnerScene extends Phaser.Scene {
   private featuresText!: Phaser.GameObjects.Text;
   private startText!: Phaser.GameObjects.Text;
   private gameOverContainer!: Phaser.GameObjects.Container;
+  
+  private backgroundLayers: { sprite: Phaser.GameObjects.TileSprite; speedFactor: number }[] = [];
 
   private obstacleNames = ["Legacy Bug", "Merge Conflict", "Prod Incident", "Tech Debt"];
   private pickupNames = ["PR Merged", "Feature Shipped", "Offer Letter", "Code Review"];
+  private flyingObstacleName = "Scope Creep";
 
   constructor() {
     super({ key: "RunnerScene" });
@@ -49,7 +52,7 @@ export class RunnerScene extends Phaser.Scene {
 
   preload(): void {
     // Player character is generated with graphics, no sprite needed
-    this.load.image("runner-tileset", "/runner-tileset.png");
+    // Removed "runner-tileset" loading to avoid potential missing texture box if it's not found or corrupt
   }
 
   create(): void {
@@ -57,27 +60,21 @@ export class RunnerScene extends Phaser.Scene {
 
     const { width, height } = this.scale;
 
-    // Background gradient effect
+    // 1. Static Sky Gradient
     const bg = this.add.graphics();
-    bg.fillGradientStyle(0x0a0a0f, 0x0a0a0f, 0x1a1a2e, 0x1a1a2e, 1);
+    bg.fillGradientStyle(0x050510, 0x050510, 0x1a1a2e, 0x2a0a2e, 1);
     bg.fillRect(0, 0, width, height);
 
-    // Grid lines for cyber effect
+    // 2. Generate and Add Parallax Layers
+    this.createParallaxBackgrounds();
+
+    // 3. Grid lines (Cyber floor effect only, removing full screen grid)
     const gridGraphics = this.add.graphics();
     gridGraphics.lineStyle(1, 0x00ff00, 0.1);
-    for (let i = 0; i < width; i += 20) {
-      gridGraphics.moveTo(i, 0);
-      gridGraphics.lineTo(i, height);
-    }
-    for (let i = 0; i < height; i += 20) {
-      gridGraphics.moveTo(0, i);
-      gridGraphics.lineTo(width, i);
-    }
-    gridGraphics.strokePath();
-
+    const groundY = height - 24;
+    
     // Create ground
     this.ground = this.physics.add.staticGroup();
-    const groundY = height - 24;
     
     // Draw ground tiles across the width
     for (let x = 0; x < width + 32; x += 16) {
@@ -109,7 +106,8 @@ export class RunnerScene extends Phaser.Scene {
     // HUD
     this.createHUD();
 
-    // Start text
+    // Start text (Press Space to Start)
+    // Note: Removed "block of stuff" (debug ground/start text background) as requested
     this.startText = this.add.text(width / 2, height / 2 - 20, "PRESS SPACE TO START", {
       fontFamily: "monospace",
       fontSize: "14px",
@@ -249,7 +247,38 @@ export class RunnerScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const groundY = height - 24;
 
-    // Create obstacle
+    // Chance to spawn flying "Scope Creep" (increases with day)
+    const spawnFlying = Math.random() < (0.1 + this.sprintDay * 0.05) && this.sprintDay > 1;
+
+    if (spawnFlying) {
+      const droneY = groundY - 45; // Head height, requires duck or perfect jump
+      const drone = this.add.rectangle(width + 20, droneY, 20, 12, 0xff00ff, 0.9) as unknown as Obstacle;
+      drone.setStrokeStyle(2, 0xff88ff);
+      drone.obstacleType = this.flyingObstacleName;
+      
+      this.physics.add.existing(drone);
+      this.obstacles.add(drone);
+      
+      const body = drone.body as Phaser.Physics.Arcade.Body;
+      body.setAllowGravity(false);
+      body.setVelocityX(-(this.gameSpeed * 1.2)); // Flying enemies move faster!
+      body.setImmovable(true);
+      
+      // Add label
+      const text = this.add.text(0, -15, "SCOPE CREEP", { 
+        fontSize: "8px", 
+        color: "#ff00ff", 
+        fontFamily: "monospace" 
+      }).setOrigin(0.5);
+      
+      // Attach text to drone container? simplified: just a drone for now or add container logic
+      // For simplicity in this setup, we'll skip complex container logic and just use the rect
+      // but let's add a simple visual indicator
+      
+      return;
+    }
+
+    // Create ground obstacle
     const obstacleType = Phaser.Math.RND.pick(this.obstacleNames);
     const obstacle = this.add.rectangle(
       width + 20,
@@ -495,6 +524,14 @@ export class RunnerScene extends Phaser.Scene {
       }
     });
 
+    // Flying movement (sine wave)
+    this.obstacles.getChildren().forEach((obj) => {
+      const obs = obj as unknown as Obstacle;
+      if (obs.obstacleType === this.flyingObstacleName) {
+        obs.y += Math.sin(time / 200) * 0.5; // Bobbing effect
+      }
+    });
+
     this.pickups.getChildren().forEach((obj) => {
       const sprite = obj as Phaser.GameObjects.Rectangle;
       if (sprite.x < -50) {
@@ -512,6 +549,73 @@ export class RunnerScene extends Phaser.Scene {
       const body = (obj as Phaser.GameObjects.GameObject).body as Phaser.Physics.Arcade.Body;
       body.setVelocityX(-this.gameSpeed);
     });
+
+    // Scroll backgrounds
+    this.backgroundLayers.forEach((layer) => {
+      layer.sprite.tilePositionX += (this.gameSpeed * layer.speedFactor * delta) / 1000;
+    });
+  }
+
+  private createParallaxBackgrounds(): void {
+    const width = this.scale.width;
+    const height = this.scale.height;
+
+    // Clear old textures if they exist
+    if (this.textures.exists("bg-far")) this.textures.remove("bg-far");
+    if (this.textures.exists("bg-mid")) this.textures.remove("bg-mid");
+
+    // --- Far Layer (Slow, Tall Skyline) ---
+    const farGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+    farGraphics.fillStyle(0x151525); // Dark silhouette
+    
+    let currentX = 0;
+    while (currentX < width) {
+      const bWidth = Phaser.Math.Between(20, 50);
+      const bHeight = Phaser.Math.Between(60, 120);
+      farGraphics.fillRect(currentX, height - bHeight - 10, bWidth, bHeight + 20);
+      currentX += bWidth + Phaser.Math.Between(-5, 2); // slight overlap
+    }
+    
+    farGraphics.generateTexture("bg-far", width, height);
+    
+    const farLayer = this.add.tileSprite(0, 0, width, height, "bg-far");
+    farLayer.setOrigin(0, 0);
+    this.backgroundLayers.push({ sprite: farLayer, speedFactor: 0.1 });
+
+    // --- Mid Layer (Faster, detailed, neon accents) ---
+    const midGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+    midGraphics.fillStyle(0x2a2a4a); // Lighter purple/blue
+    
+    currentX = 0;
+    while (currentX < width) {
+      const bWidth = Phaser.Math.Between(15, 40);
+      const bHeight = Phaser.Math.Between(30, 80);
+      const x = currentX;
+      const y = height - bHeight - 10;
+      
+      // Building body
+      midGraphics.fillStyle(0x2a2a4a);
+      midGraphics.fillRect(x, y, bWidth, bHeight + 20);
+      
+      // Neon Windows/Accents
+      if (Math.random() > 0.3) {
+        midGraphics.fillStyle(Math.random() > 0.5 ? 0x00ff00 : 0xff00ff, 0.5);
+        const windowSize = 2;
+        for (let wy = y + 5; wy < height - 10; wy += 6) {
+           if (Math.random() > 0.4) {
+             midGraphics.fillRect(x + 4, wy, bWidth - 8, windowSize);
+           }
+        }
+      }
+      
+      currentX += bWidth + Phaser.Math.Between(2, 10); // Gaps between mid buildings
+    }
+
+    midGraphics.generateTexture("bg-mid", width, height);
+    
+    const midLayer = this.add.tileSprite(0, 0, width, height, "bg-mid");
+    midLayer.setOrigin(0, 0);
+    this.backgroundLayers.push({ sprite: midLayer, speedFactor: 0.3 });
   }
 }
 
