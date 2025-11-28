@@ -220,7 +220,10 @@ export default function ForumPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl pt-24">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gradient mb-2">Kracked Forum</h1>
+        <h1 className="text-4xl font-bold mb-2">
+          <span className="text-green-700 drop-shadow-[0_0_20px_rgba(21,128,61,0.3)]">Kracked</span>
+          <span className="text-zinc-50 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"> Forum</span>
+        </h1>
         <p className="text-muted-foreground">A community space for developers to discuss, share, and collaborate.</p>
       </div>
 
