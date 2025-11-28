@@ -135,11 +135,6 @@ export default function HackathonPage() {
               <Badge className="bg-zinc-700 text-zinc-50 font-mono text-xs">FINISHED</Badge>
             </div>
             <CardHeader>
-              <div className="flex items-center justify-between mb-2">
-                <Badge variant="outline" className="border-zinc-600/50 text-zinc-50 text-xs">
-                  RM 100
-                </Badge>
-              </div>
               <CardTitle className="text-xl mb-2 text-zinc-50 flex items-center gap-2">
                 <Code2 className="w-6 h-6 text-zinc-50/70" />
                 Bug Bounty #001
@@ -150,12 +145,8 @@ export default function HackathonPage() {
             </CardHeader>
             <CardContent>
               <p className="mb-4 transition-colors text-muted-foreground group-hover:text-zinc-50/90">
-                Showcase your creativity! Build innovative web designs and frontend implementations. Be bold and creative to win RM 100.
+                Showcase your creativity! Build innovative web designs and frontend implementations. Be bold and creative!
               </p>
-              <div className="flex gap-2 mb-4">
-                <Badge variant="outline" className="border-zinc-600/50 text-zinc-50 text-xs">RM 100</Badge>
-                <Badge variant="outline" className="border-zinc-600/50 text-zinc-50 text-xs">Top 10 Bonus</Badge>
-              </div>
             </CardContent>
             <CardFooter className="flex gap-2">
               <Button variant="cyberpunk" size="lg" asChild className="flex-1 border-zinc-600/50 text-zinc-50 hover:bg-zinc-800/30 hover:text-zinc-50 font-mono uppercase">
@@ -507,7 +498,7 @@ export default function HackathonPage() {
                 <div className="p-4 bg-neon-secondary/10 rounded-none border-l-2 border-neon-secondary">
                   <h4 className="font-semibold text-neon-secondary mb-2">Cash Rewards</h4>
                   <p className="text-sm text-muted-foreground">
-                    Top performers earn real money! Bug Bounty #001 offers RM 100 prize. More bounties = more opportunities to win.
+                    Top performers earn real money! More bounties = more opportunities to win.
                   </p>
                 </div>
                 <div className="p-4 bg-neon-accent/10 rounded-none border-l-2 border-neon-accent">
@@ -590,17 +581,6 @@ export default function HackathonPage() {
           </DialogHeader>
           
           <div className="space-y-6 mt-4 font-mono text-sm">
-            {/* Rewards Section */}
-            <div>
-              <h3 className="text-lg font-semibold mb-3 text-zinc-50 border-b border-white/10 pb-1">Reward & Payout</h3>
-              <div className="p-6 bg-gradient-to-r from-neon-primary/20 via-neon-secondary/20 to-neon-accent/20 rounded-none border-2 border-neon-primary/50">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-neon-primary mb-2 font-mono">RM 100</div>
-                  <p className="text-sm text-muted-foreground">Winner takes all! The most creative and well-executed submission wins the full prize.</p>
-                </div>
-              </div>
-            </div>
-
             {/* Scope Section */}
             <div>
               <h3 className="text-lg font-semibold mb-3 text-zinc-50 border-b border-white/10 pb-1">What We're Looking For</h3>
@@ -642,7 +622,7 @@ export default function HackathonPage() {
 
             <div className="pt-4 border-t border-white/10">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                <strong>System Note:</strong> RM 100 reward is paid in cash or AI credits equivalent. Winner will be selected based on creativity, technical execution, and overall impact. Verification and code review required.
+                <strong>System Note:</strong> Winner will be selected based on creativity, technical execution, and overall impact. Verification and code review required.
               </p>
             </div>
           </div>
