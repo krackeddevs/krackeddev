@@ -25,10 +25,10 @@ export default function SplitTextAnimation({
   };
 
   useEffect(() => {
-    // Start fade out after animation completes + display time
+    // Start fade out after animation completes + brief display time
     const fadeOutTimer = setTimeout(() => {
       setIsExiting(true);
-    }, 4000);
+    }, 2000);
 
     return () => clearTimeout(fadeOutTimer);
   }, []);
