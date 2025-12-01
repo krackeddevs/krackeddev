@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { cn } from "@/lib/utils";
+import { SupabaseProvider } from "./context/SupabaseContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://kracked-dev.com'),
@@ -72,11 +73,13 @@ export default function RootLayout({
           "min-h-screen bg-background font-mono antialiased flex flex-col"
         )}
       >
-        <Navbar />
-        <div className="flex-grow">
-          {children}
-        </div>
-        <Footer />
+        <SupabaseProvider>
+          <Navbar />
+          <div className="flex-grow">
+            {children}
+          </div>
+          <Footer />
+        </SupabaseProvider>
       </body>
     </html>
   );
