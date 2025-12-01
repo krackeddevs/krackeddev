@@ -9,6 +9,7 @@ import { ArrowRight, Trophy, Gamepad2 } from "lucide-react";
 
 export default function HomeClient() {
   const [isHoveringBounties, setIsHoveringBounties] = useState(false);
+
   return (
     <main className="min-h-screen pb-20 overflow-hidden">
       {/* Hero Section */}

@@ -1,0 +1,237 @@
+"use client";
+
+import React, { useMemo, useState } from 'react';
+import { BaseGameWorld } from './BaseGameWorld';
+import { EscapeButton } from './EscapeButton';
+import { TILE_EMPTY, TILE_WALL, TILE_BLOG, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
+import { BuildingConfig } from '@/lib/game/types';
+import { posts } from '@/lib/blog';
+
+interface BlogSceneProps {
+  onBack: () => void;
+}
+
+export const BlogScene: React.FC<BlogSceneProps> = ({ onBack }) => {
+  const [selectedPost, setSelectedPost] = useState<any>(null);
+  const [showPostPopup, setShowPostPopup] = useState(false);
+
+  // Generate map
+  const map = useMemo(() => {
+    const newMap: number[][] = [];
+
+    for (let y = 0; y < MAP_HEIGHT; y++) {
+      const row: number[] = [];
+      for (let x = 0; x < MAP_WIDTH; x++) {
+        if (x === 0 || x === MAP_WIDTH - 1 || y === 0 || y === MAP_HEIGHT - 1) {
+          row.push(TILE_WALL);
+        } else {
+          row.push(TILE_EMPTY);
+        }
+      }
+      newMap.push(row);
+    }
+
+    // Place blog buildings representing posts
+    const centerX = Math.floor(MAP_WIDTH / 2);
+    const startY = 2;
+    posts.slice(0, 4).forEach((post, idx) => {
+      const x = centerX - 2 + (idx % 2) * 3;
+      const y = startY + Math.floor(idx / 2) * 2;
+      if (x >= 1 && x < MAP_WIDTH - 1 && y >= 1 && y < MAP_HEIGHT - 1) {
+        newMap[y][x] = TILE_BLOG;
+        newMap[y][x + 1] = TILE_BLOG;
+        newMap[y + 1][x] = TILE_BLOG;
+        newMap[y + 1][x + 1] = TILE_BLOG;
+      }
+    });
+
+    // Place back to town building (bottom-left)
+    newMap[MAP_HEIGHT - 2][1] = TILE_BACK_TO_TOWN;
+    newMap[MAP_HEIGHT - 2][2] = TILE_BACK_TO_TOWN;
+    newMap[MAP_HEIGHT - 3][1] = TILE_BACK_TO_TOWN;
+    newMap[MAP_HEIGHT - 3][2] = TILE_BACK_TO_TOWN;
+
+    return newMap;
+  }, []);
+
+  const buildings: BuildingConfig[] = useMemo(() => {
+    const centerX = Math.floor(MAP_WIDTH / 2);
+    const startY = 2;
+    const blogBuildings = posts.slice(0, 4).map((post, idx) => {
+      const x = centerX - 2 + (idx % 2) * 3;
+      const y = startY + Math.floor(idx / 2) * 2;
+      const date = new Date(post.date);
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.getDate();
+      const customLabel = `${month}\n${day}`;
+      
+      return {
+        id: `blog-${post.id}`,
+        tileType: TILE_BLOG,
+        positions: [
+          { x, y },
+          { x: x + 1, y },
+          { x, y: y + 1 },
+          { x: x + 1, y: y + 1 },
+        ],
+        label: post.title.substring(0, 15),
+        description: post.summary.substring(0, 50) + '...',
+        route: `blog-${post.id}`,
+        color: '#a855f7',
+        colorDark: '#9333ea',
+        customLabel: customLabel,
+        customData: post,
+      };
+    });
+    
+    return [
+      ...blogBuildings,
+      {
+        id: 'back-to-town',
+        tileType: TILE_BACK_TO_TOWN,
+        positions: [
+          { x: 1, y: MAP_HEIGHT - 3 },
+          { x: 2, y: MAP_HEIGHT - 3 },
+          { x: 1, y: MAP_HEIGHT - 2 },
+          { x: 2, y: MAP_HEIGHT - 2 },
+        ],
+        label: 'BACK TO TOWN',
+        description: 'Return to the main town',
+        route: '/',
+        color: '#ef4444',
+        colorDark: '#dc2626',
+        autoNavigate: true,
+      },
+    ];
+  }, []);
+
+  const handleBuildingEnter = (route: string) => {
+    if (route.startsWith('blog-')) {
+      const postId = route.replace('blog-', '');
+      const post = posts.find(p => p.id === postId);
+      if (post) {
+        setSelectedPost(post);
+        setShowPostPopup(true);
+      }
+    } else if (route === '/') {
+      onBack();
+    }
+  };
+
+  // Handle Escape key to close popup
+  React.useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showPostPopup) {
+        setShowPostPopup(false);
+        setSelectedPost(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [showPostPopup]);
+
+  return (
+    <div className="relative w-full h-screen">
+      <BaseGameWorld
+        map={map}
+        buildings={buildings}
+        onBuildingEnter={handleBuildingEnter}
+        initialPlayerX={(MAP_WIDTH / 2) * 40}
+        initialPlayerY={(MAP_HEIGHT / 2) * 40}
+      />
+
+      {/* Blog Post Popup */}
+      {showPostPopup && selectedPost && (
+        <>
+          <EscapeButton onClose={() => { setShowPostPopup(false); setSelectedPost(null); }} />
+          <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
+          <div className="bg-gray-900 border-4 border-purple-500 max-w-4xl w-full max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b border-purple-500">
+              <div>
+                <h2 className="text-2xl text-purple-400 font-bold">{selectedPost.title}</h2>
+                <p className="text-gray-400 text-sm mt-1">
+                  {new Date(selectedPost.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowPostPopup(false);
+                  setSelectedPost(null);
+                }}
+                className="text-white hover:text-red-400 text-xl"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="prose prose-invert max-w-none">
+                <p className="text-purple-300 mb-6 text-lg">{selectedPost.summary}</p>
+                {selectedPost.content ? (
+                  <div className="text-white">
+                    {selectedPost.content.split(/\n\n+/).map((para: string, idx: number) => {
+                      if (!para.trim()) return null;
+                      
+                      // Check if it's a heading
+                      if (para.trim().startsWith('##')) {
+                        const heading = para.replace(/^##+\s*/, '').trim();
+                        return (
+                          <h3 key={idx} className="text-purple-400 text-xl font-bold mt-6 mb-3">
+                            {heading}
+                          </h3>
+                        );
+                      }
+                      
+                      // Check if it's a code block
+                      if (para.trim().startsWith('```')) {
+                        const codeContent = para.split('\n').slice(1, -1).join('\n');
+                        return (
+                          <pre key={idx} className="bg-gray-800 p-4 rounded mb-4 overflow-x-auto">
+                            <code className="text-green-400 text-sm font-mono">{codeContent}</code>
+                          </pre>
+                        );
+                      }
+                      
+                      // Check if it's a list item
+                      if (para.trim().startsWith('-') || para.trim().startsWith('*')) {
+                        const items = para.split('\n').filter(line => line.trim());
+                        return (
+                          <ul key={idx} className="list-disc list-inside mb-4 space-y-2 ml-4">
+                            {items.map((item, itemIdx) => (
+                              <li key={itemIdx} className="text-gray-300">
+                                {item.replace(/^[-*]\s*/, '').trim()}
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      }
+                      
+                      // Regular paragraph
+                      return (
+                        <p key={idx} className="mb-4 text-gray-300 leading-relaxed">
+                          {para.trim()}
+                        </p>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-gray-400">Content coming soon...</p>
+                )}
+              </div>
+            </div>
+            <div className="p-4 border-t border-purple-500 text-center">
+              <p className="text-gray-500 text-sm">Press ESC to close</p>
+            </div>
+          </div>
+        </div>
+        </>
+      )}
+
+    </div>
+  );
+};
+

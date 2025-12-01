@@ -1,22 +1,80 @@
-import type { Metadata } from "next";
-import HomeClient from "./components/HomeClient";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Want to be a Kracked Dev?",
-  description: "Turn random vibes into real output in 28 days. Join the Vibe Code Bootcamp - No CS degree required, just cracked execution. Real-world projects, mentorship, and earn 'Cracked Dev' status.",
-  openGraph: {
-    title: "Want to be a Kracked Dev? | Kracked Devs",
-    description: "Turn random vibes into real output in 28 days. Join the Vibe Code Bootcamp - No CS degree required, just cracked execution.",
-    url: "/",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Want to be a Kracked Dev?",
-    description: "Turn random vibes into real output in 28 days. Join the Vibe Code Bootcamp.",
-  },
-};
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import SplitTextAnimation from "./components/SplitTextAnimation";
+import { LandingTown } from "@/components/game/LandingTown";
+import "./jobs/jobs.css";
 
 export default function Home() {
-  return <HomeClient />;
+  const router = useRouter();
+  const [showAnimation, setShowAnimation] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Check if we should skip animation (e.g., coming from back to town)
+      const skipAnimation = sessionStorage.getItem('skipWelcomeAnimation') === 'true';
+      if (skipAnimation) {
+        setShowAnimation(false);
+        sessionStorage.removeItem('skipWelcomeAnimation');
+        return;
+      }
+
+      // Check 12-hour localStorage logic
+      const LAST_WELCOME_KEY = 'krackedDevs_lastWelcomeTime';
+      const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+      
+      const lastWelcomeTime = localStorage.getItem(LAST_WELCOME_KEY);
+      const now = Date.now();
+      
+      if (lastWelcomeTime) {
+        const timeSinceLastWelcome = now - parseInt(lastWelcomeTime, 10);
+        // If less than 12 hours have passed, skip animation
+        if (timeSinceLastWelcome < TWELVE_HOURS_MS) {
+          setShowAnimation(false);
+          return;
+        }
+      }
+      
+      // If we get here, either it's the first time or 12+ hours have passed
+      // Animation will show, and we'll save the timestamp when it completes
+    }
+  }, []);
+
+  const handleAnimationComplete = () => {
+    // Save the current timestamp when animation completes
+    if (typeof window !== 'undefined') {
+      const LAST_WELCOME_KEY = 'krackedDevs_lastWelcomeTime';
+      localStorage.setItem(LAST_WELCOME_KEY, Date.now().toString());
+    }
+    setShowAnimation(false);
+  };
+
+  const handleBuildingEnter = (route: string) => {
+    if (route === '/') {
+      // Set flag to skip animation when returning to landing
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('skipWelcomeAnimation', 'true');
+      }
+    }
+    router.push(route);
+  };
+
+  return (
+    <main className="min-h-screen w-full bg-gray-900 relative">
+      {/* CRT Scanline Overlay */}
+      {!showAnimation && (
+        <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+      )}
+      {showAnimation && (
+        <SplitTextAnimation
+          text="Welcome to Kracked Devs"
+          onComplete={handleAnimationComplete}
+        />
+      )}
+      {!showAnimation && (
+        <LandingTown onBuildingEnter={handleBuildingEnter} />
+      )}
+    </main>
+  );
 }
