@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
+import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_BLOG, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { BuildingConfig } from '@/lib/game/types';
 import { posts } from '@/lib/blog';
@@ -142,7 +143,9 @@ export const BlogScene: React.FC<BlogSceneProps> = ({ onBack }) => {
 
       {/* Blog Post Popup */}
       {showPostPopup && selectedPost && (
-        <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
+        <>
+          <EscapeButton onClose={() => { setShowPostPopup(false); setSelectedPost(null); }} />
+          <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
           <div className="bg-gray-900 border-4 border-purple-500 max-w-4xl w-full max-h-[90vh] flex flex-col">
             <div className="flex justify-between items-center p-4 border-b border-purple-500">
               <div>
@@ -225,6 +228,7 @@ export const BlogScene: React.FC<BlogSceneProps> = ({ onBack }) => {
             </div>
           </div>
         </div>
+        </>
       )}
 
     </div>

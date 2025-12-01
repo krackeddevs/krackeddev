@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
+import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_PROFILE, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { BuildingConfig } from '@/lib/game/types';
 import { CharacterStats, UserProfile } from '@/types/jobs';
@@ -133,7 +134,9 @@ export const ProfileScene: React.FC<ProfileSceneProps> = ({ onBack }) => {
 
       {/* Profile Popup */}
       {showProfilePopup && (
-        <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
+        <>
+          <EscapeButton onClose={() => setShowProfilePopup(false)} />
+          <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
           <div className="bg-gray-900 border-4 border-pink-500 max-w-2xl w-full max-h-[90vh] overflow-y-auto flex flex-col">
             <div className="flex justify-between items-center p-4 border-b border-pink-500">
               <h2 className="text-2xl text-pink-400 font-bold">YOUR PROFILE</h2>
@@ -247,6 +250,7 @@ export const ProfileScene: React.FC<ProfileSceneProps> = ({ onBack }) => {
             </div>
           </div>
         </div>
+        </>
       )}
     </div>
   );

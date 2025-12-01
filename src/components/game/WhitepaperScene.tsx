@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
+import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_WHITEPAPER, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { BuildingConfig } from '@/lib/game/types';
 
@@ -111,7 +112,9 @@ export const WhitepaperScene: React.FC<WhitepaperSceneProps> = ({ onBack }) => {
 
       {/* PDF Viewer Overlay */}
       {showPDF && (
-        <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
+        <>
+          <EscapeButton onClose={() => setShowPDF(false)} />
+          <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
           <div className="bg-gray-900 border-4 border-yellow-500 max-w-6xl w-full h-[90vh] flex flex-col">
             <div className="flex justify-between items-center p-4 border-b border-yellow-500">
               <h2 className="text-2xl text-yellow-400 font-bold">WHITEPAPER</h2>
@@ -134,6 +137,7 @@ export const WhitepaperScene: React.FC<WhitepaperSceneProps> = ({ onBack }) => {
             </div>
           </div>
         </div>
+        </>
       )}
 
     </div>

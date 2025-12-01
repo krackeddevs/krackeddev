@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
+import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_JOBS, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { BuildingConfig } from '@/lib/game/types';
 import { generateQuests, type Quest } from '@/lib/jobs';
@@ -118,7 +119,9 @@ export const NewJobsScene: React.FC<NewJobsSceneProps> = ({ onBack }) => {
 
       {/* Jobs Screen Overlay */}
       {showJobScreen && (
-        <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
+        <>
+          <EscapeButton onClose={() => setShowJobScreen(false)} />
+          <div className="absolute inset-0 bg-black/90 z-30 flex items-center justify-center p-4">
           <div className="bg-gray-900 border-4 border-blue-500 max-w-4xl w-full max-h-[80vh] overflow-y-auto p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl text-blue-400 font-bold">TECH JOBS</h2>
@@ -152,6 +155,7 @@ export const NewJobsScene: React.FC<NewJobsSceneProps> = ({ onBack }) => {
             </div>
           </div>
         </div>
+        </>
       )}
 
     </div>
