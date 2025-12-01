@@ -15,13 +15,6 @@ import { ArrowLeft, ArrowUp, ArrowDown, BookOpen, Code2, Rocket, FileText, Messa
 import { posts, type BlogSection } from "../posts";
 import { cn } from "@/lib/utils";
 
-// Required for static export with dynamic routes
-export function generateStaticParams() {
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
-
 const sectionLabels: Record<BlogSection, { label: string; icon: React.ElementType }> = {
   all: { label: "All", icon: FileText },
   learning: { label: "Learning Updates", icon: BookOpen },
