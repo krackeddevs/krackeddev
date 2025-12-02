@@ -2,11 +2,9 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
-import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_BLOG, TILE_JOBS, TILE_CODE, TILE_PROFILE, TILE_WHITEPAPER, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { BuildingConfig } from '@/lib/game/types';
 import { CharacterStats, UserProfile } from '@/types/jobs';
-import { useDialogClose } from './useDialogClose';
 import { addGroundVariety, addTrees, connectBuildingsWithRoads } from '@/lib/game/mapHelpers';
 
 interface LandingTownProps {
@@ -15,7 +13,6 @@ interface LandingTownProps {
 
 export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => {
   const [showProfilePopup, setShowProfilePopup] = useState(false);
-  const [showWhitepaperPopup, setShowWhitepaperPopup] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile
@@ -206,16 +203,30 @@ export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => 
   const handleBuildingEnter = (route: string) => {
     if (route === 'profile-popup') {
       setShowProfilePopup(true);
-    } else if (route === '/whitepaper') {
-      setShowWhitepaperPopup(true);
     } else {
       onBuildingEnter(route);
     }
   };
 
-  // Handle Escape key and Y button to close popups
-  useDialogClose(showProfilePopup, () => setShowProfilePopup(false));
-  useDialogClose(showWhitepaperPopup, () => setShowWhitepaperPopup(false));
+  // Handle Escape key to close popups (desktop only)
+  useEffect(() => {
+    if (isMobile) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (showProfilePopup) {
+          setShowProfilePopup(false);
+        }
+      }
+    };
+
+    if (showProfilePopup) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [showProfilePopup, isMobile]);
+
 
   return (
     <div className="relative w-full h-full">
@@ -226,27 +237,21 @@ export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => 
         initialPlayerX={(MAP_WIDTH / 2) * 40}
         initialPlayerY={(MAP_HEIGHT / 2) * 40}
         onCloseDialog={() => {
-          setShowProfilePopup(false);
-          setShowWhitepaperPopup(false);
+          if (showProfilePopup) {
+            setShowProfilePopup(false);
+          }
         }}
-        canCloseDialog={showProfilePopup || showWhitepaperPopup}
+        canCloseDialog={showProfilePopup}
       />
 
       {/* Profile Popup */}
       {showProfilePopup && (
         <>
-          <EscapeButton onClose={() => setShowProfilePopup(false)} />
           <div className="absolute inset-0 bg-transparent z-40 flex items-center justify-center p-4 pointer-events-none">
           <div className="pointer-events-auto">
           <div className="bg-gray-900 border-4 border-pink-500 max-w-2xl w-full max-h-[60vh] md:max-h-[90vh] overflow-y-auto flex flex-col mb-20 md:mb-0">
             <div className="flex justify-between items-center p-4 border-b border-pink-500">
               <h2 className="text-2xl text-pink-400 font-bold">YOUR PROFILE</h2>
-              <button
-                onClick={() => setShowProfilePopup(false)}
-                className="text-white hover:text-red-400 text-xl"
-              >
-                ✕
-              </button>
             </div>
 
             <div className="flex-1 p-6 space-y-6">
@@ -346,26 +351,14 @@ export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => 
               )}
             </div>
 
-            {!isMobile && (
-              <div className="p-4 border-t border-pink-500 text-center">
-                <p className="text-gray-500 text-sm">Press ESC to close</p>
-              </div>
-            )}
           </div>
           </div>
           </div>
         </>
       )}
 
-      {/* Whitepaper Popup */}
-      {showWhitepaperPopup && (
-        <>
-          {/* Backdrop - Desktop only */}
-          {!isMobile && <div className="fixed inset-0 bg-black/50 z-30" />}
-          <EscapeButton onClose={() => setShowWhitepaperPopup(false)} />
-          <div className={`absolute inset-0 bg-transparent z-40 flex items-center justify-center pointer-events-none ${
-            isMobile ? 'p-0' : 'p-2 md:p-4'
-          }`}>
+      {/* Whitepaper popup removed - now navigates to /whitepaper page */}
+      {/* 
             <div className="pointer-events-auto">
               <div className={`bg-gray-900 ${
                 isMobile 
@@ -374,12 +367,6 @@ export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => 
               } flex flex-col overflow-hidden`}>
                 <div className="flex justify-between items-center p-2 md:p-4 border-b border-yellow-500">
                   <h2 className="text-lg md:text-2xl text-yellow-400 font-bold">WHITEPAPER</h2>
-                  <button
-                    onClick={() => setShowWhitepaperPopup(false)}
-                    className="text-white hover:text-red-400 text-xl"
-                  >
-                    ✕
-                  </button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 md:p-6">
                   <div className="prose prose-invert max-w-none">
@@ -704,16 +691,12 @@ export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => 
                     </div>
                   </div>
                 </div>
-                {!isMobile && (
-                  <div className="p-2 md:p-4 border-t border-yellow-500 text-center">
-                    <p className="text-gray-500 text-xs md:text-sm">Press ESC to close</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
         </>
       )}
+      */}
     </div>
   );
 };

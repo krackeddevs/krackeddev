@@ -2,12 +2,10 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
-import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_BLOG, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { addGroundVariety, addTrees, connectBuildingsWithRoads } from '@/lib/game/mapHelpers';
 import { BuildingConfig } from '@/lib/game/types';
 import { posts } from '@/lib/blog';
-import { useDialogClose } from './useDialogClose';
 
 interface BlogSceneProps {
   onBack: () => void;
@@ -154,11 +152,21 @@ export const BlogScene: React.FC<BlogSceneProps> = ({ onBack }) => {
     }
   };
 
-  // Handle Escape key and Y button to close popup
-  useDialogClose(showPostPopup, () => {
-    setShowPostPopup(false);
-    setSelectedPost(null);
-  });
+  // Handle Escape key to close popup (desktop only)
+  useEffect(() => {
+    if (!showPostPopup || isMobile) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowPostPopup(false);
+        setSelectedPost(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showPostPopup, isMobile]);
 
   return (
     <div className="relative w-full h-screen">
@@ -180,7 +188,6 @@ export const BlogScene: React.FC<BlogSceneProps> = ({ onBack }) => {
         <>
           {/* Backdrop - Desktop only */}
           {!isMobile && <div className="fixed inset-0 bg-black/50 z-30" />}
-          <EscapeButton onClose={() => { setShowPostPopup(false); setSelectedPost(null); }} />
           <div className={`absolute inset-0 bg-transparent z-40 flex items-center justify-center pointer-events-none ${
             isMobile ? 'p-0' : 'p-2 md:p-4'
           }`}>
@@ -201,15 +208,6 @@ export const BlogScene: React.FC<BlogSceneProps> = ({ onBack }) => {
                       })}
                     </p>
                   </div>
-                  <button
-                    onClick={() => {
-                      setShowPostPopup(false);
-                      setSelectedPost(null);
-                    }}
-                    className="text-white hover:text-red-400 text-xl"
-                  >
-                    ✕
-                  </button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 md:p-6">
                   <div className="prose prose-invert max-w-none">
@@ -266,11 +264,6 @@ export const BlogScene: React.FC<BlogSceneProps> = ({ onBack }) => {
                     )}
                   </div>
                 </div>
-                {!isMobile && (
-                  <div className="p-2 md:p-4 border-t border-purple-500 text-center">
-                    <p className="text-gray-500 text-xs md:text-sm">Press ESC to close</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
