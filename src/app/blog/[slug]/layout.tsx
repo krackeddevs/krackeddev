@@ -9,8 +9,8 @@ export async function generateStaticParams() {
 
 export default function BlogPostLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  return children;
+}>) {
+  return <>{children}</>;
 }

@@ -15,8 +15,8 @@ export async function generateStaticParams() {
 
 export default function JobDetailLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  return children;
+}>) {
+  return <>{children}</>;
 }
