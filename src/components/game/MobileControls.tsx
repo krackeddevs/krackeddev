@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from 'react';
-import { DPad } from './DPad';
+import { Joystick } from './Joystick';
 
 interface MobileControlsProps {
   onDirectionChange: (dir: string | null) => void;
@@ -43,13 +43,13 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
     }`;
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-30 flex items-end justify-between px-4 pointer-events-none">
-      {/* D-Pad on the left */}
-      <div className="pointer-events-auto bg-black/50 backdrop-blur-sm p-2 rounded-lg">
-        <DPad onDirectionChange={onDirectionChange} />
+    <div className="relative z-30 flex items-center justify-center gap-8 pointer-events-none">
+      {/* Joystick */}
+      <div className="pointer-events-auto">
+        <Joystick onDirectionChange={onDirectionChange} />
       </div>
 
-      {/* Action buttons on the right */}
+      {/* Action buttons */}
       <div className="flex flex-col gap-2 pointer-events-auto">
         <button
           onClick={handleInteract}
