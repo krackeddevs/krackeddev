@@ -46,7 +46,6 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [nearBuilding, setNearBuilding] = useState<BuildingConfig | null>(null);
-  const [showDialog, setShowDialog] = useState(false);
   const hasNavigatedRef = useRef(false);
 
   // Player state
@@ -103,16 +102,9 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
         e.preventDefault();
         dir = "right";
       } else if (key === "e" || key === " ") {
-        // E or Space to interact
+        // E or Space to enter building directly
         e.preventDefault();
         if (nearBuilding) {
-          playClickSound();
-          setShowDialog(true);
-        }
-      } else if (e.key === "Enter") {
-        // Enter to navigate
-        e.preventDefault();
-        if (nearBuilding && showDialog) {
           playClickSound();
           onBuildingEnter(nearBuilding.route);
         }
@@ -143,7 +135,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [handleDirectionInput, nearBuilding, showDialog, onBuildingEnter]);
+  }, [handleDirectionInput, nearBuilding, onBuildingEnter]);
 
   // Game loop
   useEffect(() => {
@@ -219,9 +211,6 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
 
       if (foundBuilding !== nearBuilding) {
         setNearBuilding(foundBuilding);
-        if (!foundBuilding) {
-          setShowDialog(false);
-        }
       }
 
       // Render
@@ -306,23 +295,11 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
             }}
           />
 
-          {/* Dialog Box - overlay on top of tile section */}
-          {showDialog && nearBuilding && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-black/90 border-4 border-white p-4 max-w-md w-[90%]">
-              <div className="text-center">
-                <p className="text-yellow-400 mb-2 text-sm">{nearBuilding.label}</p>
-                <p className="text-white text-xs mb-2">{nearBuilding.description}</p>
-                {!isMobile && <p className="text-green-400 text-xs">Press ENTER to enter</p>}
-                {isMobile && <p className="text-green-400 text-xs">Tap ENTER button below</p>}
-              </div>
-            </div>
-          )}
-
           {/* Interaction Hint - overlay on top of tile section */}
-          {nearBuilding && !showDialog && (
+          {nearBuilding && (
             <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-black/70 border-2 border-yellow-400 p-2">
               <p className="text-yellow-400 text-xs text-center">
-                {isMobile ? 'Tap E button below' : 'Press E or SPACE to speak'}
+                {isMobile ? 'Tap E button to enter' : 'Press E or SPACE to enter'}
               </p>
             </div>
           )}
@@ -337,17 +314,10 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
             onInteract={() => {
               if (nearBuilding) {
                 playClickSound();
-                setShowDialog(true);
-              }
-            }}
-            onConfirm={() => {
-              if (nearBuilding && showDialog) {
-                playClickSound();
                 onBuildingEnter(nearBuilding.route);
               }
             }}
-            canInteract={!!nearBuilding && !showDialog}
-            canConfirm={!!nearBuilding && showDialog}
+            canInteract={!!nearBuilding}
           />
         </div>
       )}
