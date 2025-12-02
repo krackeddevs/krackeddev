@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 // Required for static export with dynamic routes
 export async function generateStaticParams() {
   // Generate static params for all quest IDs
@@ -18,7 +16,7 @@ export async function generateStaticParams() {
 export default function JobDetailLayout({
   children,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
 }) {
   return children;
 }
