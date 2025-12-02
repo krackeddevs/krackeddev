@@ -14,3 +14,9 @@ export default function BlogPostLayout({
 }>) {
   return <>{children}</>;
 }
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
+}
+

@@ -20,3 +20,9 @@ export default function JobDetailLayout({
 }>) {
   return <>{children}</>;
 }
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
+}
+
