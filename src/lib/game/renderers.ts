@@ -1,4 +1,4 @@
-import { TILE_SIZE, TILE_EMPTY, TILE_WALL, TILE_JOBS, TILE_BLOG, TILE_HACKATHON, TILE_CODE, TILE_PROFILE, TILE_WHITEPAPER, TILE_BACK_TO_TOWN } from './constants';
+import { TILE_SIZE, TILE_EMPTY, TILE_WALL, TILE_JOBS, TILE_BLOG, TILE_HACKATHON, TILE_CODE, TILE_PROFILE, TILE_WHITEPAPER, TILE_BACK_TO_TOWN, TILE_TREE, TILE_GRAVEL, TILE_PAVEMENT } from './constants';
 import { spriteCache, getCharacterSpritePath } from './sprites';
 
 // Tile renderer
@@ -201,6 +201,73 @@ export function renderTile(
       ctx.fillText("BACK", backTextX, backTextY1);
       ctx.fillText("TOWN", backTextX, backTextY2);
       break;
+
+    case TILE_TREE:
+      // Tree - draw grass base first, then tree on top
+      ctx.fillStyle = "#22c55e"; // green-500 grass base
+      ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+      ctx.strokeStyle = "#16a34a"; // green-600
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
+      // Tree trunk (brown)
+      ctx.fillStyle = "#78350f"; // brown-800
+      ctx.fillRect(px + TILE_SIZE / 2 - 3, py + TILE_SIZE - 12, 6, 12);
+      // Tree leaves (green circle)
+      ctx.fillStyle = "#166534"; // green-800
+      ctx.beginPath();
+      ctx.arc(px + TILE_SIZE / 2, py + TILE_SIZE - 12, 12, 0, Math.PI * 2);
+      ctx.fill();
+      // Tree leaves highlight
+      ctx.fillStyle = "#15803d"; // green-700
+      ctx.beginPath();
+      ctx.arc(px + TILE_SIZE / 2 - 3, py + TILE_SIZE - 15, 8, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+
+    case TILE_GRAVEL:
+      // Gravel path - gray/brown rocky texture
+      ctx.fillStyle = "#78716c"; // stone-600
+      ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+      ctx.strokeStyle = "#57534e"; // stone-700
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
+      // Gravel texture - random small stones
+      ctx.fillStyle = "#a8a29e"; // stone-400
+      ctx.fillRect(px + 3, py + 3, 4, 4);
+      ctx.fillRect(px + 12, py + 8, 3, 3);
+      ctx.fillRect(px + 22, py + 5, 4, 4);
+      ctx.fillRect(px + 8, py + 15, 3, 3);
+      ctx.fillRect(px + 18, py + 18, 4, 4);
+      ctx.fillRect(px + 28, py + 12, 3, 3);
+      // Darker stones
+      ctx.fillStyle = "#57534e"; // stone-700
+      ctx.fillRect(px + 6, py + 10, 2, 2);
+      ctx.fillRect(px + 15, py + 3, 2, 2);
+      ctx.fillRect(px + 25, py + 15, 2, 2);
+      ctx.fillRect(px + 10, py + 20, 2, 2);
+      break;
+
+    case TILE_PAVEMENT:
+      // Pavement - light gray concrete
+      ctx.fillStyle = "#d1d5db"; // gray-300
+      ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+      ctx.strokeStyle = "#9ca3af"; // gray-400
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
+      // Pavement lines/seams
+      ctx.strokeStyle = "#9ca3af"; // gray-400
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(px + TILE_SIZE / 2, py);
+      ctx.lineTo(px + TILE_SIZE / 2, py + TILE_SIZE);
+      ctx.moveTo(px, py + TILE_SIZE / 2);
+      ctx.lineTo(px + TILE_SIZE, py + TILE_SIZE / 2);
+      ctx.stroke();
+      // Pavement texture - subtle highlights
+      ctx.fillStyle = "#e5e7eb"; // gray-200
+      ctx.fillRect(px + 2, py + 2, TILE_SIZE / 2 - 4, TILE_SIZE / 2 - 4);
+      ctx.fillRect(px + TILE_SIZE / 2 + 2, py + TILE_SIZE / 2 + 2, TILE_SIZE / 2 - 4, TILE_SIZE / 2 - 4);
+      break;
   }
 }
 
@@ -322,6 +389,121 @@ function renderPlayerFallback(
   ctx.fillStyle = "#1e40af"; // blue-800
   ctx.fillRect(-5, 6 - bounce + legOffset, 4, 6);
   ctx.fillRect(1, 6 - bounce - legOffset, 4, 6);
+
+  ctx.restore();
+}
+
+// Cat renderer - simple pixel art cat that follows the player
+export function renderCat(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  direction: number,
+  frame: number
+) {
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Walking animation bounce
+  const bounce = Math.abs(Math.sin(frame * 0.3)) * 1.5;
+
+  // Shadow
+  ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+  ctx.beginPath();
+  ctx.ellipse(0, 10, 6, 2, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Cat body (smaller than player)
+  ctx.fillStyle = "#f97316"; // orange-500 (cat body)
+  ctx.fillRect(-4, -1 - bounce, 8, 6);
+
+  // Cat head
+  ctx.fillStyle = "#f97316";
+  ctx.beginPath();
+  ctx.arc(0, -6 - bounce, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Cat ears
+  ctx.fillStyle = "#ea580c"; // orange-600
+  ctx.beginPath();
+  ctx.moveTo(-3, -10 - bounce);
+  ctx.lineTo(-1, -8 - bounce);
+  ctx.lineTo(-2, -6 - bounce);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(3, -10 - bounce);
+  ctx.lineTo(1, -8 - bounce);
+  ctx.lineTo(2, -6 - bounce);
+  ctx.fill();
+
+  // Cat face based on direction
+  if (direction === 0) {
+    // Down - facing camera
+    ctx.fillStyle = "#fef3c7"; // yellow-100 (inner ear)
+    ctx.beginPath();
+    ctx.arc(-2, -8 - bounce, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(2, -8 - bounce, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+    // Eyes
+    ctx.fillStyle = "#000";
+    ctx.fillRect(-2, -7 - bounce, 1.5, 1.5);
+    ctx.fillRect(0.5, -7 - bounce, 1.5, 1.5);
+    // Nose
+    ctx.fillStyle = "#fbbf24"; // yellow-400
+    ctx.beginPath();
+    ctx.moveTo(0, -5 - bounce);
+    ctx.lineTo(-1, -4 - bounce);
+    ctx.lineTo(1, -4 - bounce);
+    ctx.fill();
+    // Mouth
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(0, -4 - bounce);
+    ctx.lineTo(-1, -3 - bounce);
+    ctx.moveTo(0, -4 - bounce);
+    ctx.lineTo(1, -3 - bounce);
+    ctx.stroke();
+  } else if (direction === 1) {
+    // Up - back of head
+    ctx.fillStyle = "#ea580c";
+    ctx.beginPath();
+    ctx.arc(0, -6 - bounce, 5, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (direction === 2) {
+    // Left - profile
+    ctx.fillStyle = "#fef3c7";
+    ctx.beginPath();
+    ctx.arc(-1, -6 - bounce, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#000";
+    ctx.fillRect(-2, -7 - bounce, 1.5, 1.5);
+  } else {
+    // Right - profile
+    ctx.fillStyle = "#fef3c7";
+    ctx.beginPath();
+    ctx.arc(1, -6 - bounce, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0.5, -7 - bounce, 1.5, 1.5);
+  }
+
+  // Cat tail (wagging animation)
+  const tailWag = Math.sin(frame * 0.4) * 0.5;
+  ctx.strokeStyle = "#f97316";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(4, 2 - bounce);
+  ctx.quadraticCurveTo(6 + tailWag, 0 - bounce, 8 + tailWag * 2, -2 - bounce);
+  ctx.stroke();
+
+  // Legs with walking animation
+  const legOffset = Math.sin(frame * 0.4) * 1.5;
+  ctx.fillStyle = "#ea580c"; // orange-600
+  ctx.fillRect(-3, 4 - bounce + legOffset, 2, 4);
+  ctx.fillRect(1, 4 - bounce - legOffset, 2, 4);
 
   ctx.restore();
 }

@@ -3,6 +3,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { NewJobsScene } from '@/components/game/NewJobsScene';
+import { MusicPlayer } from '@/components/game/MusicPlayer';
+import { SoundToggle } from '@/components/game/SoundToggle';
 import '../jobs/jobs.css';
 
 export default function NewJobsPage() {
@@ -14,9 +16,13 @@ export default function NewJobsPage() {
 
   return (
     <main className="min-h-screen w-full bg-gray-900 relative">
+      <MusicPlayer startPlaying={true} />
+      <SoundToggle />
       <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
       <NewJobsScene onBack={handleBack} />
     </main>
   );
 }
+
+
 

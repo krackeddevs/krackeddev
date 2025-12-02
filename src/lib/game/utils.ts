@@ -1,4 +1,4 @@
-import { TILE_SIZE, TILE_WALL, MAP_WIDTH, MAP_HEIGHT } from './constants';
+import { TILE_SIZE, TILE_WALL, TILE_TREE, MAP_WIDTH, MAP_HEIGHT } from './constants';
 
 // Check if position is walkable
 export function isWalkable(
@@ -28,8 +28,8 @@ export function isWalkable(
     }
 
     const tile = map[tileY]?.[tileX];
-    // Only block walls, allow all other tiles
-    if (tile === TILE_WALL) {
+    // Block walls and trees, allow all other tiles
+    if (tile === TILE_WALL || tile === TILE_TREE) {
       return false;
     }
   }

@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
 import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_JOBS, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
+import { addGroundVariety, addTrees, connectBuildingsWithRoads } from '@/lib/game/mapHelpers';
 import { BuildingConfig } from '@/lib/game/types';
 import { generateQuests, type Quest } from '@/lib/jobs';
 
@@ -49,6 +50,25 @@ export const NewJobsScene: React.FC<NewJobsSceneProps> = ({ onBack }) => {
     newMap[MAP_HEIGHT - 2][2] = TILE_BACK_TO_TOWN;
     newMap[MAP_HEIGHT - 3][1] = TILE_BACK_TO_TOWN;
     newMap[MAP_HEIGHT - 3][2] = TILE_BACK_TO_TOWN;
+
+    // Connect buildings with roads
+    const jobsCenterX = Math.floor(MAP_WIDTH / 2);
+    const jobsCenterY = Math.floor(MAP_HEIGHT / 2);
+    connectBuildingsWithRoads(newMap, [
+      [{ x: jobsCenterX - 1, y: jobsCenterY - 1 }, { x: jobsCenterX, y: jobsCenterY - 1 },
+       { x: jobsCenterX - 1, y: jobsCenterY }, { x: jobsCenterX, y: jobsCenterY }],
+      [{ x: 1, y: MAP_HEIGHT - 2 }, { x: 2, y: MAP_HEIGHT - 2 },
+       { x: 1, y: MAP_HEIGHT - 3 }, { x: 2, y: MAP_HEIGHT - 3 }]
+    ]);
+
+    // Add ground variety and trees
+    addGroundVariety(newMap);
+    addTrees(newMap, [
+      { x: jobsCenterX - 1, y: jobsCenterY - 1 }, { x: jobsCenterX, y: jobsCenterY - 1 },
+      { x: jobsCenterX - 1, y: jobsCenterY }, { x: jobsCenterX, y: jobsCenterY },
+      { x: 1, y: MAP_HEIGHT - 2 }, { x: 2, y: MAP_HEIGHT - 2 },
+      { x: 1, y: MAP_HEIGHT - 3 }, { x: 2, y: MAP_HEIGHT - 3 }
+    ]);
 
     return newMap;
   }, []);

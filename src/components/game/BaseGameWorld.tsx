@@ -2,11 +2,31 @@
 
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { TILE_SIZE, MAP_WIDTH, MAP_HEIGHT, PLAYER_SPEED, TILE_EMPTY, TILE_WALL } from '@/lib/game/constants';
-import { renderTile, renderPlayer } from '@/lib/game/renderers';
+import { renderTile, renderPlayer, renderCat } from '@/lib/game/renderers';
 import { isWalkable, isNearBuilding, isOnBuildingTile } from '@/lib/game/utils';
 import { BuildingConfig } from '@/lib/game/types';
 import { MobileControls } from './MobileControls';
 import { preloadCharacterSprites } from '@/lib/game/sprites';
+
+// Create a single shared Audio instance for click sound (only in browser)
+let clickSound: HTMLAudioElement | null = null;
+if (typeof Audio !== "undefined") {
+    clickSound = new Audio("/audio/click.mp3");
+    clickSound.volume = 0.6;
+}
+
+const playClickSound = () => {
+    if (clickSound) {
+        try {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {
+                // ignore autoplay / user gesture issues
+            });
+        } catch {
+            // fail silently
+        }
+    }
+};
 
 interface BaseGameWorldProps {
   map: number[][];
@@ -26,7 +46,6 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [nearBuilding, setNearBuilding] = useState<BuildingConfig | null>(null);
-  const [showDialog, setShowDialog] = useState(false);
   const hasNavigatedRef = useRef(false);
 
   // Player state
@@ -36,6 +55,16 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
     direction: 0, // 0=down, 1=up, 2=left, 3=right
     frame: 0,
     isMoving: false,
+  });
+
+  // Cat state - follows the player
+  const catRef = useRef({
+    x: initialPlayerX,
+    y: initialPlayerY + TILE_SIZE, // Start behind player
+    direction: 0,
+    frame: 0,
+    targetX: initialPlayerX,
+    targetY: initialPlayerY + TILE_SIZE,
   });
 
   // Input state
@@ -83,15 +112,10 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
         e.preventDefault();
         dir = "right";
       } else if (key === "e" || key === " ") {
-        // E or Space to interact
+        // E or Space to enter building directly
         e.preventDefault();
         if (nearBuilding) {
-          setShowDialog(true);
-        }
-      } else if (e.key === "Enter") {
-        // Enter to navigate
-        e.preventDefault();
-        if (nearBuilding && showDialog) {
+          playClickSound();
           onBuildingEnter(nearBuilding.route);
         }
       }
@@ -121,7 +145,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [handleDirectionInput, nearBuilding, showDialog, onBuildingEnter]);
+  }, [handleDirectionInput, nearBuilding, onBuildingEnter]);
 
   // Game loop
   useEffect(() => {
@@ -197,9 +221,6 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
 
       if (foundBuilding !== nearBuilding) {
         setNearBuilding(foundBuilding);
-        if (!foundBuilding) {
-          setShowDialog(false);
-        }
       }
 
       // Render
@@ -253,6 +274,50 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
         }
       }
 
+      // Update cat to follow player
+      const cat = catRef.current;
+      const CAT_FOLLOW_SPEED = PLAYER_SPEED * 0.7; // Cat moves slightly slower
+      const FOLLOW_DISTANCE = TILE_SIZE * 0.8; // Distance behind player
+      
+      // Calculate target position (behind player based on direction)
+      const catDirVectors = [
+        { dx: 0, dy: FOLLOW_DISTANCE }, // down - cat follows behind
+        { dx: 0, dy: -FOLLOW_DISTANCE }, // up - cat follows behind
+        { dx: FOLLOW_DISTANCE, dy: 0 }, // left - cat follows behind
+        { dx: -FOLLOW_DISTANCE, dy: 0 }, // right - cat follows behind
+      ];
+      
+      const vec = catDirVectors[player.direction];
+      cat.targetX = player.x + vec.dx;
+      cat.targetY = player.y + vec.dy;
+      
+      // Smoothly move cat towards target
+      const dx = cat.targetX - cat.x;
+      const dy = cat.targetY - cat.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance > 2) {
+        // Move cat towards target
+        const moveX = (dx / distance) * CAT_FOLLOW_SPEED;
+        const moveY = (dy / distance) * CAT_FOLLOW_SPEED;
+        const newCatX = cat.x + moveX;
+        const newCatY = cat.y + moveY;
+        
+        // Check if cat can move there (same walkability as player)
+        if (isWalkable(newCatX, newCatY, map, 8)) {
+          cat.x = newCatX;
+          cat.y = newCatY;
+          cat.frame++;
+          
+          // Update cat direction based on movement
+          if (Math.abs(dx) > Math.abs(dy)) {
+            cat.direction = dx > 0 ? 3 : 2; // right or left
+          } else {
+            cat.direction = dy > 0 ? 0 : 1; // down or up
+          }
+        }
+      }
+
       // Render player
       renderPlayer(
         ctx,
@@ -260,6 +325,15 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
         player.y,
         player.direction,
         player.isMoving ? player.frame : 0
+      );
+
+      // Render cat
+      renderCat(
+        ctx,
+        cat.x,
+        cat.y,
+        cat.direction,
+        cat.frame
       );
 
       animationId = requestAnimationFrame(gameLoop);
@@ -270,58 +344,45 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   }, [map, buildings, nearBuilding]);
 
   return (
-    <div className="w-full bg-gray-900 text-white jobs-container relative overflow-hidden flex items-center justify-center pt-20 pb-8 px-2 md:px-4">
-      {/* Canvas Container */}
-      <div className="w-full max-w-5xl border-4 border-gray-700 mx-auto" style={{ aspectRatio: `${MAP_WIDTH}/${MAP_HEIGHT}` }}>
-        <canvas
-          ref={canvasRef}
-          width={MAP_WIDTH * TILE_SIZE}
-          height={MAP_HEIGHT * TILE_SIZE}
-          className="block w-full h-full"
-          style={{ 
-            imageRendering: "pixelated"
-          }}
-        />
+    <div className="w-full bg-gray-900 text-white jobs-container relative overflow-hidden flex flex-col items-center justify-center pt-20 pb-8 px-2 md:px-4">
+      {/* Canvas Container with relative positioning for dialogs */}
+      <div className="relative w-full max-w-5xl mx-auto">
+        <div className="relative w-full border-4 border-gray-700" style={{ aspectRatio: `${MAP_WIDTH}/${MAP_HEIGHT}` }}>
+          <canvas
+            ref={canvasRef}
+            width={MAP_WIDTH * TILE_SIZE}
+            height={MAP_HEIGHT * TILE_SIZE}
+            className="block w-full h-full"
+            style={{ 
+              imageRendering: "pixelated"
+            }}
+          />
+
+          {/* Interaction Hint - overlay on top of tile section */}
+          {nearBuilding && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-black/70 border-2 border-yellow-400 p-2">
+              <p className="text-yellow-400 text-xs text-center">
+                {isMobile ? 'Tap E button to enter' : 'Press E or SPACE to enter'}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Dialog Box */}
-      {showDialog && nearBuilding && (
-        <div className={`absolute ${isMobile ? 'bottom-32' : 'bottom-20'} left-1/2 -translate-x-1/2 z-20 bg-black/90 border-4 border-white p-4 max-w-md`}>
-          <div className="text-center">
-            <p className="text-yellow-400 mb-2 text-sm">{nearBuilding.label}</p>
-            <p className="text-white text-xs mb-2">{nearBuilding.description}</p>
-            {!isMobile && <p className="text-green-400 text-xs">Press ENTER to enter</p>}
-            {isMobile && <p className="text-green-400 text-xs">Tap ENTER button below</p>}
-          </div>
-        </div>
-      )}
-
-      {/* Interaction Hint */}
-      {nearBuilding && !showDialog && (
-        <div className={`absolute ${isMobile ? 'bottom-32' : 'bottom-20'} left-1/2 -translate-x-1/2 z-20 bg-black/70 border-2 border-yellow-400 p-2`}>
-          <p className="text-yellow-400 text-xs text-center">
-            {isMobile ? 'Tap E button below' : 'Press E or SPACE to speak'}
-          </p>
-        </div>
-      )}
-
-      {/* Mobile Controls */}
+      {/* Mobile Controls - Centered below tile section */}
       {isMobile && (
-        <MobileControls
-          onDirectionChange={handleDirectionInput}
-          onInteract={() => {
-            if (nearBuilding) {
-              setShowDialog(true);
-            }
-          }}
-          onConfirm={() => {
-            if (nearBuilding && showDialog) {
-              onBuildingEnter(nearBuilding.route);
-            }
-          }}
-          canInteract={!!nearBuilding && !showDialog}
-          canConfirm={!!nearBuilding && showDialog}
-        />
+        <div className="w-full max-w-5xl mt-6 flex items-center justify-center gap-8">
+          <MobileControls
+            onDirectionChange={handleDirectionInput}
+            onInteract={() => {
+              if (nearBuilding) {
+                playClickSound();
+                onBuildingEnter(nearBuilding.route);
+              }
+            }}
+            canInteract={!!nearBuilding}
+          />
+        </div>
       )}
     </div>
   );

@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import SplitTextAnimation from "./components/SplitTextAnimation";
 import { LandingTown } from "@/components/game/LandingTown";
+import { MusicPlayer } from "@/components/game/MusicPlayer";
+import { SoundToggle } from "@/components/game/SoundToggle";
 import "./jobs/jobs.css";
 
 export default function Home() {
   const router = useRouter();
   const [showAnimation, setShowAnimation] = useState(true);
+  const [shouldStartMusic, setShouldStartMusic] = useState(false);
+  const musicControlsRef = useRef<{ play: () => void; pause: () => void; setVolume: (vol: number) => void } | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -17,6 +21,8 @@ export default function Home() {
       if (skipAnimation) {
         setShowAnimation(false);
         sessionStorage.removeItem('skipWelcomeAnimation');
+        // Start music immediately if animation is skipped
+        setShouldStartMusic(true);
         return;
       }
 
@@ -32,6 +38,8 @@ export default function Home() {
         // If less than 12 hours have passed, skip animation
         if (timeSinceLastWelcome < TWELVE_HOURS_MS) {
           setShowAnimation(false);
+          // Start music immediately if animation is skipped
+          setShouldStartMusic(true);
           return;
         }
       }
@@ -48,6 +56,11 @@ export default function Home() {
       localStorage.setItem(LAST_WELCOME_KEY, Date.now().toString());
     }
     setShowAnimation(false);
+    // Start music after animation completes
+    setShouldStartMusic(true);
+    if (musicControlsRef.current) {
+      musicControlsRef.current.play();
+    }
   };
 
   const handleBuildingEnter = (route: string) => {
@@ -62,6 +75,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-full bg-gray-900 relative">
+      <MusicPlayer startPlaying={shouldStartMusic} onReady={(controls) => { musicControlsRef.current = controls; }} />
+      <SoundToggle />
       {/* CRT Scanline Overlay */}
       {!showAnimation && (
         <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>

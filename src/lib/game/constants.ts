@@ -14,4 +14,7 @@ export const TILE_CODE = 5;
 export const TILE_PROFILE = 6;
 export const TILE_WHITEPAPER = 7;
 export const TILE_BACK_TO_TOWN = 8;
+export const TILE_TREE = 9;
+export const TILE_GRAVEL = 10;
+export const TILE_PAVEMENT = 11;
 
