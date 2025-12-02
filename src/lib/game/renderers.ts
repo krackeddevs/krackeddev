@@ -1,4 +1,4 @@
-import { TILE_SIZE, TILE_EMPTY, TILE_WALL, TILE_JOBS, TILE_BLOG, TILE_HACKATHON, TILE_CODE, TILE_PROFILE, TILE_WHITEPAPER, TILE_BACK_TO_TOWN, TILE_TREE, TILE_GRAVEL, TILE_PAVEMENT, TILE_X } from './constants';
+import { TILE_SIZE, TILE_EMPTY, TILE_WALL, TILE_JOBS, TILE_BLOG, TILE_HACKATHON, TILE_CODE, TILE_PROFILE, TILE_WHITEPAPER, TILE_BACK_TO_TOWN, TILE_SYSTEM, TILE_LEVELS, TILE_TREE, TILE_GRAVEL, TILE_PAVEMENT, TILE_X } from './constants';
 import { spriteCache, getCharacterSpritePath, getChickenSpritePath, getCowSpritePath } from './sprites';
 
 // Tile renderer
@@ -200,6 +200,48 @@ export function renderTile(
       ctx.fillStyle = "#ffffff";
       ctx.fillText("BACK", backTextX, backTextY1);
       ctx.fillText("TOWN", backTextX, backTextY2);
+      break;
+
+    case TILE_SYSTEM:
+      // System - purple building with label
+      ctx.fillStyle = "#22c55e"; // green ground
+      ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+      ctx.fillStyle = "#a855f7"; // purple-500
+      ctx.fillRect(px + 2, py + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+      ctx.fillStyle = "#9333ea"; // purple-600
+      ctx.fillRect(px + 4, py + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+      // Draw text label (smaller font)
+      const systemTextX = px + TILE_SIZE / 2;
+      const systemTextY = py + TILE_SIZE / 2;
+      ctx.font = "bold 6px 'Press Start 2P', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 2;
+      ctx.strokeText("SYSTEM", systemTextX, systemTextY);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText("SYSTEM", systemTextX, systemTextY);
+      break;
+
+    case TILE_LEVELS:
+      // Levels - blue building with label
+      ctx.fillStyle = "#22c55e"; // green ground
+      ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+      ctx.fillStyle = "#3b82f6"; // blue-500
+      ctx.fillRect(px + 2, py + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+      ctx.fillStyle = "#2563eb"; // blue-600
+      ctx.fillRect(px + 4, py + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+      // Draw text label (smaller font)
+      const levelsTextX = px + TILE_SIZE / 2;
+      const levelsTextY = py + TILE_SIZE / 2;
+      ctx.font = "bold 6px 'Press Start 2P', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 2;
+      ctx.strokeText("LEVELS", levelsTextX, levelsTextY);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText("LEVELS", levelsTextX, levelsTextY);
       break;
 
     case TILE_TREE:
