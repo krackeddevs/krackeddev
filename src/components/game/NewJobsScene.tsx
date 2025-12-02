@@ -2,12 +2,11 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
-import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_JOBS, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { addGroundVariety, addTrees, connectBuildingsWithRoads } from '@/lib/game/mapHelpers';
 import { BuildingConfig } from '@/lib/game/types';
 import { generateQuests, type Quest } from '@/lib/jobs';
-import { useDialogClose } from './useDialogClose';
+import { EscapeButton } from './EscapeButton';
 
 interface NewJobsSceneProps {
   onBack: () => void;
@@ -129,8 +128,20 @@ export const NewJobsScene: React.FC<NewJobsSceneProps> = ({ onBack }) => {
     }
   };
 
-  // Handle Escape key and Y button to close popup
-  useDialogClose(showJobScreen, () => setShowJobScreen(false));
+  // Handle Escape key to close popup (desktop only)
+  useEffect(() => {
+    if (!showJobScreen || isMobile) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowJobScreen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showJobScreen, isMobile]);
 
   return (
     <div className="relative w-full h-screen">
@@ -155,14 +166,6 @@ export const NewJobsScene: React.FC<NewJobsSceneProps> = ({ onBack }) => {
           <div className="bg-gray-900 border-4 border-blue-500 max-w-4xl w-full max-h-[60vh] md:max-h-[80vh] overflow-y-auto p-6 mb-20 md:mb-0">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl text-blue-400 font-bold">TECH JOBS</h2>
-              <button
-                onClick={() => {
-                  setShowJobScreen(false);
-                }}
-                className="text-white hover:text-red-400 text-xl"
-              >
-                ✕
-              </button>
             </div>
 
             <div className="space-y-2">

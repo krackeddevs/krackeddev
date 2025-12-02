@@ -2,11 +2,9 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
-import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_PROFILE, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { addGroundVariety, addTrees, connectBuildingsWithRoads } from '@/lib/game/mapHelpers';
 import { BuildingConfig } from '@/lib/game/types';
-import { useDialogClose } from './useDialogClose';
 
 interface MembersSceneProps {
   onBack: () => void;
@@ -150,9 +148,27 @@ export const MembersScene: React.FC<MembersSceneProps> = ({ onBack }) => {
     }
   };
 
-  // Handle Escape key and Y button to close popups
-  useDialogClose(showFoundingMembersPopup, () => setShowFoundingMembersPopup(false));
-  useDialogClose(showMembersPopup, () => setShowMembersPopup(false));
+  // Handle Escape key to close popups (desktop only)
+  useEffect(() => {
+    if (isMobile) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (showFoundingMembersPopup) {
+          setShowFoundingMembersPopup(false);
+        }
+        if (showMembersPopup) {
+          setShowMembersPopup(false);
+        }
+      }
+    };
+
+    if (showFoundingMembersPopup || showMembersPopup) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [showFoundingMembersPopup, showMembersPopup, isMobile]);
 
   return (
     <div className="relative w-full h-screen">
@@ -176,18 +192,11 @@ export const MembersScene: React.FC<MembersSceneProps> = ({ onBack }) => {
       {/* Founding Members Popup */}
       {showFoundingMembersPopup && (
         <>
-          <EscapeButton onClose={() => setShowFoundingMembersPopup(false)} />
           <div className="absolute inset-0 bg-transparent z-40 flex items-center justify-center p-4 pointer-events-none">
           <div className="pointer-events-auto">
             <div className="bg-gray-900 border-4 border-black max-w-md w-full max-h-[60vh] md:max-h-none flex flex-col mb-20 md:mb-0 overflow-y-auto">
               <div className="flex justify-between items-center p-4 border-b border-black">
                 <h2 className="text-2xl text-black bg-white px-2 font-bold">FOUNDING MEMBERS</h2>
-                <button
-                  onClick={() => setShowFoundingMembersPopup(false)}
-                  className="text-white hover:text-red-400 text-xl"
-                >
-                  ✕
-                </button>
               </div>
               <div className="flex-1 p-6">
                 <div className="space-y-3">
@@ -215,18 +224,11 @@ export const MembersScene: React.FC<MembersSceneProps> = ({ onBack }) => {
       {/* Members Popup */}
       {showMembersPopup && (
         <>
-          <EscapeButton onClose={() => setShowMembersPopup(false)} />
           <div className="absolute inset-0 bg-transparent z-40 flex items-center justify-center p-4 pointer-events-none">
           <div className="pointer-events-auto">
             <div className="bg-gray-900 border-4 border-green-500 max-w-md w-full max-h-[60vh] md:max-h-none flex flex-col mb-20 md:mb-0 overflow-y-auto">
               <div className="flex justify-between items-center p-4 border-b border-green-500">
                 <h2 className="text-2xl text-green-400 font-bold">MEMBERS</h2>
-                <button
-                  onClick={() => setShowMembersPopup(false)}
-                  className="text-white hover:text-red-400 text-xl"
-                >
-                  ✕
-                </button>
               </div>
               <div className="flex-1 p-6">
                 <div className="space-y-3">
