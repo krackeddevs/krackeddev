@@ -230,7 +230,7 @@ export const WhitepaperScene: React.FC<WhitepaperSceneProps> = ({ onBack }) => {
           {!isMobile && <div className="fixed inset-0 bg-black/50 z-30" />}
           <div className="absolute inset-0 bg-transparent z-40 flex items-center justify-center p-4 pointer-events-none">
             <div className="pointer-events-auto">
-              <div className={`bg-gray-900 border-4 border-yellow-500 max-w-4xl w-full overflow-y-auto p-6 ${
+              <div className={`bg-gray-900 border-4 border-yellow-500 max-w-4xl w-full overflow-y-auto p-4 md:p-6 ${
                 isMobile ? 'max-h-[60vh] mb-20' : 'max-h-[80vh]'
               }`}>
                 <div className="flex justify-between items-center mb-4">
@@ -1038,7 +1038,7 @@ export const WhitepaperScene: React.FC<WhitepaperSceneProps> = ({ onBack }) => {
           {!isMobile && <div className="fixed inset-0 bg-black/50 z-30" />}
           <div className="absolute inset-0 bg-transparent z-40 flex items-center justify-center p-4 pointer-events-none">
             <div className="pointer-events-auto">
-              <div className={`bg-gray-900 border-4 border-purple-500 max-w-4xl w-full overflow-y-auto p-6 ${
+              <div className={`bg-gray-900 border-4 border-purple-500 max-w-4xl w-full overflow-y-auto p-4 md:p-6 ${
                 isMobile ? 'max-h-[60vh] mb-20' : 'max-h-[80vh]'
               }`}>
                 <div className="flex justify-between items-center mb-4">
@@ -2074,7 +2074,7 @@ export const WhitepaperScene: React.FC<WhitepaperSceneProps> = ({ onBack }) => {
           {!isMobile && <div className="fixed inset-0 bg-black/50 z-30" />}
           <div className="absolute inset-0 bg-transparent z-40 flex items-center justify-center p-4 pointer-events-none">
             <div className="pointer-events-auto">
-              <div className={`bg-gray-900 border-4 border-blue-500 max-w-4xl w-full overflow-y-auto p-6 ${
+              <div className={`bg-gray-900 border-4 border-blue-500 max-w-4xl w-full overflow-y-auto p-4 md:p-6 ${
                 isMobile ? 'max-h-[60vh] mb-20' : 'max-h-[80vh]'
               }`}>
                 <div className="flex justify-between items-center mb-4">
