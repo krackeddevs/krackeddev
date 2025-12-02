@@ -6,10 +6,18 @@ export const SoundToggle: React.FC = () => {
     // Always start with false to match server render
     const [isMuted, setIsMuted] = useState(false);
     const [isClient, setIsClient] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         // Mark as client-side rendered
         setIsClient(true);
+        
+        // Check if mobile
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
         
         // Load initial state from localStorage on client only
         const muted = localStorage.getItem('soundMuted') === 'true';
@@ -21,8 +29,19 @@ export const SoundToggle: React.FC = () => {
             setIsMuted(muted);
         };
 
+        // Sync with soundToggle events from MobileControls
+        const handleSoundToggle = (e: CustomEvent) => {
+            setIsMuted(e.detail.muted);
+        };
+
         window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
+        window.addEventListener('soundToggle', handleSoundToggle as EventListener);
+        
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('soundToggle', handleSoundToggle as EventListener);
+            window.removeEventListener('resize', checkMobile);
+        };
     }, []);
 
     const toggleSound = () => {
@@ -36,6 +55,11 @@ export const SoundToggle: React.FC = () => {
 
     // Render consistent initial state until client-side hydration
     const displayMuted = isClient ? isMuted : false;
+
+    // Hide on mobile (mute button is in MobileControls)
+    if (isMobile) {
+        return null;
+    }
 
     return (
         <button
