@@ -334,7 +334,6 @@ export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => 
             </div>
           </div>
           </div>
-          </div>
         </>
       )}
     </div>

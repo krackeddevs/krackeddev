@@ -193,7 +193,10 @@ export const MembersScene: React.FC<MembersSceneProps> = ({ onBack }) => {
               </div>
             </div>
           </div>
+<<<<<<< HEAD
           </div>
+=======
+>>>>>>> 0221da7 (feat: Replace profile building with members building)
         </>
       )}
 
