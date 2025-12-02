@@ -111,8 +111,8 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
       } else if (key === "d" || key === "arrowright") {
         e.preventDefault();
         dir = "right";
-      } else if (key === "e" || key === " ") {
-        // E or Space to enter building directly
+      } else if (key === " ") {
+        // Space to enter building directly
         e.preventDefault();
         if (nearBuilding) {
           playClickSound();
@@ -362,16 +362,16 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
           {nearBuilding && (
             <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-black/70 border-2 border-yellow-400 p-2">
               <p className="text-yellow-400 text-xs text-center">
-                {isMobile ? 'Tap E button to enter' : 'Press E or SPACE to enter'}
+                {isMobile ? 'Tap SPACE button to enter' : 'Press SPACE to enter'}
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Mobile Controls - Centered below tile section */}
+      {/* Mobile Controls - Fixed at bottom third of screen */}
       {isMobile && (
-        <div className="w-full max-w-5xl mt-6 flex items-center justify-center gap-8">
+        <div className="fixed bottom-[25%] left-0 right-0 w-full flex items-center justify-center gap-8 px-4 z-30 pointer-events-none">
           <MobileControls
             onDirectionChange={handleDirectionInput}
             onInteract={() => {

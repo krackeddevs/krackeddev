@@ -13,9 +13,9 @@ export const Joystick: React.FC<JoystickProps> = ({ onDirectionChange }) => {
   const joystickRef = useRef<HTMLDivElement>(null);
   const knobRef = useRef<HTMLDivElement>(null);
 
-  const JOYSTICK_SIZE = 120;
-  const KNOB_SIZE = 50;
-  const DEAD_ZONE = 20;
+  const JOYSTICK_SIZE = 160;
+  const KNOB_SIZE = 70;
+  const DEAD_ZONE = 25;
 
   const getDirection = useCallback((x: number, y: number): string | null => {
     const distance = Math.sqrt(x * x + y * y);

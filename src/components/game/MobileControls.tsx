@@ -23,12 +23,12 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
   }, [onInteract]);
 
   const buttonClass = (pressed: boolean, enabled: boolean) =>
-    `px-6 py-3 rounded-xl flex items-center justify-center text-sm font-bold select-none transition-all touch-none ${
+    `w-20 h-20 rounded-full flex items-center justify-center text-xs font-bold select-none transition-all touch-none ${
       enabled
         ? pressed
-          ? "bg-green-500/90 scale-95"
-          : "bg-green-500/70 active:bg-green-500/90"
-        : "bg-gray-600/50 opacity-50"
+          ? "bg-green-500 scale-95"
+          : "bg-green-500 active:bg-green-600"
+        : "bg-green-500 opacity-50"
     }`;
 
   return (
@@ -45,8 +45,7 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
           disabled={!canInteract}
           className={buttonClass(interactPressed, canInteract)}
         >
-          <span className="text-white font-mono text-xs">E</span>
-          <span className="text-white/70 ml-1 text-xs">Enter</span>
+          <span className="text-white font-mono text-xs">SPACE</span>
         </button>
       </div>
     </div>
