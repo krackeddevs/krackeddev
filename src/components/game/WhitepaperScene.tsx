@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { BaseGameWorld } from './BaseGameWorld';
 import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_WHITEPAPER, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
+import { addGroundVariety, addTrees } from '@/lib/game/mapHelpers';
 import { BuildingConfig } from '@/lib/game/types';
 
 interface WhitepaperSceneProps {
@@ -42,6 +43,17 @@ export const WhitepaperScene: React.FC<WhitepaperSceneProps> = ({ onBack }) => {
     newMap[MAP_HEIGHT - 2][2] = TILE_BACK_TO_TOWN;
     newMap[MAP_HEIGHT - 3][1] = TILE_BACK_TO_TOWN;
     newMap[MAP_HEIGHT - 3][2] = TILE_BACK_TO_TOWN;
+
+    // Add ground variety and trees
+    addGroundVariety(newMap);
+    const wpCenterX = Math.floor(MAP_WIDTH / 2);
+    const wpCenterY = Math.floor(MAP_HEIGHT / 2);
+    addTrees(newMap, [
+      { x: wpCenterX - 1, y: wpCenterY - 1 }, { x: wpCenterX, y: wpCenterY - 1 },
+      { x: wpCenterX - 1, y: wpCenterY }, { x: wpCenterX, y: wpCenterY },
+      { x: 1, y: MAP_HEIGHT - 2 }, { x: 2, y: MAP_HEIGHT - 2 },
+      { x: 1, y: MAP_HEIGHT - 3 }, { x: 2, y: MAP_HEIGHT - 3 }
+    ]);
 
     return newMap;
   }, []);

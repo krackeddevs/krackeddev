@@ -6,6 +6,7 @@ import { EscapeButton } from './EscapeButton';
 import { TILE_EMPTY, TILE_WALL, TILE_BLOG, TILE_JOBS, TILE_CODE, TILE_PROFILE, TILE_WHITEPAPER, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
 import { BuildingConfig } from '@/lib/game/types';
 import { CharacterStats, UserProfile } from '@/types/jobs';
+import { addGroundVariety, addTrees } from '@/lib/game/mapHelpers';
 
 interface LandingTownProps {
   onBuildingEnter: (route: string) => void;
@@ -77,6 +78,17 @@ export const LandingTown: React.FC<LandingTownProps> = ({ onBuildingEnter }) => 
     newMap[MAP_HEIGHT - 3][Math.floor(MAP_WIDTH / 2)] = TILE_WHITEPAPER;
     newMap[MAP_HEIGHT - 4][Math.floor(MAP_WIDTH / 2) - 1] = TILE_WHITEPAPER;
     newMap[MAP_HEIGHT - 4][Math.floor(MAP_WIDTH / 2)] = TILE_WHITEPAPER;
+
+    // Add ground variety and trees
+    addGroundVariety(newMap);
+    addTrees(newMap, [
+      { x: 2, y: 2 }, { x: 3, y: 2 }, { x: 3, y: 3 }, { x: 3, y: 4 }, { x: 4, y: 3 }, // Jobs
+      { x: MAP_WIDTH - 5, y: 2 }, { x: MAP_WIDTH - 4, y: 2 }, { x: MAP_WIDTH - 5, y: 3 }, { x: MAP_WIDTH - 4, y: 3 }, // Blog
+      { x: 2, y: 5 }, { x: 3, y: 5 }, // Code
+      { x: MAP_WIDTH - 4, y: 5 }, { x: MAP_WIDTH - 3, y: 5 }, // Profile
+      { x: Math.floor(MAP_WIDTH / 2) - 1, y: MAP_HEIGHT - 3 }, { x: Math.floor(MAP_WIDTH / 2), y: MAP_HEIGHT - 3 },
+      { x: Math.floor(MAP_WIDTH / 2) - 1, y: MAP_HEIGHT - 4 }, { x: Math.floor(MAP_WIDTH / 2), y: MAP_HEIGHT - 4 } // Whitepaper
+    ]);
 
     return newMap;
   }, []);
