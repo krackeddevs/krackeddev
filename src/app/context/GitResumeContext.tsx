@@ -56,12 +56,15 @@ const getRedirectUri = () => {
 const upsertUserToSupabase = async (
   username: string
 ): Promise<string | null> => {
+  // console.log("[GitResume] Attempting to save user to Supabase:", username);
+
   if (!supabase) {
-    console.warn("Supabase not available, skipping database sync");
+    console.error("[GitResume] Supabase client is NULL - check your env vars!");
     return null;
   }
 
   try {
+    // console.log("[GitResume] Supabase client available, upserting...");
     const { data, error } = await supabase
       .from("profiles")
       .upsert(
@@ -79,13 +82,14 @@ const upsertUserToSupabase = async (
       .single();
 
     if (error) {
-      console.error("Error upserting user to Supabase:", error);
+      console.error("[GitResume] Supabase upsert error:", error);
       return null;
     }
 
+    // console.log("[GitResume] Successfully saved to Supabase! ID:", data?.id);
     return data?.id || null;
   } catch (error) {
-    console.error("Error syncing with Supabase:", error);
+    console.error("[GitResume] Exception during Supabase sync:", error);
     return null;
   }
 };
@@ -171,8 +175,11 @@ export const GitResumeProvider = ({ children }: { children: ReactNode }) => {
   }, [closeLoginModal]);
 
   const setUserFromCallback = useCallback(async (username: string) => {
+    // console.log("[GitResume] setUserFromCallback called with:", username);
+
     // First, save to Supabase
     const supabaseId = await upsertUserToSupabase(username);
+    // console.log("[GitResume] Got Supabase ID:", supabaseId);
 
     const newUser: GitResumeUser = {
       id: supabaseId || undefined,
@@ -183,6 +190,7 @@ export const GitResumeProvider = ({ children }: { children: ReactNode }) => {
 
     setUser(newUser);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
+    // console.log("[GitResume] User saved to state and localStorage");
   }, []);
 
   return (
