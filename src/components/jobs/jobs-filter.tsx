@@ -64,8 +64,20 @@ export function JobsFilter() {
                 handleSearch();
               }
             }}
-            className="bg-black border-white/20 text-white placeholder:text-gray-600 pl-4 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-white transition-colors"
+            className="bg-black border-white/20 text-white placeholder:text-gray-600 pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-white transition-colors"
           />
+          {localSearch && (
+            <button
+              onClick={() => {
+                setLocalSearch("");
+                setSearch(null);
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-sm transition-colors"
+              aria-label="Clear search"
+            >
+              <X className="w-3 h-3 md:w-4 md:h-4 text-gray-400 hover:text-white" />
+            </button>
+          )}
         </div>
         <Button
           className="bg-white text-black hover:bg-gray-200 h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm"

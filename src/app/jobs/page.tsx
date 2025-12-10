@@ -1,7 +1,34 @@
 "use client";
 
+import { Suspense } from "react";
 import { JobsTable } from "@/components/jobs/jobs-table";
 import { JobsFilter } from "@/components/jobs/jobs-filter";
+
+function JobsFilterSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex gap-4">
+        <div className="h-10 w-full max-w-sm bg-white/5 animate-pulse" />
+        <div className="h-10 w-24 bg-white/5 animate-pulse" />
+      </div>
+      <div className="flex gap-4">
+        <div className="h-10 w-32 bg-white/5 animate-pulse" />
+        <div className="h-10 w-32 bg-white/5 animate-pulse" />
+        <div className="h-10 w-32 bg-white/5 animate-pulse" />
+      </div>
+    </div>
+  );
+}
+
+function JobsTableSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="h-16 bg-white/5 animate-pulse border border-white/20" />
+      ))}
+    </div>
+  );
+}
 
 export default function JobsPage() {
   return (
@@ -18,9 +45,13 @@ export default function JobsPage() {
           </p>
         </div>
 
-        <JobsFilter />
+        <Suspense fallback={<JobsFilterSkeleton />}>
+          <JobsFilter />
+        </Suspense>
 
-        <JobsTable />
+        <Suspense fallback={<JobsTableSkeleton />}>
+          <JobsTable />
+        </Suspense>
       </div>
     </main>
   );
