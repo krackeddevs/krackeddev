@@ -1,17 +1,32 @@
 "use client";
 
-import React, { useMemo } from 'react';
-import { BaseGameWorld } from './BaseGameWorld';
-import { TILE_EMPTY, TILE_WALL, TILE_CODE, TILE_BACK_TO_TOWN, MAP_WIDTH, MAP_HEIGHT } from '@/lib/game/constants';
-import { addGroundVariety, addTrees, connectBuildingsWithRoads } from '@/lib/game/mapHelpers';
-import { BuildingConfig } from '@/lib/game/types';
+import React, { useMemo } from "react";
+import { BaseGameWorld } from "./BaseGameWorld";
+import {
+  TILE_EMPTY,
+  TILE_WALL,
+  TILE_CODE,
+  TILE_BACK_TO_TOWN,
+  MAP_WIDTH,
+  MAP_HEIGHT,
+} from "@/lib/game/constants";
+import {
+  addGroundVariety,
+  addTrees,
+  connectBuildingsWithRoads,
+} from "@/lib/game/mapHelpers";
+import { BuildingConfig } from "@/lib/game/types";
 
 interface CodeHubSceneProps {
   onBack: () => void;
+  onNavigate?: (route: string) => void;
 }
 
-export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
-  const X_COMMUNITY_URL = 'https://x.com/i/communities/1983062242292822298';
+export const CodeHubScene: React.FC<CodeHubSceneProps> = ({
+  onBack,
+  onNavigate,
+}) => {
+  const X_COMMUNITY_URL = "https://x.com/i/communities/1983062242292822298";
 
   // Generate map with 3 buildings
   const map = useMemo(() => {
@@ -57,21 +72,51 @@ export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
     // Connect buildings with roads
     const codeCenterX = Math.floor(MAP_WIDTH / 2);
     connectBuildingsWithRoads(newMap, [
-      [{ x: 3, y: 3 }, { x: 4, y: 3 }, { x: 3, y: 4 }, { x: 4, y: 4 }],
-      [{ x: codeCenterX - 1, y: 3 }, { x: codeCenterX, y: 3 }, { x: codeCenterX - 1, y: 4 }, { x: codeCenterX, y: 4 }],
-      [{ x: MAP_WIDTH - 5, y: 3 }, { x: MAP_WIDTH - 4, y: 3 }, { x: MAP_WIDTH - 5, y: 4 }, { x: MAP_WIDTH - 4, y: 4 }],
-      [{ x: 1, y: MAP_HEIGHT - 2 }, { x: 2, y: MAP_HEIGHT - 2 },
-       { x: 1, y: MAP_HEIGHT - 3 }, { x: 2, y: MAP_HEIGHT - 3 }]
+      [
+        { x: 3, y: 3 },
+        { x: 4, y: 3 },
+        { x: 3, y: 4 },
+        { x: 4, y: 4 },
+      ],
+      [
+        { x: codeCenterX - 1, y: 3 },
+        { x: codeCenterX, y: 3 },
+        { x: codeCenterX - 1, y: 4 },
+        { x: codeCenterX, y: 4 },
+      ],
+      [
+        { x: MAP_WIDTH - 5, y: 3 },
+        { x: MAP_WIDTH - 4, y: 3 },
+        { x: MAP_WIDTH - 5, y: 4 },
+        { x: MAP_WIDTH - 4, y: 4 },
+      ],
+      [
+        { x: 1, y: MAP_HEIGHT - 2 },
+        { x: 2, y: MAP_HEIGHT - 2 },
+        { x: 1, y: MAP_HEIGHT - 3 },
+        { x: 2, y: MAP_HEIGHT - 3 },
+      ],
     ]);
 
     // Add ground variety and trees
     addGroundVariety(newMap);
     addTrees(newMap, [
-      { x: 3, y: 3 }, { x: 4, y: 3 }, { x: 3, y: 4 }, { x: 4, y: 4 },
-      { x: codeCenterX - 1, y: 3 }, { x: codeCenterX, y: 3 }, { x: codeCenterX - 1, y: 4 }, { x: codeCenterX, y: 4 },
-      { x: MAP_WIDTH - 5, y: 3 }, { x: MAP_WIDTH - 4, y: 3 }, { x: MAP_WIDTH - 5, y: 4 }, { x: MAP_WIDTH - 4, y: 4 },
-      { x: 1, y: MAP_HEIGHT - 2 }, { x: 2, y: MAP_HEIGHT - 2 },
-      { x: 1, y: MAP_HEIGHT - 3 }, { x: 2, y: MAP_HEIGHT - 3 }
+      { x: 3, y: 3 },
+      { x: 4, y: 3 },
+      { x: 3, y: 4 },
+      { x: 4, y: 4 },
+      { x: codeCenterX - 1, y: 3 },
+      { x: codeCenterX, y: 3 },
+      { x: codeCenterX - 1, y: 4 },
+      { x: codeCenterX, y: 4 },
+      { x: MAP_WIDTH - 5, y: 3 },
+      { x: MAP_WIDTH - 4, y: 3 },
+      { x: MAP_WIDTH - 5, y: 4 },
+      { x: MAP_WIDTH - 4, y: 4 },
+      { x: 1, y: MAP_HEIGHT - 2 },
+      { x: 2, y: MAP_HEIGHT - 2 },
+      { x: 1, y: MAP_HEIGHT - 3 },
+      { x: 2, y: MAP_HEIGHT - 3 },
     ]);
 
     return newMap;
@@ -81,7 +126,7 @@ export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
     const centerX = Math.floor(MAP_WIDTH / 2);
     return [
       {
-        id: 'hackathon',
+        id: "hackathon",
         tileType: TILE_CODE,
         positions: [
           { x: 3, y: 3 },
@@ -89,15 +134,15 @@ export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
           { x: 3, y: 4 },
           { x: 4, y: 4 },
         ],
-        label: 'HACKATHON',
-        description: 'Join coding competitions and challenges',
-        route: 'hackathon',
-        color: '#06b6d4',
-        colorDark: '#0891b2',
-        customLabel: 'HACK\nATHON',
+        label: "HACKATHON",
+        description: "Join coding competitions and challenges",
+        route: "hackathon",
+        color: "#06b6d4",
+        colorDark: "#0891b2",
+        customLabel: "HACK\nATHON",
       },
       {
-        id: 'opensource',
+        id: "opensource",
         tileType: TILE_CODE,
         positions: [
           { x: centerX - 1, y: 3 },
@@ -105,15 +150,15 @@ export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
           { x: centerX - 1, y: 4 },
           { x: centerX, y: 4 },
         ],
-        label: 'OPEN SOURCE',
-        description: 'Contribute to open source projects',
-        route: 'opensource',
-        color: '#06b6d4',
-        colorDark: '#0891b2',
-        customLabel: 'OPEN\nSOURCE',
+        label: "OPEN SOURCE",
+        description: "Contribute to open source projects",
+        route: "opensource",
+        color: "#06b6d4",
+        colorDark: "#0891b2",
+        customLabel: "OPEN\nSOURCE",
       },
       {
-        id: 'bounty',
+        id: "bounty",
         tileType: TILE_CODE,
         positions: [
           { x: MAP_WIDTH - 5, y: 3 },
@@ -121,15 +166,15 @@ export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
           { x: MAP_WIDTH - 5, y: 4 },
           { x: MAP_WIDTH - 4, y: 4 },
         ],
-        label: 'BOUNTY',
-        description: 'Earn rewards for completing coding tasks',
-        route: 'bounty',
-        color: '#06b6d4',
-        colorDark: '#0891b2',
-        customLabel: 'BOUNTY',
+        label: "BOUNTY",
+        description: "Earn rewards for completing coding tasks",
+        route: "bounty",
+        color: "#06b6d4",
+        colorDark: "#0891b2",
+        customLabel: "BOUNTY",
       },
       {
-        id: 'back-to-town',
+        id: "back-to-town",
         tileType: TILE_BACK_TO_TOWN,
         positions: [
           { x: 1, y: MAP_HEIGHT - 3 },
@@ -137,23 +182,28 @@ export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
           { x: 1, y: MAP_HEIGHT - 2 },
           { x: 2, y: MAP_HEIGHT - 2 },
         ],
-        label: 'BACK TO TOWN',
-        customLabel: 'BACK\nTO\nTOWN',
-        description: 'Return to the main town',
-        route: '/',
-        color: '#ef4444',
-        colorDark: '#dc2626',
+        label: "BACK TO TOWN",
+        customLabel: "BACK\nTO\nTOWN",
+        description: "Return to the main town",
+        route: "/",
+        color: "#ef4444",
+        colorDark: "#dc2626",
         autoNavigate: true,
       },
     ];
   }, []);
 
   const handleBuildingEnter = (route: string) => {
-    if (route === '/') {
+    if (route === "/") {
       onBack();
-    } else if (route === 'hackathon' || route === 'opensource' || route === 'bounty') {
+    } else if (route === "bounty") {
+      // Navigate to bounty page
+      if (onNavigate) {
+        onNavigate("/code/bounty");
+      }
+    } else if (route === "hackathon" || route === "opensource") {
       // Open X community in new tab
-      window.open(X_COMMUNITY_URL, '_blank', 'noopener,noreferrer');
+      window.open(X_COMMUNITY_URL, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -168,9 +218,6 @@ export const CodeHubScene: React.FC<CodeHubSceneProps> = ({ onBack }) => {
         onCloseDialog={() => {}}
         canCloseDialog={false}
       />
-
-
     </div>
   );
 };
-
