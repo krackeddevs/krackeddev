@@ -100,3 +100,4 @@ COMMENT ON TABLE public.bounty_submissions IS 'Stores user submissions (GitHub P
 COMMENT ON COLUMN public.bounty_submissions.bounty_slug IS 'URL slug identifier for the bounty';
 COMMENT ON COLUMN public.bounty_submissions.status IS 'Submission status: pending, approved, or rejected';
 COMMENT ON COLUMN public.bounty_submissions.pull_request_url IS 'GitHub pull request URL for the submission';
+
