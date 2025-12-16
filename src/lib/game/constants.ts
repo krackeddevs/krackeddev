@@ -1,8 +1,8 @@
 // Shared game constants
-export const TILE_SIZE = 40;
+export const TILE_SIZE = 120;
 export const MAP_WIDTH = 15;
 export const MAP_HEIGHT = 9;
-export const PLAYER_SPEED = 2.5;
+export const PLAYER_SPEED = 7.5;
 
 // Map tile types
 export const TILE_EMPTY = 0;

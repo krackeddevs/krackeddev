@@ -68,7 +68,20 @@ interface BaseGameWorldProps {
   triggerZones?: Array<{
     id: string;
     rect: WalkableRect;
-    message: string;
+    message?: string;
+    modal?: {
+      title?: string;
+      body: string;
+      confirmText?: string;
+      cancelText?: string;
+      actions?: Array<{
+        label: string;
+        href: string;
+        newTab?: boolean;
+      }>;
+    };
+    onConfirm?: () => void;
+    onCancel?: () => void;
     once?: boolean; // if true, only triggers once per page load
   }>;
 }
@@ -100,7 +113,17 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   } | null>(null);
   const [activeModal, setActiveModal] = useState<{
     zoneId: string;
-    message: string;
+    title?: string;
+    body: string;
+    confirmText?: string;
+    cancelText?: string;
+    actions?: Array<{
+      label: string;
+      href: string;
+      newTab?: boolean;
+    }>;
+    onConfirm?: () => void;
+    onCancel?: () => void;
   } | null>(null);
   const activeModalRef = useRef<typeof activeModal>(null);
   const insideZoneIdsRef = useRef<Set<string>>(new Set());
@@ -377,7 +400,22 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
             if (zone.once === true) {
               triggeredOnceZoneIdsRef.current.add(zone.id);
             }
-            setActiveModal({ zoneId: zone.id, message: zone.message });
+            const modal = zone.modal ?? {
+              title: undefined,
+              body: zone.message ?? "",
+              confirmText: "OK",
+            };
+
+            setActiveModal({
+              zoneId: zone.id,
+              title: modal.title,
+              body: modal.body,
+              confirmText: modal.confirmText ?? "OK",
+              cancelText: modal.cancelText,
+              actions: modal.actions,
+              onConfirm: zone.onConfirm,
+              onCancel: zone.onCancel,
+            });
           }
         }
 
@@ -856,7 +894,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   }, [nearBuilding, isMobile]);
 
   return (
-    <div className="w-full h-screen bg-gray-900 text-white jobs-container relative overflow-hidden flex flex-col items-center justify-center px-2 md:px-4">
+    <div className="w-full h-[85vh] bg-gray-900 text-white jobs-container relative overflow-hidden flex flex-col items-center justify-center">
       {/* Canvas Container with relative positioning for dialogs */}
       <div
         className={`relative w-full mx-auto flex flex-col items-center gap-4 ${
@@ -870,20 +908,70 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
               className="absolute inset-0 bg-black/60"
               onClick={() => setActiveModal(null)}
             />
-            <div className="relative bg-gray-900 border-4 border-emerald-500 p-6 max-w-sm w-full pointer-events-auto">
+            <div className="relative bg-gray-900 border-4 border-emerald-500 p-16 max-w-sm w-full pointer-events-auto">
+              <button
+                type="button"
+                aria-label="Close"
+                onClick={() => setActiveModal(null)}
+                className="absolute top-2 right-2 w-9 h-9 flex items-center justify-center bg-gray-800 border-2 border-emerald-500/60 text-emerald-200 font-bold hover:bg-emerald-500/10 transition-all"
+              >
+                X
+              </button>
+
               <h2 className="text-lg text-emerald-300 font-bold mb-3 text-center">
-                Notice
+                {activeModal.title ?? "Notice"}
               </h2>
               <p className="text-gray-200 text-center mb-6">
-                {activeModal.message}
+                {activeModal.body}
               </p>
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setActiveModal(null)}
-                  className="px-6 py-2 bg-emerald-900/40 border-2 border-emerald-500 text-emerald-200 font-bold uppercase tracking-wider hover:bg-emerald-500/20 transition-all"
-                >
-                  OK
-                </button>
+              <div className="flex justify-center gap-3">
+                {activeModal.actions?.length ? (
+                  activeModal.actions.map((action) => (
+                    <button
+                      key={action.label}
+                      onClick={() => {
+                        const target =
+                          action.newTab === false ? "_self" : "_blank";
+                        window.open(action.href, target, "noopener,noreferrer");
+                        setActiveModal(null);
+                      }}
+                      className="px-6 py-2 bg-emerald-900/40 border-2 border-emerald-500 text-emerald-200 font-bold uppercase tracking-wider hover:bg-emerald-500/20 transition-all"
+                    >
+                      {action.label}
+                    </button>
+                  ))
+                ) : (
+                  <>
+                    {activeModal.cancelText && (
+                      <button
+                        onClick={() => {
+                          try {
+                            activeModal.onCancel?.();
+                          } finally {
+                            setActiveModal(null);
+                          }
+                        }}
+                        className="px-6 py-2 bg-gray-700 border-2 border-gray-500 text-gray-200 font-bold uppercase tracking-wider hover:bg-gray-600 hover:border-gray-400 transition-all"
+                      >
+                        {activeModal.cancelText}
+                      </button>
+                    )}
+                    {activeModal.confirmText && (
+                      <button
+                        onClick={() => {
+                          try {
+                            activeModal.onConfirm?.();
+                          } finally {
+                            setActiveModal(null);
+                          }
+                        }}
+                        className="px-6 py-2 bg-emerald-900/40 border-2 border-emerald-500 text-emerald-200 font-bold uppercase tracking-wider hover:bg-emerald-500/20 transition-all"
+                      >
+                        {activeModal.confirmText}
+                      </button>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -910,7 +998,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
           </div>
         )}
         <div
-          className="relative w-full border-4 border-gray-700 canvas-container max-w-[80vw] max-h-[80vh]"
+          className="relative w-full border-4 border-gray-700 canvas-container max-w-[100vw] max-h-[100vh] lg:max-w-[85vw] lg:max-h-[85vw]"
           style={{ aspectRatio: `${MAP_WIDTH}/${MAP_HEIGHT}` }}
         >
           <canvas
@@ -925,7 +1013,9 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
         </div>
 
         {/* Control Legend - Desktop only, below canvas */}
-        <ControlLegend isMobile={isMobile} />
+        <div className="absolute bottom-2 left-2">
+          <ControlLegend isMobile={isMobile} />
+        </div>
       </div>
 
       {/* Mobile Controls - Fixed at bottom of screen */}

@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BaseGameWorld } from "@/components/game/BaseGameWorld";
+import { WhitepaperPdfModal } from "@/components/game/WhitepaperPdfModal";
 import {
   MAP_HEIGHT,
   MAP_WIDTH,
@@ -11,6 +13,9 @@ import {
 import type { BuildingConfig } from "@/lib/game/types";
 
 export function TownhallV2() {
+  const router = useRouter();
+  const [showWhitepaper, setShowWhitepaper] = useState(false);
+
   const map = useMemo(() => {
     const newMap: number[][] = [];
 
@@ -81,46 +86,85 @@ export function TownhallV2() {
   );
 
   return (
-    <BaseGameWorld
-      map={map}
-      buildings={buildings}
-      onBuildingEnter={() => {}}
-      backgroundImagePath="/map/townhall.png"
-      backgroundFit="cover"
-      showDebugHud
-      walkableRectangles={[savePointA, savePointB, savePointC]}
-      triggerZones={[
-        {
-          id: "save-point-a",
-          rect: savePointA,
-          message: "reached save point A",
-          once: false,
-        },
-        {
-          id: "save-point-b",
-          rect: savePointB,
-          message: "reached save point B",
-          once: false,
-        },
-        {
-          id: "save-point-c",
-          rect: savePointC,
-          message: "reached save point C",
-          once: false,
-        },
-        {
-          id: "save-point-d",
-          rect: savePointD,
-          message: "reached save point D",
-          once: false,
-        },
-        {
-          id: "save-point-e",
-          rect: savePointE,
-          message: "reached save point E",
-          once: false,
-        },
-      ]}
-    />
+    <>
+      <BaseGameWorld
+        map={map}
+        buildings={buildings}
+        onBuildingEnter={() => {}}
+        backgroundImagePath="/map/townhall.png"
+        backgroundFit="cover"
+        // showDebugHud
+        walkableRectangles={[savePointA, savePointB, savePointC]}
+        triggerZones={[
+          {
+            id: "save-point-a",
+            rect: savePointA,
+            modal: {
+              title: "Whitepaper",
+              body: "Read our community goals and vision?",
+              cancelText: "Cancel",
+              confirmText: "Yes",
+            },
+            onConfirm: () => setShowWhitepaper(true),
+            once: false,
+          },
+          {
+            id: "save-point-b",
+            rect: savePointB,
+            modal: {
+              title: "Bounties",
+              body: "Earn rewards for completing coding tasks",
+              cancelText: "Cancel",
+              confirmText: "Yes",
+            },
+            onConfirm: () => router.push("/code/bounty"),
+            once: false,
+          },
+          {
+            id: "save-point-c",
+            rect: savePointC,
+            modal: {
+              title: "Founding members",
+              body: "danial\nadam\nmuhaimin\nsolah\nanep\npali\nirfan\nnatasha\nunies",
+              confirmText: "OK",
+            },
+            once: false,
+          },
+          {
+            id: "save-point-d",
+            rect: savePointD,
+            modal: {
+              title: "Socials",
+              body: "Join our community:",
+              actions: [
+                { label: "Discord", href: "https://discord.gg/XfkHsa8R" },
+                {
+                  label: "X",
+                  href: "https://x.com/i/communities/1983062242292822298",
+                },
+              ],
+            },
+            once: false,
+          },
+          {
+            id: "save-point-e",
+            rect: savePointE,
+            modal: {
+              title: "Jobs",
+              body: "Explore available tech jobs?",
+              cancelText: "Cancel",
+              confirmText: "Yes",
+            },
+            onConfirm: () => router.push("/jobs"),
+            once: false,
+          },
+        ]}
+      />
+
+      <WhitepaperPdfModal
+        open={showWhitepaper}
+        onClose={() => setShowWhitepaper(false)}
+      />
+    </>
   );
 }

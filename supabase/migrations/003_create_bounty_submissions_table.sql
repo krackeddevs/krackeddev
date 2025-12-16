@@ -101,3 +101,7 @@ COMMENT ON COLUMN public.bounty_submissions.bounty_slug IS 'URL slug identifier 
 COMMENT ON COLUMN public.bounty_submissions.status IS 'Submission status: pending, approved, or rejected';
 COMMENT ON COLUMN public.bounty_submissions.pull_request_url IS 'GitHub pull request URL for the submission';
 
+
+
+
+

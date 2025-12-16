@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { Joystick } from './Joystick';
-import { GameBoyButtonX } from './GameBoyButtonX';
-import { GameBoyButtonY } from './GameBoyButtonY';
+import React, { useState, useCallback, useEffect } from "react";
+import { Joystick } from "./Joystick";
+import { GameBoyButtonX } from "./GameBoyButtonX";
+import { GameBoyButtonY } from "./GameBoyButtonY";
 
 interface MobileControlsProps {
   onDirectionChange: (dir: string | null) => void;
@@ -40,11 +40,11 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
 
   // Load mute state from localStorage
   useEffect(() => {
-    const muted = localStorage.getItem('soundMuted') === 'true';
+    const muted = localStorage.getItem("soundMuted") === "true";
     setIsMuted(muted);
 
     const handleStorageChange = () => {
-      const muted = localStorage.getItem('soundMuted') === 'true';
+      const muted = localStorage.getItem("soundMuted") === "true";
       setIsMuted(muted);
     };
 
@@ -52,20 +52,25 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
       setIsMuted(e.detail.muted);
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('soundToggle', handleSoundToggle as EventListener);
-    
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("soundToggle", handleSoundToggle as EventListener);
+
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('soundToggle', handleSoundToggle as EventListener);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener(
+        "soundToggle",
+        handleSoundToggle as EventListener
+      );
     };
   }, []);
 
   const handleMute = useCallback(() => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
-    localStorage.setItem('soundMuted', newMuted.toString());
-    window.dispatchEvent(new CustomEvent('soundToggle', { detail: { muted: newMuted } }));
+    localStorage.setItem("soundMuted", newMuted.toString());
+    window.dispatchEvent(
+      new CustomEvent("soundToggle", { detail: { muted: newMuted } })
+    );
   }, [isMuted]);
 
   const buttonClass = (pressed: boolean, enabled: boolean) =>
@@ -80,25 +85,25 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
   return (
     <div className="relative flex items-center justify-between w-full pointer-events-none">
       {/* Joystick - Leftmost */}
-      <div className="pointer-events-auto">
+      <div className="pointer-events-auto ml-4 mb-4">
         <Joystick onDirectionChange={onDirectionChange} />
       </div>
 
       {/* Mute switch - Center */}
-      <div className="pointer-events-auto absolute left-1/2 transform -translate-x-1/2 -top-8">
+      <div className="pointer-events-auto absolute left-1/2 transform -translate-x-1/2 -top-20">
         <button
           onClick={handleMute}
-          className="relative w-16 h-8 rounded-full transition-all duration-300 touch-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+          className="relative w-16 h-6 rounded-full transition-all duration-300 touch-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900"
           style={{
-            backgroundColor: isMuted ? '#6b7280' : '#22c55e',
+            backgroundColor: isMuted ? "#6b7280" : "#22c55e",
           }}
-          aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
+          aria-label={isMuted ? "Unmute sound" : "Mute sound"}
         >
           {/* Switch slider */}
           <div
-            className="absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 flex items-center justify-center"
+            className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 flex items-center justify-center"
             style={{
-              transform: isMuted ? 'translateX(0)' : 'translateX(32px)',
+              transform: isMuted ? "translateX(0)" : "translateX(40px)",
             }}
           >
             {isMuted ? (
@@ -132,6 +137,9 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
               </svg>
             )}
           </div>
+          <span className="min-w-[88px] mt-5 left-[-6px] right-0 text-[8px] tracking-widest text-white/20 absolute">
+            MUTE SOUND
+          </span>
         </button>
       </div>
 
@@ -153,13 +161,15 @@ export const MobileControls: React.FC<MobileControlsProps> = ({
         <button
           onClick={handleInteract}
           disabled={!canInteract}
-          className={`${buttonClass(interactPressed, canInteract)} relative -top-4`}
+          className={`${buttonClass(
+            interactPressed,
+            canInteract
+          )} relative -top-4 right-8`}
           aria-label="Interact (X button)"
         >
-          <span className="text-white font-mono text-2xl font-bold">X</span>
+          <span className="text-white text-5xl font-thin -mt-2 ml-2">x</span>
         </button>
       </div>
     </div>
   );
 };
-

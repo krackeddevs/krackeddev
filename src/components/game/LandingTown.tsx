@@ -24,7 +24,7 @@ import {
 import { EscapeButton } from "./EscapeButton";
 import { loadSprite } from "@/lib/game/sprites";
 import { useSupabase } from "@/context/SupabaseContext";
-import { LogOut, Eye } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 interface LandingTownProps {
   onBuildingEnter: (route: string) => void;
@@ -36,7 +36,6 @@ export const LandingTown: React.FC<LandingTownProps> = ({
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [pageViews, setPageViews] = useState<number | null>(null);
   const { isAuthenticated, signOut, user, supabase } = useSupabase();
 
   // Detect mobile
@@ -56,39 +55,6 @@ export const LandingTown: React.FC<LandingTownProps> = ({
     loadSprite("/houses/HOUSE1.png").catch(() => {});
     loadSprite("/houses/HOUSE2.png").catch(() => {});
   }, []);
-
-  // Track page views
-  useEffect(() => {
-    if (!supabase) return;
-
-    const trackAndFetchPageViews = async () => {
-      try {
-        // Record the page view
-        await supabase.from("page_views").insert({
-          page_path: "/",
-          visitor_id: localStorage.getItem("visitor_id") || crypto.randomUUID(),
-          user_agent: navigator.userAgent,
-          referrer: document.referrer || null,
-        });
-
-        // Store visitor ID for future visits
-        if (!localStorage.getItem("visitor_id")) {
-          localStorage.setItem("visitor_id", crypto.randomUUID());
-        }
-
-        // Fetch total page views
-        const { count } = await supabase
-          .from("page_views")
-          .select("*", { count: "exact", head: true });
-
-        setPageViews(count ?? 0);
-      } catch (error) {
-        console.error("Error tracking page views:", error);
-      }
-    };
-
-    trackAndFetchPageViews();
-  }, [supabase]);
 
   // Mock profile data
   const stats: CharacterStats = {
@@ -379,7 +345,7 @@ export const LandingTown: React.FC<LandingTownProps> = ({
 
       {/* Sign Out Button - Top Right */}
       {isAuthenticated && (
-        <div className="absolute top-4 right-4 z-[100]">
+        <div className="absolute top-4 right-4 z-100">
           <button
             onClick={() => setShowSignOutConfirm(true)}
             className="cursor-pointer flex items-center gap-2 px-3 py-2 bg-gray-900/90 border-2 border-red-500/70 text-red-400 font-bold text-sm uppercase tracking-wider hover:bg-red-500/20 hover:border-red-500 transition-all pointer-events-auto"
@@ -397,7 +363,7 @@ export const LandingTown: React.FC<LandingTownProps> = ({
 
       {/* Sign Out Confirmation Modal */}
       {showSignOutConfirm && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-110 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/60"
             onClick={() => setShowSignOutConfirm(false)}
@@ -573,17 +539,6 @@ export const LandingTown: React.FC<LandingTownProps> = ({
           </div>
         </>
       )}
-
-      {/* Page Views Counter - Bottom Left */}
-      <div className="absolute bottom-4 left-4 z-[100] pointer-events-none">
-        <div className="flex items-center gap-2 px-3 py-2 bg-gray-900/80 border-2 border-emerald-500/50 text-emerald-400">
-          <Eye className="w-4 h-4" />
-          <span className="font-mono text-sm mr-1">Page Visits:</span>
-          <span className="font-mono text-sm">
-            {pageViews !== null ? pageViews.toLocaleString() : "---"}
-          </span>
-        </div>
-      </div>
     </div>
   );
 };

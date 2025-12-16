@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SplitTextAnimation from "@/components/animations/SplitTextAnimation";
-import { LandingTown } from "@/components/game/LandingTown";
+import { TownhallV2 } from "@/components/game/TownhallV2";
 import { useSupabase } from "@/context/SupabaseContext";
 import "@/styles/jobs.css";
 
@@ -119,7 +119,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen w-full bg-gray-900 relative">
+    <main className="min-h-[90vh] w-full bg-gray-900 relative">
       {/* CRT Scanline Overlay */}
       {!showAnimation && (
         <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
@@ -130,7 +130,7 @@ export default function Home() {
           onComplete={handleAnimationComplete}
         />
       )}
-      {!showAnimation && <LandingTown onBuildingEnter={handleBuildingEnter} />}
+      {!showAnimation && <TownhallV2 />}
     </main>
   );
 }

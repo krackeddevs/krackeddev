@@ -3,17 +3,42 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import PrayerWidget from "./PrayerWidget";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, User, X } from "lucide-react";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { useSupabase } from "@/context/SupabaseContext";
+
+interface PrayerTimes {
+  Fajr: string;
+  Dhuhr: string;
+  Asr: string;
+  Maghrib: string;
+  Isha: string;
+  [key: string]: string;
+}
+
+const PRAYER_ORDER = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const isHomepage = pathname === "/";
+  const { isAuthenticated, signOut, openLoginModal, supabase } = useSupabase();
+  const [pageViews, setPageViews] = React.useState<number | null>(null);
+  const [nextPrayer, setNextPrayer] = React.useState<{
+    name: string;
+    time: string;
+  } | null>(null);
 
   // Hide navigation links (middle section) on game pages and job detail pages, but keep header visible
   const gamePages = [
@@ -35,6 +60,78 @@ const Navbar = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Track + fetch total page views (centralized here so we don't double-count in pages)
+  React.useEffect(() => {
+    if (!supabase) return;
+
+    const trackAndFetchPageViews = async () => {
+      try {
+        const key = "visitor_id";
+        const existing = localStorage.getItem(key);
+        const visitorId =
+          existing ??
+          (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()));
+        if (!existing) localStorage.setItem(key, visitorId);
+
+        await supabase.from("page_views").insert({
+          page_path: pathname || "/",
+          visitor_id: visitorId,
+          user_agent: navigator.userAgent,
+          referrer: document.referrer || null,
+        });
+
+        const { count } = await supabase
+          .from("page_views")
+          .select("*", { count: "exact", head: true });
+
+        setPageViews(count ?? 0);
+      } catch (error) {
+        console.error("Error tracking page views:", error);
+      }
+    };
+
+    trackAndFetchPageViews();
+  }, [supabase, pathname]);
+
+  // Fetch next prayer time (KL, method 17 / JAKIM) for marquee
+  React.useEffect(() => {
+    const calculateNextPrayer = (timings: PrayerTimes) => {
+      const now = new Date();
+      const timeNow = now.getHours() * 60 + now.getMinutes();
+
+      for (const prayer of PRAYER_ORDER) {
+        const [hours, minutes] = timings[prayer].split(":").map(Number);
+        const prayerTime = hours * 60 + minutes;
+        if (prayerTime > timeNow) {
+          setNextPrayer({ name: prayer, time: timings[prayer] });
+          return;
+        }
+      }
+      setNextPrayer({ name: "Fajr", time: timings["Fajr"] });
+    };
+
+    const fetchPrayerTimes = async () => {
+      try {
+        const date = new Date();
+        const formattedDate = `${date.getDate()}-${
+          date.getMonth() + 1
+        }-${date.getFullYear()}`;
+        const res = await fetch(
+          `https://api.aladhan.com/v1/timingsByCity/${formattedDate}?city=Kuala%20Lumpur&country=Malaysia&method=17`
+        );
+        const data = await res.json();
+        const timings = data?.data?.timings as PrayerTimes | undefined;
+        if (timings) calculateNextPrayer(timings);
+      } catch (error) {
+        console.error("Failed to fetch prayer times", error);
+      }
+    };
+
+    fetchPrayerTimes();
+    const interval = setInterval(fetchPrayerTimes, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -68,8 +165,44 @@ const Navbar = () => {
         )}
 
         {/* Right Side (Desktop) */}
-        <div className="hidden md:flex items-center gap-4">
-          <PrayerWidget />
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+                aria-label="Profile"
+              >
+                <span>Profile</span>
+                <User className="min-h-5 min-w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={8}>
+              <DropdownMenuLabel>Profile</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {isAuthenticated ? (
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
+                  <LogOut />
+                  Logout
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => {
+                    openLoginModal();
+                  }}
+                >
+                  <User />
+                  Login
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -90,6 +223,121 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      <div className="border-t border-white/10 bg-white/5 backdrop-blur-md">
+        <div className="overflow-hidden">
+          <div className="marquee text-[10px] sm:text-xs font-mono text-foreground/80">
+            <div className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20">
+              <span className="text-foreground/60">
+                Page visits:{" "}
+                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">
+                Next prayer (KL):{" "}
+                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">Stay kracked.</span>
+              <span className="text-foreground/30">•</span>
+            </div>
+            <div
+              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+              aria-hidden="true"
+            >
+              <span className="text-foreground/60">
+                Page visits:{" "}
+                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">
+                Next prayer (KL):{" "}
+                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">Stay kracked.</span>
+              <span className="text-foreground/30">•</span>
+            </div>
+            <div
+              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+              aria-hidden="true"
+            >
+              <span className="text-foreground/60">
+                Page visits:{" "}
+                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">
+                Next prayer (KL):{" "}
+                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">Stay kracked.</span>
+              <span className="text-foreground/30">•</span>
+            </div>
+            <div
+              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+              aria-hidden="true"
+            >
+              <span className="text-foreground/60">
+                Page visits:{" "}
+                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">
+                Next prayer (KL):{" "}
+                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">Stay kracked.</span>
+              <span className="text-foreground/30">•</span>
+            </div>
+            <div
+              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+              aria-hidden="true"
+            >
+              <span className="text-foreground/60">
+                Page visits:{" "}
+                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">
+                Next prayer (KL):{" "}
+                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+              </span>
+              <span className="text-foreground/30">•</span>
+              <span className="text-foreground/60">Stay kracked.</span>
+              <span className="text-foreground/30">•</span>
+            </div>
+          </div>
+        </div>
+        <style jsx>{`
+          .marquee {
+            display: flex;
+            width: max-content;
+            will-change: transform;
+            animation: marquee 60s linear infinite;
+          }
+          .marquee__group {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+          }
+          @keyframes marquee {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .marquee {
+              animation: none;
+              transform: none;
+            }
+          }
+        `}</style>
+      </div>
 
       {/* Mobile Menu Dropdown */}
       <AnimatePresence>
@@ -102,10 +350,42 @@ const Navbar = () => {
           >
             <div className="container mx-auto px-4 py-6 space-y-4 flex flex-col">
               <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Prayer Times
-                </span>
-                <PrayerWidget />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="border border-white/10 hover:border-neon-primary/40 hover:bg-white/5"
+                      aria-label="Profile"
+                    >
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" sideOffset={8}>
+                    <DropdownMenuLabel>Profile</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {isAuthenticated ? (
+                      <DropdownMenuItem
+                        variant="destructive"
+                        onClick={() => {
+                          signOut();
+                        }}
+                      >
+                        <LogOut />
+                        Logout
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem
+                        onClick={() => {
+                          openLoginModal();
+                        }}
+                      >
+                        <User />
+                        Login
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </motion.div>
@@ -115,7 +395,7 @@ const Navbar = () => {
       {/* Decorative Neon Line */}
       <div
         className={cn(
-          "absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-neon-primary to-transparent transition-all duration-500",
+          "absolute bottom-0 left-0 h-px bg-linear-to-r from-transparent via-neon-primary to-transparent transition-all duration-500",
           isScrolled || isMobileMenuOpen ? "w-full opacity-50" : "w-0 opacity-0"
         )}
       />
