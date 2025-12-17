@@ -178,7 +178,11 @@ const Navbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={8}>
-              <DropdownMenuLabel>Profile</DropdownMenuLabel>
+              <DropdownMenuItem asChild>
+                <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
+                  Profile
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               {isAuthenticated ? (
                 <DropdownMenuItem
@@ -361,7 +365,11 @@ const Navbar = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" sideOffset={8}>
-                    <DropdownMenuLabel>Profile</DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {isAuthenticated ? (
                       <DropdownMenuItem
