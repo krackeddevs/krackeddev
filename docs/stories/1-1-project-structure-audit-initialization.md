@@ -16,7 +16,8 @@ So that the codebase is scalable and aligns with the agreed Architecture.
 2.  **When** I audit the directory structure
 3.  **Then** `src/features` directory must exist with all required feature sub-folders
 4.  **And** `profiles` table must include a `role` column (admin/user) for RBAC compliance
-5.  **And** each feature folder must contain an `index.ts` (barrel file)
+5.  **And** Login UI must include inputs for Email/Password (in preparation for Story 1.2 Admin Access)
+6.  **And** each feature folder must contain an `index.ts` (barrel file)
 5.  **And** `src/components/ui` must contain the shared Shadcn components
 6.  **And** Supabase configuration must be verified by checking `.env.local` for `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 7.  **And** TypeScript types for Supabase must be generated and saved to `src/types/supabase.ts`
