@@ -35,7 +35,10 @@ So that I can perform sensitive operations safely.
 
 ## Dev Notes
 
-- **Role Management**: Check `custom_users.role` or `auth.users.app_metadata.role`. Clarify which is used. Default to `app_metadata` if using Supabase standard, or `public.users` table.
+- **Role Management**: Check `profiles.role` (added in Story 1.1).
+- **Bootstrap Admin**: There is no UI to create the *first* admin.
+    - **Action**: Developer must manually update the `role` to 'admin' in the `profiles` table via Supabase Dashboard for their own user after signing up.
+
 
 ### References
 
