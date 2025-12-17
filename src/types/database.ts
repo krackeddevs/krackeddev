@@ -49,6 +49,30 @@ export interface BountySubmissionRow {
   updated_at: string | null;
 }
 
+export interface Bounty {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  reward_amount: number;
+  status: string;
+  type: string;
+  skills: string[] | null;
+  company_name: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BountyInquiry {
+  id: string;
+  company_name: string;
+  email: string;
+  budget_range: string;
+  description: string;
+  status: string;
+  created_at: string;
+}
+
 // Database schema type for Supabase client
 export interface Database {
   public: {
@@ -99,6 +123,38 @@ export interface Database {
             referencedColumns: ["id"];
           }
         ];
+      };
+      bounties: {
+        Row: Bounty;
+        Insert: {
+          id?: string;
+          title: string;
+          slug: string;
+          description?: string | null;
+          reward_amount?: number;
+          status?: string;
+          type?: string;
+          skills?: string[] | null;
+          company_name?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Omit<Bounty, "id" | "created_at">>;
+        Relationships: [];
+      };
+      bounty_inquiries: {
+        Row: BountyInquiry;
+        Insert: {
+          id?: string;
+          company_name: string;
+          email: string;
+          budget_range: string;
+          description: string;
+          status?: string;
+          created_at?: string;
+        };
+        Update: Partial<Omit<BountyInquiry, "id" | "created_at">>;
+        Relationships: [];
       };
     };
     Views: {

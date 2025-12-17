@@ -1,6 +1,6 @@
 # Story 2.1: Landing Page Refactor
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -47,3 +47,22 @@ So that the codebase remains organized and I can maintain the UI separately from
 ### Agent Model Used
 
 Antigravity (System Generated)
+
+### Completion Notes
+- **Refactoring**: Moved `TownhallV2` and `SplitTextAnimation` to `src/features/landingpage/components`.
+- **Logic**: Extracted `useEffect` logic for animation state and audio unlocking into `useLandingSequence` hook.
+- **Testing**: Added unit tests for `useLandingSequence` (5 passing tests). Installed `vitest` infrastructure.
+- **Cleanup**: Deleted legacy component files.
+- **Dependencies**: Updated `src/app/v2/page.tsx` to use new component location.
+
+### File List
+- `src/features/landingpage/components/townhall.tsx`
+- `src/features/landingpage/components/hero-animation.tsx`
+- `src/features/landingpage/hooks/use-landing-sequence.ts`
+- `src/features/landingpage/hooks/use-landing-sequence.test.ts`
+- `src/features/landingpage/page.tsx`
+- `src/features/landingpage/index.ts`
+- `src/app/page.tsx`
+- `src/app/v2/page.tsx`
+- `vitest.config.ts`
+- `package.json`

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TownhallV2 } from "@/components/game/TownhallV2";
+import { TownhallV2 } from "@/features/landingpage/components/townhall";
 import "@/styles/jobs.css";
 
 export default function V2Page() {

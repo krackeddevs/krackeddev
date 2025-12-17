@@ -1,6 +1,6 @@
 # Story 2.3: Navigation & Job Preview
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
