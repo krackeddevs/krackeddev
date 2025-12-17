@@ -21,3 +21,8 @@ export interface GithubStats {
     username: string; // GitHub username
     avatarUrl: string;
 }
+
+export interface BountyStats {
+    totalWins: number;
+    totalEarnings: number;
+}

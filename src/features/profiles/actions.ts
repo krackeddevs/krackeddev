@@ -168,3 +168,39 @@ export async function fetchGithubStats(): Promise<{ data?: GithubStats; error?: 
         return { error: "Failed to connect to GitHub" };
     }
 }
+
+import { BountyStats } from "./types";
+
+export async function fetchBountyStats(userId?: string): Promise<{ data?: BountyStats; error?: string }> {
+    const supabase = await createClient();
+
+    // If no userId provided, use current user
+    let targetUserId = userId;
+    if (!targetUserId) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return { error: "Not authenticated" };
+        targetUserId = user.id;
+    }
+
+    const { data, error } = await supabase
+        .from("bounty_submissions")
+        .select("bounty_reward")
+        .eq("user_id", targetUserId)
+        .eq("status", "approved");
+
+    if (error) {
+        console.error("Error fetching bounty stats:", error);
+        return { error: "Failed to fetch bounty stats" };
+    }
+
+    const totalWins = (data || []).length;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const totalEarnings = (data || []).reduce((acc: number, curr: any) => acc + (curr.bounty_reward || 0), 0);
+
+    return {
+        data: {
+            totalWins,
+            totalEarnings,
+        },
+    };
+}

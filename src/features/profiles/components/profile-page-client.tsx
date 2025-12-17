@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { ProfileData } from "../actions";
-import { GithubStats } from "../types";
+import { GithubStats, BountyStats } from "../types";
 import { ProfileDetails } from "./profile-details";
 import { EditProfileForm } from "./edit-profile-form";
 
 interface ProfilePageClientProps {
     initialData: ProfileData;
     githubStats?: GithubStats;
+    bountyStats?: BountyStats;
 }
 
-export function ProfilePageClient({ initialData, githubStats }: ProfilePageClientProps) {
+export function ProfilePageClient({ initialData, githubStats, bountyStats }: ProfilePageClientProps) {
     const [isEditing, setIsEditing] = useState(false);
 
     return (
@@ -25,6 +26,7 @@ export function ProfilePageClient({ initialData, githubStats }: ProfilePageClien
                 <ProfileDetails
                     profile={initialData}
                     githubStats={githubStats}
+                    bountyStats={bountyStats}
                     onEdit={() => setIsEditing(true)}
                 />
             )}

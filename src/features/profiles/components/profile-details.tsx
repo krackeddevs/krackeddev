@@ -8,14 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Terminal, Code2, User } from "lucide-react";
 import { GithubGraph } from "./github-graph";
 import { TopLanguages } from "./top-languages";
+import { BountyStats } from "./bounty-stats";
 
 interface ProfileDetailsProps {
     profile: ProfileData;
     githubStats?: GithubStats;
+    bountyStats?: { totalWins: number; totalEarnings: number };
     onEdit: () => void;
 }
 
-export function ProfileDetails({ profile, githubStats, onEdit }: ProfileDetailsProps) {
+export function ProfileDetails({ profile, githubStats, bountyStats, onEdit }: ProfileDetailsProps) {
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-8 animate-in fade-in duration-500">
             {/* Header Section */}
@@ -27,7 +29,7 @@ export function ProfileDetails({ profile, githubStats, onEdit }: ProfileDetailsP
                     <div className="flex items-center gap-2 text-muted-foreground">
                         <User className="w-4 h-4" />
                         <span className="font-mono text-sm uppercase tracking-widest">
-                            {profile.role || "Unclassified"}
+                            {profile.developer_role || profile.role || "Unclassified"}
                         </span>
                     </div>
                 </div>
@@ -56,6 +58,10 @@ export function ProfileDetails({ profile, githubStats, onEdit }: ProfileDetailsP
                             </p>
                         </CardContent>
                     </Card>
+
+                    {bountyStats && (
+                        <BountyStats stats={bountyStats} />
+                    )}
 
                     {githubStats && (
                         <GithubGraph
