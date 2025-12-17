@@ -227,7 +227,7 @@ export default function BountyDetailPage({
         bounty_reward: bounty.reward,
         user_id: user.id,
         pull_request_url: prUrl.trim(),
-      })
+      } as any)
       .select("id, pull_request_url, status, notes, created_at, user_id")
       .single();
 
@@ -241,6 +241,7 @@ export default function BountyDetailPage({
     setSubmitted(true);
 
     if (data) {
+      const submissionData = data as { id: string; pull_request_url: string; status: string; notes: string | null; created_at: string | null; user_id: string };
       const submittedBy =
         profile?.username ||
         profile?.full_name ||
@@ -248,16 +249,16 @@ export default function BountyDetailPage({
 
       setSubmissions((prev) => [
         {
-          id: data.id,
+          id: submissionData.id,
           bountyId: bounty.id,
-          pullRequestUrl: data.pull_request_url,
+          pullRequestUrl: submissionData.pull_request_url,
           submittedBy,
-          submittedAt: data.created_at ?? new Date().toISOString(),
-          status: (data.status ?? "pending") as
+          submittedAt: submissionData.created_at ?? new Date().toISOString(),
+          status: (submissionData.status ?? "pending") as
             | "pending"
             | "approved"
             | "rejected",
-          notes: data.notes ?? undefined,
+          notes: submissionData.notes ?? undefined,
         },
         ...prev,
       ]);
@@ -362,16 +363,14 @@ export default function BountyDetailPage({
               BOUNTY #{bounty.id}
             </span>
             <span
-              className={`px-3 py-1 text-xs font-mono border ${
-                statusColors[bounty.status]
-              }`}
+              className={`px-3 py-1 text-xs font-mono border ${statusColors[bounty.status]
+                }`}
             >
               {bounty.status.toUpperCase()}
             </span>
             <span
-              className={`px-3 py-1 text-xs font-mono border ${
-                difficultyColors[bounty.difficulty]
-              }`}
+              className={`px-3 py-1 text-xs font-mono border ${difficultyColors[bounty.difficulty]
+                }`}
             >
               {bounty.difficulty.toUpperCase()}
             </span>
@@ -452,16 +451,14 @@ export default function BountyDetailPage({
           <div className="bg-gray-800/30 border border-gray-700 p-4">
             <div className="flex items-center gap-3">
               <Clock
-                className={`w-5 h-5 ${
-                  isDeadlinePassed ? "text-red-500" : "text-gray-500"
-                }`}
+                className={`w-5 h-5 ${isDeadlinePassed ? "text-red-500" : "text-gray-500"
+                  }`}
               />
               <div>
                 <div className="text-gray-500 text-xs font-mono">DEADLINE</div>
                 <div
-                  className={`font-mono text-sm ${
-                    isDeadlinePassed ? "text-red-400" : "text-white"
-                  }`}
+                  className={`font-mono text-sm ${isDeadlinePassed ? "text-red-400" : "text-white"
+                    }`}
                 >
                   {formatDeadline(bounty.deadline)}
                 </div>

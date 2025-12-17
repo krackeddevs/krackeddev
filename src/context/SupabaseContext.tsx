@@ -7,8 +7,9 @@ import React, {
   useState,
   useCallback,
   ReactNode,
+  useMemo,
 } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import type {
   User,
   Session,
@@ -16,10 +17,10 @@ import type {
   AuthChangeEvent,
   Provider,
 } from "@supabase/supabase-js";
-import type { Profile } from "@/types/database";
+import type { Profile, Database } from "@/types/database";
 
 interface SupabaseContextType {
-  supabase: SupabaseClient | null;
+  supabase: SupabaseClient<Database>;
   user: User | null;
   profile: Profile | null;
   session: Session | null;
@@ -29,6 +30,8 @@ interface SupabaseContextType {
   openLoginModal: () => void;
   closeLoginModal: () => void;
   signInWithOAuth: (provider: Provider) => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signUpWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
@@ -39,6 +42,9 @@ const SupabaseContext = createContext<SupabaseContextType | undefined>(
 );
 
 export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
+  // Create a single supabase client instance for the component lifecycle
+  const supabase = useMemo(() => createClient(), []);
+
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -47,8 +53,6 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
 
   // Fetch user profile from profiles table
   const fetchProfile = useCallback(async (userId: string) => {
-    if (!supabase) return null;
-
     try {
       const { data, error } = await supabase
         .from("profiles")
@@ -57,11 +61,7 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
         .single();
 
       if (error) {
-        // Profile might not exist yet (trigger hasn't run)
-        console.log(
-          "Profile not found, may be created shortly:",
-          error.message
-        );
+        console.log("Profile not found, may be created shortly:", error.message);
         return null;
       }
 
@@ -70,7 +70,7 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error fetching profile:", error);
       return null;
     }
-  }, []);
+  }, [supabase]);
 
   // Refresh profile data
   const refreshProfile = useCallback(async () => {
@@ -80,19 +80,12 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
   }, [user, fetchProfile]);
 
   useEffect(() => {
-    // Skip if supabase is not available (e.g., during build)
-    const supabaseClient = supabase;
-    if (!supabaseClient) {
-      setLoading(false);
-      return;
-    }
-
     // Get initial session
     const initializeAuth = async () => {
       try {
         const {
           data: { session: initialSession },
-        } = await supabaseClient.auth.getSession();
+        } = await supabase.auth.getSession();
         setSession(initialSession);
         setUser(initialSession?.user ?? null);
 
@@ -113,7 +106,7 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabaseClient.auth.onAuthStateChange(
+    } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, currentSession: Session | null) => {
         console.log("Auth state changed:", event);
         setSession(currentSession);
@@ -137,7 +130,7 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [fetchProfile]);
+  }, [supabase, fetchProfile]);
 
   const openLoginModal = useCallback(() => {
     setIsLoginModalOpen(true);
@@ -151,15 +144,11 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   const signInWithOAuth = async (provider: Provider) => {
-    if (!supabase) throw new Error("Supabase not initialized");
-
-    // Detect current origin (works for both localhost and production)
     const currentOrigin =
       typeof window !== "undefined"
         ? window.location.origin
         : process.env.NEXT_PUBLIC_SITE_URL || "https://krackeddevs.com";
 
-    // Remove trailing slash if present
     const siteUrl = currentOrigin.replace(/\/$/, "");
     const redirectTo = `${siteUrl}/auth/callback`;
 
@@ -172,8 +161,17 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
     if (error) throw error;
   };
 
+  const signInWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error: error ? new Error(error.message) : null };
+  };
+
+  const signUpWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({ email, password });
+    return { error: error ? new Error(error.message) : null };
+  };
+
   const signOut = async () => {
-    if (!supabase) throw new Error("Supabase not initialized");
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setProfile(null);
@@ -182,9 +180,10 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
 
   // Update user profile
   const updateProfile = async (updates: Partial<Profile>) => {
-    if (!supabase || !user) throw new Error("Not authenticated");
+    if (!user) throw new Error("Not authenticated");
 
-    const { error } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any)
       .from("profiles")
       .update(updates)
       .eq("id", user.id);
@@ -208,6 +207,8 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
         openLoginModal,
         closeLoginModal,
         signInWithOAuth,
+        signInWithEmail,
+        signUpWithEmail,
         signOut,
         refreshProfile,
         updateProfile,

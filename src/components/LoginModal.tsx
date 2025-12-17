@@ -1,8 +1,11 @@
 "use client";
 
 import { useSupabase } from "@/context/SupabaseContext";
-import { X, ExternalLink, LogOut } from "lucide-react";
-import { useEffect, useCallback } from "react";
+import { X, ExternalLink, LogOut, Mail, ArrowLeft } from "lucide-react";
+import { useEffect, useCallback, useState } from "react";
+import { usePathname } from "next/navigation";
+
+type ViewState = "login" | "signup" | "forgot-password" | "forgot-password-success";
 
 export const LoginModal = () => {
   const {
@@ -11,8 +14,18 @@ export const LoginModal = () => {
     isLoginModalOpen,
     closeLoginModal,
     signInWithOAuth,
+    signInWithEmail,
+    signUpWithEmail,
     signOut,
+    supabase,
   } = useSupabase();
+
+  const pathname = usePathname();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [viewState, setViewState] = useState<ViewState>("login");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // Handle escape key to close modal (only when authenticated)
   const handleKeyDown = useCallback(
@@ -36,7 +49,9 @@ export const LoginModal = () => {
     };
   }, [isLoginModalOpen, handleKeyDown]);
 
-  if (!isLoginModalOpen) return null;
+  // Hide modal on auth routes
+  const isAuthRoute = pathname?.startsWith('/auth/');
+  if (!isLoginModalOpen || isAuthRoute) return null;
 
   // Get user display info from Supabase user metadata
   const displayName =
@@ -70,6 +85,56 @@ export const LoginModal = () => {
     }
   };
 
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const result = viewState === "signup"
+        ? await signUpWithEmail(email, password)
+        : await signInWithEmail(email, password);
+
+      if (result.error) {
+        setError(result.error.message);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${currentOrigin}/auth/update-password`,
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        setViewState("forgot-password-success");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetToLogin = () => {
+    setViewState("login");
+    setError(null);
+    setEmail("");
+    setPassword("");
+  };
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
@@ -93,7 +158,7 @@ export const LoginModal = () => {
               id="login-modal-title"
               className="text-lg font-bold text-green-400 uppercase tracking-wider"
             >
-              {isAuthenticated ? "Your Profile" : "Connect Account"}
+              {isAuthenticated ? "Your Profile" : viewState === "forgot-password" || viewState === "forgot-password-success" ? "Reset Password" : "Connect Account"}
             </h2>
             {/* Only show close button when authenticated */}
             {isAuthenticated && (
@@ -119,7 +184,7 @@ export const LoginModal = () => {
                     alt={`${displayName}'s avatar`}
                     className="w-16 h-16 border-2 border-neon-primary rounded-full"
                   />
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="text-lg font-bold text-foreground truncate">
                       {displayName}
                     </p>
@@ -136,7 +201,7 @@ export const LoginModal = () => {
                       href={`https://github.com/${user.user_metadata.user_name}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-3 border border-neon-primary/50 text-neon-primary font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/10 transition-all"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
                     >
                       <ExternalLink className="w-4 h-4" />
                       View GitHub Profile
@@ -151,12 +216,74 @@ export const LoginModal = () => {
                   </button>
                 </div>
               </div>
-            ) : (
-              // Logged out state
+            ) : viewState === "forgot-password-success" ? (
+              // Forgot password success state
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 mx-auto flex items-center justify-center bg-neon-primary/10 border border-neon-primary">
+                  <Mail className="w-8 h-8 text-neon-primary" />
+                </div>
+                <p className="text-lg font-bold text-foreground">Check your email</p>
+                <p className="text-sm text-muted-foreground">
+                  We've sent a password reset link to <strong>{email}</strong>
+                </p>
+                <button
+                  type="button"
+                  onClick={resetToLogin}
+                  className="flex items-center justify-center gap-2 w-full text-sm text-neon-primary hover:underline"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Sign In
+                </button>
+              </div>
+            ) : viewState === "forgot-password" ? (
+              // Forgot password form
               <div className="space-y-6">
-                {/* Description */}
                 <div className="text-center space-y-2">
-                  <div className="w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                  <Mail className="w-12 h-12 text-neon-primary mx-auto" />
+                  <p className="text-sm text-muted-foreground">
+                    Enter your email and we'll send you a reset link.
+                  </p>
+                </div>
+                <form onSubmit={handleForgotPassword} className="space-y-3">
+                  {error && (
+                    <div className="p-3 bg-red-500/10 border border-red-500/50 text-red-400 text-sm">
+                      {error}
+                    </div>
+                  )}
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    required
+                    autoFocus
+                    className="w-full px-4 py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading || !email}
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
+                  >
+                    <Mail className="w-4 h-4" />
+                    {loading ? "Sending..." : "Send Reset Link"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetToLogin}
+                    className="flex items-center justify-center gap-2 w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Sign In
+                  </button>
+                </form>
+              </div>
+            ) : (
+              // Logged out state - login/signup form
+              <div className="space-y-6">
+                {/* Welcome Section */}
+                <div className="flex flex-col items-center text-center space-y-2 mb-4">
+                  <div className="relative">
                     <img
                       src="/logo/logo-old.png"
                       alt="Kracked Devs Logo"
@@ -217,6 +344,65 @@ export const LoginModal = () => {
                     </svg>
                     Login with Google
                   </button>
+                  <div className="flex items-center justify-center py-2">
+                    <span className="text-muted-foreground">or</span>
+                  </div>
+                  {/* Email/Password Form */}
+                  <form onSubmit={handleEmailAuth} className="space-y-3">
+                    {error && (
+                      <div className="p-3 bg-red-500/10 border border-red-500/50 text-red-400 text-sm">
+                        {error}
+                      </div>
+                    )}
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      required
+                      autoComplete="email"
+                      className="w-full px-4 py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                    />
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      required
+                      minLength={6}
+                      autoComplete={viewState === "signup" ? "new-password" : "current-password"}
+                      className="w-full px-4 py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
+                    >
+                      <Mail className="w-4 h-4" />
+                      {loading ? "Loading..." : viewState === "signup" ? "Sign Up" : "Sign In"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewState(viewState === "signup" ? "login" : "signup")}
+                      className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {viewState === "signup" ? "Already have an account? Sign In" : "Need an account? Sign Up"}
+                    </button>
+                    {viewState === "login" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setViewState("forgot-password");
+                          setError(null);
+                        }}
+                        className="block w-full text-center text-sm text-neon-primary hover:underline"
+                      >
+                        Forgot your password?
+                      </button>
+                    )}
+                  </form>
                 </div>
 
                 {/* Info text */}

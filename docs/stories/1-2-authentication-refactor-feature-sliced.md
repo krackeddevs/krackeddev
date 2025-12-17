@@ -1,6 +1,6 @@
 # Story 1.2: Authentication Refactor (Feature-Sliced & SSR Migration)
 
-Status: ready-for-dev
+Status: complete
 
 ## Story
 

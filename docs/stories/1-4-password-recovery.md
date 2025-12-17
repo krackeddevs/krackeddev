@@ -1,6 +1,6 @@
 # Story 1.4: Password Recovery
 
-Status: ready-for-dev
+Status: complete
 
 ## Story
 

@@ -80,7 +80,7 @@ const Navbar = () => {
           visitor_id: visitorId,
           user_agent: navigator.userAgent,
           referrer: document.referrer || null,
-        });
+        } as any);
 
         const { count } = await supabase
           .from("page_views")
@@ -115,9 +115,8 @@ const Navbar = () => {
     const fetchPrayerTimes = async () => {
       try {
         const date = new Date();
-        const formattedDate = `${date.getDate()}-${
-          date.getMonth() + 1
-        }-${date.getFullYear()}`;
+        const formattedDate = `${date.getDate()}-${date.getMonth() + 1
+          }-${date.getFullYear()}`;
         const res = await fetch(
           `https://api.aladhan.com/v1/timingsByCity/${formattedDate}?city=Kuala%20Lumpur&country=Malaysia&method=17`
         );

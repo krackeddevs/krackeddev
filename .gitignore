@@ -41,7 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # bmad agent tools
-/_bmad/
-/_bmad-output/
-/.agent/
-/.claude/
+#/_bmad/
+#/_bmad-output/
+#/.agent/
+#/.claude/
