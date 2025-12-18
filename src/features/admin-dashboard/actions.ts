@@ -1,10 +1,8 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { revalidatePath } from 'next/cache';
-import { ActionResult, BountyInputData, AnalyticsData } from './types';
-import { BountySchema } from './schemas';
-import { UserRole, Profile } from '@/types/database';
+import { ActionResult, AnalyticsData } from './types';
+import { UserRole, Profile, Bounty } from '@/types/database';
 
 // Helper to check admin role
 async function checkAdmin(): Promise<ActionResult<boolean>> {
@@ -27,6 +25,10 @@ async function checkAdmin(): Promise<ActionResult<boolean>> {
 
     return { data: true, error: null };
 }
+
+import { revalidatePath } from 'next/cache';
+import { BountySchema } from './schemas';
+import { BountyInputData } from './types';
 
 export async function createBounty(data: BountyInputData): Promise<ActionResult<any>> {
     const authCheck = await checkAdmin();
@@ -127,8 +129,6 @@ export async function deleteBounty(id: string): Promise<ActionResult<boolean>> {
     return { data: true, error: null };
 }
 
-// User Management Actions
-
 export async function fetchUsers(): Promise<ActionResult<Profile[]>> {
     const authCheck = await checkAdmin();
     if (authCheck.error) return { data: null, error: authCheck.error };
@@ -138,7 +138,7 @@ export async function fetchUsers(): Promise<ActionResult<Profile[]>> {
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(50); // Pagination cap for safety
+        .limit(50);
 
     if (error) {
         console.error('Error fetching users:', error);
@@ -174,22 +174,61 @@ export async function getAnalyticsData(): Promise<ActionResult<AnalyticsData>> {
     if (authCheck.error) return { data: null, error: authCheck.error };
 
     const supabase = await createClient();
-    const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select('location, stack, developer_role, created_at');
 
-    if (error) {
-        console.error('Error fetching analytics data:', error);
-        return { data: null, error: 'Failed to fetch analytics data' };
+    // Parallel fetch for efficiency
+    const [profilesRes, bountiesRes] = await Promise.all([
+        supabase
+            .from('profiles')
+            .select('id, full_name, username, avatar_url, location, stack, developer_role, created_at')
+            .order('created_at', { ascending: false }),
+        supabase
+            .from('bounties')
+            .select('id, title, status, created_at, reward_amount')
+            .order('created_at', { ascending: false })
+    ]);
+
+    if (profilesRes.error) {
+        console.error('Error fetching analytics data (profiles):', profilesRes.error);
+        return { data: null, error: 'Failed to fetch profiles data' };
+    }
+    if (bountiesRes.error) {
+        console.error('Error fetching analytics data (bounties):', bountiesRes.error);
+        return { data: null, error: 'Failed to fetch bounties data' };
     }
 
-    // Process Data
+    // Cast to expected types since select partials don't perfectly match full types
+    const profiles = profilesRes.data as unknown as Profile[];
+    const bounties = bountiesRes.data as unknown as Bounty[];
+
+    // --- Helper for Monthly Growth ---
+    const getGrowth = (dates: (string | null | undefined)[]) => {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+        const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+        const prevMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+        let currentCount = 0;
+        let prevCount = 0;
+
+        dates.forEach(d => {
+            if (!d) return;
+            const date = new Date(d);
+            if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) currentCount++;
+            if (date.getMonth() === prevMonth && date.getFullYear() === prevMonthYear) prevCount++;
+        });
+
+        if (prevCount === 0) return currentCount > 0 ? 100 : 0;
+        return Math.round(((currentCount - prevCount) / prevCount) * 100);
+    };
+
+    // --- Process Profiles ---
     const locationMap = new Map<string, number>();
     const stackMap = new Map<string, number>();
     const roleMap = new Map<string, number>();
     const growthMap = new Map<string, number>();
 
-    profiles.forEach((profile: any) => {
+    profiles.forEach((profile) => {
         // Location
         if (profile.location) {
             const loc = profile.location.trim(); // Simplified state matching
@@ -208,7 +247,7 @@ export async function getAnalyticsData(): Promise<ActionResult<AnalyticsData>> {
             roleMap.set(profile.developer_role, (roleMap.get(profile.developer_role) || 0) + 1);
         }
 
-        // Growth (Monthly)
+        // Growth Timeline
         if (profile.created_at) {
             const date = new Date(profile.created_at);
             const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
@@ -216,7 +255,7 @@ export async function getAnalyticsData(): Promise<ActionResult<AnalyticsData>> {
         }
     });
 
-    // Format for Recharts
+    // Format Charts
     const locationDistribution = Array.from(locationMap.entries())
         .map(([name, value]) => ({ name, value }))
         .sort((a, b) => b.value - a.value);
@@ -237,14 +276,58 @@ export async function getAnalyticsData(): Promise<ActionResult<AnalyticsData>> {
         return { date, count: cumulative };
     });
 
+    // --- Stats Calculation ---
+    // Users
+    const totalUsers = profiles.length;
+    const userGrowthRate = getGrowth(profiles.map((p) => p.created_at));
+
+    // Bounties
+    const totalBounties = bounties.length;
+    const activeBounties = bounties.filter((b) => b.status === 'published' || b.status === 'open').length;
+    const completedBounties = bounties.filter((b) => b.status === 'completed' || b.status === 'paid').length;
+    const bountyGrowthRate = getGrowth(bounties.map((b) => b.created_at));
+    const totalRewards = bounties.reduce((acc, b) => acc + (b.reward_amount || 0), 0);
+
+    // --- Recent Activity ---
+    const recentUsers = profiles.slice(0, 5).map((p) => ({
+        id: p.id,
+        name: p.full_name || p.username || 'Anonymous',
+        email: 'Hidden',
+        role: p.developer_role || 'Developer',
+        joinedAt: p.created_at,
+        avatar: p.avatar_url || undefined,
+    }));
+
+    const recentBounties = bounties.slice(0, 5).map((b) => ({
+        id: b.id,
+        title: b.title,
+        status: b.status,
+        reward: b.reward_amount,
+        createdAt: b.created_at,
+    }));
+
     return {
         data: {
-            totalUsers: profiles.length,
+            // Metrics
+            totalUsers,
+            userGrowthRate,
+            totalBounties,
+            activeBounties,
+            completedBounties,
+            bountyGrowthRate,
+            totalRewards,
+
+            // Charts
             locationDistribution,
             stackDistribution,
             roleDistribution,
-            userGrowth
+            userGrowth,
+
+            // Recent
+            recentUsers,
+            recentBounties,
         },
         error: null
     };
 }
+

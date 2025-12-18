@@ -9,9 +9,9 @@ interface TechStackChartProps {
 
 export function TechStackChart({ data }: TechStackChartProps) {
     return (
-        <div className="w-full h-[250px] md:h-[400px] border rounded-lg bg-card p-4">
+        <div className="w-full h-[250px] md:h-full min-h-[400px] border rounded-lg bg-card p-4">
             <h3 className="text-lg font-semibold mb-4">Top Tech Stacks</h3>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="90%">
                 <BarChart data={data} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#374151" />
                     <XAxis type="number" stroke="#9ca3af" tick={{ fontSize: 10 }} />

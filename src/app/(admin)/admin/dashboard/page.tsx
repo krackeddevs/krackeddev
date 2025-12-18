@@ -3,8 +3,17 @@ import { AnalyticsMap } from '@/features/admin-dashboard/components/analytics/an
 import { TechStackChart } from '@/features/admin-dashboard/components/analytics/tech-stack-chart';
 import { RoleDistributionChart } from '@/features/admin-dashboard/components/analytics/role-distribution-chart';
 import { UserGrowthChart } from '@/features/admin-dashboard/components/analytics/user-growth-chart';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Code, Crown } from 'lucide-react';
+import { StatsCard } from '@/features/admin-dashboard/components/stats-card';
+import { RecentActivity } from '@/features/admin-dashboard/components/recent-activity';
+import {
+    Users,
+    Code,
+    Crown,
+    Target,
+    Clock,
+    DollarSign,
+    TrendingUp
+} from 'lucide-react';
 
 export default async function AdminDashboardPage() {
     const { data, error } = await getAnalyticsData();
@@ -18,63 +27,77 @@ export default async function AdminDashboardPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
-
-            {/* Metrics Row */}
-            <div className="grid gap-4 md:grid-cols-3">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{data.totalUsers}</div>
-                        <p className="text-xs text-muted-foreground">Registered developers</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Top Skill</CardTitle>
-                        <Code className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{data.stackDistribution[0]?.name || '-'}</div>
-                        <p className="text-xs text-muted-foreground">Most popular tech</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Top Role</CardTitle>
-                        <Crown className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold capitalize">{data.roleDistribution.sort((a, b) => b.value - a.value)[0]?.name || '-'}</div>
-                        <p className="text-xs text-muted-foreground">Highest distribution</p>
-                    </CardContent>
-                </Card>
+        <div className="space-y-6 pb-8">
+            <div className="flex items-center justify-between">
+                <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
             </div>
 
-            {/* Charts Grid */}
+            {/* Metrics Row */}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <StatsCard
+                    title="Total Users"
+                    value={data.totalUsers}
+                    icon={Users}
+                    trend={data.userGrowthRate}
+                    trendLabel="from last month"
+                    description="Registered developers"
+                />
+                <StatsCard
+                    title="Active Bounties"
+                    value={data.activeBounties}
+                    icon={Target}
+                    trendLabel="Currently open"
+                    description="Opportunities available"
+                />
+                <StatsCard
+                    title="Total Rewards"
+                    value={`RM ${data.totalRewards.toLocaleString()}`}
+                    icon={DollarSign}
+                    description="Total bounty value"
+                />
+                <StatsCard
+                    title="Bounty Growth"
+                    value={`${data.bountyGrowthRate}%`}
+                    icon={TrendingUp}
+                    trend={data.bountyGrowthRate}
+                    trendLabel="from last month"
+                    description="Platform scaling"
+                />
+            </div>
+
+            {/* Main Content Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                {/* User Map - Wide */}
-                <div className="col-span-4">
-                    <AnalyticsMap data={data.locationDistribution} />
-                </div>
 
-                {/* Role Distribution - Side */}
-                <div className="col-span-3">
-                    <RoleDistributionChart data={data.roleDistribution} />
-                </div>
-
-                {/* Growth - Wide */}
-                <div className="col-span-4">
+                {/* User Growth - Wide (4 cols) */}
+                <div className="col-span-full lg:col-span-4">
                     <UserGrowthChart data={data.userGrowth} />
                 </div>
 
-                {/* Tech Stack - Side */}
-                <div className="col-span-3">
+                {/* Role Distribution - Side (3 cols) */}
+                <div className="col-span-full md:col-span-1 lg:col-span-3">
+                    <RoleDistributionChart data={data.roleDistribution} />
+                </div>
+
+                {/* Second Row */}
+
+                {/* Recent Activity - Side (3 cols) */}
+                <div className="col-span-full md:col-span-1 lg:col-span-3 h-full">
+                    <RecentActivity
+                        recentUsers={data.recentUsers}
+                        recentBounties={data.recentBounties}
+                    />
+                </div>
+
+                {/* Tech Stack - Wide (4 cols) */}
+                <div className="col-span-full lg:col-span-4">
                     <TechStackChart data={data.stackDistribution} />
+                </div>
+            </div>
+
+            {/* Bottom Row - Map */}
+            <div className="grid gap-4 grid-cols-1">
+                <div className="col-span-1">
+                    <AnalyticsMap data={data.locationDistribution} />
                 </div>
             </div>
         </div>

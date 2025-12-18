@@ -1,6 +1,6 @@
 # Story 3.3: Stats & Wins Display
 
-Status: review
+Status: done
 
 ## Story
 

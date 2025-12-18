@@ -1,6 +1,6 @@
 # Story 1.4: Password Recovery
 
-Status: complete
+Status: done
 
 ## Story
 

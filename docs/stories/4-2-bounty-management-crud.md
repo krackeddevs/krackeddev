@@ -1,6 +1,6 @@
 # Story 4.2: Bounty Management (CRUD)
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -51,15 +51,15 @@ So that I can keep the marketplace up to date.
 
 ## Tasks
 
-- [ ] Create Zod schema for Bounty (Create/Update) in `src/features/admin-dashboard/schemas.ts` <!-- id: 1 -->
-- [ ] Implement Server Actions in `src/features/admin-dashboard/actions.ts`: `createBounty`, `updateBounty`, `deleteBounty` <!-- id: 2 -->
-- [ ] Create `BountyForm` component in `src/features/admin-dashboard/components/bounty-form.tsx` <!-- id: 3 -->
-- [ ] Create `BountyTable` component in `src/features/admin-dashboard/components/bounty-table.tsx` <!-- id: 4 -->
-- [ ] Create Admin Page: `src/app/(admin)/admin/bounties/page.tsx` (List) <!-- id: 5 -->
-- [ ] Create Admin Page: `src/app/(admin)/admin/bounties/create/page.tsx` (Create) <!-- id: 6 -->
-- [ ] Create Admin Page: `src/app/(admin)/admin/bounties/[id]/edit/page.tsx` (Edit) <!-- id: 7 -->
-- [ ] Add "Bounties" link to `AdminSidebar` <!-- id: 8 -->
-- [ ] Run Tests (`npm test src/features/admin-dashboard`) <!-- id: 9 -->
+- [x] Create Zod schema for Bounty (Create/Update) in `src/features/admin-dashboard/schemas.ts` <!-- id: 1 -->
+- [x] Implement Server Actions in `src/features/admin-dashboard/actions.ts`: `createBounty`, `updateBounty`, `deleteBounty` <!-- id: 2 -->
+- [x] Create `BountyForm` component in `src/features/admin-dashboard/components/bounty-form.tsx` <!-- id: 3 -->
+- [x] Create `BountyTable` component in `src/features/admin-dashboard/components/bounty-table.tsx` <!-- id: 4 -->
+- [x] Create Admin Page: `src/app/(admin)/admin/bounties/page.tsx` (List) <!-- id: 5 -->
+- [x] Create Admin Page: `src/app/(admin)/admin/bounties/create/page.tsx` (Create) <!-- id: 6 -->
+- [x] Create Admin Page: `src/app/(admin)/admin/bounties/[id]/edit/page.tsx` (Edit) <!-- id: 7 -->
+- [x] Add "Bounties" link to `AdminSidebar` <!-- id: 8 -->
+- [x] Run Tests (`npm test src/features/admin-dashboard`) <!-- id: 9 -->
 
 ## Dev Agent Record
 

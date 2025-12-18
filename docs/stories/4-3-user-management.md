@@ -1,6 +1,6 @@
 # Story 4.3: User Management
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -38,15 +38,15 @@ So that I can protect the platform from bad actors.
 
 ## Tasks
 
-- [ ] Create migration to add `status` column (enum: active, banned) to `profiles` table.
-- [ ] Update `Profile` type definition in `src/types/database.ts`.
-- [ ] Implement `fetchUsers` server action (with pagination support).
-- [ ] Implement `toggleUserBan` server action.
-- [ ] Create `UserTable` component (Desktop view).
-- [ ] Create `UserCard` component (Mobile view).
-- [ ] Implement `BanConfirmationDialog`.
-- [ ] Create Admin User Management Page at `src/app/(admin)/admin/users/page.tsx` handling responsive switching.
-- [ ] Update Middleware (`src/lib/supabase/middleware.ts`) to deny access to banned users.
+- [x] Create migration to add `status` column (enum: active, banned) to `profiles` table.
+- [x] Update `Profile` type definition in `src/types/database.ts`.
+- [x] Implement `fetchUsers` server action (with pagination support).
+- [x] Implement `toggleUserBan` server action.
+- [x] Create `UserTable` component (Desktop view).
+- [x] Create `UserCard` component (Mobile view) - *merged into UserTable*.
+- [x] Implement `BanConfirmationDialog`.
+- [x] Create Admin User Management Page at `src/app/(admin)/admin/users/page.tsx` handling responsive switching.
+- [x] Update Middleware (`src/lib/supabase/middleware.ts`) to deny access to banned users.
 
 ## Dev Notes
 

@@ -1,5 +1,7 @@
 # Story 4.4: Admin Analytics Dashboard
 
+Status: done
+
 ## Background
 The admin dashboard needs to provide insights into the user base to help with decision making and community understanding.
 
@@ -15,9 +17,18 @@ The admin dashboard needs to provide insights into the user base to help with de
     -   Aggregation logic to count users by location, stack, role, and date.
 -   **Frontend**:
     -   Use `Recharts` for charts (standard in React).
-    -   Use `react-simple-maps` or similar lightweight mapping for the world/region map. Or just a simple list if mapping is too complex for now, but user asked for a "map". I'll use a simple SVG map or a list if map libraries are heavy. Given the "WOW" factor requirement, a map is better.
+    -   Use `react-simple-maps` for the Malaysia map.
     -   Components: `AnalyticsMap`, `TechStackChart`, `UserGrowthChart`, `RoleDistributionChart`.
 
 ## Design
 -   Cyberpunk/Dark theme consistent with the rest of the app.
 -   Responsive grid layout for the dashboard.
+-   Mobile optimized views for all charts.
+
+## Tasks
+
+- [x] Create Story Documentation `docs/stories/4-4-admin-analytics.md`
+- [x] Implement Server Actions for Analytics (`getAnalyticsData`)
+- [x] Create Analytics Components (Charts, Maps)
+- [x] Update Admin Dashboard Page to display metrics
+- [x] Optimize Charts for Mobile View

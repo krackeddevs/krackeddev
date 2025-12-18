@@ -43,7 +43,7 @@ export function AdminSidebarContent({ className, onLinkClick }: SidebarContentPr
 
 export function AdminSidebar() {
     return (
-        <aside className="hidden md:block w-64 min-h-screen border-r bg-background p-4 relative z-10">
+        <aside className="hidden md:block w-64 h-full border-r bg-background p-4 relative z-10">
             <AdminSidebarContent />
         </aside>
     );

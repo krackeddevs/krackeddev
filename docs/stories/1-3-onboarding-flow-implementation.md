@@ -1,6 +1,6 @@
 # Story 1.3: Onboarding Flow Implementation
 
-Status: complete
+Status: done
 
 ## Story
 

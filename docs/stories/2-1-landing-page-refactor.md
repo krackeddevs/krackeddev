@@ -1,6 +1,6 @@
 # Story 2.1: Landing Page Refactor
 
-Status: review
+Status: done
 
 ## Story
 

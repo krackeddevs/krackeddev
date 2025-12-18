@@ -1,6 +1,6 @@
 # Story 1.1: Project Structure Audit & Initialization
 
-Status: complete
+Status: done
 
 <!-- Note: Validation verified against checklist.md - Critical fixes applied. -->
 

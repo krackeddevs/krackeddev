@@ -1,6 +1,6 @@
 # Story 3.2: GitHub Stats Integration
 
-Status: complete
+Status: done
 
 ## Story
 

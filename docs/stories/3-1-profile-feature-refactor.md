@@ -1,6 +1,6 @@
 # Story 3.1: Profile Feature Refactor & Alignment
 
-Status: review
+Status: done
 
 ## Story
 

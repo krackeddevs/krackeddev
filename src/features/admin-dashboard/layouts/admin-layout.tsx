@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { AdminSidebar, AdminSidebarContent } from '../components/admin-sidebar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
@@ -13,16 +13,26 @@ interface AdminLayoutProps {
 export function AdminLayout({ children }: AdminLayoutProps) {
     const [open, setOpen] = useState(false);
 
+    // Lock body scroll to prevent double scrollbars since we have global Navbar + local scroll area
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        document.body.style.height = '100vh';
+        return () => {
+            document.body.style.overflow = '';
+            document.body.style.height = '';
+        };
+    }, []);
+
     return (
-        <div className="flex h-screen bg-background text-foreground relative overflow-hidden">
+        <div className="flex h-full w-full bg-background text-foreground relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
             {/* Desktop Sidebar */}
             <AdminSidebar />
 
             <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
-                {/* Mobile Header */}
-                <div className="md:hidden border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 flex items-center">
+                {/* Mobile Header (Sidebar Toggle only) */}
+                <div className="md:hidden border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 flex items-center shrink-0">
                     <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon" className="mr-2">
