@@ -41,7 +41,7 @@ export function LiveStats() {
     if (!stats) return null; // Or a loading skeleton
 
     const statItems = [
-        { label: "TOTAL BOUNTIES PAID", value: stats.payoutVolume, prefix: "$" },
+        { label: "TOTAL BOUNTIES PAID", value: stats.payoutVolume, prefix: "RM" },
         { label: "LIVE MISSIONS", value: stats.activeBounties, prefix: "" },
         { label: "ACTIVE AGENTS", value: stats.travelers, prefix: "" },
     ];

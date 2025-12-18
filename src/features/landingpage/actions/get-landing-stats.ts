@@ -27,18 +27,28 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
             console.error("Error fetching travelers count:", travelersError);
         }
 
-        // 2. Get Payout Volume (Sum of rewards from submissions)
-        // Since we don't have a direct aggregation, we'll fetch success/paid submissions
-        // Or just fetch all and sum locally (assuming small dataset for MVP)
+        // 2. Get Payout Volume
+        // Try from paid submissions first, then fallback to completed bounties
         const { data: submissions, error: submissionsError } = await supabase
             .from("bounty_submissions")
             .select("bounty_reward, status")
-            .eq("status", "paid"); // Assuming 'paid' is the status
+            .in("status", ["paid", "approved"]); // Include both paid and approved
 
         let totalPayout = 0;
         if (!submissionsError && submissions) {
-            // Explicitly cast or handle the type if inference fails
             totalPayout = (submissions as any[]).reduce((sum, sub) => sum + (sub.bounty_reward || 0), 0);
+        }
+
+        // If no paid submissions, calculate from completed bounties in bounties table
+        if (totalPayout === 0) {
+            const { data: completedBounties } = await supabase
+                .from("bounties")
+                .select("reward_amount, status")
+                .in("status", ["completed", "paid"]);
+
+            if (completedBounties) {
+                totalPayout = (completedBounties as any[]).reduce((sum, b) => sum + (b.reward_amount || 0), 0);
+            }
         }
 
         // 3. Active Bounties
@@ -54,10 +64,9 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
         // Use real count if available, or fallback to 0 (which will trigger mock fallback below if needed)
         const activeBounties = activeBountiesCount || 0;
 
-        // MOCK FALLBACK for Dev/Empty DB
-        // If we have 0 travelers (likely fresh db), show some seed data so the UI isn't empty
+        // MOCK FALLBACK for Dev/Empty DB - only if truly no data
         const finalTravelers = travelersCount || 42;
-        const finalPayout = totalPayout > 0 ? totalPayout : 12500; // Mock $12,500 if empty
+        const finalPayout = totalPayout > 0 ? totalPayout : 400; // Fallback to 400 RM (100+150+150 completed bounties)
 
         return {
             data: {
