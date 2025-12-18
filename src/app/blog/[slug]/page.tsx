@@ -1,5 +1,3 @@
-export const runtime = 'edge';
-
 import BlogPostClient from './BlogPostClient';
 
 export default function BlogPostPage({
