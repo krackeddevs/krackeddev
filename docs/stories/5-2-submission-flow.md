@@ -1,6 +1,6 @@
 # Story 5.2: Submission Flow
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -31,9 +31,23 @@ So that I can claim the bounty.
 
 ## Dev Notes
 
+- **Module Location**: Keep action in `src/features/bounty-board/actions.ts` — submission is bounty domain logic
 - **Submission Limit**: STRICTLY 1 submission per user per bounty (MVP Constraint).
    - If user attempts a second submission, show error: "You have already submitted a solution for this bounty."
+   - Use database unique constraint on `(bounty_slug, user_id)` to enforce
    - **Future Context**: PM decision is to stick to 1:1 for MVP. Post-launch, we will gather feedback to see if users need multiple submissions.
+- **Form UX**: Display success state with confirmation message after submission; allow viewing their own submission status
+
+## Testing Requirements
+
+- Unit test for GitHub PR URL validation regex
+- Integration test for `submitBountySolution` server action
+- Test duplicate submission prevention returns proper error
+- Test form submission success state displays correctly
+
+## Execution Dependency
+
+> **Requires:** Story 5.1 (Bounty Board Refactor) must be completed first — this story uses the extracted `SubmissionCard` component and shared types.
 
 ### References
 

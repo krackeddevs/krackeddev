@@ -1,4 +1,40 @@
-// Bounty board feature barrel file
-// Export bounty board components, hooks, and utilities here
+// Bounty Board Feature - Public API
+// This barrel file exports all public components, actions, and types
 
-export { };
+// Types
+export type {
+    Bounty,
+    BountyStatus,
+    BountyDifficulty,
+    BountyRarity,
+    BountyWinner,
+    BountySubmission,
+    BountyFilters,
+    BountyStats,
+} from "./types";
+
+export { difficultyColors, statusColors, rarityColors } from "./types";
+
+// Server Actions
+export {
+    fetchActiveBounties,
+    fetchBountyBySlug,
+    fetchBountySubmissions,
+    fetchBountyStats,
+    fetchUniqueTags,
+    submitBountySolution,
+} from "./actions";
+
+// Validators (sync functions - separate from server actions)
+export { validateGitHubPrUrl, GITHUB_PR_URL_REGEX } from "./validators";
+
+// List Page Components
+export { BountyCard } from "./components/bounty-card";
+export { BountyFilters as BountyFiltersPanel } from "./components/bounty-filters";
+export { BountyStatsBar } from "./components/bounty-stats-bar";
+export { BountyList } from "./components/bounty-list";
+
+// Detail Page Components
+export { BountyDetail } from "./components/bounty-detail";
+export { SubmissionCard } from "./components/submission-card";
+export { WinnerDisplay } from "./components/winner-display";
