@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Target, Users } from 'lucide-react';
+import { LayoutDashboard, Target, Users, GitPullRequest } from 'lucide-react';
 
 interface SidebarContentProps {
     className?: string;
@@ -27,6 +27,14 @@ export function AdminSidebarContent({ className, onLinkClick }: SidebarContentPr
                 >
                     <Target className="w-4 h-4" />
                     Bounties
+                </Link>
+                <Link
+                    href="/admin/submissions"
+                    onClick={onLinkClick}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+                >
+                    <GitPullRequest className="w-4 h-4" />
+                    Submissions
                 </Link>
                 <Link
                     href="/admin/users"

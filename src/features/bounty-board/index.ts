@@ -23,7 +23,14 @@ export {
     fetchBountyStats,
     fetchUniqueTags,
     submitBountySolution,
+    // Admin verification actions
+    fetchAllSubmissions,
+    reviewSubmission,
+    markSubmissionPaid,
 } from "./actions";
+
+// Types
+export type { AdminSubmission } from "./actions";
 
 // Validators (sync functions - separate from server actions)
 export { validateGitHubPrUrl, GITHUB_PR_URL_REGEX } from "./validators";

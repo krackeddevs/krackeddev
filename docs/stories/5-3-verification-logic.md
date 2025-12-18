@@ -1,6 +1,6 @@
 # Story 5.3: Verification Logic
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 

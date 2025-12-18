@@ -34,26 +34,20 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
                             {submission.status}
                         </span>
                     </div>
-                    <a
-                        href={submission.pullRequestUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cyan-400 hover:text-cyan-300 font-mono text-sm flex items-center gap-1"
-                        data-testid="pr-link"
-                    >
-                        <GitPullRequest className="w-4 h-4" />
-                        {submission.pullRequestUrl.replace("https://github.com/", "")}
-                    </a>
-                    <div className="text-gray-500 text-xs mt-2" data-testid="submission-meta">
-                        by {submission.submittedBy} •{" "}
-                        {new Date(submission.submittedAt).toLocaleDateString()}
+                    {/* Only show submitter name, hide PR URL for privacy */}
+                    <div className="flex items-center gap-2 text-gray-300 font-mono text-sm">
+                        <GitPullRequest className="w-4 h-4 text-gray-500" />
+                        <span data-testid="submitter-name">{submission.submittedBy}</span>
                     </div>
-                    {submission.notes && (
-                        <p className="text-gray-400 text-sm mt-2" data-testid="submission-notes">
-                            {submission.notes}
-                        </p>
-                    )}
+                    <div className="text-gray-500 text-xs mt-2" data-testid="submission-meta">
+                        Submitted on {new Date(submission.submittedAt).toLocaleDateString()}
+                    </div>
                 </div>
+                {submission.notes && (
+                    <p className="text-gray-400 text-sm mt-2" data-testid="submission-notes">
+                        {submission.notes}
+                    </p>
+                )}
             </div>
         </div>
     );

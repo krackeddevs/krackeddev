@@ -345,3 +345,168 @@ export async function submitBountySolution(
         return { data: null, error: "Failed to submit solution" };
     }
 }
+
+// ============================================================================
+// Admin Verification Actions
+// ============================================================================
+
+export interface AdminSubmission {
+    id: string;
+    bountySlug: string;
+    bountyTitle: string;
+    bountyReward: number;
+    userId: string;
+    userName?: string;
+    pullRequestUrl: string;
+    status: "pending" | "approved" | "rejected";
+    notes?: string;
+    reviewedBy?: string;
+    reviewedAt?: string;
+    reviewNotes?: string;
+    paymentRef?: string;
+    paidAt?: string;
+    createdAt: string;
+}
+
+/**
+ * Fetch all submissions for admin review
+ */
+export async function fetchAllSubmissions(): Promise<{
+    data: AdminSubmission[];
+    error: string | null;
+}> {
+    try {
+        const supabase = await createClient();
+        if (!supabase) {
+            return { data: [], error: "Database connection unavailable" };
+        }
+
+        const { data, error } = await supabase
+            .from("bounty_submissions")
+            .select(`
+                id,
+                bounty_slug,
+                bounty_title,
+                bounty_reward,
+                user_id,
+                pull_request_url,
+                status,
+                notes,
+                reviewed_by,
+                reviewed_at,
+                review_notes,
+                payment_ref,
+                paid_at,
+                created_at
+            `)
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            console.error("Error fetching submissions:", error);
+            return { data: [], error: error.message };
+        }
+
+        const submissions: AdminSubmission[] = (data || []).map((row: any) => ({
+            id: row.id,
+            bountySlug: row.bounty_slug,
+            bountyTitle: row.bounty_title,
+            bountyReward: row.bounty_reward,
+            userId: row.user_id,
+            pullRequestUrl: row.pull_request_url,
+            status: row.status,
+            notes: row.notes,
+            reviewedBy: row.reviewed_by,
+            reviewedAt: row.reviewed_at,
+            reviewNotes: row.review_notes,
+            paymentRef: row.payment_ref,
+            paidAt: row.paid_at,
+            createdAt: row.created_at,
+        }));
+
+        return { data: submissions, error: null };
+    } catch (error) {
+        console.error("Error fetching submissions:", error);
+        return { data: [], error: "Failed to fetch submissions" };
+    }
+}
+
+/**
+ * Review a submission (approve or reject)
+ * Requires a comment for audit trail
+ */
+export async function reviewSubmission(
+    submissionId: string,
+    status: "approved" | "rejected",
+    comment: string,
+    reviewerId: string
+): Promise<{ success: boolean; error: string | null }> {
+    try {
+        // Validate comment is provided
+        if (!comment || comment.trim() === "") {
+            return { success: false, error: "Comment is required for review" };
+        }
+
+        const supabase = await createClient();
+        if (!supabase) {
+            return { success: false, error: "Database connection unavailable" };
+        }
+
+        const { error } = await (supabase
+            .from("bounty_submissions") as any)
+            .update({
+                status,
+                review_notes: comment.trim(),
+                reviewed_by: reviewerId,
+                reviewed_at: new Date().toISOString(),
+            })
+            .eq("id", submissionId);
+
+        if (error) {
+            console.error("Error reviewing submission:", error);
+            return { success: false, error: error.message };
+        }
+
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error reviewing submission:", error);
+        return { success: false, error: "Failed to review submission" };
+    }
+}
+
+/**
+ * Mark a submission as paid with transaction reference
+ */
+export async function markSubmissionPaid(
+    submissionId: string,
+    transactionRef: string
+): Promise<{ success: boolean; error: string | null }> {
+    try {
+        // Validate transaction reference is provided
+        if (!transactionRef || transactionRef.trim() === "") {
+            return { success: false, error: "Transaction reference is required" };
+        }
+
+        const supabase = await createClient();
+        if (!supabase) {
+            return { success: false, error: "Database connection unavailable" };
+        }
+
+        const { error } = await (supabase
+            .from("bounty_submissions") as any)
+            .update({
+                payment_ref: transactionRef.trim(),
+                paid_at: new Date().toISOString(),
+            })
+            .eq("id", submissionId);
+
+        if (error) {
+            console.error("Error marking as paid:", error);
+            return { success: false, error: error.message };
+        }
+
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error marking as paid:", error);
+        return { success: false, error: "Failed to mark as paid" };
+    }
+}
