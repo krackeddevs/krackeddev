@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { getProfile, fetchGithubStats, fetchBountyStats } from "@/features/profiles/actions";
 import { ProfilePageClient } from "@/features/profiles/components/profile-page-client";
 import { redirect } from "next/navigation";

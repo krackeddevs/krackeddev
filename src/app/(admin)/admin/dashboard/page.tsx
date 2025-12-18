@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { getAnalyticsData } from '@/features/admin-dashboard/actions';
 import { AnalyticsMap } from '@/features/admin-dashboard/components/analytics/analytics-map';
 import { TechStackChart } from '@/features/admin-dashboard/components/analytics/tech-stack-chart';

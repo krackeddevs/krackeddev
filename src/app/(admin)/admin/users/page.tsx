@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { fetchUsers } from '@/features/admin-dashboard/actions';
 import { UserTable } from '@/features/admin-dashboard/components/user-table';
 import { AlertCircle } from 'lucide-react';
