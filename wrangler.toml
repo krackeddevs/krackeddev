@@ -3,6 +3,3 @@ compatibility_flags = ["nodejs_compat"]
 compatibility_date = "2024-12-01"
 pages_build_output_dir = ".vercel/output/static"
 
-[vars]
-NEXT_PUBLIC_SUPABASE_URL = "https://jjitmsvvaksjkvbrzpnw.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqaXRtc3Z2YWtzamt2YnJ6cG53Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mjc3ODIsImV4cCI6MjA4MTUwMzc4Mn0.M0jc5WGs0Ir6qUJVzgveecb81Bdb5TC-g7bqVLLk9NE"
