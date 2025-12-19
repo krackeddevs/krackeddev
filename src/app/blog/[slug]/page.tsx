@@ -1,9 +1,12 @@
+export const runtime = 'edge';
+
 import BlogPostClient from './BlogPostClient';
 
-export default function BlogPostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  return <BlogPostClient slug={params.slug} />;
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug } = await params;
+  return <BlogPostClient slug={slug} />;
 }
