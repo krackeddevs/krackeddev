@@ -7,8 +7,8 @@ export type BountyRarity = "normal" | "rare";
 
 export interface BountyWinner {
     name: string;
-    xHandle: string;
-    xUrl: string;
+    xHandle?: string;
+    xUrl?: string;
     submissionUrl?: string;
 }
 

@@ -16,6 +16,9 @@ export function OnboardingWizard() {
         developerRole: 'junior',
         stack: [],
         location: '',
+        country: 'Malaysia',
+        state: '',
+        otherCountry: '',
     });
 
     const handleRoleSelect = (role: string) => {
@@ -86,8 +89,8 @@ export function OnboardingWizard() {
                                         key={role.value}
                                         onClick={() => handleRoleSelect(role.value)}
                                         className={`p-4 border text-left transition-all ${formData.developerRole === role.value
-                                                ? 'border-neon-primary bg-neon-primary/10 text-neon-primary'
-                                                : 'border-border hover:border-neon-primary/50 text-foreground'
+                                            ? 'border-neon-primary bg-neon-primary/10 text-neon-primary'
+                                            : 'border-border hover:border-neon-primary/50 text-foreground'
                                             }`}
                                     >
                                         <span className="font-medium">{role.label}</span>
@@ -112,8 +115,8 @@ export function OnboardingWizard() {
                                         key={tech}
                                         onClick={() => handleStackToggle(tech)}
                                         className={`px-3 py-1.5 text-sm border transition-all ${formData.stack.includes(tech)
-                                                ? 'border-neon-primary bg-neon-primary/10 text-neon-primary'
-                                                : 'border-border hover:border-neon-primary/50 text-foreground'
+                                            ? 'border-neon-primary bg-neon-primary/10 text-neon-primary'
+                                            : 'border-border hover:border-neon-primary/50 text-foreground'
                                             }`}
                                     >
                                         {formData.stack.includes(tech) && <Check className="w-3 h-3 inline mr-1" />}
@@ -139,13 +142,103 @@ export function OnboardingWizard() {
                                 <p className="text-muted-foreground">Help us connect you with local opportunities.</p>
                             </div>
 
-                            <input
-                                type="text"
-                                value={formData.location}
-                                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                                placeholder="e.g., Kuala Lumpur, Malaysia"
-                                className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
-                            />
+                            {/* Country Selection */}
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm text-muted-foreground mb-2">Country</label>
+                                    <select
+                                        value={formData.country || 'Malaysia'}
+                                        onChange={(e) => {
+                                            const country = e.target.value;
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                country,
+                                                state: '',
+                                                location: country === 'Malaysia' ? '' : prev.location,
+                                            }));
+                                        }}
+                                        className="w-full px-4 py-3 bg-background border border-border text-foreground focus:outline-none focus:border-neon-primary"
+                                    >
+                                        <option value="Malaysia">Malaysia</option>
+                                        <option value="Other">Other Country</option>
+                                    </select>
+                                </div>
+
+                                {formData.country === 'Other' ? (
+                                    <>
+                                        {/* Other Country - Text inputs */}
+                                        <div>
+                                            <label className="block text-sm text-muted-foreground mb-2">Country Name</label>
+                                            <input
+                                                type="text"
+                                                value={formData.otherCountry || ''}
+                                                onChange={(e) => {
+                                                    const otherCountry = e.target.value;
+                                                    setFormData(prev => ({
+                                                        ...prev,
+                                                        otherCountry,
+                                                        location: `${prev.state || ''}, ${otherCountry}`.replace(/^, /, ''),
+                                                    }));
+                                                }}
+                                                placeholder="e.g., Singapore"
+                                                className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-muted-foreground mb-2">State / City</label>
+                                            <input
+                                                type="text"
+                                                value={formData.state || ''}
+                                                onChange={(e) => {
+                                                    const state = e.target.value;
+                                                    setFormData(prev => ({
+                                                        ...prev,
+                                                        state,
+                                                        location: `${state}, ${prev.otherCountry || ''}`.replace(/, $/, ''),
+                                                    }));
+                                                }}
+                                                placeholder="e.g., Central Region"
+                                                className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                                            />
+                                        </div>
+                                    </>
+                                ) : (
+                                    /* Malaysia - State dropdown */
+                                    <div>
+                                        <label className="block text-sm text-muted-foreground mb-2">State</label>
+                                        <select
+                                            value={formData.state || ''}
+                                            onChange={(e) => {
+                                                const state = e.target.value;
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    state,
+                                                    location: `${state}, Malaysia`,
+                                                }));
+                                            }}
+                                            className="w-full px-4 py-3 bg-background border border-border text-foreground focus:outline-none focus:border-neon-primary"
+                                        >
+                                            <option value="">Select a state</option>
+                                            <option value="Johor">Johor</option>
+                                            <option value="Kedah">Kedah</option>
+                                            <option value="Kelantan">Kelantan</option>
+                                            <option value="Kuala Lumpur">Kuala Lumpur</option>
+                                            <option value="Labuan">Labuan</option>
+                                            <option value="Melaka">Melaka</option>
+                                            <option value="Negeri Sembilan">Negeri Sembilan</option>
+                                            <option value="Pahang">Pahang</option>
+                                            <option value="Penang">Penang</option>
+                                            <option value="Perak">Perak</option>
+                                            <option value="Perlis">Perlis</option>
+                                            <option value="Putrajaya">Putrajaya</option>
+                                            <option value="Sabah">Sabah</option>
+                                            <option value="Sarawak">Sarawak</option>
+                                            <option value="Selangor">Selangor</option>
+                                            <option value="Terengganu">Terengganu</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
 
                             {error && (
                                 <div className="p-3 bg-red-500/10 border border-red-500/50 text-red-400 text-sm">

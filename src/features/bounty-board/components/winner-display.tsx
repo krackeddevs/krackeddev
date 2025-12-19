@@ -41,16 +41,18 @@ export function WinnerDisplay({ winner, completedAt }: WinnerDisplayProps) {
                     >
                         {winner.name}
                     </div>
-                    <a
-                        href={winner.xUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-2"
-                        data-testid="winner-x-link"
-                    >
-                        <XIcon className="w-4 h-4" />@{winner.xHandle}
-                        <ExternalLink className="w-3 h-3" />
-                    </a>
+                    {winner.xHandle && winner.xUrl && (
+                        <a
+                            href={winner.xUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-2"
+                            data-testid="winner-x-link"
+                        >
+                            <XIcon className="w-4 h-4" />@{winner.xHandle}
+                            <ExternalLink className="w-3 h-3" />
+                        </a>
+                    )}
                 </div>
             </div>
             {winner.submissionUrl && (

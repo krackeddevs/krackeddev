@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { bounties as staticBounties } from "@/lib/bounty/data";
 
 export interface LandingStats {
     payoutVolume: number;
@@ -18,7 +19,6 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
         const supabase = await createClient();
 
         // 1. Get Travelers count (Profiles)
-        // Using head:true to get count only
         const { count: travelersCount, error: travelersError } = await supabase
             .from("profiles")
             .select("*", { count: "exact", head: true });
@@ -27,32 +27,34 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
             console.error("Error fetching travelers count:", travelersError);
         }
 
-        // 2. Get Payout Volume
-        // Try from paid submissions first, then fallback to completed bounties
-        const { data: submissions, error: submissionsError } = await supabase
-            .from("bounty_submissions")
-            .select("bounty_reward, status")
-            .in("status", ["paid", "approved"]); // Include both paid and approved
+        // 2. Calculate Payout Volume from:
+        //    a) Static completed bounties (hardcoded data)
+        //    b) DB completed bounties (excluding static slugs to prevent double counting)
 
-        let totalPayout = 0;
-        if (!submissionsError && submissions) {
-            totalPayout = (submissions as any[]).reduce((sum, sub) => sum + (sub.bounty_reward || 0), 0);
+        // Static bounties total
+        const staticCompletedBounties = staticBounties.filter((b) => b.status === "completed");
+        const staticCompletedTotal = staticCompletedBounties.reduce((sum, b) => sum + b.reward, 0);
+        const staticSlugs = staticBounties.map((b) => b.slug);
+
+        // DB completed bounties - exclude any that match static slugs
+        let dbCompletedTotal = 0;
+        const { data: completedBounties } = await supabase
+            .from("bounties")
+            .select("reward_amount, slug")
+            .eq("status", "completed");
+
+        if (completedBounties) {
+            // Only count DB bounties that aren't duplicates of static data
+            dbCompletedTotal = (completedBounties as any[])
+                .filter((b) => !staticSlugs.includes(b.slug))
+                .reduce((sum, b) => sum + (b.reward_amount || 0), 0);
         }
 
-        // If no paid submissions, calculate from completed bounties in bounties table
-        if (totalPayout === 0) {
-            const { data: completedBounties } = await supabase
-                .from("bounties")
-                .select("reward_amount, status")
-                .in("status", ["completed", "paid"]);
+        // Total payout = static + DB (non-duplicate)
+        const totalPayout = staticCompletedTotal + dbCompletedTotal;
 
-            if (completedBounties) {
-                totalPayout = (completedBounties as any[]).reduce((sum, b) => sum + (b.reward_amount || 0), 0);
-            }
-        }
-
-        // 3. Active Bounties
-        const { count: activeBountiesCount, error: bountiesError } = await supabase
+        // 3. Active Bounties (from DB only since static ones are completed)
+        const { count: dbActiveBounties, error: bountiesError } = await supabase
             .from("bounties")
             .select("*", { count: "exact", head: true })
             .eq("status", "open");
@@ -61,16 +63,15 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
             console.error("Error fetching active bounties:", bountiesError);
         }
 
-        // Use real count if available, or fallback to 0 (which will trigger mock fallback below if needed)
-        const activeBounties = activeBountiesCount || 0;
+        // Count static active bounties
+        const staticActiveBounties = staticBounties.filter((b) => b.status === "active").length;
+        const activeBounties = (dbActiveBounties || 0) + staticActiveBounties;
 
-        // MOCK FALLBACK for Dev/Empty DB - only if truly no data
-        const finalTravelers = travelersCount || 42;
-        const finalPayout = totalPayout > 0 ? totalPayout : 400; // Fallback to 400 RM (100+150+150 completed bounties)
+        const finalTravelers = travelersCount || 0;
 
         return {
             data: {
-                payoutVolume: finalPayout,
+                payoutVolume: totalPayout,
                 activeBounties: activeBounties,
                 travelers: finalTravelers,
             },
@@ -84,3 +85,4 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
         };
     }
 }
+

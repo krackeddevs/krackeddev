@@ -75,7 +75,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
                             <Trophy className="w-4 h-4 text-yellow-500" />
                             <span className="text-green-400 font-mono text-sm">Winner:</span>
                             <span className="text-white font-mono text-sm">
-                                @{bounty.winner.xHandle}
+                                {bounty.winner.xHandle ? `@${bounty.winner.xHandle}` : bounty.winner.name}
                             </span>
                         </div>
                     )}

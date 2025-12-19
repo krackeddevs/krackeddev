@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, User, X, Shield, Home } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -33,7 +33,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const isHomepage = pathname === "/";
-  const { isAuthenticated, signOut, openLoginModal, supabase } = useSupabase();
+  const { isAuthenticated, signOut, openLoginModal, supabase, profile } = useSupabase();
   const [pageViews, setPageViews] = React.useState<number | null>(null);
   const [nextPrayer, setNextPrayer] = React.useState<{
     name: string;
@@ -165,26 +165,52 @@ const Navbar = () => {
 
         {/* Right Side (Desktop) */}
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
-                aria-label="Profile"
-              >
-                <span>Profile</span>
-                <User className="min-h-5 min-w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={8}>
-              <DropdownMenuItem asChild>
-                <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
-                  Profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {isAuthenticated ? (
+          {/* Home Button - For admins when on admin pages */}
+          {isAuthenticated && profile?.role === 'admin' && pathname?.startsWith('/admin') && (
+            <Button
+              variant="ghost"
+              asChild
+              className="py-2 h-auto w-auto px-4 border border-white/50 hover:border-white hover:bg-white/10"
+            >
+              <Link href="/">
+                <Home className="min-h-4 min-w-4 mr-2" />
+                <span>Home</span>
+              </Link>
+            </Button>
+          )}
+          {/* Admin Dashboard Button - Only for admins when NOT on admin pages */}
+          {isAuthenticated && profile?.role === 'admin' && !pathname?.startsWith('/admin') && (
+            <Button
+              variant="ghost"
+              asChild
+              className="py-2 h-auto w-auto px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
+            >
+              <Link href="/admin/dashboard">
+                <Shield className="min-h-4 min-w-4 mr-2" />
+                <span>Admin</span>
+              </Link>
+            </Button>
+          )}
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+                  aria-label="Profile"
+                >
+                  <span>Profile</span>
+                  <User className="min-h-5 min-w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8}>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   variant="destructive"
                   onClick={() => {
@@ -194,18 +220,18 @@ const Navbar = () => {
                   <LogOut />
                   Logout
                 </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  onClick={() => {
-                    openLoginModal();
-                  }}
-                >
-                  <User />
-                  Login
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              variant="ghost"
+              onClick={() => openLoginModal()}
+              className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+            >
+              <span>Login</span>
+              <User className="min-h-5 min-w-5" />
+            </Button>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -353,25 +379,25 @@ const Navbar = () => {
           >
             <div className="container mx-auto px-4 py-6 space-y-4 flex flex-col">
               <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="border border-white/10 hover:border-neon-primary/40 hover:bg-white/5"
-                      aria-label="Profile"
-                    >
-                      <User className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" sideOffset={8}>
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
-                        Profile
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {isAuthenticated ? (
+                {isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="border border-white/10 hover:border-neon-primary/40 hover:bg-white/5"
+                        aria-label="Profile"
+                      >
+                        <User className="h-5 w-5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" sideOffset={8}>
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
+                          Profile
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         variant="destructive"
                         onClick={() => {
@@ -381,18 +407,18 @@ const Navbar = () => {
                         <LogOut />
                         Logout
                       </DropdownMenuItem>
-                    ) : (
-                      <DropdownMenuItem
-                        onClick={() => {
-                          openLoginModal();
-                        }}
-                      >
-                        <User />
-                        Login
-                      </DropdownMenuItem>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    onClick={() => openLoginModal()}
+                    className="border border-white/10 hover:border-neon-primary/40 hover:bg-white/5"
+                  >
+                    <User className="h-5 w-5 mr-2" />
+                    Login
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>

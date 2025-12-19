@@ -1,8 +1,6 @@
 "use client";
 
-import { useSupabase } from "@/context/SupabaseContext";
 import "@/styles/jobs.css";
-import { useEffect } from "react";
 import SplitTextAnimation from "./components/hero-animation";
 import { TownhallV2 } from "./components/townhall";
 import { useLandingSequence } from "./hooks/use-landing-sequence";
@@ -11,21 +9,10 @@ import { BrandCTA } from "./components/brand-cta";
 import { LiveStats } from "./components/live-stats";
 import { JobPreview } from "./components/job-preview";
 import { NavigationHub } from "./components/navigation-hub";
+import { CommunityMap } from "./components/community-map";
 
 export function LandingPage() {
-    const { isAuthenticated, loading, openLoginModal } = useSupabase();
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
-
-    // Auto-open login modal when animation is done and user is not authenticated
-    useEffect(() => {
-        if (animationDone && !loading && !isAuthenticated) {
-            // Small delay to let the town render first
-            const timer = setTimeout(() => {
-                openLoginModal();
-            }, 500);
-            return () => clearTimeout(timer);
-        }
-    }, [animationDone, loading, isAuthenticated, openLoginModal]);
 
     return (
         <main className="min-h-screen w-full bg-gray-900 relative flex flex-col">
@@ -48,6 +35,11 @@ export function LandingPage() {
                         <TownhallV2 />
                     </section>
 
+                    {/* Community Map Section */}
+                    <section className="relative w-full bg-black border-t border-green-900/50">
+                        <CommunityMap />
+                    </section>
+
                     {/* Live Stats Section */}
                     <section className="relative w-full bg-black border-t border-green-900/50">
                         <LiveStats />
@@ -55,7 +47,6 @@ export function LandingPage() {
 
                     {/* Navigation Hub */}
                     <section className="relative w-full bg-black border-t border-green-900/50">
-                        <div className="absolute inset-0 bg-[url('/grid-pixel.png')] opacity-5 pointer-events-none" />
                         <NavigationHub />
                     </section>
 

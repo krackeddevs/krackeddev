@@ -121,10 +121,15 @@ export function BountyForm({ initialData, onSubmit, isLoading = false }: BountyF
                                 <FormLabel>Reward (RM)</FormLabel>
                                 <FormControl>
                                     <Input
-                                        type="number"
+                                        type="text"
+                                        inputMode="numeric"
                                         placeholder="500"
                                         {...field}
-                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                        value={field.value || ''}
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/[^0-9]/g, '');
+                                            field.onChange(val ? Number(val) : 0);
+                                        }}
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -291,15 +296,53 @@ export function BountyForm({ initialData, onSubmit, isLoading = false }: BountyF
                                 <Textarea
                                     placeholder="- Requirement 1&#10;- Requirement 2"
                                     className="min-h-[150px]"
-                                    value={Array.isArray(field.value) ? field.value.join('\n') : ''} // Display as string
+                                    value={Array.isArray(field.value) ? field.value.join('\n') : ''}
                                     onChange={(e) => {
+                                        // Keep newlines while typing, don't filter empty lines
+                                        const val = e.target.value;
+                                        const items = val.split('\n');
+                                        field.onChange(items);
+                                    }}
+                                    onBlur={(e) => {
+                                        // Only filter empty lines on blur
                                         const val = e.target.value;
                                         const items = val.split('\n').filter(line => line.trim() !== '');
-                                        field.onChange(items); // Store as array
+                                        field.onChange(items);
                                     }}
                                 />
                             </FormControl>
                             <FormDescription>Enter each requirement on a new line.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="skills"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Skills / Tags</FormLabel>
+                            <FormControl>
+                                <Input
+                                    placeholder="react, nextjs, typescript"
+                                    value={Array.isArray(field.value) ? field.value.join(', ') : ''}
+                                    onChange={(e) => {
+                                        // Just store the raw value while typing
+                                        // We'll parse on blur
+                                        const val = e.target.value;
+                                        // Store as array immediately for display but allow comma typing
+                                        field.onChange(val.split(',').map(s => s.trim()));
+                                    }}
+                                    onBlur={(e) => {
+                                        // Clean up on blur - remove empty items
+                                        const val = e.target.value;
+                                        const items = val.split(',').map(s => s.trim()).filter(s => s !== '');
+                                        field.onChange(items);
+                                    }}
+                                />
+                            </FormControl>
+                            <FormDescription>Comma-separated list of skills or tags.</FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

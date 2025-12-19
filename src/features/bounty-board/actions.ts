@@ -24,7 +24,7 @@ export async function fetchActiveBounties(
             const { data: dbBounties, error } = await supabase
                 .from("bounties")
                 .select("*")
-                .eq("status", "open");
+                .in("status", ["open", "completed"]);
 
             if (!error && dbBounties && dbBounties.length > 0) {
                 // Map DB bounties to our type and merge with static
@@ -219,7 +219,6 @@ export async function fetchBountySubmissions(
         return { data: [], error: "Failed to fetch submissions" };
     }
 }
-
 /**
  * Calculate bounty stats for the stats bar
  */
@@ -228,12 +227,15 @@ export async function fetchBountyStats(): Promise<{
     error: string | null;
 }> {
     try {
+        // Get combined bounties (static + DB) - this already includes all sources
         const { data: bounties } = await fetchActiveBounties();
 
+        // Count active bounties (status === "active")
         const activeBounties = bounties.filter((b) => b.status === "active");
-        const completedBounties = bounties.filter((b) => b.status === "completed");
-
         const availableRewards = activeBounties.reduce((sum, b) => sum + b.reward, 0);
+
+        // Count completed bounties (status === "completed")
+        const completedBounties = bounties.filter((b) => b.status === "completed");
         const totalPaid = completedBounties.reduce((sum, b) => sum + b.reward, 0);
 
         return {
@@ -475,6 +477,7 @@ export async function reviewSubmission(
 
 /**
  * Mark a submission as paid with transaction reference
+ * Also marks the bounty as completed and saves winner info
  */
 export async function markSubmissionPaid(
     submissionId: string,
@@ -491,7 +494,28 @@ export async function markSubmissionPaid(
             return { success: false, error: "Database connection unavailable" };
         }
 
-        const { error } = await (supabase
+        // First, get the submission details to find the bounty and user
+        const { data: submission, error: fetchError } = await supabase
+            .from("bounty_submissions")
+            .select(`
+                id,
+                bounty_slug,
+                user_id,
+                pull_request_url,
+                submitter:profiles!bounty_submissions_user_id_fkey (username, full_name)
+            `)
+            .eq("id", submissionId)
+            .single();
+
+        if (fetchError || !submission) {
+            console.error("Error fetching submission:", fetchError);
+            return { success: false, error: "Submission not found" };
+        }
+
+        const row = submission as any;
+
+        // Update the submission as paid
+        const { error: updateError } = await (supabase
             .from("bounty_submissions") as any)
             .update({
                 payment_ref: transactionRef.trim(),
@@ -499,9 +523,29 @@ export async function markSubmissionPaid(
             })
             .eq("id", submissionId);
 
-        if (error) {
-            console.error("Error marking as paid:", error);
-            return { success: false, error: error.message };
+        if (updateError) {
+            console.error("Error marking as paid:", updateError);
+            return { success: false, error: updateError.message };
+        }
+
+        // Get winner name from profile
+        const winnerName = row.submitter?.username || row.submitter?.full_name || "Anonymous";
+
+        // Update the bounty status to completed and save winner info
+        const { error: bountyError } = await (supabase
+            .from("bounties") as any)
+            .update({
+                status: "completed",
+                completed_at: new Date().toISOString(),
+                winner_name: winnerName,
+                winner_submission_url: row.pull_request_url,
+            })
+            .eq("slug", row.bounty_slug);
+
+        if (bountyError) {
+            console.error("Error updating bounty status:", bountyError);
+            // Don't fail the whole operation - payment was already recorded
+            // Just log the error, the bounty can be updated manually
         }
 
         return { success: true, error: null };

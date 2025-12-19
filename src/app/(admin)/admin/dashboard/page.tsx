@@ -9,10 +9,7 @@ import { StatsCard } from '@/features/admin-dashboard/components/stats-card';
 import { RecentActivity } from '@/features/admin-dashboard/components/recent-activity';
 import {
     Users,
-    Code,
-    Crown,
     Target,
-    Clock,
     DollarSign,
     TrendingUp
 } from 'lucide-react';

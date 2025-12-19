@@ -26,6 +26,9 @@ export const onboardingSchema = z.object({
     developerRole: z.enum(developerRoleValues),
     stack: z.array(z.string()).min(1, 'Please select at least one technology'),
     location: z.string().min(2, 'Please enter your location'),
+    country: z.string().optional(),
+    state: z.string().optional(),
+    otherCountry: z.string().optional(),
 });
 
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;

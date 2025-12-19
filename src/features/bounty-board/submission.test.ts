@@ -1,79 +1,101 @@
 import { describe, it, expect } from "vitest";
-import { validateGitHubPrUrl, GITHUB_PR_URL_REGEX } from "./validators";
+import { validateSubmissionUrl, validateGitHubPrUrl, SUBMISSION_URL_REGEX, GITHUB_PR_URL_REGEX } from "./validators";
 
-describe("GitHub PR URL Validation", () => {
-    describe("GITHUB_PR_URL_REGEX", () => {
+describe("Submission URL Validation", () => {
+    describe("SUBMISSION_URL_REGEX", () => {
         it("matches valid GitHub PR URL", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/owner/repo/pull/123")).toBe(true);
+            expect(SUBMISSION_URL_REGEX.test("https://github.com/owner/repo/pull/123")).toBe(true);
         });
 
-        it("matches PR URL with dashes in owner/repo names", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/my-org/my-repo/pull/1")).toBe(true);
+        it("matches Vercel deployment URL", () => {
+            expect(SUBMISSION_URL_REGEX.test("https://my-app.vercel.app")).toBe(true);
         });
 
-        it("matches PR URL with dots in repo name", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/owner/my.repo/pull/42")).toBe(true);
+        it("matches Vercel deployment URL with path", () => {
+            expect(SUBMISSION_URL_REGEX.test("https://my-app.vercel.app/dashboard")).toBe(true);
         });
 
-        it("matches PR URL with underscores", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/user_name/repo_name/pull/999")).toBe(true);
+        it("matches custom domain URL", () => {
+            expect(SUBMISSION_URL_REGEX.test("https://myportfolio.com/project")).toBe(true);
         });
 
-        it("rejects non-GitHub URLs", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://gitlab.com/owner/repo/pull/1")).toBe(false);
+        it("matches Netlify URL", () => {
+            expect(SUBMISSION_URL_REGEX.test("https://amazing-site.netlify.app")).toBe(true);
         });
 
-        it("rejects issues URL (not PR)", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/owner/repo/issues/1")).toBe(false);
+        it("matches YouTube URL", () => {
+            expect(SUBMISSION_URL_REGEX.test("https://youtube.com/watch?v=abc123")).toBe(true);
         });
 
-        it("rejects commit URL", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/owner/repo/commit/abc123")).toBe(false);
+        it("rejects HTTP (non-HTTPS) URLs", () => {
+            expect(SUBMISSION_URL_REGEX.test("http://example.com")).toBe(false);
         });
 
-        it("rejects plain GitHub URL", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/owner/repo")).toBe(false);
+        it("rejects localhost URLs", () => {
+            expect(SUBMISSION_URL_REGEX.test("https://localhost:3000")).toBe(false);
         });
 
-        it("rejects PR URL without number", () => {
-            expect(GITHUB_PR_URL_REGEX.test("https://github.com/owner/repo/pull/")).toBe(false);
+        it("rejects URLs without domain extension", () => {
+            expect(SUBMISSION_URL_REGEX.test("https://localhost")).toBe(false);
         });
     });
 
-    describe("validateGitHubPrUrl", () => {
-        it("returns valid for correct PR URL", () => {
-            const result = validateGitHubPrUrl("https://github.com/owner/repo/pull/123");
+    describe("validateSubmissionUrl", () => {
+        it("returns valid for GitHub PR URL", () => {
+            const result = validateSubmissionUrl("https://github.com/owner/repo/pull/123");
+            expect(result.valid).toBe(true);
+            expect(result.error).toBeUndefined();
+        });
+
+        it("returns valid for Vercel URL", () => {
+            const result = validateSubmissionUrl("https://my-demo.vercel.app");
+            expect(result.valid).toBe(true);
+            expect(result.error).toBeUndefined();
+        });
+
+        it("returns valid for custom domain", () => {
+            const result = validateSubmissionUrl("https://portfolio.io/project");
             expect(result.valid).toBe(true);
             expect(result.error).toBeUndefined();
         });
 
         it("returns error for empty string", () => {
-            const result = validateGitHubPrUrl("");
+            const result = validateSubmissionUrl("");
             expect(result.valid).toBe(false);
-            expect(result.error).toBe("Pull request URL is required");
+            expect(result.error).toBe("Submission URL is required");
         });
 
         it("returns error for whitespace only", () => {
-            const result = validateGitHubPrUrl("   ");
+            const result = validateSubmissionUrl("   ");
             expect(result.valid).toBe(false);
-            expect(result.error).toBe("Pull request URL is required");
+            expect(result.error).toBe("Submission URL is required");
+        });
+
+        it("returns error for non-HTTPS URL", () => {
+            const result = validateSubmissionUrl("http://example.com");
+            expect(result.valid).toBe(false);
+            expect(result.error).toContain("HTTPS");
         });
 
         it("returns error for invalid URL format", () => {
-            const result = validateGitHubPrUrl("not-a-url");
+            const result = validateSubmissionUrl("not-a-url");
             expect(result.valid).toBe(false);
-            expect(result.error).toContain("valid GitHub pull request URL");
-        });
-
-        it("returns error for non-PR GitHub URL", () => {
-            const result = validateGitHubPrUrl("https://github.com/owner/repo/issues/1");
-            expect(result.valid).toBe(false);
-            expect(result.error).toContain("valid GitHub pull request URL");
+            expect(result.error).toContain("valid URL");
         });
 
         it("trims whitespace and validates", () => {
-            const result = validateGitHubPrUrl("  https://github.com/owner/repo/pull/123  ");
+            const result = validateSubmissionUrl("  https://demo.vercel.app  ");
             expect(result.valid).toBe(true);
+        });
+    });
+
+    describe("Legacy exports (backward compatibility)", () => {
+        it("GITHUB_PR_URL_REGEX equals SUBMISSION_URL_REGEX", () => {
+            expect(GITHUB_PR_URL_REGEX).toBe(SUBMISSION_URL_REGEX);
+        });
+
+        it("validateGitHubPrUrl equals validateSubmissionUrl", () => {
+            expect(validateGitHubPrUrl).toBe(validateSubmissionUrl);
         });
     });
 });

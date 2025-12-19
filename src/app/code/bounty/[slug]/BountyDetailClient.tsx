@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
     ArrowLeft,
     CheckCircle,
-    GitPullRequest,
+    Link2,
     Send,
     LogOut,
 } from "lucide-react";
@@ -89,7 +89,15 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                 submissionPostUrl: "",
                 createdAt: data.created_at,
                 deadline: data.deadline || new Date().toISOString(),
+                completedAt: data.completed_at,
                 submissions: [],
+                // Map winner data from DB columns
+                winner: data.winner_name ? {
+                    name: data.winner_name,
+                    xHandle: data.winner_x_handle,
+                    xUrl: data.winner_x_url,
+                    submissionUrl: data.winner_submission_url,
+                } : undefined,
             };
 
             setBounty(dbBounty);
@@ -272,7 +280,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     {canSubmit && (
                         <div className="mb-8">
                             <h2 className="text-lg font-mono text-white mb-4 flex items-center gap-2">
-                                <GitPullRequest className="w-5 h-5 text-cyan-400" />
+                                <Link2 className="w-5 h-5 text-cyan-400" />
                                 SUBMIT YOUR SOLUTION
                             </h2>
                             <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-6">
@@ -283,20 +291,20 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                                             Submission Received!
                                         </h3>
                                         <p className="text-gray-400 mb-4">
-                                            Your pull request has been submitted for review. We&apos;ll
+                                            Your submission has been received for review. We&apos;ll
                                             notify you once it&apos;s been reviewed.
                                         </p>
                                         <button
                                             onClick={() => setSubmitted(false)}
                                             className="text-cyan-400 hover:text-cyan-300 font-mono text-sm"
                                         >
-                                            Submit Another PR
+                                            Submit Another Link
                                         </button>
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit}>
                                         <label className="block mb-2 text-gray-400 font-mono text-sm">
-                                            GitHub Pull Request URL
+                                            Submission Link
                                         </label>
                                         <div className="flex flex-col md:flex-row gap-4">
                                             <div className="flex-1">
@@ -304,7 +312,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                                                     type="url"
                                                     value={prUrl}
                                                     onChange={(e) => setPrUrl(e.target.value)}
-                                                    placeholder="https://github.com/solahidris/krackeddev/pull/123"
+                                                    placeholder="https://your-demo.vercel.app or https://github.com/.../pull/123"
                                                     className="w-full bg-gray-900 border border-gray-600 px-4 py-3 font-mono text-sm text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
                                                     required
                                                 />
@@ -327,14 +335,14 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                                                 ) : (
                                                     <>
                                                         <Send className="w-4 h-4" />
-                                                        Submit PR
+                                                        Submit
                                                     </>
                                                 )}
                                             </button>
                                         </div>
                                         <p className="text-gray-500 text-xs mt-3 font-mono">
-                                            Make sure your PR follows the contribution guidelines and
-                                            tag @KrackedDevs on X.
+                                            Submit your deployed app, GitHub PR, or any link showing your work.
+                                            Tag @KrackedDevs on X for extra visibility!
                                         </p>
                                     </form>
                                 )}
