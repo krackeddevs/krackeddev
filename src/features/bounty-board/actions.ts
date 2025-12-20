@@ -57,12 +57,10 @@ export async function fetchActiveBounties(
                 }));
 
                 // Merge: DB bounties take precedence (by slug)
-                const staticSlugs = new Set(bounties.map((b) => b.slug));
-                for (const dbBounty of mappedDbBounties) {
-                    if (!staticSlugs.has(dbBounty.slug)) {
-                        bounties.push(dbBounty);
-                    }
-                }
+                // Remove static bounties that exist in DB, then add all DB bounties
+                const dbSlugs = new Set(mappedDbBounties.map((b) => b.slug));
+                bounties = bounties.filter((b) => !dbSlugs.has(b.slug));
+                bounties.push(...mappedDbBounties);
             }
         }
 
@@ -102,67 +100,65 @@ export async function fetchActiveBounties(
 
 /**
  * Fetch a single bounty by slug
- * Uses hybrid data source: static data first, Supabase fallback
+ * Uses hybrid data source: Supabase first, static data fallback
  */
 export async function fetchBountyBySlug(
     slug: string
 ): Promise<{ data: Bounty | null; error: string | null }> {
     try {
-        // First try static data
+        // Try Supabase first (DB takes precedence)
+        const supabase = await createClient();
+        if (supabase) {
+            const { data, error } = await supabase
+                .from("bounties")
+                .select("*")
+                .eq("slug", slug)
+                .single();
+
+            if (!error && data) {
+                // Cast to any to avoid TypeScript errors when table not in generated types
+                const row = data as any;
+
+                // Map DB data to Bounty type
+                const bounty: Bounty = {
+                    id: row.id,
+                    slug: row.slug,
+                    title: row.title,
+                    description: row.description || "",
+                    longDescription: row.long_description || row.description || "",
+                    reward: row.reward_amount,
+                    difficulty: row.difficulty || "intermediate",
+                    status: row.status === "open" ? "active" : row.status,
+                    rarity: row.rarity || "normal",
+                    tags: row.skills || [],
+                    requirements: row.requirements || [],
+                    repositoryUrl: row.repository_url || "",
+                    bountyPostUrl: row.bounty_post_url || "",
+                    submissionPostUrl: row.submission_post_url,
+                    createdAt: row.created_at,
+                    deadline: row.deadline || new Date().toISOString(),
+                    completedAt: row.completed_at,
+                    submissions: [],
+                    // Map winner data from DB columns
+                    winner: row.winner_name ? {
+                        name: row.winner_name,
+                        xHandle: row.winner_x_handle,
+                        xUrl: row.winner_x_url,
+                        submissionUrl: row.winner_submission_url,
+                    } : undefined,
+                };
+
+                return { data: bounty, error: null };
+            }
+        }
+
+        // Fallback to static data if not found in DB
         const staticBounty = staticBounties.find((b) => b.slug === slug);
         if (staticBounty) {
             return { data: staticBounty, error: null };
         }
 
-        // Fallback to Supabase
-        const supabase = await createClient();
-        if (!supabase) {
-            return { data: null, error: "Bounty not found" };
-        }
-
-        const { data, error } = await supabase
-            .from("bounties")
-            .select("*")
-            .eq("slug", slug)
-            .single();
-
-        if (error || !data) {
-            return { data: null, error: "Bounty not found" };
-        }
-
-        // Cast to any to avoid TypeScript errors when table not in generated types
-        const row = data as any;
-
-        // Map DB data to Bounty type
-        const bounty: Bounty = {
-            id: row.id,
-            slug: row.slug,
-            title: row.title,
-            description: row.description || "",
-            longDescription: row.long_description || row.description || "",
-            reward: row.reward_amount,
-            difficulty: row.difficulty || "intermediate",
-            status: row.status === "open" ? "active" : row.status,
-            rarity: row.rarity || "normal",
-            tags: row.skills || [],
-            requirements: row.requirements || [],
-            repositoryUrl: row.repository_url || "",
-            bountyPostUrl: row.bounty_post_url || "",
-            submissionPostUrl: row.submission_post_url,
-            createdAt: row.created_at,
-            deadline: row.deadline || new Date().toISOString(),
-            completedAt: row.completed_at,
-            submissions: [],
-            // Map winner data from DB columns
-            winner: row.winner_name ? {
-                name: row.winner_name,
-                xHandle: row.winner_x_handle,
-                xUrl: row.winner_x_url,
-                submissionUrl: row.winner_submission_url,
-            } : undefined,
-        };
-
-        return { data: bounty, error: null };
+        return { data: null, error: "Bounty not found" };
     } catch (error) {
         console.error("Error fetching bounty:", error);
         return { data: null, error: "Failed to fetch bounty" };
@@ -552,5 +548,60 @@ export async function markSubmissionPaid(
     } catch (error) {
         console.error("Error marking as paid:", error);
         return { success: false, error: "Failed to mark as paid" };
+    }
+}
+
+// ============================================================================
+// Manual Bounty Completion (for external submissions)
+// ============================================================================
+
+export interface ManualCompletionData {
+    winnerName: string;
+    winnerXHandle?: string;
+    winnerXUrl?: string;
+    winnerSubmissionUrl?: string;
+}
+
+/**
+ * Mark a bounty as completed manually (for submissions outside the platform)
+ * Updates bounty status to completed and saves winner info
+ */
+export async function markBountyCompletedManually(
+    bountyId: string,
+    winnerData: ManualCompletionData
+): Promise<{ success: boolean; error: string | null }> {
+    try {
+        // Validate winner name is provided
+        if (!winnerData.winnerName || winnerData.winnerName.trim() === "") {
+            return { success: false, error: "Winner name is required" };
+        }
+
+        const supabase = await createClient();
+        if (!supabase) {
+            return { success: false, error: "Database connection unavailable" };
+        }
+
+        // Update the bounty with winner info and mark as completed
+        const { error } = await (supabase
+            .from("bounties") as any)
+            .update({
+                status: "completed",
+                completed_at: new Date().toISOString(),
+                winner_name: winnerData.winnerName.trim(),
+                winner_x_handle: winnerData.winnerXHandle?.trim() || null,
+                winner_x_url: winnerData.winnerXUrl?.trim() || null,
+                winner_submission_url: winnerData.winnerSubmissionUrl?.trim() || null,
+            })
+            .eq("id", bountyId);
+
+        if (error) {
+            console.error("Error marking bounty as completed:", error);
+            return { success: false, error: error.message };
+        }
+
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error marking bounty as completed:", error);
+        return { success: false, error: "Failed to mark bounty as completed" };
     }
 }

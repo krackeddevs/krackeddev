@@ -9,12 +9,12 @@ import {
     Send,
     LogOut,
 } from "lucide-react";
-import { getBountyBySlug } from "@/lib/bounty";
 import {
     BountyDetail,
     SubmissionCard,
     fetchBountySubmissions,
     submitBountySolution,
+    fetchBountyBySlug,
 } from "@/features/bounty-board";
 import type { Bounty, BountySubmission } from "@/features/bounty-board";
 import { useSupabase } from "@/context/SupabaseContext";
@@ -38,78 +38,31 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
     const [submissions, setSubmissions] = useState<BountySubmission[]>([]);
 
-    // Fetch Bounty Data (Static Fallback + DB)
+    // Fetch Bounty Data using server action (DB takes precedence)
     useEffect(() => {
         let cancelled = false;
 
-        const fetchBounty = async () => {
-            // First try static data
-            const staticBounty = getBountyBySlug(slug);
-            if (staticBounty) {
-                if (!cancelled) {
-                    setBounty(staticBounty);
-                    setLoading(false);
-                }
-                return;
-            }
-
-            // Fallback to Database
-            if (!supabase) return;
-
-            const { data: rawData, error } = await supabase
-                .from("bounties")
-                .select("*")
-                .eq("slug", slug)
-                .single();
-
-            const data = rawData as any;
+        const loadBounty = async () => {
+            const { data, error } = await fetchBountyBySlug(slug);
 
             if (cancelled) return;
 
             if (error || !data) {
-                console.error("Bounty not found in DB:", error);
+                console.error("Bounty not found:", error);
                 setLoading(false);
                 return;
             }
 
-            // Map DB data to Bounty interface
-            const dbBounty: Bounty = {
-                id: data.id,
-                slug: data.slug,
-                title: data.title,
-                description: data.description || "",
-                longDescription: data.long_description || data.description || "",
-                reward: data.reward_amount,
-                difficulty: (data.difficulty as any) || "intermediate",
-                status: (data.status === "open" ? "active" : data.status) as any,
-                tags: data.skills || [],
-                requirements: data.requirements || [],
-                repositoryUrl: data.repository_url || "",
-                bountyPostUrl: "",
-                submissionPostUrl: "",
-                createdAt: data.created_at,
-                deadline: data.deadline || new Date().toISOString(),
-                completedAt: data.completed_at,
-                submissions: [],
-                // Map winner data from DB columns
-                winner: data.winner_name ? {
-                    name: data.winner_name,
-                    xHandle: data.winner_x_handle,
-                    xUrl: data.winner_x_url,
-                    submissionUrl: data.winner_submission_url,
-                } : undefined,
-            };
-
-            setBounty(dbBounty);
+            setBounty(data);
             setLoading(false);
         };
 
-        fetchBounty();
+        loadBounty();
 
         return () => {
             cancelled = true;
         };
-    }, [slug, supabase]);
+    }, [slug]);
 
     // Fetch Submissions
     useEffect(() => {

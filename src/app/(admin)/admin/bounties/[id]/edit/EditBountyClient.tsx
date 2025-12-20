@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { BountyForm } from '@/features/admin-dashboard';
+import { BountyForm, ManualCompletionForm } from '@/features/admin-dashboard';
 import { updateBounty } from '@/features/admin-dashboard/actions';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
@@ -25,25 +25,25 @@ export default function EditBountyClient({ id }: EditBountyClientProps) {
     const [bounty, setBounty] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
+    const fetchBounty = async () => {
+        const supabase = createClient();
+        const { data, error } = await supabase
+            .from('bounties')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            toast.error('Failed to load bounty');
+            router.push('/admin/bounties');
+            return;
+        }
+
+        setBounty(data);
+        setLoading(false);
+    };
+
     useEffect(() => {
-        const fetchBounty = async () => {
-            const supabase = createClient();
-            const { data, error } = await supabase
-                .from('bounties')
-                .select('*')
-                .eq('id', id)
-                .single();
-
-            if (error) {
-                toast.error('Failed to load bounty');
-                router.push('/admin/bounties');
-                return;
-            }
-
-            setBounty(data);
-            setLoading(false);
-        };
-
         if (id) {
             fetchBounty();
         }
@@ -57,6 +57,11 @@ export default function EditBountyClient({ id }: EditBountyClientProps) {
             toast.success('Bounty updated successfully');
             router.push('/admin/bounties');
         }
+    };
+
+    const handleManualComplete = () => {
+        // Refresh the bounty data after manual completion
+        fetchBounty();
     };
 
     if (loading) {
@@ -87,7 +92,21 @@ export default function EditBountyClient({ id }: EditBountyClientProps) {
 
             <div className="rounded-lg border p-6 bg-card text-card-foreground shadow-sm">
                 <BountyForm initialData={bounty} onSubmit={handleSubmit} />
+
+                {/* Manual Completion Section for external submissions */}
+                <ManualCompletionForm
+                    bountyId={id}
+                    currentStatus={bounty?.status || ''}
+                    currentWinner={{
+                        name: bounty?.winner_name,
+                        xHandle: bounty?.winner_x_handle,
+                        xUrl: bounty?.winner_x_url,
+                        submissionUrl: bounty?.winner_submission_url,
+                    }}
+                    onComplete={handleManualComplete}
+                />
             </div>
         </div>
     );
 }
+
