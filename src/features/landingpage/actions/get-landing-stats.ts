@@ -28,32 +28,35 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
         }
 
         // 2. Calculate Payout Volume from:
-        //    a) Static completed bounties (hardcoded data)
-        //    b) DB completed bounties (excluding static slugs to prevent double counting)
+        //    a) DB completed bounties (takes precedence)
+        //    b) Static completed bounties (only if not in DB)
 
-        // Static bounties total
-        const staticCompletedBounties = staticBounties.filter((b) => b.status === "completed");
-        const staticCompletedTotal = staticCompletedBounties.reduce((sum, b) => sum + b.reward, 0);
-        const staticSlugs = staticBounties.map((b) => b.slug);
-
-        // DB completed bounties - exclude any that match static slugs
-        let dbCompletedTotal = 0;
-        const { data: completedBounties } = await supabase
+        // Fetch all completed bounties from DB
+        const { data: dbCompletedBounties } = await supabase
             .from("bounties")
             .select("reward_amount, slug")
             .eq("status", "completed");
 
-        if (completedBounties) {
-            // Only count DB bounties that aren't duplicates of static data
-            dbCompletedTotal = (completedBounties as any[])
-                .filter((b) => !staticSlugs.includes(b.slug))
-                .reduce((sum, b) => sum + (b.reward_amount || 0), 0);
-        }
+        // Get slugs of DB completed bounties
+        const dbCompletedSlugs = new Set(
+            (dbCompletedBounties || []).map((b: any) => b.slug)
+        );
 
-        // Total payout = static + DB (non-duplicate)
-        const totalPayout = staticCompletedTotal + dbCompletedTotal;
+        // DB completed bounties total
+        const dbCompletedTotal = (dbCompletedBounties || [])
+            .reduce((sum: number, b: any) => sum + (b.reward_amount || 0), 0);
 
-        // 3. Active Bounties (from DB only since static ones are completed)
+        // Static completed bounties - only count those NOT in DB (DB takes precedence)
+        const staticCompletedBounties = staticBounties.filter(
+            (b) => b.status === "completed" && !dbCompletedSlugs.has(b.slug)
+        );
+        const staticCompletedTotal = staticCompletedBounties.reduce((sum, b) => sum + b.reward, 0);
+
+        // Total payout = DB + static (non-duplicate)
+        const totalPayout = dbCompletedTotal + staticCompletedTotal;
+
+        // 3. Active Bounties
+        // Get DB active bounties
         const { count: dbActiveBounties, error: bountiesError } = await supabase
             .from("bounties")
             .select("*", { count: "exact", head: true })
@@ -63,8 +66,16 @@ export async function getLandingStats(): Promise<ActionResult<LandingStats>> {
             console.error("Error fetching active bounties:", bountiesError);
         }
 
-        // Count static active bounties
-        const staticActiveBounties = staticBounties.filter((b) => b.status === "active").length;
+        // Get all DB bounty slugs to avoid double counting
+        const { data: allDbBounties } = await supabase
+            .from("bounties")
+            .select("slug");
+        const dbSlugs = new Set((allDbBounties || []).map((b: any) => b.slug));
+
+        // Count static active bounties not in DB
+        const staticActiveBounties = staticBounties.filter(
+            (b) => b.status === "active" && !dbSlugs.has(b.slug)
+        ).length;
         const activeBounties = (dbActiveBounties || 0) + staticActiveBounties;
 
         const finalTravelers = travelersCount || 0;
