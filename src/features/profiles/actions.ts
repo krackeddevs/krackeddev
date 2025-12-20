@@ -11,6 +11,10 @@ export type ProfileData = {
     bio: string | null;
     location: string | null;
     username: string | null;
+    full_name: string | null;
+    x_url: string | null;
+    linkedin_url: string | null;
+    website_url: string | null;
 };
 
 export async function getProfile() {
@@ -44,11 +48,15 @@ export async function updateProfile(data: Partial<ProfileData>) {
 
     const { error } = await (supabase.from("profiles") as any)
         .update({
-            developer_role: data.role as any, // Cast to any or import DeveloperRole type if needed, or simply string if DB accepts it. DB type is DeveloperRole enum.
+            developer_role: data.role as any,
             stack: data.stack,
             bio: data.bio,
             location: data.location,
             username: data.username,
+            full_name: data.full_name,
+            x_url: data.x_url,
+            linkedin_url: data.linkedin_url,
+            website_url: data.website_url,
             updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);

@@ -6,7 +6,7 @@ export const BountySchema = z.object({
     description: z.string().optional(), // Short summary
     long_description: z.string().optional(), // Full Markdown details
     reward_amount: z.number().min(0, 'Reward amount must be positive'),
-    status: z.enum(['draft', 'open', 'pending', 'completed']).default('draft'),
+    status: z.enum(['draft', 'open', 'pending', 'completed', 'expired']).default('draft'),
     type: z.string().min(1, 'Type is required'),
     company_name: z.string().optional(),
     skills: z.array(z.string()).default([]),

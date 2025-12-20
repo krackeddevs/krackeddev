@@ -227,7 +227,7 @@ Each place should display:
 - Overall polish and attention to detail`,
     reward: 200,
     difficulty: "advanced",
-    status: "active",
+    status: "expired",
     tags: ["maps", "api", "food", "fullstack", "google-places", "react"],
     requirements: [
       "Map with pins + synced list view",

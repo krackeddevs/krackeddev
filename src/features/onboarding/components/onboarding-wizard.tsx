@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronRight, Loader2, MapPin, Code, User } from 'lucide-react';
+import { Check, ChevronRight, Loader2, MapPin, Code, User, Link as LinkIcon } from 'lucide-react';
 import { saveOnboardingDetails } from '../actions';
 import { developerRoles, techStacks, type OnboardingFormData } from '../schema';
 
@@ -13,12 +13,17 @@ export function OnboardingWizard() {
     const [error, setError] = useState<string | null>(null);
 
     const [formData, setFormData] = useState<OnboardingFormData>({
+        fullName: '',
+        username: '',
         developerRole: 'junior',
         stack: [],
         location: '',
         country: 'Malaysia',
         state: '',
         otherCountry: '',
+        xUrl: '',
+        linkedinUrl: '',
+        websiteUrl: '',
     });
 
     const handleRoleSelect = (role: string) => {
@@ -50,11 +55,15 @@ export function OnboardingWizard() {
         router.refresh();
     };
 
+    const totalSteps = 5;
+
     const canProceed = () => {
         switch (step) {
-            case 1: return !!formData.developerRole;
-            case 2: return formData.stack.length > 0;
-            case 3: return formData.location.length >= 2;
+            case 1: return true; // Identity is optional
+            case 2: return !!formData.developerRole;
+            case 3: return formData.stack.length > 0;
+            case 4: return formData.location.length >= 2;
+            case 5: return true; // Social links are optional
             default: return false;
         }
     };
@@ -64,7 +73,7 @@ export function OnboardingWizard() {
             <div className="w-full max-w-2xl">
                 {/* Progress indicator */}
                 <div className="flex items-center justify-center gap-2 mb-8">
-                    {[1, 2, 3].map((s) => (
+                    {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
                         <div
                             key={s}
                             className={`w-3 h-3 rounded-full transition-colors ${s <= step ? 'bg-neon-primary' : 'bg-muted'
@@ -74,8 +83,42 @@ export function OnboardingWizard() {
                 </div>
 
                 <div className="bg-card border border-neon-primary/30 p-8 shadow-[0_0_30px_rgba(21,128,61,0.2)]">
-                    {/* Step 1: Role */}
+                    {/* Step 1: Identity */}
                     {step === 1 && (
+                        <div className="space-y-6">
+                            <div className="text-center space-y-2">
+                                <User className="w-12 h-12 text-neon-primary mx-auto" />
+                                <h1 className="text-2xl font-bold text-foreground">Tell us about yourself</h1>
+                                <p className="text-muted-foreground">How should we call you?</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm text-muted-foreground mb-2">Display Name</label>
+                                    <input
+                                        type="text"
+                                        value={formData.fullName || ''}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                                        placeholder="e.g. John Doe"
+                                        className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-muted-foreground mb-2">Username / Codename</label>
+                                    <input
+                                        type="text"
+                                        value={formData.username || ''}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                                        placeholder="e.g. cyber_ninja"
+                                        className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Step 2: Role */}
+                    {step === 2 && (
                         <div className="space-y-6">
                             <div className="text-center space-y-2">
                                 <User className="w-12 h-12 text-neon-primary mx-auto" />
@@ -100,8 +143,8 @@ export function OnboardingWizard() {
                         </div>
                     )}
 
-                    {/* Step 2: Stack */}
-                    {step === 2 && (
+                    {/* Step 3: Stack */}
+                    {step === 3 && (
                         <div className="space-y-6">
                             <div className="text-center space-y-2">
                                 <Code className="w-12 h-12 text-neon-primary mx-auto" />
@@ -133,8 +176,8 @@ export function OnboardingWizard() {
                         </div>
                     )}
 
-                    {/* Step 3: Location */}
-                    {step === 3 && (
+                    {/* Step 4: Location */}
+                    {step === 4 && (
                         <div className="space-y-6">
                             <div className="text-center space-y-2">
                                 <MapPin className="w-12 h-12 text-neon-primary mx-auto" />
@@ -248,6 +291,56 @@ export function OnboardingWizard() {
                         </div>
                     )}
 
+                    {/* Step 5: Social Links (Optional) */}
+                    {step === 5 && (
+                        <div className="space-y-6">
+                            <div className="text-center space-y-2">
+                                <LinkIcon className="w-12 h-12 text-neon-primary mx-auto" />
+                                <h1 className="text-2xl font-bold text-foreground">Connect your profiles</h1>
+                                <p className="text-muted-foreground">Optional: Add your social links.</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm text-muted-foreground mb-2">X (Twitter)</label>
+                                    <input
+                                        type="url"
+                                        value={formData.xUrl || ''}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, xUrl: e.target.value }))}
+                                        placeholder="https://x.com/username"
+                                        className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-muted-foreground mb-2">LinkedIn</label>
+                                    <input
+                                        type="url"
+                                        value={formData.linkedinUrl || ''}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
+                                        placeholder="https://linkedin.com/in/username"
+                                        className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-muted-foreground mb-2">Website / Portfolio</label>
+                                    <input
+                                        type="url"
+                                        value={formData.websiteUrl || ''}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, websiteUrl: e.target.value }))}
+                                        placeholder="https://yoursite.com"
+                                        className="w-full px-4 py-3 bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                                    />
+                                </div>
+                            </div>
+
+                            {error && (
+                                <div className="p-3 bg-red-500/10 border border-red-500/50 text-red-400 text-sm">
+                                    {error}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {/* Navigation */}
                     <div className="flex justify-between mt-8">
                         <button
@@ -258,7 +351,7 @@ export function OnboardingWizard() {
                             Back
                         </button>
 
-                        {step < 3 ? (
+                        {step < totalSteps ? (
                             <button
                                 onClick={() => setStep(prev => prev + 1)}
                                 disabled={!canProceed()}

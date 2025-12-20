@@ -5,7 +5,7 @@ import { GithubStats } from "../types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Terminal, Code2, User, Github } from "lucide-react";
+import { MapPin, Terminal, Code2, User, Github, ExternalLink, Linkedin } from "lucide-react";
 import { GithubGraph } from "./github-graph";
 import { TopLanguages } from "./top-languages";
 import { BountyStats } from "./bounty-stats";
@@ -29,11 +29,16 @@ export function ProfileDetails({ profile, githubStats, bountyStats, onEdit }: Pr
         });
     };
 
+    const hasSocialLinks = profile.x_url || profile.linkedin_url || profile.website_url;
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-8 animate-in fade-in duration-500">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
                 <div className="space-y-1">
+                    {profile.full_name && (
+                        <p className="text-sm text-muted-foreground font-mono">{profile.full_name}</p>
+                    )}
                     <h1 className="text-3xl font-bold font-mono tracking-tighter bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
                         {profile.username || "Anonymous Netrunner"}
                     </h1>
@@ -43,6 +48,26 @@ export function ProfileDetails({ profile, githubStats, bountyStats, onEdit }: Pr
                             {profile.developer_role || profile.role || "Unclassified"}
                         </span>
                     </div>
+                    {/* Social Links */}
+                    {hasSocialLinks && (
+                        <div className="flex items-center gap-3 pt-2">
+                            {profile.x_url && (
+                                <a href={profile.x_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                                </a>
+                            )}
+                            {profile.linkedin_url && (
+                                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
+                                    <Linkedin className="w-4 h-4" />
+                                </a>
+                            )}
+                            {profile.website_url && (
+                                <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
+                                    <ExternalLink className="w-4 h-4" />
+                                </a>
+                            )}
+                        </div>
+                    )}
                 </div>
                 <Button
                     onClick={onEdit}

@@ -1,11 +1,11 @@
 "use client";
 
 import { useSupabase } from "@/context/SupabaseContext";
-import { X, ExternalLink, LogOut, Mail, ArrowLeft } from "lucide-react";
+import { X, ExternalLink, LogOut, Mail, ArrowLeft, User } from "lucide-react";
 import { useEffect, useCallback, useState } from "react";
 import { usePathname } from "next/navigation";
 
-type ViewState = "login" | "signup" | "forgot-password" | "forgot-password-success";
+type ViewState = "login" | "signup" | "signup-success" | "forgot-password" | "forgot-password-success";
 
 export const LoginModal = () => {
   const {
@@ -97,6 +97,10 @@ export const LoginModal = () => {
 
       if (result.error) {
         setError(result.error.message);
+      } else if (viewState === "signup") {
+        // Signup successful - show confirmation message
+        setError(null);
+        setViewState("signup-success");
       }
     } catch (err) {
       setError("An unexpected error occurred");
@@ -196,12 +200,21 @@ export const LoginModal = () => {
 
                 {/* Actions */}
                 <div className="space-y-3">
+                  {/* View Profile / Complete Profile */}
+                  <a
+                    href="/profile/view"
+                    onClick={closeLoginModal}
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
+                  >
+                    <User className="w-4 h-4" />
+                    View Profile
+                  </a>
                   {user?.user_metadata?.user_name && (
                     <a
                       href={`https://github.com/${user.user_metadata.user_name}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 border border-neon-primary/50 text-neon-primary font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/10 transition-all"
                     >
                       <ExternalLink className="w-4 h-4" />
                       View GitHub Profile
@@ -215,6 +228,25 @@ export const LoginModal = () => {
                     Disconnect Account
                   </button>
                 </div>
+              </div>
+            ) : viewState === "signup-success" ? (
+              // Signup success state - email confirmation needed
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 mx-auto flex items-center justify-center bg-neon-primary/10 border border-neon-primary">
+                  <Mail className="w-8 h-8 text-neon-primary" />
+                </div>
+                <p className="text-lg font-bold text-foreground">Check your email</p>
+                <p className="text-sm text-muted-foreground">
+                  We've sent a confirmation link to <strong>{email}</strong>. Please click the link to activate your account.
+                </p>
+                <button
+                  type="button"
+                  onClick={resetToLogin}
+                  className="flex items-center justify-center gap-2 w-full text-sm text-neon-primary hover:underline"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Sign In
+                </button>
               </div>
             ) : viewState === "forgot-password-success" ? (
               // Forgot password success state

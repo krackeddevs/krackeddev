@@ -157,6 +157,7 @@ export function BountyForm({ initialData, onSubmit, isLoading = false }: BountyF
                                         <SelectItem value="open">Open</SelectItem>
                                         <SelectItem value="pending">Pending</SelectItem>
                                         <SelectItem value="completed">Completed</SelectItem>
+                                        <SelectItem value="expired">Expired</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />

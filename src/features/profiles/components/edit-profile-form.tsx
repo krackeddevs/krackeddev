@@ -30,13 +30,17 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// Extended schema to include Bio and Username
+// Extended schema to include Bio, Username, Full Name and Social Links
 const editProfileSchema = z.object({
+    fullName: z.string().max(100, "Name too long").optional().or(z.literal("")),
     username: z.string().min(3, "Username must be at least 3 characters").optional().or(z.literal("")),
     developerRole: z.string().min(1, "Please select a role"),
     stack: z.array(z.string()).min(1, "Please select at least one technology"),
     location: z.string().min(2, "Please enter your location").optional().or(z.literal("")),
     bio: z.string().max(500, "Bio must be less than 500 characters").optional().or(z.literal("")),
+    xUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
+    linkedinUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
+    websiteUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
 });
 
 type EditProfileFormValues = z.infer<typeof editProfileSchema>;
@@ -53,11 +57,15 @@ export function EditProfileForm({ initialData, onCancel }: EditProfileFormProps)
     const form = useForm<EditProfileFormValues>({
         resolver: zodResolver(editProfileSchema),
         defaultValues: {
+            fullName: initialData.full_name || "",
             username: initialData.username || "",
             developerRole: initialData.developer_role || "",
             stack: initialData.stack || [],
             location: initialData.location || "",
             bio: initialData.bio || "",
+            xUrl: initialData.x_url || "",
+            linkedinUrl: initialData.linkedin_url || "",
+            websiteUrl: initialData.website_url || "",
         },
     });
 
@@ -71,6 +79,10 @@ export function EditProfileForm({ initialData, onCancel }: EditProfileFormProps)
                 location: data.location || null,
                 bio: data.bio || null,
                 username: data.username || null,
+                full_name: data.fullName || null,
+                x_url: data.xUrl || null,
+                linkedin_url: data.linkedinUrl || null,
+                website_url: data.websiteUrl || null,
             });
 
             if (result.error) {
@@ -107,6 +119,23 @@ export function EditProfileForm({ initialData, onCancel }: EditProfileFormProps)
                 </div>
 
                 <div className="grid gap-6">
+                    <FormField
+                        control={form.control}
+                        name="fullName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Display Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.g. John Doe" {...field} className="bg-background/50" />
+                                </FormControl>
+                                <FormDescription>
+                                    Your real name (optional).
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
                     <FormField
                         control={form.control}
                         name="username"
@@ -214,6 +243,53 @@ export function EditProfileForm({ initialData, onCancel }: EditProfileFormProps)
                             </FormItem>
                         )}
                     />
+
+                    {/* Social Links Section */}
+                    <div className="space-y-4 pt-4 border-t border-border/50">
+                        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Social Links</h3>
+
+                        <FormField
+                            control={form.control}
+                            name="xUrl"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>X (Twitter)</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="https://x.com/username" {...field} className="bg-background/50" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="linkedinUrl"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>LinkedIn</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="https://linkedin.com/in/username" {...field} className="bg-background/50" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="websiteUrl"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Website / Portfolio</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="https://yoursite.com" {...field} className="bg-background/50" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                 </div>
 
                 <div className="flex gap-4">

@@ -24,7 +24,7 @@ export async function fetchActiveBounties(
             const { data: dbBounties, error } = await supabase
                 .from("bounties")
                 .select("*")
-                .in("status", ["open", "completed"]);
+                .in("status", ["open", "completed", "expired"]);
 
             if (!error && dbBounties && dbBounties.length > 0) {
                 // Map DB bounties to our type and merge with static

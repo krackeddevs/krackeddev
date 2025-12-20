@@ -23,12 +23,17 @@ export const techStacks = [
 const developerRoleValues = ['student', 'junior', 'mid', 'senior', 'lead', 'principal'] as const;
 
 export const onboardingSchema = z.object({
+    fullName: z.string().max(100).optional(),
+    username: z.string().min(3, 'Username must be at least 3 characters').optional(),
     developerRole: z.enum(developerRoleValues),
     stack: z.array(z.string()).min(1, 'Please select at least one technology'),
     location: z.string().min(2, 'Please enter your location'),
     country: z.string().optional(),
     state: z.string().optional(),
     otherCountry: z.string().optional(),
+    xUrl: z.string().url().optional().or(z.literal('')),
+    linkedinUrl: z.string().url().optional().or(z.literal('')),
+    websiteUrl: z.string().url().optional().or(z.literal('')),
 });
 
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;
