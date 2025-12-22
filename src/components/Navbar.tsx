@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -11,34 +11,21 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useSupabase } from "@/context/SupabaseContext";
-
-interface PrayerTimes {
-  Fajr: string;
-  Dhuhr: string;
-  Asr: string;
-  Maghrib: string;
-  Isha: string;
-  [key: string]: string;
-}
-
-const PRAYER_ORDER = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
+import { usePageViews } from "@/lib/hooks/use-page-views";
+import { usePrayerTimes } from "@/lib/hooks/use-prayer-times";
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const isHomepage = pathname === "/";
-  const { isAuthenticated, signOut, openLoginModal, supabase, profile } = useSupabase();
-  const [pageViews, setPageViews] = React.useState<number | null>(null);
-  const [nextPrayer, setNextPrayer] = React.useState<{
-    name: string;
-    time: string;
-  } | null>(null);
+  const { isAuthenticated, signOut, openLoginModal, profile } = useSupabase();
+  const { data: pageViews } = usePageViews(pathname || "/");
+  const { data: nextPrayer } = usePrayerTimes();
 
   // Hide navigation links (middle section) on game pages and job detail pages, but keep header visible
   const gamePages = [
@@ -54,83 +41,12 @@ const Navbar = () => {
   const shouldHideNavLinks =
     isHomepage || gamePages.includes(pathname) || isJobDetailPage;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Track + fetch total page views (centralized here so we don't double-count in pages)
-  React.useEffect(() => {
-    if (!supabase) return;
-
-    const trackAndFetchPageViews = async () => {
-      try {
-        const key = "visitor_id";
-        const existing = localStorage.getItem(key);
-        const visitorId =
-          existing ??
-          (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()));
-        if (!existing) localStorage.setItem(key, visitorId);
-
-        await supabase.from("page_views").insert({
-          page_path: pathname || "/",
-          visitor_id: visitorId,
-          user_agent: navigator.userAgent,
-          referrer: document.referrer || null,
-        } as any);
-
-        const { count } = await supabase
-          .from("page_views")
-          .select("*", { count: "exact", head: true });
-
-        setPageViews(count ?? 0);
-      } catch (error) {
-        console.error("Error tracking page views:", error);
-      }
-    };
-
-    trackAndFetchPageViews();
-  }, [supabase, pathname]);
-
-  // Fetch next prayer time (KL, method 17 / JAKIM) for marquee
-  React.useEffect(() => {
-    const calculateNextPrayer = (timings: PrayerTimes) => {
-      const now = new Date();
-      const timeNow = now.getHours() * 60 + now.getMinutes();
-
-      for (const prayer of PRAYER_ORDER) {
-        const [hours, minutes] = timings[prayer].split(":").map(Number);
-        const prayerTime = hours * 60 + minutes;
-        if (prayerTime > timeNow) {
-          setNextPrayer({ name: prayer, time: timings[prayer] });
-          return;
-        }
-      }
-      setNextPrayer({ name: "Fajr", time: timings["Fajr"] });
-    };
-
-    const fetchPrayerTimes = async () => {
-      try {
-        const date = new Date();
-        const formattedDate = `${date.getDate()}-${date.getMonth() + 1
-          }-${date.getFullYear()}`;
-        const res = await fetch(
-          `https://api.aladhan.com/v1/timingsByCity/${formattedDate}?city=Kuala%20Lumpur&country=Malaysia&method=17`
-        );
-        const data = await res.json();
-        const timings = data?.data?.timings as PrayerTimes | undefined;
-        if (timings) calculateNextPrayer(timings);
-      } catch (error) {
-        console.error("Failed to fetch prayer times", error);
-      }
-    };
-
-    fetchPrayerTimes();
-    const interval = setInterval(fetchPrayerTimes, 60000);
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -142,7 +58,7 @@ const Navbar = () => {
         "relative top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
         isScrolled || isMobileMenuOpen
           ? "bg-background/80 backdrop-blur-lg border-white/10 shadow-[0_0_20px_rgba(21,128,61,0.1)]"
-          : "bg-transparent"
+          : "bg-transparent",
       )}
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -158,39 +74,38 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Nav */}
-        {!shouldHideNavLinks && (
-          <div className="hidden md:flex items-center gap-8"></div>
-        )}
-
         {/* Right Side (Desktop) */}
         <div className="flex items-center gap-2">
           {/* Home Button - For admins when on admin pages */}
-          {isAuthenticated && profile?.role === 'admin' && pathname?.startsWith('/admin') && (
-            <Button
-              variant="ghost"
-              asChild
-              className="py-2 h-auto w-auto px-4 border border-white/50 hover:border-white hover:bg-white/10"
-            >
-              <Link href="/">
-                <Home className="min-h-4 min-w-4 mr-2" />
-                <span>Home</span>
-              </Link>
-            </Button>
-          )}
+          {isAuthenticated &&
+            profile?.role === "admin" &&
+            pathname?.startsWith("/admin") && (
+              <Button
+                variant="ghost"
+                asChild
+                className="py-2 h-auto w-auto px-4 border border-white/50 hover:border-white hover:bg-white/10"
+              >
+                <Link href="/">
+                  <Home className="min-h-4 min-w-4 mr-2" />
+                  <span>Home</span>
+                </Link>
+              </Button>
+            )}
           {/* Admin Dashboard Button - Only for admins when NOT on admin pages */}
-          {isAuthenticated && profile?.role === 'admin' && !pathname?.startsWith('/admin') && (
-            <Button
-              variant="ghost"
-              asChild
-              className="py-2 h-auto w-auto px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
-            >
-              <Link href="/admin/dashboard">
-                <Shield className="min-h-4 min-w-4 mr-2" />
-                <span>Admin</span>
-              </Link>
-            </Button>
-          )}
+          {isAuthenticated &&
+            profile?.role === "admin" &&
+            !pathname?.startsWith("/admin") && (
+              <Button
+                variant="ghost"
+                asChild
+                className="py-2 h-auto w-auto px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
+              >
+                <Link href="/admin/dashboard">
+                  <Shield className="min-h-4 min-w-4 mr-2" />
+                  <span>Admin</span>
+                </Link>
+              </Button>
+            )}
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -206,7 +121,10 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={8}>
                 <DropdownMenuItem asChild>
-                  <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
+                  <Link
+                    href="/profile/view"
+                    className="cursor-pointer w-full font-semibold"
+                  >
                     Profile
                   </Link>
                 </DropdownMenuItem>
@@ -258,7 +176,7 @@ const Navbar = () => {
             <div className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20">
               <span className="text-foreground/60">
                 Page visits:{" "}
-                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+                {pageViews != null ? pageViews.toLocaleString() : "---"}
               </span>
               <span className="text-foreground/30">•</span>
               <span className="text-foreground/60">
@@ -275,7 +193,7 @@ const Navbar = () => {
             >
               <span className="text-foreground/60">
                 Page visits:{" "}
-                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+                {pageViews != null ? pageViews.toLocaleString() : "---"}
               </span>
               <span className="text-foreground/30">•</span>
               <span className="text-foreground/60">
@@ -292,7 +210,7 @@ const Navbar = () => {
             >
               <span className="text-foreground/60">
                 Page visits:{" "}
-                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+                {pageViews != null ? pageViews.toLocaleString() : "---"}
               </span>
               <span className="text-foreground/30">•</span>
               <span className="text-foreground/60">
@@ -309,7 +227,7 @@ const Navbar = () => {
             >
               <span className="text-foreground/60">
                 Page visits:{" "}
-                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+                {pageViews != null ? pageViews.toLocaleString() : "---"}
               </span>
               <span className="text-foreground/30">•</span>
               <span className="text-foreground/60">
@@ -326,7 +244,7 @@ const Navbar = () => {
             >
               <span className="text-foreground/60">
                 Page visits:{" "}
-                {pageViews !== null ? pageViews.toLocaleString() : "---"}
+                {pageViews != null ? pageViews.toLocaleString() : "---"}
               </span>
               <span className="text-foreground/30">•</span>
               <span className="text-foreground/60">
@@ -393,7 +311,10 @@ const Navbar = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" sideOffset={8}>
                       <DropdownMenuItem asChild>
-                        <Link href="/profile/view" className="cursor-pointer w-full font-semibold">
+                        <Link
+                          href="/profile/view"
+                          className="cursor-pointer w-full font-semibold"
+                        >
                           Profile
                         </Link>
                       </DropdownMenuItem>
@@ -429,45 +350,13 @@ const Navbar = () => {
       <div
         className={cn(
           "absolute bottom-0 left-0 h-px bg-linear-to-r from-transparent via-neon-primary to-transparent transition-all duration-500",
-          isScrolled || isMobileMenuOpen ? "w-full opacity-50" : "w-0 opacity-0"
+          isScrolled || isMobileMenuOpen
+            ? "w-full opacity-50"
+            : "w-0 opacity-0",
         )}
       />
     </motion.nav>
   );
 };
-
-const NavLink = ({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) => (
-  <Link
-    href={href}
-    className="relative text-sm font-medium text-zinc-50 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:text-neon-primary transition-colors duration-300 py-2 group"
-  >
-    {children}
-    <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-neon-primary shadow-[0_0_10px_var(--neon-primary)] group-hover:w-full transition-all duration-300" />
-  </Link>
-);
-
-const MobileNavLink = ({
-  href,
-  children,
-  onClick,
-}: {
-  href: string;
-  children: React.ReactNode;
-  onClick: () => void;
-}) => (
-  <Link
-    href={href}
-    onClick={onClick}
-    className="text-lg font-medium text-zinc-50 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:text-neon-primary hover:pl-2 transition-all duration-300 border-l-2 border-transparent hover:border-neon-primary py-2"
-  >
-    {children}
-  </Link>
-);
 
 export default Navbar;
