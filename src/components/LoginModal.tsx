@@ -27,14 +27,14 @@ export const LoginModal = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Handle escape key to close modal (only when authenticated)
+  // Handle escape key to close modal
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isAuthenticated) {
+      if (e.key === "Escape") {
         closeLoginModal();
       }
     },
-    [closeLoginModal, isAuthenticated]
+    [closeLoginModal]
   );
 
   useEffect(() => {
@@ -146,10 +146,10 @@ export const LoginModal = () => {
       aria-modal="true"
       aria-labelledby="login-modal-title"
     >
-      {/* Backdrop with blur - only clickable when authenticated */}
+      {/* Backdrop with blur */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={isAuthenticated ? closeLoginModal : undefined}
+        onClick={closeLoginModal}
         aria-hidden="true"
       />
 
@@ -164,16 +164,13 @@ export const LoginModal = () => {
             >
               {isAuthenticated ? "Your Profile" : viewState === "forgot-password" || viewState === "forgot-password-success" ? "Reset Password" : "Connect Account"}
             </h2>
-            {/* Only show close button when authenticated */}
-            {isAuthenticated && (
-              <button
-                onClick={closeLoginModal}
-                className="p-1 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Close modal"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            )}
+            <button
+              onClick={closeLoginModal}
+              className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Body */}
