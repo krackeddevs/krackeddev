@@ -10,12 +10,15 @@ import { LiveStats } from "./components/live-stats";
 import { JobPreview } from "./components/job-preview";
 import { NavigationHub } from "./components/navigation-hub";
 import { CommunityMap } from "./components/community-map";
+import { ManifestoModal } from "@/components/ManifestoModal";
 
 export function LandingPage() {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
 
     return (
         <main className="min-h-screen w-full bg-gray-900 relative flex flex-col">
+            {/* Manifesto Modal - Shows once for new visitors */}
+            <ManifestoModal />
             {/* CRT Scanline Overlay - Fixed to viewport */}
             {!showAnimation && (
                 <div className="scanlines fixed inset-0 pointer-events-none z-50 h-screen"></div>
