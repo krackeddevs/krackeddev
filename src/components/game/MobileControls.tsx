@@ -2,8 +2,6 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import { Joystick } from "./Joystick";
-import { GameBoyButtonX } from "./GameBoyButtonX";
-import { GameBoyButtonY } from "./GameBoyButtonY";
 
 interface MobileControlsProps {
   onDirectionChange: (dir: string | null) => void;
