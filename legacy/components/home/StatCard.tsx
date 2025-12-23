@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Card, CardContent } from './ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface StatCardProps {
   label: string;
