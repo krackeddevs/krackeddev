@@ -3,8 +3,6 @@ import { db } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
 import { and, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
 
-export const runtime = "edge";
-
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);

@@ -3,8 +3,6 @@ import { db } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
 import { isNotNull } from "drizzle-orm";
 
-export const runtime = "edge";
-
 export async function GET() {
   try {
     // parallel fetch
