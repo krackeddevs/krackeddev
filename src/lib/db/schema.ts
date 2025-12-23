@@ -1,43 +1,55 @@
-import { pgTable, uuid, text, integer, timestamp, index, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, integer, timestamp, index, boolean, numeric, pgEnum } from 'drizzle-orm/pg-core';
+
+// ============================================
+// ENUMS
+// ============================================
+export const userRoleEnum = pgEnum('user_role', ['admin', 'user']);
 
 // ============================================
 // PROFILES TABLE
-// Matches: supabase/migrations/001_create_profiles_table.sql
 // ============================================
 export const profiles = pgTable(
   'profiles',
   {
-    id: uuid().primaryKey(), // References auth.users(id) - managed by Supabase
-    username: text(),
+    id: uuid('id').primaryKey(), // References auth.users(id) - managed by Supabase
+    username: text('username'),
     fullName: text('full_name'),
     avatarUrl: text('avatar_url'),
-    email: text(),
-    provider: text(),
+    email: text('email'),
+    provider: text('provider'),
     githubUrl: text('github_url'),
-    bio: text(),
-    level: integer().default(1),
-    xp: integer().default(0),
-    role: text().default('user').notNull(), // 'user' | 'admin'
+    bio: text('bio'),
+    level: integer('level').default(1),
+    xp: integer('xp').default(0),
+    role: userRoleEnum('role').notNull().default('user'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+    developerRole: text('developer_role'),
+    stack: text('stack').array(),
+    location: text('location'),
+    onboardingCompleted: boolean('onboarding_completed').notNull().default(false),
+    status: text('status').notNull().default('active'),
+    xUrl: text('x_url'),
+    linkedinUrl: text('linkedin_url'),
+    websiteUrl: text('website_url'),
   },
   (table) => ({
     usernameIdx: index('profiles_username_idx').on(table.username),
+    onboardingCompletedIdx: index('profiles_onboarding_completed_idx').on(table.onboardingCompleted),
   })
 );
 
 // ============================================
 // PAGE VIEWS TABLE
-// Matches: supabase/migrations/002_create_page_views_table.sql
 // ============================================
 export const pageViews = pgTable(
   'page_views',
   {
-    id: uuid().primaryKey().defaultRandom(),
+    id: uuid('id').primaryKey().defaultRandom(),
     pagePath: text('page_path').notNull(),
     visitorId: text('visitor_id'),
     userAgent: text('user_agent'),
-    referrer: text(),
+    referrer: text('referrer'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   },
   (table) => ({
@@ -49,23 +61,22 @@ export const pageViews = pgTable(
 
 // ============================================
 // JOBS TABLE
-// For job board/listings functionality
 // ============================================
 export const jobs = pgTable(
   'jobs',
   {
-    id: text().primaryKey(), // External job ID from source (e.g., "88959607")
-    title: text().notNull(),
-    company: text().notNull(),
+    id: text('id').primaryKey(),
+    title: text('title').notNull(),
+    company: text('company').notNull(),
     companyLogo: text('company_logo'),
-    description: text().notNull(),
-    location: text().notNull(),
+    description: text('description').notNull(),
+    location: text('location').notNull(),
     isRemote: boolean('is_remote').default(false),
-    salaryMin: integer('salary_min'), // Minimum salary in MYR
-    salaryMax: integer('salary_max'), // Maximum salary in MYR
-    employmentType: text('employment_type'), // "Full time", "Part time", "Contract", etc.
-    sourceUrl: text('source_url'), // Original job posting URL
-    sourceSite: text('source_site'), // "JobStreet", "LinkedIn", etc.
+    salaryMin: integer('salary_min'),
+    salaryMax: integer('salary_max'),
+    employmentType: text('employment_type'),
+    sourceUrl: text('source_url'),
+    sourceSite: text('source_site'),
     postedAt: timestamp('posted_at', { withTimezone: true }),
     scrapedAt: timestamp('scraped_at', { withTimezone: true }).defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
@@ -77,5 +88,86 @@ export const jobs = pgTable(
     isActiveIdx: index('jobs_is_active_idx').on(table.isActive),
     postedAtIdx: index('jobs_posted_at_idx').on(table.postedAt),
     sourceSiteIdx: index('jobs_source_site_idx').on(table.sourceSite),
+  })
+);
+
+// ============================================
+// BOUNTIES TABLE
+// ============================================
+export const bounties = pgTable(
+  'bounties',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    title: text('title').notNull(),
+    slug: text('slug').notNull().unique(),
+    description: text('description'),
+    rewardAmount: numeric('reward_amount').notNull().default('0'),
+    status: text('status').notNull().default('open'),
+    type: text('type').notNull().default('bounty'),
+    skills: text('skills').array().default([]),
+    companyName: text('company_name'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+    difficulty: text('difficulty').default('intermediate'),
+    deadline: timestamp('deadline', { withTimezone: true }),
+    requirements: text('requirements').array().default([]),
+    repositoryUrl: text('repository_url'),
+    longDescription: text('long_description'),
+    bountyPostUrl: text('bounty_post_url'),
+    submissionPostUrl: text('submission_post_url'),
+    completedAt: timestamp('completed_at', { withTimezone: true }),
+    rarity: text('rarity').default('normal'),
+    winnerName: text('winner_name'),
+    winnerXHandle: text('winner_x_handle'),
+    winnerXUrl: text('winner_x_url'),
+    winnerSubmissionUrl: text('winner_submission_url'),
+  },
+  (table) => ({
+    slugIdx: index('bounties_slug_idx').on(table.slug),
+    statusIdx: index('bounties_status_idx').on(table.status),
+  })
+);
+
+// ============================================
+// BOUNTY INQUIRIES TABLE
+// ============================================
+export const bountyInquiries = pgTable('bounty_inquiries', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  companyName: text('company_name').notNull(),
+  email: text('email').notNull(),
+  budgetRange: text('budget_range').notNull(),
+  description: text('description').notNull(),
+  status: text('status').notNull().default('new'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ============================================
+// BOUNTY SUBMISSIONS TABLE
+// ============================================
+export const bountySubmissions = pgTable(
+  'bounty_submissions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    bountySlug: text('bounty_slug').notNull(),
+    bountyTitle: text('bounty_title').notNull(),
+    bountyReward: integer('bounty_reward').notNull(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => profiles.id),
+    pullRequestUrl: text('pull_request_url').notNull(),
+    notes: text('notes'),
+    status: text('status').notNull().default('pending'),
+    reviewedBy: uuid('reviewed_by').references(() => profiles.id),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+    reviewNotes: text('review_notes'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+    paymentRef: text('payment_ref'),
+    paidAt: timestamp('paid_at', { withTimezone: true }),
+  },
+  (table) => ({
+    bountySlugIdx: index('bounty_submissions_bounty_slug_idx').on(table.bountySlug),
+    userIdIdx: index('bounty_submissions_user_id_idx').on(table.userId),
+    statusIdx: index('bounty_submissions_status_idx').on(table.status),
   })
 );
