@@ -9,16 +9,19 @@ import { MapPin, Terminal, Code2, User, Github, ExternalLink, Linkedin } from "l
 import { GithubGraph } from "./github-graph";
 import { TopLanguages } from "./top-languages";
 import { BountyStats } from "./bounty-stats";
+import { MySubmissions } from "./my-submissions";
+import { UserSubmission } from "../types";
 import { createClient } from "@/lib/supabase/client";
 
 interface ProfileDetailsProps {
     profile: ProfileData;
     githubStats?: GithubStats;
     bountyStats?: { totalWins: number; totalEarnings: number };
+    userSubmissions?: UserSubmission[];
     onEdit: () => void;
 }
 
-export function ProfileDetails({ profile, githubStats, bountyStats, onEdit }: ProfileDetailsProps) {
+export function ProfileDetails({ profile, githubStats, bountyStats, userSubmissions, onEdit }: ProfileDetailsProps) {
     const handleLinkGithub = () => {
         const supabase = createClient();
         supabase.auth.signInWithOAuth({
@@ -97,6 +100,10 @@ export function ProfileDetails({ profile, githubStats, bountyStats, onEdit }: Pr
 
                     {bountyStats && (
                         <BountyStats stats={bountyStats} />
+                    )}
+
+                    {userSubmissions && (
+                        <MySubmissions submissions={userSubmissions} />
                     )}
 
                     {githubStats && (

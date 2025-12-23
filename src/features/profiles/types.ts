@@ -26,3 +26,13 @@ export interface BountyStats {
     totalWins: number;
     totalEarnings: number;
 }
+
+export interface UserSubmission {
+    id: string;
+    bountySlug: string;
+    bountyTitle: string;
+    bountyReward: number;
+    status: "pending" | "approved" | "rejected";
+    createdAt: string;
+    paidAt: string | null; // If set, user WON this bounty
+}
