@@ -38,6 +38,30 @@ export async function getProfile() {
     return { data };
 }
 
+/**
+ * Fetch a user's public profile by username (FR6)
+ * Returns only public-safe fields
+ */
+export async function fetchPublicProfile(username: string): Promise<{ data?: ProfileData & { avatar_url?: string }; error?: string }> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url")
+        .eq("username", username)
+        .eq("status", "active")  // Only show active users
+        .single();
+
+    if (error) {
+        if (error.code === "PGRST116") {
+            return { error: "User not found" };
+        }
+        return { error: error.message };
+    }
+
+    return { data: data as ProfileData & { avatar_url?: string } };
+}
+
 export async function updateProfile(data: Partial<ProfileData>) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -225,6 +249,114 @@ export async function fetchBountyStats(userId?: string): Promise<{ data?: Bounty
             totalEarnings,
         },
     };
+}
+
+export type TopHunter = {
+    id: string;
+    username: string;
+    full_name: string | null;
+    avatar_url: string | null;
+    developer_role: string | null;
+    location: string | null;
+    totalWins: number;
+    totalEarnings: number;
+};
+
+export type Member = {
+    id: string;
+    username: string;
+    full_name: string | null;
+    avatar_url: string | null;
+    developer_role: string | null;
+    location: string | null;
+    created_at: string;
+};
+
+/**
+ * Fetch all active members for the members page (FR6)
+ */
+export async function fetchAllMembers(limit: number = 50): Promise<{ data: Member[]; error?: string }> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("id, username, full_name, avatar_url, developer_role, location, created_at, status")
+        .eq("status", "active")
+        .eq("onboarding_completed", true)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+    if (error) {
+        console.error("Error fetching members:", error);
+        return { data: [], error: "Failed to fetch members" };
+    }
+
+    return { data: (data || []) as Member[] };
+}
+
+/**
+ * Fetch top bounty hunters for leaderboard (FR6)
+ */
+export async function fetchTopHunters(limit: number = 20): Promise<{ data: TopHunter[]; error?: string }> {
+    const supabase = await createClient();
+
+    // Step 1: Get approved submissions
+    const { data: submissions, error: subError } = await supabase
+        .from("bounty_submissions")
+        .select("user_id, bounty_reward")
+        .eq("status", "approved");
+
+    if (subError) {
+        console.error("Error fetching submissions:", subError);
+        return { data: [], error: "Failed to fetch leaderboard" };
+    }
+
+    if (!submissions || submissions.length === 0) {
+        return { data: [] };
+    }
+
+    // Step 2: Aggregate by user
+    const userStatsMap = new Map<string, { wins: number; earnings: number }>();
+    for (const sub of submissions as any[]) {
+        const existing = userStatsMap.get(sub.user_id) || { wins: 0, earnings: 0 };
+        existing.wins += 1;
+        existing.earnings += sub.bounty_reward || 0;
+        userStatsMap.set(sub.user_id, existing);
+    }
+
+    const userIds = Array.from(userStatsMap.keys());
+
+    // Step 3: Fetch profiles for these users
+    const { data: profiles, error: profError } = await supabase
+        .from("profiles")
+        .select("id, username, full_name, avatar_url, developer_role, location, status")
+        .in("id", userIds)
+        .neq("status", "banned");
+
+    if (profError) {
+        console.error("Error fetching profiles:", profError);
+        return { data: [], error: "Failed to fetch user profiles" };
+    }
+
+    // Step 4: Combine data
+    const hunters: TopHunter[] = (profiles || []).map((profile: any) => {
+        const stats = userStatsMap.get(profile.id) || { wins: 0, earnings: 0 };
+        return {
+            id: profile.id,
+            username: profile.username,
+            full_name: profile.full_name,
+            avatar_url: profile.avatar_url,
+            developer_role: profile.developer_role,
+            location: profile.location,
+            totalWins: stats.wins,
+            totalEarnings: stats.earnings,
+        };
+    });
+
+    // Sort by total wins, then earnings
+    hunters.sort((a, b) => b.totalWins - a.totalWins || b.totalEarnings - a.totalEarnings);
+
+    return { data: hunters.slice(0, limit) };
 }
 
 export async function fetchUserSubmissions(): Promise<{ data: UserSubmission[]; error?: string }> {
