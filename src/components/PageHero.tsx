@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, Variants, AnimatePresence } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 interface PageHeroProps {
   title: string;
@@ -12,28 +12,15 @@ interface PageHeroProps {
 
 const TypingAnimation = ({ text }: { text: string }) => {
   const [displayText, setDisplayText] = useState("");
-  const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
-    setDisplayText("");
-    setIsTyping(true);
-  }, [text]);
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
-    if (isTyping) {
-      if (displayText.length < text.length) {
-        timeout = setTimeout(() => {
-          setDisplayText(text.slice(0, displayText.length + 1));
-        }, 50);
-      } else {
-        setIsTyping(false);
-      }
+    if (displayText.length < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText(text.slice(0, displayText.length + 1));
+      }, 50);
+      return () => clearTimeout(timeout);
     }
-
-    return () => clearTimeout(timeout);
-  }, [displayText, isTyping, text]);
+  }, [displayText, text]);
 
   return (
     <span>
@@ -135,7 +122,7 @@ const PageHero = ({
             transition={{ delay: 0.5, duration: 0.5 }}
           >
             <span className="text-green-700/80 mr-2">&gt;</span>
-            <TypingAnimation text={subtitle} />
+            <TypingAnimation key={subtitle} text={subtitle} />
           </motion.div>
 
           <motion.div
