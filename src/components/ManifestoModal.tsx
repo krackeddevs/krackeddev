@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, createContext, useContext } from "react";
+import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, Scroll, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 
 const MANIFESTO_STORAGE_KEY = "kd_manifesto_seen";
@@ -34,7 +35,6 @@ export function useManifesto() {
 export function ManifestoModal() {
     const [isOpen, setIsOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
-    const [hasSeen, setHasSeen] = useState(true);
     const [isZoomed, setIsZoomed] = useState(false);
     const [zoomLevel, setZoomLevel] = useState(1);
     const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
@@ -43,7 +43,6 @@ export function ManifestoModal() {
 
     useEffect(() => {
         const seen = localStorage.getItem(MANIFESTO_STORAGE_KEY);
-        setHasSeen(!!seen);
 
         if (!seen) {
             const timer = setTimeout(() => {
@@ -53,56 +52,49 @@ export function ManifestoModal() {
         }
     }, []);
 
-    // Reset zoom when changing pages
-    useEffect(() => {
+    // Helper to reset zoom state
+    const resetZoomState = () => {
         setIsZoomed(false);
         setZoomLevel(1);
         setPanPosition({ x: 0, y: 0 });
-    }, [currentPage]);
-
-    // Reset zoom when closing modal
-    useEffect(() => {
-        if (!isOpen) {
-            setIsZoomed(false);
-            setZoomLevel(1);
-            setPanPosition({ x: 0, y: 0 });
-        }
-    }, [isOpen]);
+    };
 
     const handleClose = () => {
         localStorage.setItem(MANIFESTO_STORAGE_KEY, "true");
         setIsOpen(false);
-        setHasSeen(true);
+        resetZoomState();
     };
 
     const handleOpen = () => {
         setCurrentPage(0);
+        resetZoomState();
         setIsOpen(true);
     };
 
     const nextPage = () => {
         if (currentPage < manifestoPages.length - 1 && !isZoomed) {
+            resetZoomState();
             setCurrentPage(currentPage + 1);
         }
     };
 
     const prevPage = () => {
         if (currentPage > 0 && !isZoomed) {
+            resetZoomState();
             setCurrentPage(currentPage - 1);
         }
     };
 
     const goToPage = (index: number) => {
         if (!isZoomed) {
+            resetZoomState();
             setCurrentPage(index);
         }
     };
 
     const toggleZoom = () => {
         if (isZoomed) {
-            setIsZoomed(false);
-            setZoomLevel(1);
-            setPanPosition({ x: 0, y: 0 });
+            resetZoomState();
         } else {
             setIsZoomed(true);
             setZoomLevel(2);
@@ -121,8 +113,7 @@ export function ManifestoModal() {
             const newZoom = Math.max(zoomLevel - 0.5, 1);
             setZoomLevel(newZoom);
             if (newZoom === 1) {
-                setIsZoomed(false);
-                setPanPosition({ x: 0, y: 0 });
+                resetZoomState();
             }
         }
     };
@@ -304,6 +295,7 @@ export function ManifestoModal() {
                                         className="w-full h-full flex items-center justify-center overflow-auto"
                                         style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
                                     >
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img
                                             src={manifestoPages[currentPage].src}
                                             alt={manifestoPages[currentPage].alt}
@@ -323,13 +315,20 @@ export function ManifestoModal() {
                                             key={index}
                                             className="flex-shrink-0 w-full h-full flex items-center justify-center p-2 sm:p-4"
                                         >
-                                            <img
-                                                src={page.src}
-                                                alt={page.alt}
-                                                className="max-w-full max-h-[55vh] sm:max-h-[60vh] object-contain rounded-md cursor-zoom-in"
+                                            <div 
+                                                className="relative w-full h-[55vh] sm:h-[60vh] cursor-zoom-in"
                                                 onClick={handleImageClick}
-                                                draggable={false}
-                                            />
+                                            >
+                                                <Image
+                                                    src={page.src}
+                                                    alt={page.alt}
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, 80vw"
+                                                    className="object-contain rounded-md"
+                                                    draggable={false}
+                                                    priority={index === 0}
+                                                />
+                                            </div>
                                         </div>
                                     ))
                                 )}
