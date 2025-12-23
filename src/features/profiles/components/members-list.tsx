@@ -66,39 +66,40 @@ export function MembersList({ members }: MembersListProps) {
                             href={`/profile/${member.username}`}
                             className="block group"
                         >
-                            <div className="flex items-center gap-4 p-4 bg-gray-800/50 border border-gray-700 hover:border-neon-primary/50 transition-all">
+                            <div className="flex items-center gap-4 p-4 bg-gray-800/50 border border-gray-700 hover:border-neon-primary/50 transition-all h-[88px]">
                                 {/* Avatar */}
                                 {member.avatar_url ? (
                                     <img
                                         src={member.avatar_url}
                                         alt={member.username || "User"}
-                                        className="w-12 h-12 rounded-full border-2 border-white/10 group-hover:border-neon-primary/50 transition-colors"
+                                        className="w-12 h-12 rounded-full border-2 border-white/10 group-hover:border-neon-primary/50 transition-colors flex-shrink-0"
                                     />
                                 ) : (
-                                    <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white/10">
+                                    <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white/10 flex-shrink-0">
                                         <User className="w-6 h-6 text-gray-400" />
                                     </div>
                                 )}
 
                                 {/* Info */}
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="font-mono text-white group-hover:text-neon-primary transition-colors truncate">
+                                <div className="flex-1 min-w-0 overflow-hidden">
+                                    <h3 className="font-mono text-white group-hover:text-neon-primary transition-colors truncate text-sm">
                                         {member.full_name || member.username || "Anonymous"}
                                     </h3>
-                                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-400 font-mono">
-                                        {member.developer_role && (
-                                            <span className="uppercase">{member.developer_role}</span>
-                                        )}
-                                        {member.location && (
-                                            <span className="flex items-center gap-1">
-                                                <MapPin className="w-3 h-3" />
-                                                {member.location}
-                                            </span>
-                                        )}
+                                    <div className="text-xs text-gray-400 font-mono uppercase truncate h-4">
+                                        {member.developer_role || "DEVELOPER"}
                                     </div>
-                                    <div className="flex items-center gap-1 text-xs text-gray-500 font-mono mt-1">
-                                        <Calendar className="w-3 h-3" />
-                                        Joined {formatDate(member.created_at)}
+                                    <div className="flex items-center gap-1 text-xs text-gray-500 font-mono mt-0.5 truncate">
+                                        {member.location ? (
+                                            <>
+                                                <MapPin className="w-3 h-3 flex-shrink-0" />
+                                                <span className="truncate">{member.location}</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Calendar className="w-3 h-3 flex-shrink-0" />
+                                                Joined {formatDate(member.created_at)}
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
