@@ -153,6 +153,10 @@ export async function fetchGithubStats(): Promise<{ data?: GithubStats; error?: 
         });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                // Token invalid or expired - user may have signed in with Google but not synced GitHub
+                return { error: "GitHub not connected or token expired" };
+            }
             console.error("GitHub API Error Status:", response.status);
             return { error: "Failed to connect to GitHub API" };
         }
