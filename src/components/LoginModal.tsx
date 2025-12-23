@@ -12,6 +12,7 @@ export const LoginModal = () => {
     user,
     isAuthenticated,
     isLoginModalOpen,
+    isLoginModalCloseable,
     closeLoginModal,
     signInWithOAuth,
     signInWithEmail,
@@ -27,14 +28,14 @@ export const LoginModal = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Handle escape key to close modal (only when authenticated)
+  // Handle escape key to close modal (when authenticated OR closeable)
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isAuthenticated) {
+      if (e.key === "Escape" && (isAuthenticated || isLoginModalCloseable)) {
         closeLoginModal();
       }
     },
-    [closeLoginModal, isAuthenticated]
+    [closeLoginModal, isAuthenticated, isLoginModalCloseable]
   );
 
   useEffect(() => {
@@ -146,10 +147,10 @@ export const LoginModal = () => {
       aria-modal="true"
       aria-labelledby="login-modal-title"
     >
-      {/* Backdrop with blur - only clickable when authenticated */}
+      {/* Backdrop with blur - clickable when authenticated OR closeable */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={isAuthenticated ? closeLoginModal : undefined}
+        onClick={(isAuthenticated || isLoginModalCloseable) ? closeLoginModal : undefined}
         aria-hidden="true"
       />
 
@@ -164,8 +165,8 @@ export const LoginModal = () => {
             >
               {isAuthenticated ? "Your Profile" : viewState === "forgot-password" || viewState === "forgot-password-success" ? "Reset Password" : "Connect Account"}
             </h2>
-            {/* Only show close button when authenticated */}
-            {isAuthenticated && (
+            {/* Show close button when authenticated OR closeable */}
+            {(isAuthenticated || isLoginModalCloseable) && (
               <button
                 onClick={closeLoginModal}
                 className="p-1 text-muted-foreground hover:text-foreground transition-colors"

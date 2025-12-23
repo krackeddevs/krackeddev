@@ -27,7 +27,8 @@ interface SupabaseContextType {
   loading: boolean;
   isAuthenticated: boolean;
   isLoginModalOpen: boolean;
-  openLoginModal: () => void;
+  isLoginModalCloseable: boolean;
+  openLoginModal: (closeable?: boolean) => void;
   closeLoginModal: () => void;
   signInWithOAuth: (provider: Provider) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -50,6 +51,7 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoginModalCloseable, setIsLoginModalCloseable] = useState(false);
 
   // Fetch user profile from profiles table
   const fetchProfile = useCallback(async (userId: string) => {
@@ -132,16 +134,18 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [supabase, fetchProfile]);
 
-  const openLoginModal = useCallback(() => {
+  const openLoginModal = useCallback((closeable: boolean = false) => {
+    setIsLoginModalCloseable(closeable);
     setIsLoginModalOpen(true);
   }, []);
 
   const closeLoginModal = useCallback(() => {
-    // Only allow closing if user is authenticated
-    if (user) {
+    // Allow closing if user is authenticated OR if modal was opened as closeable
+    if (user || isLoginModalCloseable) {
       setIsLoginModalOpen(false);
+      setIsLoginModalCloseable(false);
     }
-  }, [user]);
+  }, [user, isLoginModalCloseable]);
 
   const signInWithOAuth = async (provider: Provider) => {
     const currentOrigin =
@@ -149,8 +153,10 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
         ? window.location.origin
         : process.env.NEXT_PUBLIC_SITE_URL || "https://krackeddevs.com";
 
+    // Preserve current path so user returns to same page after login
+    const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
     const siteUrl = currentOrigin.replace(/\/$/, "");
-    const redirectTo = `${siteUrl}/auth/callback`;
+    const redirectTo = `${siteUrl}/auth/callback?next=${encodeURIComponent(currentPath)}`;
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -206,6 +212,7 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
         loading,
         isAuthenticated: !!user,
         isLoginModalOpen,
+        isLoginModalCloseable,
         openLoginModal,
         closeLoginModal,
         signInWithOAuth,
