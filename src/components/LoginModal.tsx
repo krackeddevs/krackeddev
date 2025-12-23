@@ -4,6 +4,8 @@ import { useSupabase } from "@/context/SupabaseContext";
 import { X, ExternalLink, LogOut, Mail, ArrowLeft, User } from "lucide-react";
 import { useEffect, useCallback, useState } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 
 type ViewState =
   | "login"
@@ -109,7 +111,7 @@ export const LoginModal = () => {
         setError(null);
         setViewState("signup-success");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -133,7 +135,7 @@ export const LoginModal = () => {
       } else {
         setViewState("forgot-password-success");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -198,9 +200,11 @@ export const LoginModal = () => {
               <div className="space-y-6">
                 {/* User Card */}
                 <div className="flex items-center gap-4 p-4 bg-background border border-neon-primary/20">
-                  <img
+                  <Image
                     src={avatarUrl}
                     alt={`${displayName}'s avatar`}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 border-2 border-neon-primary rounded-full"
                   />
                   <div className="min-w-0 flex-1">
@@ -216,14 +220,14 @@ export const LoginModal = () => {
                 {/* Actions */}
                 <div className="space-y-3">
                   {/* View Profile / Complete Profile */}
-                  <a
+                  <Link
                     href="/profile"
                     onClick={closeLoginModal}
                     className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
                   >
                     <User className="w-4 h-4" />
                     View Profile
-                  </a>
+                  </Link>
                   {user?.user_metadata?.user_name && (
                     <a
                       href={`https://github.com/${user.user_metadata.user_name}`}
@@ -254,7 +258,7 @@ export const LoginModal = () => {
                   Check your email
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a confirmation link to <strong>{email}</strong>.
+                  We&apos;ve sent a confirmation link to <strong>{email}</strong>.
                   Please click the link to activate your account.
                 </p>
                 <button
@@ -276,7 +280,7 @@ export const LoginModal = () => {
                   Check your email
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a password reset link to <strong>{email}</strong>
+                  We&apos;ve sent a password reset link to <strong>{email}</strong>
                 </p>
                 <button
                   type="button"
@@ -293,7 +297,7 @@ export const LoginModal = () => {
                 <div className="text-center space-y-2">
                   <Mail className="w-12 h-12 text-neon-primary mx-auto" />
                   <p className="text-sm text-muted-foreground">
-                    Enter your email and we'll send you a reset link.
+                    Enter your email and we&apos;ll send you a reset link.
                   </p>
                 </div>
                 <form onSubmit={handleForgotPassword} className="space-y-3">
@@ -336,9 +340,11 @@ export const LoginModal = () => {
                 {/* Welcome Section */}
                 <div className="flex flex-col items-center text-center space-y-2 mb-4">
                   <div className="relative">
-                    <img
+                    <Image
                       src="/logo/logo-old.png"
                       alt="Kracked Devs Logo"
+                      width={96}
+                      height={96}
                       className="w-24 h-24 object-cover p-0.5 bg-green-400"
                     />
                   </div>
@@ -474,19 +480,19 @@ export const LoginModal = () => {
                 {/* Info text */}
                 <p className="text-xs text-center text-muted-foreground">
                   By connecting, you agree to our{" "}
-                  <a
+                  <Link
                     href="/terms"
                     className="text-neon-primary hover:underline"
                   >
                     Terms of Service
-                  </a>{" "}
+                  </Link>{" "}
                   and{" "}
-                  <a
+                  <Link
                     href="/privacy"
                     className="text-neon-primary hover:underline"
                   >
                     Privacy Policy
-                  </a>
+                  </Link>
                 </p>
               </div>
             )}
