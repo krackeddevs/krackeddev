@@ -144,7 +144,6 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     if (!bounty) {
         return (
             <main className="min-h-screen bg-gray-900 flex items-center justify-center">
-                <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
                 <div className="text-center relative z-10">
                     <div className="text-6xl mb-4">🔍</div>
                     <h1 className="text-2xl font-mono text-white mb-4">
@@ -172,8 +171,6 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     if (isGuest) {
         return (
             <main className="min-h-screen bg-gray-900 relative">
-                <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
-
                 {/* Header with Navigation */}
                 <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
                     <div className="container mx-auto px-4 py-3 max-w-4xl">
@@ -242,8 +239,6 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
     return (
         <main className="min-h-screen bg-gray-900 relative">
-            <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
-
             {/* Header with Navigation */}
             <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
                 <div className="container mx-auto px-4 py-3 max-w-4xl">

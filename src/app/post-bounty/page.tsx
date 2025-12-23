@@ -38,7 +38,6 @@ export default function PostBountyPage() {
     if (submitted) {
         return (
             <main className="min-h-screen bg-black text-green-500 font-mono flex flex-col items-center justify-center p-4 relative overflow-hidden">
-                <div className="scanlines fixed inset-0 pointer-events-none z-50 opacity-50" />
                 <div className="max-w-md w-full border border-green-500/50 p-8 bg-black/80 backdrop-blur relative z-10 text-center">
                     <div className="absolute top-0 left-0 w-full h-1 bg-green-500 shadow-[0_0_10px_#00ff00]" />
                     <Terminal className="w-16 h-16 mx-auto mb-6 text-green-400" />
@@ -59,9 +58,6 @@ export default function PostBountyPage() {
 
     return (
         <main className="min-h-screen bg-black text-gray-300 font-mono relative overflow-hidden">
-            {/* CRT Overlay */}
-            <div className="scanlines fixed inset-0 pointer-events-none z-50 opacity-30 h-screen" />
-
             {/* Background Grid - Reduced Opacity */}
             <div className="fixed inset-0 pointer-events-none opacity-10"
                 style={{

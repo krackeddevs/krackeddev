@@ -13,7 +13,6 @@ export default async function MembersPage() {
 
   return (
     <main className="min-h-screen bg-gray-900">
-      <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
       <div className="relative z-10">
         {/* Header */}
         <div className="bg-gray-800/50 border-b border-gray-700">

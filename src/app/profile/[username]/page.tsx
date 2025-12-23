@@ -21,7 +21,6 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
 
     return (
         <main className="min-h-screen bg-gray-900">
-            <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
             <div className="relative z-10 py-8">
                 <PublicProfileDetails
                     profile={profile}

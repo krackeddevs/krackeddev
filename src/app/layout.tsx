@@ -100,6 +100,8 @@ export default function RootLayout({
               <div className="flex-grow">{children}</div>
               <Toaster theme="dark" position="top-center" offset={16} />
               <LoginModal />
+              {/* Global CRT Scanline Overlay */}
+              <div className="scanlines fixed inset-0 pointer-events-none z-50" />
             </NuqsAdapter>
           </QueryProvider>
         </SupabaseProvider>

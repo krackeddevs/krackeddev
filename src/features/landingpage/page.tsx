@@ -21,10 +21,6 @@ export function LandingPage() {
         <main className="min-h-screen w-full bg-gray-900 relative flex flex-col">
             {/* Manifesto Modal - Shows once for new visitors */}
             <ManifestoModal />
-            {/* CRT Scanline Overlay - Fixed to viewport */}
-            {!showAnimation && (
-                <div className="scanlines fixed inset-0 pointer-events-none z-50 h-screen"></div>
-            )}
 
             {showAnimation && (
                 <SplitTextAnimation
