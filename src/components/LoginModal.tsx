@@ -5,7 +5,12 @@ import { X, ExternalLink, LogOut, Mail, ArrowLeft, User } from "lucide-react";
 import { useEffect, useCallback, useState } from "react";
 import { usePathname } from "next/navigation";
 
-type ViewState = "login" | "signup" | "signup-success" | "forgot-password" | "forgot-password-success";
+type ViewState =
+  | "login"
+  | "signup"
+  | "signup-success"
+  | "forgot-password"
+  | "forgot-password-success";
 
 export const LoginModal = () => {
   const {
@@ -35,7 +40,7 @@ export const LoginModal = () => {
         closeLoginModal();
       }
     },
-    [closeLoginModal, isAuthenticated, isLoginModalCloseable]
+    [closeLoginModal, isAuthenticated, isLoginModalCloseable],
   );
 
   useEffect(() => {
@@ -51,7 +56,7 @@ export const LoginModal = () => {
   }, [isLoginModalOpen, handleKeyDown]);
 
   // Hide modal on auth routes
-  const isAuthRoute = pathname?.startsWith('/auth/');
+  const isAuthRoute = pathname?.startsWith("/auth/");
   if (!isLoginModalOpen || isAuthRoute) return null;
 
   // Get user display info from Supabase user metadata
@@ -65,7 +70,7 @@ export const LoginModal = () => {
   const avatarUrl =
     user?.user_metadata?.avatar_url ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      displayName
+      displayName,
     )}&background=random`;
 
   const providerType = user?.app_metadata?.provider || "email";
@@ -92,9 +97,10 @@ export const LoginModal = () => {
     setLoading(true);
 
     try {
-      const result = viewState === "signup"
-        ? await signUpWithEmail(email, password)
-        : await signInWithEmail(email, password);
+      const result =
+        viewState === "signup"
+          ? await signUpWithEmail(email, password)
+          : await signInWithEmail(email, password);
 
       if (result.error) {
         setError(result.error.message);
@@ -116,7 +122,8 @@ export const LoginModal = () => {
     setLoading(true);
 
     try {
-      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      const currentOrigin =
+        typeof window !== "undefined" ? window.location.origin : "";
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${currentOrigin}/auth/update-password`,
       });
@@ -150,7 +157,9 @@ export const LoginModal = () => {
       {/* Backdrop with blur - clickable when authenticated OR closeable */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={(isAuthenticated || isLoginModalCloseable) ? closeLoginModal : undefined}
+        onClick={
+          isAuthenticated || isLoginModalCloseable ? closeLoginModal : undefined
+        }
         aria-hidden="true"
       />
 
@@ -163,7 +172,12 @@ export const LoginModal = () => {
               id="login-modal-title"
               className="text-lg font-bold text-green-400 uppercase tracking-wider"
             >
-              {isAuthenticated ? "Your Profile" : viewState === "forgot-password" || viewState === "forgot-password-success" ? "Reset Password" : "Connect Account"}
+              {isAuthenticated
+                ? "Your Profile"
+                : viewState === "forgot-password" ||
+                    viewState === "forgot-password-success"
+                  ? "Reset Password"
+                  : "Connect Account"}
             </h2>
             {/* Show close button when authenticated OR closeable */}
             {(isAuthenticated || isLoginModalCloseable) && (
@@ -203,7 +217,7 @@ export const LoginModal = () => {
                 <div className="space-y-3">
                   {/* View Profile / Complete Profile */}
                   <a
-                    href="/profile/view"
+                    href="/profile"
                     onClick={closeLoginModal}
                     className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
                   >
@@ -236,9 +250,12 @@ export const LoginModal = () => {
                 <div className="w-16 h-16 mx-auto flex items-center justify-center bg-neon-primary/10 border border-neon-primary">
                   <Mail className="w-8 h-8 text-neon-primary" />
                 </div>
-                <p className="text-lg font-bold text-foreground">Check your email</p>
+                <p className="text-lg font-bold text-foreground">
+                  Check your email
+                </p>
                 <p className="text-sm text-muted-foreground">
-                  We've sent a confirmation link to <strong>{email}</strong>. Please click the link to activate your account.
+                  We've sent a confirmation link to <strong>{email}</strong>.
+                  Please click the link to activate your account.
                 </p>
                 <button
                   type="button"
@@ -255,7 +272,9 @@ export const LoginModal = () => {
                 <div className="w-16 h-16 mx-auto flex items-center justify-center bg-neon-primary/10 border border-neon-primary">
                   <Mail className="w-8 h-8 text-neon-primary" />
                 </div>
-                <p className="text-lg font-bold text-foreground">Check your email</p>
+                <p className="text-lg font-bold text-foreground">
+                  Check your email
+                </p>
                 <p className="text-sm text-muted-foreground">
                   We've sent a password reset link to <strong>{email}</strong>
                 </p>
@@ -405,7 +424,11 @@ export const LoginModal = () => {
                       onKeyDown={(e) => e.stopPropagation()}
                       required
                       minLength={6}
-                      autoComplete={viewState === "signup" ? "new-password" : "current-password"}
+                      autoComplete={
+                        viewState === "signup"
+                          ? "new-password"
+                          : "current-password"
+                      }
                       className="w-full px-4 py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
                     />
                     <button
@@ -414,14 +437,24 @@ export const LoginModal = () => {
                       className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
                     >
                       <Mail className="w-4 h-4" />
-                      {loading ? "Loading..." : viewState === "signup" ? "Sign Up" : "Sign In"}
+                      {loading
+                        ? "Loading..."
+                        : viewState === "signup"
+                          ? "Sign Up"
+                          : "Sign In"}
                     </button>
                     <button
                       type="button"
-                      onClick={() => setViewState(viewState === "signup" ? "login" : "signup")}
+                      onClick={() =>
+                        setViewState(
+                          viewState === "signup" ? "login" : "signup",
+                        )
+                      }
                       className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {viewState === "signup" ? "Already have an account? Sign In" : "Need an account? Sign Up"}
+                      {viewState === "signup"
+                        ? "Already have an account? Sign In"
+                        : "Need an account? Sign Up"}
                     </button>
                     {viewState === "login" && (
                       <button

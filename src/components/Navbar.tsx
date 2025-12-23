@@ -122,7 +122,7 @@ const Navbar = () => {
               <DropdownMenuContent align="end" sideOffset={8}>
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/profile/view"
+                    href="/profile"
                     className="cursor-pointer w-full font-semibold"
                   >
                     Profile
@@ -312,7 +312,7 @@ const Navbar = () => {
                     <DropdownMenuContent align="end" sideOffset={8}>
                       <DropdownMenuItem asChild>
                         <Link
-                          href="/profile/view"
+                          href="/profile"
                           className="cursor-pointer w-full font-semibold"
                         >
                           Profile
