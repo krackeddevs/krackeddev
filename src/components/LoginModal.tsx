@@ -12,6 +12,7 @@ export const LoginModal = () => {
     user,
     isAuthenticated,
     isLoginModalOpen,
+    isLoginModalCloseable,
     closeLoginModal,
     signInWithOAuth,
     signInWithEmail,
@@ -27,14 +28,14 @@ export const LoginModal = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Handle escape key to close modal
+  // Handle escape key to close modal (when authenticated OR closeable)
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && (isAuthenticated || isLoginModalCloseable)) {
         closeLoginModal();
       }
     },
-    [closeLoginModal]
+    [closeLoginModal, isAuthenticated, isLoginModalCloseable]
   );
 
   useEffect(() => {
@@ -146,10 +147,10 @@ export const LoginModal = () => {
       aria-modal="true"
       aria-labelledby="login-modal-title"
     >
-      {/* Backdrop with blur */}
+      {/* Backdrop with blur - clickable when authenticated OR closeable */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={closeLoginModal}
+        onClick={(isAuthenticated || isLoginModalCloseable) ? closeLoginModal : undefined}
         aria-hidden="true"
       />
 
@@ -164,13 +165,16 @@ export const LoginModal = () => {
             >
               {isAuthenticated ? "Your Profile" : viewState === "forgot-password" || viewState === "forgot-password-success" ? "Reset Password" : "Connect Account"}
             </h2>
-            <button
-              onClick={closeLoginModal}
-              className="p-1 text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Close modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {/* Show close button when authenticated OR closeable */}
+            {(isAuthenticated || isLoginModalCloseable) && (
+              <button
+                onClick={closeLoginModal}
+                className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
 
           {/* Body */}

@@ -1,6 +1,6 @@
 export const runtime = 'edge';
 
-import { getProfile, fetchGithubStats, fetchBountyStats } from "@/features/profiles/actions";
+import { getProfile, fetchGithubStats, fetchBountyStats, fetchUserSubmissions } from "@/features/profiles/actions";
 import { ProfilePageClient } from "@/features/profiles/components/profile-page-client";
 import { redirect } from "next/navigation";
 
@@ -10,6 +10,7 @@ export default async function ProfileViewPage() {
     const { data: profile, error } = await getProfile();
     const { data: githubStats } = await fetchGithubStats();
     const { data: bountyStats } = await fetchBountyStats();
+    const { data: userSubmissions } = await fetchUserSubmissions();
 
     if (error === "Not authenticated") {
         redirect("/");
@@ -42,6 +43,7 @@ export default async function ProfileViewPage() {
                     initialData={profile}
                     githubStats={githubStats}
                     bountyStats={bountyStats}
+                    userSubmissions={userSubmissions}
                 />
             </div>
         </div>

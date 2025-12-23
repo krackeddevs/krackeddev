@@ -8,6 +8,8 @@ import {
     Link2,
     Send,
     LogOut,
+    Lock,
+    LogIn,
 } from "lucide-react";
 import {
     BountyDetail,
@@ -164,6 +166,79 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     }
 
     const canSubmit = bounty.status === "active" || bounty.status === "claimed";
+    const isGuest = !user;
+
+    // FR9/FR10: Guest users see login required screen
+    if (isGuest) {
+        return (
+            <main className="min-h-screen bg-gray-900 relative">
+                <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+
+                {/* Header with Navigation */}
+                <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
+                    <div className="container mx-auto px-4 py-3 max-w-4xl">
+                        <button
+                            onClick={() => router.push("/code/bounty")}
+                            className="inline-flex items-center text-gray-400 hover:text-white transition-colors font-mono text-sm"
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            <span className="hidden md:inline">Back to Bounty Board</span>
+                            <span className="md:hidden">Back</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+                    {/* Bounty Preview Card */}
+                    <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-8 mb-8">
+                        <div className="flex flex-wrap items-center gap-3 mb-4">
+                            <span className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 font-mono text-xs uppercase">
+                                {bounty.status}
+                            </span>
+                            <span className="text-2xl font-mono font-bold text-cyan-400">
+                                RM{bounty.reward}
+                            </span>
+                        </div>
+                        <h1 className="text-2xl md:text-3xl font-bold font-mono text-white mb-4">
+                            {bounty.title}
+                        </h1>
+                        <p className="text-gray-400 font-mono text-sm line-clamp-2">
+                            {bounty.description?.substring(0, 150)}...
+                        </p>
+                    </div>
+
+                    {/* Login Required Card */}
+                    <div className="bg-gray-900 border-2 border-neon-primary/50 p-8 text-center">
+                        <div className="w-16 h-16 mx-auto mb-6 bg-neon-primary/10 border-2 border-neon-primary flex items-center justify-center">
+                            <Lock className="w-8 h-8 text-neon-primary" />
+                        </div>
+                        <h2 className="text-xl font-bold font-mono text-white mb-3">
+                            Login Required
+                        </h2>
+                        <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                            Sign in to view full bounty details, requirements, and submit your solution.
+                        </p>
+                        <button
+                            onClick={() => openLoginModal(true)}
+                            className="inline-flex items-center gap-2 bg-neon-primary hover:bg-neon-primary/90 text-black font-mono font-bold px-8 py-3 transition-colors"
+                        >
+                            <LogIn className="w-5 h-5" />
+                            Sign In to View Details
+                        </button>
+                        <p className="text-gray-500 text-sm mt-4 font-mono">
+                            Don&apos;t have an account?{" "}
+                            <button
+                                onClick={() => openLoginModal(true)}
+                                className="text-neon-primary hover:underline"
+                            >
+                                Sign up for free
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="min-h-screen bg-gray-900 relative">
@@ -229,7 +304,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
             <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl">
                 {/* Bounty Detail Component */}
                 <BountyDetail bounty={bounty}>
-                    {/* Submission Form - Only for active bounties */}
+                    {/* Submission Form - Only for active bounties AND logged in users */}
                     {canSubmit && (
                         <div className="mb-8">
                             <h2 className="text-lg font-mono text-white mb-4 flex items-center gap-2">

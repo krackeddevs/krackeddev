@@ -191,7 +191,7 @@ export async function fetchGithubStats(): Promise<{ data?: GithubStats; error?: 
     }
 }
 
-import { BountyStats } from "./types";
+import { BountyStats, UserSubmission } from "./types";
 
 export async function fetchBountyStats(userId?: string): Promise<{ data?: BountyStats; error?: string }> {
     const supabase = await createClient();
@@ -226,3 +226,36 @@ export async function fetchBountyStats(userId?: string): Promise<{ data?: Bounty
         },
     };
 }
+
+export async function fetchUserSubmissions(): Promise<{ data: UserSubmission[]; error?: string }> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { data: [], error: "Not authenticated" };
+    }
+
+    const { data, error } = await supabase
+        .from("bounty_submissions")
+        .select("id, bounty_slug, bounty_title, bounty_reward, status, created_at, paid_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Error fetching user submissions:", error);
+        return { data: [], error: "Failed to fetch submissions" };
+    }
+
+    const submissions: UserSubmission[] = (data || []).map((row: any) => ({
+        id: row.id,
+        bountySlug: row.bounty_slug,
+        bountyTitle: row.bounty_title,
+        bountyReward: row.bounty_reward,
+        status: row.status as "pending" | "approved" | "rejected",
+        createdAt: row.created_at,
+        paidAt: row.paid_at,
+    }));
+
+    return { data: submissions };
+}
+
