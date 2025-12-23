@@ -1,4 +1,5 @@
-import { Trophy, CheckCircle, ExternalLink } from "lucide-react";
+import { Trophy, CheckCircle, ExternalLink, User } from "lucide-react";
+import Link from "next/link";
 import type { BountyWinner } from "../types";
 
 // X/Twitter icon component
@@ -21,6 +22,30 @@ interface WinnerDisplayProps {
 }
 
 export function WinnerDisplay({ winner, completedAt }: WinnerDisplayProps) {
+    // Render winner name - clickable if username exists
+    const WinnerName = () => {
+        if (winner.username) {
+            return (
+                <Link
+                    href={`/profile/${winner.username}`}
+                    className="text-white hover:text-neon-primary font-mono text-xl mb-1 flex items-center gap-2 transition-colors group"
+                    data-testid="winner-name"
+                >
+                    {winner.name}
+                    <User className="w-4 h-4 text-gray-500 group-hover:text-neon-primary transition-colors" />
+                </Link>
+            );
+        }
+        return (
+            <div
+                className="text-white font-mono text-xl mb-1"
+                data-testid="winner-name"
+            >
+                {winner.name}
+            </div>
+        );
+    };
+
     return (
         <div
             className="bg-gradient-to-r from-yellow-500/10 to-green-500/10 border-2 border-yellow-500/50 p-6"
@@ -35,12 +60,7 @@ export function WinnerDisplay({ winner, completedAt }: WinnerDisplayProps) {
                     🏆
                 </div>
                 <div>
-                    <div
-                        className="text-white font-mono text-xl mb-1"
-                        data-testid="winner-name"
-                    >
-                        {winner.name}
-                    </div>
+                    <WinnerName />
                     {winner.xHandle && winner.xUrl && (
                         <a
                             href={winner.xUrl}
@@ -81,3 +101,4 @@ export function WinnerDisplay({ winner, completedAt }: WinnerDisplayProps) {
         </div>
     );
 }
+

@@ -23,7 +23,10 @@ export async function fetchActiveBounties(
         if (supabase) {
             const { data: dbBounties, error } = await supabase
                 .from("bounties")
-                .select("*")
+                .select(`
+                    *,
+                    winner_profile:profiles!winner_user_id (username)
+                `)
                 .in("status", ["open", "completed", "expired"]);
 
             if (!error && dbBounties && dbBounties.length > 0) {
@@ -50,6 +53,7 @@ export async function fetchActiveBounties(
                     // Map winner data from DB columns
                     winner: row.winner_name ? {
                         name: row.winner_name,
+                        username: row.winner_profile?.username,  // For profile linking
                         xHandle: row.winner_x_handle,
                         xUrl: row.winner_x_url,
                         submissionUrl: row.winner_submission_url,
@@ -111,7 +115,10 @@ export async function fetchBountyBySlug(
         if (supabase) {
             const { data, error } = await supabase
                 .from("bounties")
-                .select("*")
+                .select(`
+                    *,
+                    winner_profile:profiles!winner_user_id (username)
+                `)
                 .eq("slug", slug)
                 .single();
 
@@ -142,6 +149,7 @@ export async function fetchBountyBySlug(
                     // Map winner data from DB columns
                     winner: row.winner_name ? {
                         name: row.winner_name,
+                        username: row.winner_profile?.username,  // For profile linking
                         xHandle: row.winner_x_handle,
                         xUrl: row.winner_x_url,
                         submissionUrl: row.winner_submission_url,

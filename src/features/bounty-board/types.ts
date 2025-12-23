@@ -7,6 +7,7 @@ export type BountyRarity = "normal" | "rare";
 
 export interface BountyWinner {
     name: string;
+    username?: string;  // Profile username for linking
     xHandle?: string;
     xUrl?: string;
     submissionUrl?: string;
