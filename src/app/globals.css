@@ -309,6 +309,22 @@ label, select, summary, [tabindex]:not([tabindex="-1"]) {
   100% { clip: rect(30px, 9999px, 50px, 0); }
 }
 
+/* Neon flicker animation for beta badge */
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.8), 0 0 20px rgba(234, 179, 8, 0.4);
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    opacity: 0.6;
+    box-shadow: none;
+  }
+}
+
+.animate-flicker {
+  animation: flicker 3s infinite;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-10px) rotate(5deg); }

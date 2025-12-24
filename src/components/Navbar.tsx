@@ -72,6 +72,9 @@ const Navbar = () => {
           <span className="relative font-mono text-xl font-bold tracking-tighter text-foreground group-hover:text-neon-primary transition-colors duration-300">
             &lt;Kracked Devs /&gt;
           </span>
+          <span className="text-[10px] font-bold px-1.5 py-0.5 bg-yellow-500 text-black rounded uppercase tracking-wider animate-flicker shadow-[0_0_10px_rgba(234,179,8,0.8)]">
+            Beta
+          </span>
         </Link>
 
         {/* Right Side (Desktop) */}
