@@ -1,7 +1,7 @@
 "use client";
 
 import "@/styles/jobs.css";
-import SplitTextAnimation from "./components/hero-animation";
+import { ParallaxIntro } from "./components/parallax-intro";
 import { TownhallV2 } from "./components/townhall";
 import { useLandingSequence } from "./hooks/use-landing-sequence";
 
@@ -12,32 +12,41 @@ import { NavigationHub } from "./components/navigation-hub";
 import { CommunityMap } from "./components/community-map";
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
-import { Users } from "lucide-react";
+import { Users, ChevronDown } from "lucide-react";
 
-export function LandingPage() {
+interface LandingPageProps {
+    isLoggedIn: boolean;
+}
+
+export function LandingPage({ isLoggedIn }: LandingPageProps) {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
 
     return (
         <main className="min-h-screen w-full bg-gray-900 relative flex flex-col">
-            {/* Manifesto Modal - Shows once for new visitors */}
-            <ManifestoModal />
             {/* CRT Scanline Overlay - Fixed to viewport */}
             {!showAnimation && (
-                <div className="scanlines fixed inset-0 pointer-events-none z-50 h-screen"></div>
+                <div className="scanlines fixed inset-0 pointer-events-none z-40 h-screen"></div>
             )}
 
+            {/* Parallax Intro with Loading, Parallax Layers, and Start Button */}
             {showAnimation && (
-                <SplitTextAnimation
-                    text="Welcome to Kracked Devs"
-                    onComplete={handleAnimationComplete}
-                />
+                <ParallaxIntro onComplete={handleAnimationComplete} />
             )}
 
             {!showAnimation && (
                 <>
+                    {/* Manifesto Modal - Shows once for new visitors, only after parallax intro */}
+                    <ManifestoModal isLoggedIn={isLoggedIn} />
+
                     {/* Hero Section with Game */}
                     <section className="relative w-full h-[90vh] min-h-[600px]">
                         <TownhallV2 />
+
+                        {/* Scroll Indicator */}
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-30">
+                            <span className="text-green-400/70 text-xs font-mono mb-1">Scroll for more</span>
+                            <ChevronDown className="w-6 h-6 text-green-400/70" />
+                        </div>
                     </section>
 
                     {/* Community Map Section */}
