@@ -86,6 +86,10 @@ export async function updateProfile(data: Partial<ProfileData>) {
         .eq("id", user.id);
 
     if (error) {
+        // Handle unique constraint violation for username
+        if (error.code === "23505" && error.message.includes("unique_username")) {
+            return { error: "Username already taken. Please choose another." };
+        }
         return { error: error.message };
     }
 
