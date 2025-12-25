@@ -66,3 +66,11 @@ development_status:
   6-1-game-bridge-implementation: ready-for-dev
   6-2-game-page-refactor: ready-for-dev
   epic-6-retrospective: optional
+
+  epic-7: in-progress
+  7-1-profile-contribution-stats: backlog
+  7-2-dev-pulse-visualization: backlog
+  7-3-mini-profile-landing-page: backlog
+  7-4-landing-page-layout-swap: done
+  7-5-community-map-ux: done
+  epic-7-retrospective: optional

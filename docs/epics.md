@@ -68,6 +68,7 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 | **EPIC-3** | Bounty Marketplace & Submissions | FR8, FR9, FR10, FR11, FR12 | NFR1, NFR5 |
 | **EPIC-4** | Admin Dashboard & Operations | FR13, FR14, FR15, FR16, FR-ADM-01 | NFR4 |
 | **EPIC-5** | Santan Island Game Integration | FR17, FR18 | NFR2 |
+| **EPIC-7** | Profile Enhancement & Landing Page Polish | FR5, FR7, FR-LAND-01 | NFR1 |
 
 ## Epic List
 
@@ -446,3 +447,86 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 - [ ] Next.js app verifies the event origin.
 - [ ] Next.js app updates the User's Profile stats (if applicable) or stores activity log.
 - [ ] **Security:** Ensure events cannot be spoofed by manual console injection (Origin check + Server-side validation).
+
+### EPIC-7: Profile Enhancement & Landing Page Polish
+
+**Goal:** Enhance profile pages with richer contribution metrics and improve landing page layout based on stakeholder feedback.
+
+- **Scope:** Contribution Streaks, Dev-Pulse Visualization, Mini Profile on Landing Page, Layout Reordering.
+- **Value:** Increases user engagement and showcases developer activity more prominently.
+- **Complexity:** Medium (GitHub API data processing, new UI components).
+
+#### STORY-7.1: Profile Contribution Stats
+
+**As a** Developer
+**I want to** see my contribution streaks and weekly activity on my profile
+**So that** I can track my coding consistency and showcase my dedication.
+
+**Acceptance Criteria:**
+
+- [ ] Display Current Streak (consecutive days with contributions).
+- [ ] Display Longest Streak (all-time record of consecutive contribution days).
+- [ ] Display Contributions This Week (Monday-Sunday count).
+- [ ] Visual indicators using cyberpunk theme (green glow for active streaks).
+- [ ] Graceful fallback if GitHub not connected.
+- [ ] Works for both authenticated profile and public profile views.
+
+#### STORY-7.2: Dev-Pulse Visualization
+
+**As a** Developer
+**I want to** see a "dev-pulse" visualization of my activity
+**So that** I can quickly assess my coding health over different time periods.
+
+**Acceptance Criteria:**
+
+- [ ] Weekly Pulse - Activity chart for last 7 days.
+- [ ] Monthly Pulse - Activity trend for last 30 days.
+- [ ] Yearly Pulse - Activity overview for last 12 months.
+- [ ] Toggle between timeframes (tabs or buttons).
+- [ ] Visual "heartbeat" or "pulse" aesthetic matching cyberpunk theme.
+- [ ] Shows contribution intensity over time (line/area chart).
+
+#### STORY-7.3: Mini Profile on Landing Page
+
+**As a** Logged-in User
+**I want to** see my mini profile on the landing page
+**So that** I feel immediately recognized and can quickly access my profile.
+
+**Acceptance Criteria:**
+
+- [ ] Display mini profile card for authenticated users on landing page.
+- [ ] Shows: Avatar, Username, Role/Class, Quick Stats (wins, streak).
+- [ ] Click navigates to full profile page.
+- [ ] Only visible to logged-in users.
+- [ ] Positioned in accessible location (above or alongside navigation hub).
+- [ ] Mobile responsive.
+
+#### STORY-7.4: Landing Page Layout Swap
+
+**As a** User
+**I want to** see the Community Map prominently above the game area
+**So that** I can immediately see the community presence.
+
+**Acceptance Criteria:**
+
+- [ ] Community Map section moves to the TOP (first content after hero/parallax).
+- [ ] Townhall Game moves BELOW the Community Map.
+- [ ] Maintain scroll indicator functionality.
+- [ ] No visual regressions on other sections.
+- [ ] Mobile layout remains consistent.
+
+#### STORY-7.5: Community Map UX Enhancement
+
+**As a** User
+**I want** a clean, static community map without zoom controls
+**So that** I have a consistent, predictable map viewing experience.
+
+**Acceptance Criteria:**
+
+- [ ] Map displays at a fixed optimal zoom level (no zoom in/out).
+- [ ] Zoom buttons (+/-) are removed from the UI.
+- [ ] Scroll wheel zoom is disabled.
+- [ ] Pinch-to-zoom on mobile is disabled.
+- [ ] Map panning/dragging is disabled.
+- [ ] State hover tooltips still work correctly.
+- [ ] Design inspired by mypeta.ai (clean, static, minimal).

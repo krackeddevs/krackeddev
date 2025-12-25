@@ -266,10 +266,9 @@ function DPad({
   );
 
   const buttonClass = (dir: string) =>
-    `w-12 h-12 rounded-xl flex items-center justify-center text-xl select-none transition-all touch-none ${
-      activeDir === dir
-        ? "bg-blue-500/80 scale-95"
-        : "bg-white/20 active:bg-blue-500/60"
+    `w-12 h-12 rounded-xl flex items-center justify-center text-xl select-none transition-all touch-none ${activeDir === dir
+      ? "bg-blue-500/80 scale-95"
+      : "bg-white/20 active:bg-blue-500/60"
     }`;
 
   return (
@@ -551,7 +550,7 @@ const JobTownBoard: React.FC<JobTownBoardProps> = ({
       }
 
       // Render
-      ctx.fillStyle = "#0f172a"; // slate-900 background
+      ctx.fillStyle = "#000000"; // pure black background
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Render map
@@ -586,7 +585,7 @@ const JobTownBoard: React.FC<JobTownBoardProps> = ({
           width={MAP_WIDTH * TILE_SIZE}
           height={MAP_HEIGHT * TILE_SIZE}
           className="block w-full h-full"
-          style={{ 
+          style={{
             imageRendering: "pixelated"
           }}
         />

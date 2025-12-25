@@ -22,7 +22,16 @@ export function LandingPage({ isLoggedIn }: LandingPageProps) {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
 
     return (
-        <main className="min-h-screen w-full bg-gray-900 relative flex flex-col">
+        <main className="min-h-screen w-full bg-black relative flex flex-col">
+            {/* Global Grid Overlay */}
+            <div
+                className="fixed inset-0 pointer-events-none z-10 opacity-[0.15]"
+                style={{
+                    backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.4) 1px, transparent 1px)',
+                    backgroundSize: '20px 20px'
+                }}
+            />
+
             {/* CRT Scanline Overlay - Fixed to viewport */}
             {!showAnimation && (
                 <div className="scanlines fixed inset-0 pointer-events-none z-40 h-screen"></div>
@@ -38,8 +47,13 @@ export function LandingPage({ isLoggedIn }: LandingPageProps) {
                     {/* Manifesto Modal - Shows once for new visitors, only after parallax intro */}
                     <ManifestoModal isLoggedIn={isLoggedIn} />
 
-                    {/* Hero Section with Game */}
-                    <section className="relative w-full h-[90vh] min-h-[600px]">
+                    {/* Community Map Section - Primary Visual (moved up per Story 7.4) */}
+                    <section className="relative w-full bg-black">
+                        <CommunityMap />
+                    </section>
+
+                    {/* Game Section (moved below map per Story 7.4) */}
+                    <section className="relative w-full h-[85vh] min-h-[600px] bg-black border-t border-green-900/50">
                         <TownhallV2 />
 
                         {/* Scroll Indicator */}
@@ -47,11 +61,6 @@ export function LandingPage({ isLoggedIn }: LandingPageProps) {
                             <span className="text-green-400/70 text-xs font-mono mb-1">Scroll for more</span>
                             <ChevronDown className="w-6 h-6 text-green-400/70" />
                         </div>
-                    </section>
-
-                    {/* Community Map Section */}
-                    <section className="relative w-full bg-black border-t border-green-900/50">
-                        <CommunityMap />
                     </section>
 
                     {/* Live Stats Section */}
@@ -65,7 +74,7 @@ export function LandingPage({ isLoggedIn }: LandingPageProps) {
                     </section>
 
                     {/* Job Preview Section */}
-                    <section className="relative w-full bg-black/90 border-t border-green-900/50">
+                    <section className="relative w-full bg-black border-t border-green-900/50">
                         <JobPreview />
                     </section>
 

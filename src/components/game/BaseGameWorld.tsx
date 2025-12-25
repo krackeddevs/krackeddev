@@ -211,7 +211,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   // Preload background image (if any)
   useEffect(() => {
     if (!backgroundImagePath) return;
-    loadSprite(backgroundImagePath).catch(() => {});
+    loadSprite(backgroundImagePath).catch(() => { });
   }, [backgroundImagePath]);
 
   // Debug HUD updater (throttled)
@@ -456,7 +456,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
       }
 
       // Render
-      ctx.fillStyle = "#0f172a"; // slate-900 background
+      ctx.fillStyle = "#000000"; // pure black background
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Optional background image (drawn behind map/buildings)
@@ -894,12 +894,11 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   }, [nearBuilding, isMobile]);
 
   return (
-    <div className="w-full h-[85vh] bg-gray-900 text-white jobs-container relative overflow-hidden flex flex-col items-center justify-center">
+    <div className="w-full h-[85vh] bg-black text-white jobs-container relative overflow-hidden flex flex-col items-center justify-center">
       {/* Canvas Container with relative positioning for dialogs */}
       <div
-        className={`relative w-full mx-auto flex flex-col items-center gap-4 ${
-          isMobile ? "max-w-full" : "max-w-5xl"
-        }`}
+        className={`relative w-full mx-auto flex flex-col items-center gap-4 ${isMobile ? "max-w-full" : "max-w-5xl"
+          }`}
       >
         {/* Modal popup (trigger zones, etc.) */}
         {activeModal && (
@@ -1021,9 +1020,8 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
       {/* Mobile Controls - Fixed at bottom of screen */}
       {isMobile && (
         <div
-          className={`fixed bottom-0 left-0 right-0 w-full flex items-center px-4 pb-6 pointer-events-none ${
-            canCloseDialog ? "z-50" : "z-30"
-          }`}
+          className={`fixed bottom-0 left-0 right-0 w-full flex items-center px-4 pb-6 pointer-events-none ${canCloseDialog ? "z-50" : "z-30"
+            }`}
         >
           <MobileControls
             onDirectionChange={handleDirectionInput}
