@@ -2,6 +2,7 @@ export interface GithubContributionDay {
     color: string;
     contributionCount: number;
     date: string;
+    weekday: number;
 }
 
 export interface GithubContributionWeek {
@@ -13,10 +14,15 @@ export interface GithubLanguage {
     color: string;
     percentage: number;
 }
+// Adding the container type for consistency
+export interface GithubContributionCalendar {
+    totalContributions: number;
+    weeks: GithubContributionWeek[];
+}
 
 export interface GithubStats {
     totalContributions: number;
-    contributionCalendar: GithubContributionWeek[];
+    contributionCalendar: GithubContributionWeek[]; // This might be misnamed in GithubStats compared to raw GQL, but we'll stick to valid types.
     topLanguages: GithubLanguage[];
     username: string; // GitHub username
     avatarUrl: string;
@@ -36,3 +42,12 @@ export interface UserSubmission {
     createdAt: string;
     paidAt: string | null; // If set, user WON this bounty
 }
+
+export type ContributionStats = {
+    currentStreak: number;
+    longestStreak: number;
+    contributionsThisWeek: number;
+    lastContributionDate: string | null;
+    level?: number;
+    xp?: number;
+};

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ProfileData } from "../actions";
-import { GithubStats, BountyStats, UserSubmission } from "../types";
+import { GithubStats, BountyStats, UserSubmission, ContributionStats } from "../types";
 import { ProfileDetails } from "./profile-details";
 import { EditProfileForm } from "./edit-profile-form";
 
@@ -11,9 +11,10 @@ interface ProfilePageClientProps {
     githubStats?: GithubStats;
     bountyStats?: BountyStats;
     userSubmissions?: UserSubmission[];
+    contributionStats?: ContributionStats | null;
 }
 
-export function ProfilePageClient({ initialData, githubStats, bountyStats, userSubmissions }: ProfilePageClientProps) {
+export function ProfilePageClient({ initialData, githubStats, bountyStats, userSubmissions, contributionStats }: ProfilePageClientProps) {
     const [isEditing, setIsEditing] = useState(false);
 
     return (
@@ -30,6 +31,7 @@ export function ProfilePageClient({ initialData, githubStats, bountyStats, userS
                     bountyStats={bountyStats}
                     userSubmissions={userSubmissions}
                     onEdit={() => setIsEditing(true)}
+                    contributionStats={contributionStats}
                 />
             )}
         </div>

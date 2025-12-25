@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { fetchPublicProfile, fetchBountyStats } from "@/features/profiles/actions";
+import { fetchPublicProfile, fetchBountyStats, fetchContributionStats } from "@/features/profiles/actions";
 import { PublicProfileDetails } from "@/features/profiles/components/public-profile-details";
 
 interface PublicProfilePageProps {
@@ -19,6 +19,9 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
     // Fetch bounty stats for this user
     const bountyStatsResult = await fetchBountyStats(profile.id);
 
+    // Fetch contribution stats (read-only from cache)
+    const contributionStatsResult = await fetchContributionStats(username);
+
     return (
         <main className="min-h-screen bg-gray-900">
             <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
@@ -26,6 +29,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
                 <PublicProfileDetails
                     profile={profile}
                     bountyStats={bountyStatsResult.data}
+                    contributionStats={contributionStatsResult.data}
                 />
             </div>
         </main>

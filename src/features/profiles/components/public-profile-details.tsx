@@ -1,7 +1,8 @@
 "use client";
 
+import { ContributionStatsCard } from "./contribution-stats";
+import { ContributionStats, GithubStats, BountyStats as BountyStatsType } from "../types";
 import { ProfileData } from "../actions";
-import { GithubStats, BountyStats as BountyStatsType } from "../types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Terminal, Code2, User, ExternalLink, Linkedin, Trophy, Coins, ArrowLeft } from "lucide-react";
@@ -13,9 +14,10 @@ interface PublicProfileDetailsProps {
     profile: ProfileData & { avatar_url?: string };
     githubStats?: GithubStats;
     bountyStats?: BountyStatsType;
+    contributionStats?: ContributionStats | null;
 }
 
-export function PublicProfileDetails({ profile, githubStats, bountyStats }: PublicProfileDetailsProps) {
+export function PublicProfileDetails({ profile, githubStats, bountyStats, contributionStats }: PublicProfileDetailsProps) {
     const hasSocialLinks = profile.x_url || profile.linkedin_url || profile.website_url;
 
     return (
@@ -75,6 +77,11 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats }: Publ
                         </div>
                     )}
                 </div>
+            </div>
+
+            {/* Contribution Stats */}
+            <div>
+                <ContributionStatsCard stats={contributionStats || null} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

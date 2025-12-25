@@ -3,6 +3,7 @@ import {
   fetchGithubStats,
   fetchBountyStats,
   fetchUserSubmissions,
+  fetchContributionStats,
 } from "@/features/profiles/actions";
 import { ProfilePageClient } from "@/features/profiles/components/profile-page-client";
 import { redirect } from "next/navigation";
@@ -12,9 +13,31 @@ export const dynamic = "force-dynamic";
 
 export default async function ProfileViewPage() {
   const { data: profile, error } = await getProfile();
-  const { data: githubStats } = await fetchGithubStats();
+  let { data: githubStats } = await fetchGithubStats();
   const { data: bountyStats } = await fetchBountyStats();
   const { data: userSubmissions } = await fetchUserSubmissions();
+
+  // Calculate contribution stats (will use cache or fresh github data)
+  const contributionStatsResult = profile?.username
+    ? await fetchContributionStats(profile.username)
+    : { data: null };
+
+  // Fallback: If live githubStats failed (e.g. Gmail login without token),
+  // but we have cached contribution_stats in the profile, construct a partial githubStats object
+  // to allow the heatmap to render.
+  if (!githubStats && profile?.contribution_stats) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cachedStats = profile.contribution_stats as any;
+    if (cachedStats.weeks) {
+      githubStats = {
+        username: profile.username || "",
+        avatarUrl: profile.avatar_url || "",
+        totalContributions: cachedStats.totalContributions || 0,
+        contributionCalendar: cachedStats.weeks,
+        topLanguages: [], // We don't cache languages in contribution_stats currently
+      };
+    }
+  }
 
   if (error === "Not authenticated") {
     redirect("/");
@@ -50,6 +73,7 @@ export default async function ProfileViewPage() {
           githubStats={githubStats}
           bountyStats={bountyStats}
           userSubmissions={userSubmissions}
+          contributionStats={contributionStatsResult.data}
         />
       </div>
     </div>

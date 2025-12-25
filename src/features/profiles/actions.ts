@@ -15,9 +15,12 @@ export type ProfileData = {
     x_url: string | null;
     linkedin_url: string | null;
     website_url: string | null;
+    contribution_stats?: unknown; // JSONB column
+    level?: number;
+    xp?: number;
 };
 
-export async function getProfile() {
+export async function getProfile(): Promise<{ data?: ProfileData; error?: string }> {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -47,7 +50,7 @@ export async function fetchPublicProfile(username: string): Promise<{ data?: Pro
 
     const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url")
+        .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url, level, xp")
         .eq("username", username)
         .eq("status", "active")  // Only show active users
         .single();
@@ -398,4 +401,75 @@ export async function fetchUserSubmissions(): Promise<{ data: UserSubmission[]; 
 
     return { data: submissions };
 }
+
+import { calculateContributionStats } from "./utils/contribution-utils";
+import { ContributionStats, GithubContributionCalendar } from "./types";
+
+/**
+ * Fetch contribution stats for a user.
+ * - If viewing own profile, fetches fresh data from GitHub and updates DB cache.
+ * - If viewing others, relies on DB cache.
+ */
+export async function fetchContributionStats(username: string): Promise<{ data?: ContributionStats | null; error?: string }> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // 1. Fetch Profile from DB to get cached stats and ID
+    const { data, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, contribution_stats, portfolio_synced_at")
+        .eq("username", username)
+        .single();
+
+    // Explicitly cast to avoid 'never' inference if schema types are missing
+    const profile = data as { id: string; contribution_stats: any; portfolio_synced_at: string } | null;
+
+    if (profileError || !profile) {
+        return { error: "User not found" };
+    }
+
+    let statsData: GithubContributionCalendar | null = profile.contribution_stats as any;
+
+    // 2. If viewing own profile, try to refresh from GitHub
+    if (user && user.id === profile.id) {
+        // Only refresh if data is missing OR it's been more than 1 hour
+        const lastSync = profile.portfolio_synced_at ? new Date(profile.portfolio_synced_at) : null;
+        const now = new Date();
+        const shouldRefresh = !lastSync || (now.getTime() - lastSync.getTime() > 1000 * 60 * 60); // 1 hour
+
+        if (shouldRefresh) {
+            const { data: liveData, error: liveError } = await fetchGithubStats();
+
+            if (!liveError && liveData && liveData.contributionCalendar) {
+                // Transform to the shape we want to store (GithubContributionCalendar)
+                const newStats: GithubContributionCalendar = {
+                    totalContributions: liveData.totalContributions,
+                    weeks: liveData.contributionCalendar
+                };
+
+                // Update DB
+                await (supabase.from("profiles") as any)
+                    .update({
+                        contribution_stats: newStats,
+                        portfolio_synced_at: new Date().toISOString()
+                    })
+                    .eq("id", user.id);
+
+                statsData = newStats;
+            }
+        }
+    }
+
+    // 3. Calculate Streaks
+    const contributionStats = calculateContributionStats(statsData);
+
+    // Attach Level/XP if available (mainly for public view where we fetch them)
+    if (contributionStats && profile) {
+        contributionStats.level = (profile as any).level || 1;
+        contributionStats.xp = (profile as any).xp || 0;
+    }
+
+    return { data: contributionStats || null };
+}
+
 
