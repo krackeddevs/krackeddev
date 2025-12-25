@@ -45,13 +45,27 @@ export async function GET(request: NextRequest) {
             }
         );
 
-        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        const { data: sessionData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
         if (exchangeError) {
             console.error('Code exchange error:', exchangeError.message);
             return NextResponse.redirect(
                 `${origin}/auth/auth-code-error?error=${encodeURIComponent(exchangeError.message)}`
             );
+        }
+
+        // Store GitHub access token in profile if available
+        if (sessionData?.session?.provider_token && sessionData?.session?.user?.id) {
+            const userId = sessionData.session.user.id;
+            const providerToken = sessionData.session.provider_token;
+
+            // Update the profile with the GitHub token
+            await (supabase.from('profiles') as any)
+                .update({
+                    github_access_token: providerToken,
+                    portfolio_synced_at: null // Clear cache to force refresh
+                })
+                .eq('id', userId);
         }
 
         // Successful - redirect to home

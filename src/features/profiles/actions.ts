@@ -111,7 +111,21 @@ export async function fetchGithubStats(): Promise<{ data?: GithubStats; error?: 
     const isGithubUser = user?.app_metadata?.provider === 'github' ||
         user?.identities?.some(id => id.provider === 'github');
 
-    if (!session?.provider_token || !isGithubUser) {
+    // Try to get token from session first, fallback to stored token in DB
+    let accessToken = session?.provider_token;
+
+    if (!accessToken && user?.id) {
+        // Fallback: Retrieve stored GitHub token from profiles table
+        const { data: profileData } = await supabase
+            .from('profiles')
+            .select('github_access_token')
+            .eq('id', user.id)
+            .single();
+
+        accessToken = (profileData as any)?.github_access_token;
+    }
+
+    if (!accessToken || !isGithubUser) {
         return { error: "No GitHub token found or user not connected to GitHub." };
     }
 
@@ -119,7 +133,7 @@ export async function fetchGithubStats(): Promise<{ data?: GithubStats; error?: 
         const response = await fetch("https://api.github.com/graphql", {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${session.provider_token}`,
+                Authorization: `Bearer ${accessToken}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
