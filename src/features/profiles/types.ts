@@ -51,3 +51,15 @@ export type ContributionStats = {
     level?: number;
     xp?: number;
 };
+
+export type DevPulseDataPoint = {
+    label: string;
+    count: number;
+    date?: string; // Optional full date for tooltips
+};
+
+export type DevPulseData = {
+    weekly: DevPulseDataPoint[];
+    monthly: DevPulseDataPoint[];
+    yearly: DevPulseDataPoint[];
+};

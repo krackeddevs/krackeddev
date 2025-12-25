@@ -1,6 +1,6 @@
 # Story 7.2: Dev-Pulse Visualization
 
-Status: backlog
+Status: done
 
 ## Story
 

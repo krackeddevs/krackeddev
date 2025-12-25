@@ -9,6 +9,9 @@ import { MapPin, Terminal, Code2, User, ExternalLink, Linkedin, Trophy, Coins, A
 import { GithubGraph } from "./github-graph";
 import { TopLanguages } from "./top-languages";
 import Link from "next/link";
+import { DevPulse } from "./dev-pulse";
+import { processDevPulseData } from "../utils/pulse-utils";
+import { useMemo } from "react";
 
 interface PublicProfileDetailsProps {
     profile: ProfileData & { avatar_url?: string };
@@ -18,6 +21,11 @@ interface PublicProfileDetailsProps {
 }
 
 export function PublicProfileDetails({ profile, githubStats, bountyStats, contributionStats }: PublicProfileDetailsProps) {
+    const pulseData = useMemo(() => processDevPulseData(githubStats?.contributionCalendar ? {
+        totalContributions: githubStats.totalContributions,
+        weeks: githubStats.contributionCalendar
+    } : null), [githubStats]);
+
     const hasSocialLinks = profile.x_url || profile.linkedin_url || profile.website_url;
 
     return (
@@ -84,6 +92,8 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                 <ContributionStatsCard stats={contributionStats || null} />
             </div>
 
+            {/* Dev Pulse moved to main column */}
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Main Info Column */}
                 <div className="col-span-1 md:col-span-2 space-y-6">
@@ -122,6 +132,13 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                                 </div>
                             </CardContent>
                         </Card>
+                    )}
+
+                    {/* Dev Pulse Visualization - Main Column */}
+                    {pulseData && (
+                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
+                            <DevPulse data={pulseData} />
+                        </div>
                     )}
 
                     {/* GitHub Graph */}

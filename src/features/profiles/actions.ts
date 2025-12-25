@@ -12,6 +12,7 @@ export type ProfileData = {
     location: string | null;
     username: string | null;
     full_name: string | null;
+    avatar_url: string | null;
     x_url: string | null;
     linkedin_url: string | null;
     website_url: string | null;

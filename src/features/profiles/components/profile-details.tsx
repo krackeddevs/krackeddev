@@ -1,5 +1,9 @@
 import { ContributionStatsCard } from "./contribution-stats";
 import { ContributionStats, GithubStats, UserSubmission, BountyStats as BountyStatsType } from "../types";
+// LocationCard import removed
+import { DevPulse } from "./dev-pulse";
+import { processDevPulseData } from "../utils/pulse-utils";
+import { useMemo } from "react";
 import { ProfileData } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +25,10 @@ interface ProfileDetailsProps {
 }
 
 export function ProfileDetails({ profile, githubStats, bountyStats, contributionStats, userSubmissions, onEdit }: ProfileDetailsProps) {
+    const pulseData = useMemo(() => processDevPulseData(githubStats?.contributionCalendar ? {
+        totalContributions: githubStats.totalContributions,
+        weeks: githubStats.contributionCalendar
+    } : null), [githubStats]);
     const handleLinkGithub = () => {
         const supabase = createClient();
         supabase.auth.signInWithOAuth({
@@ -112,6 +120,13 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                         <MySubmissions submissions={userSubmissions} />
                     )}
 
+                    {/* Dev Pulse Visualization - Main Column */}
+                    {pulseData && (
+                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
+                            <DevPulse data={pulseData} />
+                        </div>
+                    )}
+
                     {githubStats && (
                         <GithubGraph
                             data={githubStats.contributionCalendar}
@@ -130,10 +145,12 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                                 Location
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="space-y-4">
                             <p className="text-zinc-300 font-mono text-sm">
                                 {profile.location || "Unknown Location"}
                             </p>
+
+                            {/* Dev Pulse moved to main column */}
                         </CardContent>
                     </Card>
 
