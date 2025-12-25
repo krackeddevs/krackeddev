@@ -34,7 +34,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
         supabase.auth.signInWithOAuth({
             provider: 'github',
             options: {
-                redirectTo: `${window.location.origin}/auth/callback?next=/profile/view`
+                redirectTo: `${window.location.origin}/auth/callback?next=/profile`
             }
         });
     };

@@ -17,10 +17,25 @@ export function ContributionStatsCard({ stats, isLoading = false }: Contribution
     // Fallback for empty stats (e.g. no GitHub connected)
     if (!stats) {
         return (
-            <div className="w-full bg-black border border-gray-800 rounded-lg p-6 text-center">
+            <div className="w-full bg-black/40 border border-white/10 rounded-xl p-6 text-center space-y-3 backdrop-blur-md">
                 <p className="text-gray-400 font-mono text-sm">
                     Connect GitHub to track your contribution streaks.
                 </p>
+                <button
+                    onClick={() => {
+                        const { createClient } = require("@/lib/supabase/client");
+                        const supabase = createClient();
+                        supabase.auth.signInWithOAuth({
+                            provider: 'github',
+                            options: {
+                                redirectTo: `${window.location.origin}/auth/callback?next=/profile`
+                            }
+                        });
+                    }}
+                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-mono text-white transition-colors"
+                >
+                    Connect GitHub Account
+                </button>
             </div>
         );
     }
