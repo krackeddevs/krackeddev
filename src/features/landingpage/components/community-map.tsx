@@ -119,7 +119,7 @@ export function CommunityMap() {
       </div>
 
       <div
-        className="relative w-full h-[300px] md:h-[400px] border-2 border-green-500/30 bg-black overflow-hidden rounded-lg p-4 flex items-center justify-center z-20"
+        className="relative w-full h-[300px] md:h-[400px] bg-black overflow-hidden rounded-lg p-4 flex items-center justify-center z-20"
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });

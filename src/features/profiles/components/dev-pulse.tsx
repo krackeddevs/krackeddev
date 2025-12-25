@@ -142,13 +142,16 @@ export function DevPulse({ data, className }: DevPulseProps) {
 
                             {/* Scanning Dot (Driven by shared MotionValue transformed to %) */}
                             <motion.circle
+                                key={timeframe} // Force remount when path changes to ensure offset-path updates correctly
                                 r="4"
                                 fill="white"
                                 style={{
                                     offsetPath: `path("${pathD}")`,
-                                    offsetDistance: offsetDistance, // Passed via style, not prop!
+                                    // Use CSS variable to avoid React unknown prop warning for offsetDistance
+                                    "--offset-distance": offsetDistance,
+                                    offsetDistance: "var(--offset-distance)",
                                     filter: "drop-shadow(0 0 8px var(--neon-primary))"
-                                }}
+                                } as any}
                             />
                         </svg>
 

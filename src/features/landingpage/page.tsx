@@ -14,11 +14,16 @@ import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
 import { Users, ChevronDown } from "lucide-react";
 
+
+import { MiniProfile } from "./components/mini-profile";
+import { MiniProfileData } from "@/features/profiles/actions";
+
 interface LandingPageProps {
     isLoggedIn: boolean;
+    miniProfileData?: MiniProfileData | null;
 }
 
-export function LandingPage({ isLoggedIn }: LandingPageProps) {
+export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
 
     return (
@@ -47,7 +52,14 @@ export function LandingPage({ isLoggedIn }: LandingPageProps) {
                     {/* Manifesto Modal - Shows once for new visitors, only after parallax intro */}
                     <ManifestoModal isLoggedIn={isLoggedIn} />
 
-                    {/* Community Map Section - Primary Visual (moved up per Story 7.4) */}
+                    {/* Floating Mini Profile - Logged In Only */}
+                    {isLoggedIn && miniProfileData && (
+                        <div className="fixed top-24 right-6 z-[45] hidden md:block w-[280px]">
+                            <MiniProfile data={miniProfileData} />
+                        </div>
+                    )}
+
+                    {/* Community Map Section */}
                     <section className="relative w-full bg-black">
                         <CommunityMap />
                     </section>
@@ -72,6 +84,13 @@ export function LandingPage({ isLoggedIn }: LandingPageProps) {
                     <section className="relative w-full bg-black border-t border-green-900/50">
                         <NavigationHub />
                     </section>
+
+                    {/* Mobile Mini Profile (Visible only on mobile, integrated above nav) */}
+                    {isLoggedIn && miniProfileData && (
+                        <div className="md:hidden relative w-full px-4 py-8 bg-black border-t border-green-900/50">
+                            <MiniProfile data={miniProfileData} />
+                        </div>
+                    )}
 
                     {/* Job Preview Section */}
                     <section className="relative w-full bg-black border-t border-green-900/50">

@@ -1,6 +1,6 @@
 # Story 7.3: Mini Profile on Landing Page
 
-Status: backlog
+Status: done
 
 ## Story
 

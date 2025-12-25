@@ -474,3 +474,59 @@ export async function fetchContributionStats(username: string): Promise<{ data?:
 }
 
 
+
+export interface MiniProfileData {
+    username: string | null;
+    avatar_url: string | null;
+    developer_role: string | null;
+    bounties_won: number;
+    current_streak: number;
+    level: number;
+    xp: number;
+}
+
+export async function fetchMiniProfileData(userId: string): Promise<MiniProfileData | null> {
+    const supabase = await createClient();
+
+    // Fetch profile and contribution stats
+    const { data } = await supabase
+        .from("profiles")
+        .select("username, avatar_url, developer_role, contribution_stats, level, xp")
+        .eq("id", userId)
+        .single();
+
+    if (!data) return null;
+
+    // Explicit type casting to avoid inference issues with generic Supabase client
+    const profile = data as {
+        username: string | null;
+        avatar_url: string | null;
+        developer_role: string | null;
+        contribution_stats: any;
+        level: number;
+        xp: number;
+    };
+
+    // Fetch confirmed bounty wins
+    const { count: wins } = await supabase
+        .from("bounty_submissions")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("status", "approved");
+
+    // Calculate current streak from cached stats
+    // Cast to any to access weeks safely
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats: any = profile.contribution_stats;
+    const currentStreak = calculateContributionStats(stats)?.currentStreak || 0;
+
+    return {
+        username: profile.username,
+        avatar_url: profile.avatar_url,
+        developer_role: profile.developer_role,
+        bounties_won: wins || 0,
+        current_streak: currentStreak,
+        level: profile.level || 1,
+        xp: profile.xp || 0
+    };
+}
