@@ -46,36 +46,56 @@ Implement core XP earning mechanics for daily login, contributions, bounty activ
 - Streak milestones award bonus XP (7/30/90 days)
 - No duplicate XP for same activity on same day
 
----
+### Phase 1: Core XP System (Current Sprint)
 
-### Story 8.3: Level Progression System
-**Priority**: must-have  
-**Estimate**: 5 points
+1.  **Story 8.1: XP Tracking Infrastructure**
+    -   Database schema for XP events and tracking columns
+    -   Immutable audit trail for all XP-earning activities
 
-Implement level calculation logic and automatic level-up when XP thresholds are reached.
+2.  **Story 8.2: XP Earning Events & Logic**
+    -   Core XP-granting mechanisms (daily login, GitHub, bounty)
+    -   Streak tracking and milestone bonuses
+    -   Server-side validation and anti-gaming measures
+
+3.  **Story 8.3: Level Progression System**
+    -   Level calculation from XP with configurable formula
+    -   XP requirements per level with diminishing returns
+    -   Automatic level-up triggers
+
+4.  **Story 8.4: XP UI Components**
+    -   Visual XP progress bar on profiles
+    -   Level badges and tier indicators
+    -   XP history feed and terminal-style level-up toasts
+
+### Phase 2: Engagement & Social (Next Sprint)
+
+5.  **Story 8.5: Leaderboards & Rankings** (Must-Have, 8 pts)
+    -   Public leaderboard page (Weekly/All-Time/By-Skill)
+    -   "Your Rank" widget on profile
+    -   Top 100 rankings with caching
+
+6.  **Story 8.6: Level-Based Visual Rewards** (Must-Have, 5 pts)
+    -   Tier system (Bronze→Silver→Gold→Platinum→Elite)
+    -   Profile borders with cyberpunk animations
+    -   Level badges with tier-specific styling
+
+7.  **Story 8.7: Social Feed & Notifications** (Good-to-Have, 8 pts)
+    -   Homepage level-up activity feed
+    -   Browser push notifications for level-ups
+    -   Streak warnings and "close to level up" nudges
+
+8.  **Story 8.8: Engagement Reports & Surprises** (Nice-to-Have, 5 pts)
+    -   Weekly XP digest emails
+    -   Monthly progress reports
+    -   Random surprise XP drops (1% chance)
+    -   Account anniversary bonuses.
 
 **Acceptance Criteria**:
-- Level progression follows defined formula (linear or exponential)
-- Users automatically level up when reaching XP threshold
-- Level and XP properly update in profiles table
-- System handles edge cases (max level, negative XP protection)
-
----
-
-### Story 8.4: XP UI Components
-**Priority**: must-have  
-**Estimate**: 8 points
-
-Create UI components to display XP progress, level badges, XP history, and level-up celebrations.
-
-**Acceptance Criteria**:
-- XP progress bar shows current level and progress to next level
-- Level badge displays prominently on profile
-- XP history feed shows recent XP events
-- Level-up toast notification celebrates achievements
-- Cyberpunk-themed styling throughout
-
----
+-   XP progress bar shows current level and progress to next level
+-   Level badge displays prominently on profile
+-   XP history feed shows recent XP events
+-   Level-up toast notification celebrates achievements
+-   Cyberpunk-themed styling throughout
 
 ## Technical Architecture
 
@@ -100,13 +120,13 @@ ALTER TABLE profiles
 
 ### XP Event Types
 
-- `daily_login`: First login of the day (10 XP)
-- `github_contribution`: Daily contribution activity (5 XP)
-- `bounty_submission`: Submitted a bounty (20 XP)
-- `bounty_win`: Won a bounty (50+ XP)
-- `streak_milestone`: Achieved streak milestone (50-500 XP)
-- `profile_completion`: Completed profile setup (30 XP one-time)
-- `manual_adjustment`: Admin correction
+-   `daily_login`: First login of the day (10 XP)
+-   `github_contribution`: Daily contribution activity (5 XP)
+-   `bounty_submission`: Submitted a bounty (20 XP)
+-   `bounty_win`: Won a bounty (50+ XP)
+-   `streak_milestone`: Achieved streak milestone (50-500 XP)
+-   `profile_completion`: Completed profile setup (30 XP one-time)
+-   `manual_adjustment`: Admin correction
 
 ### Level Progression Formula
 
@@ -123,23 +143,23 @@ XP for level N = N² * 100
 
 ### Integration Points
 
-- **Auth Flow**: Check daily login on profile load
-- **Contribution System**: Award XP from GitHub stats refresh
-- **Bounty System**: Award XP on submission/approval
-- **Profile System**: Display XP progress and level
+-   **Auth Flow**: Check daily login on profile load
+-   **Contribution System**: Award XP from GitHub stats refresh
+-   **Bounty System**: Award XP on submission/approval
+-   **Profile System**: Display XP progress and level
 
 ## Dependencies
 
-- Existing profiles table with `level` and `xp` columns ✅
-- Contribution stats system (Epic 7) ✅
-- Bounty submission system (Epic 5) ✅
+-   Existing profiles table with `level` and `xp` columns ✅
+-   Contribution stats system (Epic 7) ✅
+-   Bounty submission system (Epic 5) ✅
 
 ## Success Metrics
 
-- [ ] 80%+ of active users gain XP in first week
-- [ ] Average daily XP earned per active user \u003e 15 XP
-- [ ] Users with 7+ day streaks increase by 30%
-- [ ] Profile view time increases (users check XP progress)
+-   [ ] 80%+ of active users gain XP in first week
+-   [ ] Average daily XP earned per active user > 15 XP
+-   [ ] Users with 7+ day streaks increase by 30%
+-   [ ] Profile view time increases (users check XP progress)
 
 ## Risks & Mitigations
 
@@ -150,18 +170,32 @@ XP for level N = N² * 100
 | Performance with many events | Medium | Index xp_events properly, paginate history |
 | Exploits (gaming the system) | High | Rate limit XP events, validate all grants server-side |
 
-## Out of Scope
+## Out of Scope (Phase 3 - Future Enhancements)
 
-- Public leaderboards (future epic)
-- XP decay for inactivity
-- XP trading or transfers
-- Retroactive XP for historical contributions
-- Social sharing of level-ups
+### Advanced Gamification
+-   🎮 Quest system (daily/weekly challenges)
+-   🎁 XP multiplier events (2x weekends, happy hours)
+-   ⚔️ Friend XP challenges and competitions
+-   🏅 Achievement badge system
+-   🎰 XP scratch cards and lottery
+
+### Monetization & Rewards
+-   💰 XP marketplace or redemption system
+-   🎨 Premium tier skins/themes
+-   🎁 Level-based perks and benefits
+
+### Social & Community
+-   👥 Team/company-based XP competitions
+-   💬 Social XP (kudos, endorsements)
+-   🌍 Country/city leaderboards
+
+### System Management  
+-   📉 XP decay for inactive users
+-   🎯 Custom admin-created challenges
+-   📊 Advanced analytics dashboard
 
 ## Definition of Done
 
-- [ ] All 4 stories completed and merged
-- [ ] Database migrations applied successfully
 - [ ] Unit tests for XP calculation logic \u003e 90% coverage
 - [ ] Integration tests for all XP event types
 - [ ] UI components tested across devices
