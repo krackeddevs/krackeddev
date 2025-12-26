@@ -68,6 +68,7 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 | **EPIC-3** | Bounty Marketplace & Submissions | FR8, FR9, FR10, FR11, FR12 | NFR1, NFR5 |
 | **EPIC-4** | Admin Dashboard & Operations | FR13, FR14, FR15, FR16, FR-ADM-01 | NFR4 |
 | **EPIC-5** | Santan Island Game Integration | FR17, FR18 | NFR2 |
+| **EPIC-6** | Chat & Community Platform | FR-CHAT-01, FR-QA-01, FR-QA-02, FR-QA-03, FR-QA-04 | NFR1, NFR5 |
 | **EPIC-7** | Profile Enhancement & Landing Page Polish | FR5, FR7, FR-LAND-01 | NFR1 |
 
 ## Epic List
@@ -119,6 +120,14 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 - **Scope:** Game Container (iframe), Auth Bridge (postMessage), Session Management.
 - **Value:** Unique differentiator; drives engagement.
 - **Complexity:** Medium (Cross-origin communication, specific security handlers).
+
+### EPIC-6: Chat & Community Platform
+
+**Goal:** Create synchronous and asynchronous spaces for developer interaction to turn the platform into a "Digital Guild".
+
+- **Scope:** Real-time Chat Overlay, Stack Overflow-style Q&A Forum, XP Rewards for helping others.
+- **Value:** Increases retention, builds a knowledge base, and solves the "Empty State" problem of pure marketplaces.
+- **Complexity:** High (Real-time sockets, Rich Text Editor, Recursive data models).
 
 ## User Stories Breakdown
 
@@ -447,6 +456,56 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 - [ ] Next.js app verifies the event origin.
 - [ ] Next.js app updates the User's Profile stats (if applicable) or stores activity log.
 - [ ] **Security:** Ensure events cannot be spoofed by manual console injection (Origin check + Server-side validation).
+
+### EPIC-6: Chat & Community Platform
+
+#### STORY-6.1: Townhall Chat Overlay
+
+**As a** User
+**I want to** chat with other online users in a global overlay
+**So that** I feel a sense of community and presence.
+
+**Acceptance Criteria:**
+- [ ] Floating Chat Widget (Bottom Right or Left).
+- [ ] Connects to Supabase Realtime `messages` table.
+- [ ] Displays last ~50 messages.
+- [ ] Shows "Online Count" (Presence).
+- [ ] Supports basic text only (no file uploads for MVP).
+
+#### STORY-6.2: Community Q&A - Questions Engine
+
+**As a** Developer
+**I want to** post technical questions with code snippets
+**So that** I can get help from the community.
+
+**Acceptance Criteria:**
+- [ ] Route `/community` listings page.
+- [ ] "Ask Question" form with Title, Body (Markdown Editor), and Tags.
+- [ ] Markdown rendering supports `code blocks` with syntax highlighting.
+- [ ] Edit/Delete own questions.
+
+#### STORY-6.3: Answers & Acceptance Logic
+
+**As a** User
+**I want to** answer questions and have the OP mark it as accepted
+**So that** I can build my reputation.
+
+**Acceptance Criteria:**
+- [ ] Answer input form below questions.
+- [ ] "Mark as Accepted" button (Only visible to Question Author).
+- [ ] Accepted answer moves to the top (below OP).
+- [ ] Visual distinction (Green checkmark) for accepted answers.
+
+#### STORY-6.4: XP & Reputation Integration
+
+**As a** Contributor
+**I want to** earn XP when my answer is accepted
+**So that** my profile rank increases.
+
+**Acceptance Criteria:**
+- [ ] Database Trigger: When `is_accepted` becomes true -> Increment Answer Author `xp` by +50.
+- [ ] Profile Stats: Update "Questions Solved" count.
+- [ ] Upvoting a question/answer grants +1 or +2 XP (Rate limited).
 
 ### EPIC-7: Profile Enhancement & Landing Page Polish
 

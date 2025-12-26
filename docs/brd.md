@@ -62,7 +62,23 @@ This BRD defines the functional and non-functional requirements for the **Kracke
   * Total Earnings (RM).
   * Rank/Badge (e.g., "Top Hunter").
 
-### 3.3 The Bounty System (Core Engagement Loop)
+### 3.3 Townhall Chat (Synchronous "Vibe")
+
+* **REQ-CHAT-01 (Global Channel):** Real-time, text-based global chat accessible from a floating widget or sidebar ("The Townhall").
+* **REQ-CHAT-02 (Presence):** Show number of "Online Hunters" to create a sense of aliveness.
+* **REQ-CHAT-03 (Game Integration):** Chat overlay MUST be accessible inside the "Santan Island" game view.
+
+### 3.4 Community Q&A (The Knowledge Base)
+
+* **REQ-QA-01 (Question Posting):** Users can post technical questions with Title, Body (Markdown), and Tags.
+* **REQ-QA-02 (Answers & Voting):** Users can answer questions and upvote/downvote helpful content (Stack Overflow mechanic).
+* **REQ-QA-03 (Accepted Solution):** The Original Poster (OP) can mark one answer as "Accepted."
+* **REQ-QA-04 (XP Integration):**
+  * **Accepted Answer:** Grants significant XP (e.g., +50 XP).
+  * **Upvotes:** Grant minor XP (e.g., +2 XP).
+
+
+### 3.5 The Bounty System (Core Engagement Loop)
 
 * **REQ-BNTY-01 (Bounty Listing):** A central page listing all active "mini task" projects.
   * Filter by: Category (Frontend, Backend, Design), Reward Type, Status.
@@ -85,7 +101,7 @@ This BRD defines the functional and non-functional requirements for the **Kracke
 * **REQ-BNTY-05 (Company CTA):** A prominent Call-to-Action section for Brands: *"Have a task? Post a Rare Bounty"* (Lead gen form for "Mini games," "Landing pages," etc.).
 * **REQ-BNTY-06 (Leaderboard):** "Top Bounty Hunters" ranking based on wins and earnings to drive competition.
 
-### 3.4 Community Hub
+### 3.6 Community Hub
 
 * **REQ-COMM-01 (Social Aggregation):** Centralized dashboard linking to KD's presence on:
   * Twitter / X
@@ -96,13 +112,13 @@ This BRD defines the functional and non-functional requirements for the **Kracke
 * **REQ-COMM-03 (Featured Projects):** A showcase section for "Best of KD" community projects (curated by Admin).
 * **REQ-COMM-04 (Content Submission):** Form for members to submit white papers, blog posts, or show-and-tell projects for review.
 
-### 3.5 KD Job Board
+### 3.7 KD Job Board
 
 * **REQ-JOB-01 (Job Listing):** A clean board for full-time/contract roles.
 * **REQ-JOB-02 (Company Submission):** Brands can submit job postings via a form.
 * **REQ-JOB-03 (Curation Workflow):** Listings do NOT go live immediately. They enter a "Pending" state for KD Admin curation/approval to ensure quality and prevent spam.
 
-### 3.6 Bootcamp (Future Tease)
+### 3.8 Bootcamp (Future Tease)
 
 * **REQ-EDU-01 (Bootcamp Landing):** Informational section teasing upcoming cohorts.
 * **REQ-EDU-02 (Programs):**
@@ -110,13 +126,13 @@ This BRD defines the functional and non-functional requirements for the **Kracke
   * *Startup Bootcamp:* "Venture Builder" track for founders.
 * **REQ-EDU-03 (Waitlist):** Email capture for interested users.
 
-### 3.7 Game World ("Santan Island")
+### 3.9 Game World ("Santan Island")
 
 * **REQ-GAME-01 (Standalone App):** A 2D top-down browser game (RPG style) separate from the main web app initially.
 * **REQ-GAME-02 (Exploration):** Players navigate a pixel-art island ("Santan Island").
 * **REQ-GAME-03 (Discovery):** Interaction points in the game link back to the main website's Bounties, Jobs, and Community features. (Gamified navigation).
 
-### 3.8 Admin Dashboard (Management Core)
+### 3.10 Admin Dashboard (Management Core)
 
 * **REQ-ADM-01 (Analytics Dashboard):** Admin-only view displaying:
   * Total Users (New vs Returning).
