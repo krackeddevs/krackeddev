@@ -894,7 +894,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   }, [nearBuilding, isMobile]);
 
   return (
-    <div className="w-full h-[85vh] bg-black text-white jobs-container relative overflow-hidden flex flex-col items-center justify-center">
+    <div className="w-full h-auto md:h-[85vh] bg-black text-white jobs-container relative overflow-hidden flex flex-col md:justify-center items-center">
       {/* Canvas Container with relative positioning for dialogs */}
       <div
         className={`relative w-full mx-auto flex flex-col items-center gap-4 ${isMobile ? "max-w-full" : "max-w-5xl"
@@ -1017,10 +1017,10 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
         </div>
       </div>
 
-      {/* Mobile Controls - Fixed at bottom of screen */}
+      {/* Mobile Controls - Interactive Flow (Below Canvas) */}
       {isMobile && (
         <div
-          className={`fixed bottom-0 left-0 right-0 w-full flex items-center px-4 pb-6 pointer-events-none ${canCloseDialog ? "z-50" : "z-30"
+          className={`relative w-full flex items-center justify-center px-4 py-6 bg-black pointer-events-none ${canCloseDialog ? "z-50" : "z-30"
             }`}
         >
           <MobileControls

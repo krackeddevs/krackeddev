@@ -59,21 +59,33 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                         </div>
                     )}
 
-                    {/* Community Map Section */}
-                    <section className="relative w-full bg-black">
-                        <CommunityMap />
-                    </section>
-
-                    {/* Game Section (moved below map per Story 7.4) */}
-                    <section className="relative w-full h-[85vh] min-h-[600px] bg-black border-t border-green-900/50">
-                        <TownhallV2 />
-
-                        {/* Scroll Indicator */}
-                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-30">
-                            <span className="text-green-400/70 text-xs font-mono mb-1">Scroll for more</span>
-                            <ChevronDown className="w-6 h-6 text-green-400/70" />
+                    {/* Mobile Mini Profile (Visible only on mobile, placed above Game) */}
+                    {isLoggedIn && miniProfileData && (
+                        <div className="md:hidden relative w-full px-4 py-2 bg-black border-b border-green-900/50">
+                            <MiniProfile data={miniProfileData} />
                         </div>
-                    </section>
+                    )}
+
+                    {/* Hero Section Wrapper: Game & Map */}
+                    {/* Mobile: flex-col-reverse (Game Top, Map Bottom) */}
+                    {/* Desktop: flex-col (Map Top, Game Bottom) */}
+                    <div className="flex flex-col-reverse md:flex-col w-full">
+                        {/* Community Map Section */}
+                        <section className="relative w-full bg-black border-t border-green-900/50">
+                            <CommunityMap />
+                        </section>
+
+                        {/* Game Section */}
+                        <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px] bg-black">
+                            <TownhallV2 />
+
+                            {/* Scroll Indicator */}
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-30">
+                                <span className="text-green-400/70 text-xs font-mono mb-1">Scroll for more</span>
+                                <ChevronDown className="w-6 h-6 text-green-400/70" />
+                            </div>
+                        </section>
+                    </div>
 
                     {/* Live Stats Section */}
                     <section className="relative w-full bg-black border-t border-green-900/50">
@@ -85,12 +97,7 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                         <NavigationHub />
                     </section>
 
-                    {/* Mobile Mini Profile (Visible only on mobile, integrated above nav) */}
-                    {isLoggedIn && miniProfileData && (
-                        <div className="md:hidden relative w-full px-4 py-8 bg-black border-t border-green-900/50">
-                            <MiniProfile data={miniProfileData} />
-                        </div>
-                    )}
+
 
                     {/* Job Preview Section */}
                     <section className="relative w-full bg-black border-t border-green-900/50">

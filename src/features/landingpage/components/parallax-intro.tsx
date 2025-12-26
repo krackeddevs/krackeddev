@@ -90,7 +90,7 @@ export function ParallaxIntro({ onComplete }: ParallaxIntroProps) {
     return (
         <AnimatePresence>
             <motion.div
-                className="fixed inset-0 z-50 overflow-hidden"
+                className="fixed inset-0 z-50 overflow-hidden w-screen h-screen"
                 initial={{ opacity: 1 }}
                 animate={{
                     opacity: phase === "transitioning" ? 0 : 1,
@@ -144,84 +144,61 @@ export function ParallaxIntro({ onComplete }: ParallaxIntroProps) {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.8 }}
                     >
-                        {/* Parallax Background Layers */}
-                        <ParallaxBanner className="h-full w-full">
-                            {/* Sky layer - moves slowest */}
+                        <ParallaxBanner className="h-full w-full bg-[#0a0f0a]">
+                            {/* 1. SKY - Base layer (Static) */}
                             <ParallaxBannerLayer
                                 image="/parallax/sky.png"
-                                speed={-20}
-                                style={{
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                }}
+                                speed={0}
+                                style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
                             />
 
-                            {/* Back layer */}
+                            {/* 2. CLOUDS - Background (Moves slightly) */}
                             <ParallaxBannerLayer
                                 image="/parallax/background.png"
-                                speed={-15}
-                                style={{
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                }}
+                                speed={-10}
+                                style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
                             />
 
-                            {/* Middle layer */}
+                            {/* 3. CITY & RIVER - Midground */}
                             <ParallaxBannerLayer
                                 image="/parallax/midground.png"
-                                speed={-10}
-                                style={{
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                }}
+                                speed={-5}
+                                style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
                             />
 
-                            {/* Front layer - moves faster */}
+                            {/* 4. CLIFF, CHARACTER & MONKEY - Foreground (The most important alignment) */}
                             <ParallaxBannerLayer
                                 image="/parallax/foreground.png"
-                                speed={-5}
-                                style={{
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center bottom",
-                                }}
+                                speed={0} // Keep this at 0 or very low (-2) so it stays anchored to the UI
+                                style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
                             />
                         </ParallaxBanner>
 
-                        <div className="absolute inset-0 flex flex-col items-center justify-start pointer-events-none z-20 pt-40 md:pt-48 lg:pt-56">
-                            <div className="flex flex-col items-center justify-center w-full">
-                                {/* Title Image */}
-                                <motion.div
-                                    className="flex justify-center w-full"
-                                    initial={{ opacity: 0, y: -30 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.6, delay: 0.2 }}
-                                >
-                                    <img
-                                        src="/parallax/title.png"
-                                        alt="Kracked Devs"
-                                        className="w-[360px] md:w-[680px] lg:w-[840px] xl:w-[960px] h-auto object-contain drop-shadow-[0_0_30px_rgba(34,197,94,0.4)]"
-                                    />
-                                </motion.div>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-30">
+                            <motion.div
+                                className="relative w-[100vw] sm:w-[800px] md:w-[1000px] lg:w-[1300px] aspect-[16/9] flex flex-col items-center justify-center -mt-16 sm:-mt-24"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8 }}
+                            >
+                                {/* Title Image - The Anchor */}
+                                <img
+                                    src="/parallax/title.png"
+                                    alt="Kracked Devs"
+                                    className="w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(34,197,94,0.4)] relative z-20"
+                                />
 
-                                {/* Subtitle Image */}
-                                <motion.div
-                                    className="flex justify-center w-full -mt-48 md:-mt-[28rem] lg:-mt-[28rem] xl:-mt-[34rem]"
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.4 }}
-                                >
-                                    <img
-                                        src="/parallax/subtitle.png"
-                                        alt="Where Developers Unite"
-                                        className="w-[360px] md:w-[750px] lg:w-[950px] xl:w-[1100px] h-auto object-contain drop-shadow-[0_0_20px_rgba(34,197,94,0.3)] relative z-10"
-
-                                    />
-                                </motion.div>
-                            </div>
+                                {/* Subtitle Image - Rigidly Locked & Aggressively Tucked */}
+                                <img
+                                    src="/parallax/subtitle.png"
+                                    alt="Where Developers Unite"
+                                    className="absolute top-[23%] w-[90%] h-auto object-contain drop-shadow-[0_0_20px_rgba(34,197,94,0.3)] z-30"
+                                />
+                            </motion.div>
 
                             {/* Start Button */}
                             <motion.div
-                                className="absolute bottom-[15%] md:bottom-[18%] left-1/2 -translate-x-1/2 pointer-events-auto"
+                                className="absolute bottom-[20%] pointer-events-auto"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{
                                     opacity: phase === "ready" ? 1 : 0.5,
@@ -232,7 +209,7 @@ export function ParallaxIntro({ onComplete }: ParallaxIntroProps) {
                             >
                                 <button
                                     onClick={handleStart}
-                                    className="px-10 py-3 md:px-12 md:py-4 bg-green-600/90 hover:bg-green-500 text-white font-bold text-lg md:text-xl rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,197,94,0.5)] border-2 border-green-400/50 hover:border-green-300 cursor-pointer"
+                                    className="px-12 py-4 bg-[#15803d] hover:bg-[#16a34a] text-white font-bold text-xl rounded-sm border-b-4 border-green-900 active:border-b-0 active:translate-y-1 transition-all uppercase tracking-widest disabled:opacity-50"
                                     disabled={phase !== "ready"}
                                 >
                                     {phase === "transitioning" ? "Starting..." : "Start"}

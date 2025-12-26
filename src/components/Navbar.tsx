@@ -86,11 +86,11 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 asChild
-                className="py-2 h-auto w-auto px-4 border border-white/50 hover:border-white hover:bg-white/10"
+                className="py-2 h-auto w-auto px-2 sm:px-4 border border-white/50 hover:border-white hover:bg-white/10"
               >
                 <Link href="/">
-                  <Home className="min-h-4 min-w-4 mr-2" />
-                  <span>Home</span>
+                  <Home className="min-h-4 min-w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Home</span>
                 </Link>
               </Button>
             )}
@@ -101,11 +101,11 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 asChild
-                className="py-2 h-auto w-auto px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
+                className="py-2 h-auto w-auto px-2 sm:px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
               >
                 <Link href="/admin/dashboard">
-                  <Shield className="min-h-4 min-w-4 mr-2" />
-                  <span>Admin</span>
+                  <Shield className="min-h-4 min-w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Admin</span>
                 </Link>
               </Button>
             )}
@@ -115,10 +115,10 @@ const Navbar = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+                  className="py-2 h-auto w-auto px-2 sm:px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
                   aria-label="Profile"
                 >
-                  <span>Profile</span>
+                  <span className="hidden sm:inline mr-2">Profile</span>
                   <User className="min-h-5 min-w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -147,9 +147,9 @@ const Navbar = () => {
             <Button
               variant="ghost"
               onClick={() => openLoginModal()}
-              className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+              className="py-2 h-auto w-auto px-2 sm:px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
             >
-              <span>Login</span>
+              <span className="hidden sm:inline mr-2">Login</span>
               <User className="min-h-5 min-w-5" />
             </Button>
           )}
