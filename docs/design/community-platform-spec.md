@@ -121,3 +121,40 @@ create table public.answers (
     *   **Complexity:** Managing Rich Text Editors can be tricky.
 
 **Verdict:** For a Gamified Platform, **Integration > Features**. The value of KrackedDev is the **Profile Rank**. Therefore, we must own the data source (Build).
+
+## 7. Cost Analysis (Long-Term)
+
+### 7.1 Infrastructure Stack
+*   **Frontend/Hosting:** Vercel (Pro Plan)
+*   **Backend/Database:** Supabase (Pro Plan)
+
+### 7.2 Total Cost of Ownership (Estimated)
+*Assumption: 10,000 MAU types, 500 Concurrent Realtime Users.*
+
+| Service | Item | Estimated Usage | Cost (Monthly) | Risk Factor |
+| :--- | :--- | :--- | :--- | :--- |
+| **Vercel** | Hosting (Pro) | 1 Developer Seat | $20.00 | Low |
+| **Vercel** | Bandwidth | ~100GB (Text/HTML) | $0.00 (1TB Included) | Medium (Images) |
+| **Vercel** | Invocations | ~5M Calls | $0.00 (10M Included) | Low |
+| **Supabase** | Database (Pro) | 8GB Storage | $25.00 | Low |
+| **Supabase** | Realtime | 500 Peak Connections | $0.00 (500 Included) | High (Viral Success) |
+| **Supabase** | Storage | 50GB (Images) | ~$1.25 | Low |
+| **TOTAL** | | | **~$46.25 / month** | |
+
+### 7.3 Scaling Risks & "Success Tax"
+
+#### Risk A: Supabase Realtime (Townhall)
+*   **Metric:** Peak Concurrent Connections (people online at the exact same second).
+*   **Limit:** 500 included.
+*   **Overage Cost:** +$10 per 1,000 extra users.
+*   **Scenario:** If we hit 1,500 concurrents (massive success), bill increases by $10.
+*   **Mitigation:** `useSubscription` should lazy-load. Disconnect socket on tab blur.
+
+#### Risk B: Vercel Image Optimization
+*   **Metric:** Source Images Optimized.
+*   **Limit:** 5,000 images included.
+*   **Danger:** If every user uploads a new avatar daily, we hit this.
+*   **Mitigation:** Do NOT use `next/image` optimization for user uploads. Use Supabase Storage transformation (faster/cheaper) or Cloudinary.
+
+### 7.4 Verdict on "Vercel Tax"
+While Vercel is more expensive than a raw VPS ($5/mo), the **DevOps savings** justify the cost. Managing WebSocket servers, Redis, and Postgres backups manually would cost >5 hours of engineering time/month ($500+ value). The $46/mo infrastructure cost is efficient for a platform of this scale.
