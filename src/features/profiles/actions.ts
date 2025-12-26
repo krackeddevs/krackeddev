@@ -447,10 +447,10 @@ export async function fetchContributionStats(username: string): Promise<{ data?:
 
     // 2. If viewing own profile, try to refresh from GitHub
     if (user && user.id === profile.id) {
-        // Only refresh if data is missing OR it's been more than 1 hour
+        // Refresh if data is missing OR it's been more than 1 hour
         const lastSync = profile.portfolio_synced_at ? new Date(profile.portfolio_synced_at) : null;
         const now = new Date();
-        const shouldRefresh = !lastSync || (now.getTime() - lastSync.getTime() > 1000 * 60 * 60); // 1 hour
+        const shouldRefresh = !statsData || !lastSync || (now.getTime() - lastSync.getTime() > 1000 * 60 * 60); // 1 hour
 
         if (shouldRefresh) {
             const { data: liveData, error: liveError } = await fetchGithubStats();
