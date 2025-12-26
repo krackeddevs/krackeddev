@@ -74,3 +74,10 @@ development_status:
   7-4-landing-page-layout-swap: done
   7-5-community-map-ux: done
   epic-7-retrospective: optional
+
+  epic-8: backlog
+  8-1-xp-tracking-infrastructure: backlog
+  8-2-xp-earning-events-logic: backlog
+  8-3-level-progression-system: backlog
+  8-4-xp-ui-components: backlog
+  epic-8-retrospective: optional

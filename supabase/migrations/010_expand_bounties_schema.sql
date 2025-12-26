@@ -1,4 +1,7 @@
 -- Add new columns to bounties table
+-- NOTE: This migration is now consolidated into 007_create_bounties_tables.sql
+--       Kept for historical reference (already applied to production)
+
 ALTER TABLE public.bounties
 ADD COLUMN IF NOT EXISTS difficulty text DEFAULT 'intermediate',
 ADD COLUMN IF NOT EXISTS deadline timestamp with time zone,

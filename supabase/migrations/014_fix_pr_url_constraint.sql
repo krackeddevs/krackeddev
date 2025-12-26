@@ -1,5 +1,8 @@
 -- Fix the PR URL regex constraint to use POSIX syntax (PostgreSQL compatible)
 -- The original used \w which doesn't work correctly in PostgreSQL regex
+-- NOTE: This migration is superseded by 015_flexible_submission_url.sql
+--       and consolidated into 003_create_bounty_submissions_table.sql
+--       Kept for historical reference (already applied to production)
 
 -- Drop the old constraint
 ALTER TABLE public.bounty_submissions DROP CONSTRAINT IF EXISTS valid_pr_url;

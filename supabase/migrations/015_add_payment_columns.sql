@@ -1,5 +1,8 @@
 -- Add payment tracking columns to bounty_submissions
 -- Story 5.3: Verification Logic
+-- NOTE: Payment columns now consolidated into 003_create_bounty_submissions_table.sql
+--       Admin RLS policy in this file is still active and not duplicated
+--       Kept for historical reference (already applied to production)
 
 -- Add payment columns
 ALTER TABLE public.bounty_submissions

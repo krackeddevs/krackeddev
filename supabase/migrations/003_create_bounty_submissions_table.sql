@@ -1,4 +1,5 @@
 -- Create bounty_submissions table (user PR submissions for bounties)
+-- Consolidated schema including all production columns and constraints
 
 CREATE TABLE IF NOT EXISTS public.bounty_submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -23,12 +24,17 @@ CREATE TABLE IF NOT EXISTS public.bounty_submissions (
   reviewed_at TIMESTAMP WITH TIME ZONE,
   review_notes TEXT,
 
+  -- Payment tracking (added in migration 015)
+  payment_ref TEXT,
+  paid_at TIMESTAMP WITH TIME ZONE,
+
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
   -- Constraints
-  CONSTRAINT valid_pr_url CHECK (pull_request_url ~ '^https://github\\.com/[\\w-]+/[\\w.-]+/pull/\\d+$')
+  CONSTRAINT unique_user_bounty_submission UNIQUE (bounty_slug, user_id),
+  CONSTRAINT valid_submission_url CHECK (pull_request_url ~ '^https://[a-zA-Z0-9][-a-zA-Z0-9]*(\\.[a-zA-Z0-9][-a-zA-Z0-9]*)+(/.*)?$')
 );
 
 -- Indexes

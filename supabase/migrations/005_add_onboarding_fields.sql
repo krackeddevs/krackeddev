@@ -1,6 +1,8 @@
 -- ============================================
 -- ADD ONBOARDING FIELDS TO PROFILES TABLE
 -- For Story 1.3: Onboarding Flow
+-- NOTE: This migration is now consolidated into 001_create_profiles_table.sql
+--       Kept for historical reference (already applied to production)
 -- ============================================
 
 -- Add developer_role column (Junior, Mid, Senior, Lead, etc.)

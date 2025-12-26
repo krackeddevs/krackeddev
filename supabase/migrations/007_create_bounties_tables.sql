@@ -1,8 +1,9 @@
--- Create bounties table
+-- Create bounties table with complete production schema
+-- Consolidated schema including all columns from migrations 010, 012, 017
 create table if not exists public.bounties (
   id uuid not null default gen_random_uuid(),
   title text not null,
-  slug text not null unique,
+  slug text not null,
   description text,
   reward_amount numeric not null default 0,
   status text not null default 'open', -- open, assigned, completed, cancelled
@@ -11,8 +12,28 @@ create table if not exists public.bounties (
   company_name text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  constraint bounties_pkey primary key (id)
+  difficulty text default 'intermediate',
+  deadline timestamp with time zone,
+  requirements text[] default '{}',
+  repository_url text,
+  long_description text,
+  bounty_post_url text,
+  submission_post_url text,
+  completed_at timestamp with time zone,
+  rarity text default 'normal',
+  winner_name text,
+  winner_x_handle text,
+  winner_x_url text,
+  winner_submission_url text,
+  winner_user_id uuid,
+  constraint bounties_pkey primary key (id),
+  constraint bounties_slug_key unique (slug),
+  constraint bounties_winner_user_id_fkey foreign key (winner_user_id) references profiles(id) on delete set null,
+  constraint check_difficulty check (difficulty in ('beginner', 'intermediate', 'advanced', 'expert'))
 );
+
+-- Create index for winner_user_id
+create index if not exists idx_bounties_winner_user_id on public.bounties using btree (winner_user_id);
 
 -- Create bounty_inquiries table (for Lead Capture)
 create table if not exists public.bounty_inquiries (
