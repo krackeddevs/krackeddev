@@ -55,7 +55,12 @@ export async function GET(request: NextRequest) {
         }
 
         // Store GitHub access token in profile if available
-        if (sessionData?.session?.provider_token && sessionData?.session?.user?.id) {
+        // CRITICAL: Only update if the provider is actually GitHub. 
+        // Otherwise, logging in with Google will overwrite the GitHub token with a Google token, breaking the sync.
+        const isGithubProvider = sessionData?.session?.user?.app_metadata?.provider === 'github' ||
+            (sessionData?.session?.user?.identities || []).some((id: any) => id.provider === 'github' && id.last_sign_in_at === sessionData?.session?.user?.last_sign_in_at);
+
+        if (isGithubProvider && sessionData?.session?.provider_token && sessionData?.session?.user?.id) {
             const userId = sessionData.session.user.id;
             const providerToken = sessionData.session.provider_token;
 

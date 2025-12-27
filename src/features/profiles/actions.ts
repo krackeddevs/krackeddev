@@ -471,6 +471,14 @@ export async function fetchContributionStats(username: string): Promise<{ data?:
                     .eq("id", user.id);
 
                 statsData = newStats;
+            } else if (liveError) {
+                console.error("Failed to sync GitHub stats:", liveError);
+                // If sync failed and data is STALE (older than 24 hours), force return null
+                // This triggers the "Connect GitHub" UI, prompting the user to re-authenticate which fixes invalid tokens.
+                const isStale = !lastSync || (now.getTime() - lastSync.getTime() > 1000 * 60 * 60 * 24); // 24 hours
+                if (isStale) {
+                    return { data: null, error: "GitHub sync failed and data is stale. Please reconnect." };
+                }
             }
         }
     }
