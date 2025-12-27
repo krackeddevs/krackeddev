@@ -98,6 +98,20 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                 {/* Main Info Column */}
                 <div className="col-span-1 md:col-span-2 space-y-6">
 
+                    {/* Dev Pulse Visualization - Main Column */}
+                    {pulseData && (
+                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
+                            <DevPulse data={pulseData} />
+                        </div>
+                    )}
+
+                    {githubStats && (
+                        <GithubGraph
+                            data={githubStats.contributionCalendar}
+                            totalContributions={githubStats.totalContributions}
+                        />
+                    )}
+
                     <Card className="bg-black/40 border-white/10 backdrop-blur-md">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
@@ -118,20 +132,6 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
 
                     {userSubmissions && (
                         <MySubmissions submissions={userSubmissions} />
-                    )}
-
-                    {/* Dev Pulse Visualization - Main Column */}
-                    {pulseData && (
-                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
-                            <DevPulse data={pulseData} />
-                        </div>
-                    )}
-
-                    {githubStats && (
-                        <GithubGraph
-                            data={githubStats.contributionCalendar}
-                            totalContributions={githubStats.totalContributions}
-                        />
                     )}
                 </div>
 
