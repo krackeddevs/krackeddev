@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { fetchPublicProfile, fetchBountyStats, fetchContributionStats } from "@/features/profiles/actions";
 import { PublicProfileDetails } from "@/features/profiles/components/public-profile-details";
+import { GithubStats } from "@/features/profiles/types";
 
 interface PublicProfilePageProps {
     params: Promise<{ username: string }>;
@@ -22,6 +23,23 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
     // Fetch contribution stats (read-only from cache)
     const contributionStatsResult = await fetchContributionStats(username);
 
+    // Reconstruct GithubStats from cached contribution_stats for the heatmap
+    let githubStats: GithubStats | undefined;
+
+    if (profile.contribution_stats) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const cachedStats = profile.contribution_stats as any;
+        if (cachedStats.weeks) {
+            githubStats = {
+                username: profile.username || "",
+                avatarUrl: profile.avatar_url || "",
+                totalContributions: cachedStats.totalContributions || 0,
+                contributionCalendar: cachedStats.weeks,
+                topLanguages: [], // Top languages not currently cached in contribution_stats
+            };
+        }
+    }
+
     return (
         <main className="min-h-screen bg-gray-900">
             <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
@@ -30,6 +48,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
                     profile={profile}
                     bountyStats={bountyStatsResult.data}
                     contributionStats={contributionStatsResult.data}
+                    githubStats={githubStats}
                 />
             </div>
         </main>
