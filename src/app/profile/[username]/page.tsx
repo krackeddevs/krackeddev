@@ -28,8 +28,19 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
 
     if (profile.contribution_stats) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const cachedStats = profile.contribution_stats as any;
-        if (cachedStats.weeks) {
+        let cachedStats = profile.contribution_stats as any;
+
+        // Handle stringified JSON
+        if (typeof cachedStats === 'string') {
+            try {
+                cachedStats = JSON.parse(cachedStats);
+            } catch (e) {
+                console.error("Failed to parse cached stats in public profile:", e);
+                cachedStats = null;
+            }
+        }
+
+        if (cachedStats && cachedStats.weeks) {
             githubStats = {
                 username: profile.username || "",
                 avatarUrl: profile.avatar_url || "",

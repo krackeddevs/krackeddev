@@ -445,6 +445,16 @@ export async function fetchContributionStats(username: string): Promise<{ data?:
 
     let statsData: GithubContributionCalendar | null = profile.contribution_stats as any;
 
+    // Handle potential double-encoded JSON (stringified JSON in DB)
+    if (typeof statsData === 'string') {
+        try {
+            statsData = JSON.parse(statsData);
+        } catch (e) {
+            console.error("Failed to parse contribution_stats:", e);
+            statsData = null;
+        }
+    }
+
     // 2. If viewing own profile, try to refresh from GitHub
     if (user && user.id === profile.id) {
         // Refresh if data is missing OR it's been more than 1 hour
