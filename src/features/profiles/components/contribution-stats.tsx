@@ -7,35 +7,51 @@ import { ContributionStats } from "../types";
 interface ContributionStatsProps {
     stats: ContributionStats | null;
     isLoading?: boolean;
+    isOwnProfile?: boolean;
 }
 
-export function ContributionStatsCard({ stats, isLoading = false }: ContributionStatsProps) {
+export function ContributionStatsCard({ stats, isLoading = false, isOwnProfile = false }: ContributionStatsProps) {
     if (isLoading) {
         return <StatsSkeleton />;
     }
 
     // Fallback for empty stats (e.g. no GitHub connected)
+    // Fallback for empty stats (e.g. no GitHub connected)
     if (!stats) {
+        // Explicit check for true to avoid any truthy/falsy confusion
+        if (isOwnProfile === true) {
+            return (
+                <div className="w-full bg-black/40 border border-white/10 rounded-xl p-6 text-center space-y-3 backdrop-blur-md">
+                    <p className="text-xs text-red-500 font-mono">DEBUG: isOwnProfile: {String(isOwnProfile)}</p>
+                    <p className="text-gray-400 font-mono text-sm">
+                        Connect GitHub (OWNER VIEW) to track your contribution streaks.
+                    </p>
+                    <button
+                        onClick={() => {
+                            const { createClient } = require("@/lib/supabase/client");
+                            const supabase = createClient();
+                            supabase.auth.signInWithOAuth({
+                                provider: 'github',
+                                options: {
+                                    redirectTo: `${window.location.origin}/auth/callback?next=/profile`
+                                }
+                            });
+                        }}
+                        className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-mono text-white transition-colors"
+                    >
+                        Connect GitHub Account
+                    </button>
+                </div>
+            );
+        }
+
+        // Public profile view / fallback
         return (
             <div className="w-full bg-black/40 border border-white/10 rounded-xl p-6 text-center space-y-3 backdrop-blur-md">
-                <p className="text-gray-400 font-mono text-sm">
-                    Connect GitHub to track your contribution streaks.
+                <p className="text-xs text-green-500 font-mono">DEBUG: isOwnProfile: {String(isOwnProfile)}</p>
+                <p className="text-gray-500 font-mono text-sm">
+                    No contribution data available for this user (PUBLIC VIEW).
                 </p>
-                <button
-                    onClick={() => {
-                        const { createClient } = require("@/lib/supabase/client");
-                        const supabase = createClient();
-                        supabase.auth.signInWithOAuth({
-                            provider: 'github',
-                            options: {
-                                redirectTo: `${window.location.origin}/auth/callback?next=/profile`
-                            }
-                        });
-                    }}
-                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-mono text-white transition-colors"
-                >
-                    Connect GitHub Account
-                </button>
             </div>
         );
     }
