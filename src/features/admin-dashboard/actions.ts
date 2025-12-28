@@ -246,6 +246,24 @@ export async function getAnalyticsData(): Promise<ActionResult<AnalyticsData>> {
         return map[lower] || name.charAt(0).toUpperCase() + name.slice(1);
     };
 
+    // --- Helper for Location Normalization ---
+    const normalizeLocationName = (name: string): string => {
+        if (!name) return 'Unknown';
+
+        const lower = name.toLowerCase().trim();
+
+        // Exact matches for the requested normalizations
+        if (lower === 'kuala lumpur' || lower.includes('kuala lumpur')) return 'Wilayah Persekutuan Kuala Lumpur';
+        if (lower === 'putrajaya' || lower.includes('putrajaya')) return 'Wilayah Persekutuan Putrajaya';
+        if (lower === 'labuan' || lower.includes('labuan')) return 'Wilayah Persekutuan Labuan';
+        if (lower === 'penang') return 'Pulau Pinang';
+
+        // Standard capitalization for others if needed, or return original
+        // Ideally we match standard Malaysian states if possible
+
+        return name.trim();
+    };
+
     // --- Helper for Monthly Growth ---
     const getGrowth = (dates: (string | null | undefined)[]) => {
         const now = new Date();
@@ -277,7 +295,7 @@ export async function getAnalyticsData(): Promise<ActionResult<AnalyticsData>> {
     profiles.forEach((profile) => {
         // Location
         if (profile.location) {
-            const loc = profile.location.trim(); // Simplified state matching
+            const loc = normalizeLocationName(profile.location);
             locationMap.set(loc, (locationMap.get(loc) || 0) + 1);
         }
 
