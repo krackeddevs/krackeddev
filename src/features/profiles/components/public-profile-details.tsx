@@ -89,7 +89,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
 
             {/* Contribution Stats */}
             <div>
-                <ContributionStatsCard stats={contributionStats || null} />
+                <ContributionStatsCard stats={contributionStats || null} isOwnProfile={false} />
             </div>
 
             {/* Dev Pulse moved to main column */}

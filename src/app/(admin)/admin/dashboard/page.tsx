@@ -89,7 +89,7 @@ export default async function AdminDashboardPage() {
 
                 {/* Tech Stack - Wide (4 cols) */}
                 <div className="col-span-full lg:col-span-4">
-                    <TechStackChart data={data.stackDistribution} />
+                    <TechStackChart data={data.stackDistribution} totalUsers={data.totalUsers} />
                 </div>
             </div>
 

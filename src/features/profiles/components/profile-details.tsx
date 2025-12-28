@@ -91,7 +91,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
 
             {/* Contribution Stats Section */}
             <div>
-                <ContributionStatsCard stats={contributionStats || null} />
+                <ContributionStatsCard stats={contributionStats || null} isOwnProfile={true} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
