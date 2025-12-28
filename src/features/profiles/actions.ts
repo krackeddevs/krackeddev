@@ -51,7 +51,7 @@ export async function fetchPublicProfile(username: string): Promise<{ data?: Pro
 
     const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url, level, xp")
+        .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url, level, xp, contribution_stats")
         .eq("username", username)
         .eq("status", "active")  // Only show active users
         .single();
