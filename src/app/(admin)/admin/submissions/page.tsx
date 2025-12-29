@@ -24,9 +24,6 @@ export default async function AdminSubmissionsPage() {
             <SubmissionsTableClient
                 submissions={submissions || []}
                 userId={user.id}
-                onReload={() => {
-                    // This will be handled client-side with router.refresh()
-                }}
             />
         </div>
     );
