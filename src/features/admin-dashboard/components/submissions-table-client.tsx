@@ -27,6 +27,7 @@ import {
 import { reviewSubmission, markSubmissionPaid } from "@/features/bounty-board";
 import type { AdminSubmission } from "@/features/bounty-board";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "@/lib/toast";
 
 interface SubmissionsTableClientProps {
     submissions: AdminSubmission[];
@@ -103,9 +104,11 @@ export function SubmissionsTableClient({ submissions, userId }: SubmissionsTable
             );
             if (!success) {
                 setError(error || "Failed to mark as paid");
+                toast.error(error || "Failed to mark as paid");
                 setProcessing(false);
                 return;
             }
+            toast.success("Submission marked as paid successfully");
         } else {
             const status = modalAction === "approve" ? "approved" : "rejected";
             const { success, error } = await reviewSubmission(
@@ -116,9 +119,11 @@ export function SubmissionsTableClient({ submissions, userId }: SubmissionsTable
             );
             if (!success) {
                 setError(error || "Failed to review submission");
+                toast.error(error || "Failed to review submission");
                 setProcessing(false);
                 return;
             }
+            toast.success(`Submission ${status} successfully`);
         }
 
         setProcessing(false);

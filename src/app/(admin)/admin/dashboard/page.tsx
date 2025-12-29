@@ -8,6 +8,7 @@ import { UserGrowthChart } from '@/features/admin-dashboard/components/analytics
 import { RecentActivity } from '@/features/admin-dashboard/components/recent-activity';
 import { AdminPageHeader } from '@/features/admin-dashboard/components/admin-page-header';
 import { AdminStatsCard } from '@/features/admin-dashboard/components/admin-stats-card';
+import { QuickActions } from '@/features/admin-dashboard/components/quick-actions';
 import {
     Users,
     Target,
@@ -68,6 +69,9 @@ export default async function AdminDashboardPage() {
                     description="Platform scaling"
                 />
             </div>
+
+            {/* Quick Actions */}
+            <QuickActions />
 
             {/* Main Content Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
