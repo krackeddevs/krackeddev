@@ -7,6 +7,7 @@
 
 export {
   DOJO_WELCOME_SYSTEM_PROMPT,
-  DOJO_WELCOME_INITIAL_MESSAGES,
   DOJO_WELCOME_CONFIG,
+  buildDojoWelcomePrompt,
+  type DojoUserContext,
 } from "./dojo-welcome";
