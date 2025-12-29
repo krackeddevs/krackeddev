@@ -1,9 +1,10 @@
 export const runtime = 'edge';
 
 import { createClient } from '@/lib/supabase/server';
-import { BountyTable } from '@/features/admin-dashboard';
-import { redirect } from 'next/navigation';
+import { AdminPageHeader } from '@/features/admin-dashboard/components/admin-page-header';
+import { BountiesTableClient } from '@/features/admin-dashboard/components/bounties-table-client';
 import { Button } from '@/components/ui/button';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 
@@ -27,21 +28,20 @@ export default async function AdminBountiesPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h3 className="text-lg font-medium">Bounties</h3>
-                    <p className="text-sm text-muted-foreground">
-                        Manage bounty listings.
-                    </p>
-                </div>
-                <Button asChild>
-                    <Link href="/admin/bounties/create">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Create Bounty
-                    </Link>
-                </Button>
-            </div>
-            <BountyTable bounties={bounties || []} />
+            <AdminPageHeader
+                title="Bounties"
+                description="Manage bounty listings and rewards"
+                breadcrumbs={[{ label: "Bounties" }]}
+                actions={
+                    <Button asChild>
+                        <Link href="/admin/bounties/create">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Create Bounty
+                        </Link>
+                    </Button>
+                }
+            />
+            <BountiesTableClient bounties={bounties || []} />
         </div>
     );
 }

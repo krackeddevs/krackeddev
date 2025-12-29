@@ -28,6 +28,7 @@ export interface Column<T> {
     sortable?: boolean;
     render?: (item: T) => ReactNode;
     mobileRender?: (item: T) => ReactNode;
+    className?: string;
 }
 
 interface AdminDataTableProps<T> {

@@ -1,7 +1,8 @@
 export const runtime = 'edge';
 
 import { fetchUsers } from '@/features/admin-dashboard/actions';
-import { UserTable } from '@/features/admin-dashboard/components/user-table';
+import { AdminPageHeader } from '@/features/admin-dashboard/components/admin-page-header';
+import { UsersTableClient } from '@/features/admin-dashboard/components/users-table-client';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -27,17 +28,13 @@ export default async function UsersPage() {
     }
 
     return (
-        <div className="container mx-auto p-4 md:p-6 space-y-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold font-mono tracking-tight text-white">
-                    User Management
-                </h1>
-                <p className="text-gray-400">
-                    View and manage user accounts. Banning a user will revoke their access immediately.
-                </p>
-            </div>
-
-            <UserTable users={users || []} />
+        <div className="space-y-6">
+            <AdminPageHeader
+                title="User Management"
+                description="View and manage user accounts. Banning a user will revoke their access immediately."
+                breadcrumbs={[{ label: "Users" }]}
+            />
+            <UsersTableClient users={users || []} />
         </div>
     );
 }
