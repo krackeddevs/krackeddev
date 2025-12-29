@@ -69,8 +69,8 @@ const PageHero = ({
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#15803d1a_1px,transparent_1px),linear-gradient(to_bottom,#15803d1a_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
       {/* Ambient Glows */}
-      <div className="absolute top-[-20%] left-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-green-700/20 rounded-full blur-[80px] md:blur-[120px] pointer-events-none animate-pulse-neon" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-green-700/20 rounded-full blur-[80px] md:blur-[120px] pointer-events-none animate-pulse-neon" />
+      <div className="absolute top-[-20%] left-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary/20 rounded-full blur-[80px] md:blur-[120px] pointer-events-none animate-pulse-neon" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary/20 rounded-full blur-[80px] md:blur-[120px] pointer-events-none animate-pulse-neon" />
 
       {backgroundImage && (
         <div
@@ -92,10 +92,10 @@ const PageHero = ({
                 <motion.span
                   key={index}
                   variants={child}
-                  className="inline-block mr-2 md:mr-4 last:mr-0 text-zinc-50 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                  className="inline-block mr-2 md:mr-4 last:mr-0 text-foreground drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                 >
                   {word.toLowerCase() === "kracked" ? (
-                    <span className="text-green-600 brightness-150 drop-shadow-[0_0_20px_rgba(21,128,61,0.3)]">
+                    <span className="text-primary brightness-150 drop-shadow-[0_0_20px_var(--neon-primary)]">
                       {word}
                     </span>
                   ) : (
@@ -116,12 +116,12 @@ const PageHero = ({
           </motion.div>
 
           <motion.div
-            className="text-lg md:text-2xl text-zinc-50 max-w-[800px] mx-auto font-light tracking-wide min-h-[4rem] md:min-h-[3rem]"
+            className="text-lg md:text-2xl text-foreground max-w-[800px] mx-auto font-light tracking-wide min-h-[4rem] md:min-h-[3rem]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <span className="text-green-700/80 mr-2">&gt;</span>
+            <span className="text-primary/80 mr-2">&gt;</span>
             <TypingAnimation key={subtitle} text={subtitle} />
           </motion.div>
 

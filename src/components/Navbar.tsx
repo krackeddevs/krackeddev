@@ -61,7 +61,7 @@ const Navbar = () => {
       className={cn(
         "relative top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
         isScrolled || isMobileMenuOpen
-          ? "bg-background/80 backdrop-blur-lg border-white/10 shadow-[0_0_20px_rgba(21,128,61,0.1)]"
+          ? "bg-background/80 backdrop-blur-lg border-primary/20 shadow-[0_0_20px_rgba(21,128,61,0.1)]"
           : "bg-transparent",
       )}
     >
@@ -90,7 +90,7 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 asChild
-                className="py-2 h-auto w-auto px-2 sm:px-4 border border-white/50 hover:border-white hover:bg-white/10"
+                className="py-2 h-auto w-auto px-2 sm:px-4 border border-border hover:border-primary hover:bg-primary/10"
               >
                 <Link href="/">
                   <Home className="min-h-4 min-w-4 sm:mr-2" />
@@ -129,7 +129,7 @@ const Navbar = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="py-2 h-auto w-auto px-2 sm:px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+                  className="py-2 h-auto w-auto px-2 sm:px-4 border border-primary/50 hover:border-primary hover:bg-primary/10"
                   aria-label="Profile"
                 >
                   <span className="hidden sm:inline mr-2">Profile</span>
@@ -161,7 +161,7 @@ const Navbar = () => {
             <Button
               variant="ghost"
               onClick={() => openLoginModal()}
-              className="py-2 h-auto w-auto px-2 sm:px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+              className="py-2 h-auto w-auto px-2 sm:px-4 border border-primary/50 hover:border-primary hover:bg-primary/10"
             >
               <span className="hidden sm:inline mr-2">Login</span>
               <User className="min-h-5 min-w-5" />
@@ -189,7 +189,7 @@ const Navbar = () => {
           )
         }
       </div >
-      <div className="border-t border-white/10 bg-white/5 backdrop-blur-md">
+      <div className="border-t border-primary/20 bg-primary/5 backdrop-blur-md">
         <div className="overflow-hidden">
           <div className="marquee text-[10px] sm:text-xs font-mono text-foreground/80">
             <div className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20">
@@ -312,17 +312,17 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-white/10 bg-background/95 backdrop-blur-xl overflow-hidden"
+            className="md:hidden border-t border-primary/20 bg-background/95 backdrop-blur-xl overflow-hidden"
           >
             <div className="container mx-auto px-4 py-6 space-y-4 flex flex-col">
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+              <div className="pt-4 border-t border-primary/20 flex items-center justify-between">
                 {isAuthenticated ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="border border-white/10 hover:border-neon-primary/40 hover:bg-white/5"
+                        className="border border-primary/20 hover:border-neon-primary/40 hover:bg-primary/5"
                         aria-label="Profile"
                       >
                         <User className="h-5 w-5" />
@@ -353,7 +353,7 @@ const Navbar = () => {
                   <Button
                     variant="ghost"
                     onClick={() => openLoginModal()}
-                    className="border border-white/10 hover:border-neon-primary/40 hover:bg-white/5"
+                    className="border border-primary/20 hover:border-neon-primary/40 hover:bg-primary/5"
                   >
                     <User className="h-5 w-5 mr-2" />
                     Login

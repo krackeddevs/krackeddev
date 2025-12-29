@@ -10,6 +10,7 @@ import { SoundToggle } from "@/components/game/SoundToggle";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import QueryProvider from "@/components/providers/query-provider";
 import { ParallaxProvider } from "@/components/providers/parallax-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -86,26 +87,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-mono antialiased flex flex-col"
         )}
       >
-        <ParallaxProvider>
-          <SupabaseProvider>
-            <QueryProvider>
-              <NuqsAdapter>
-                <MusicPlayer startPlaying={true} />
-                <SoundToggle />
-                <Navbar />
-                <div className="flex-grow">{children}</div>
-                <Toaster theme="dark" position="top-center" offset={16} />
-                <LoginModal />
-              </NuqsAdapter>
-            </QueryProvider>
-          </SupabaseProvider>
-        </ParallaxProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+          storageKey="krackeddev-theme"
+        >
+          <ParallaxProvider>
+            <SupabaseProvider>
+              <QueryProvider>
+                <NuqsAdapter>
+                  <MusicPlayer startPlaying={true} />
+                  <SoundToggle />
+                  <Navbar />
+                  <div className="flex-grow">{children}</div>
+                  <Toaster theme="dark" position="top-center" offset={16} />
+                  <LoginModal />
+                </NuqsAdapter>
+              </QueryProvider>
+            </SupabaseProvider>
+          </ParallaxProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

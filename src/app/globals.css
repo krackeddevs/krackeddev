@@ -274,10 +274,8 @@
 /* Global Styles */
 body {
   cursor: default;
-  background-image:
-    linear-gradient(rgba(0, 20, 0, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-    linear-gradient(90deg, rgba(21, 128, 61, 0.03), rgba(21, 128, 61, 0.01), rgba(21, 128, 61, 0.03));
-  background-size: 100% 2px, 3px 100%;
+  background-image: var(--grid-background);
+  background-size: 20px 20px;
   overflow-x: hidden;
   font-family: monospace;
   /* Enforce mono for hacker vibe */
@@ -581,39 +579,69 @@ input:-webkit-autofill:active {
   animation-play-state: paused;
 }
 
+/* Theme-aware Text Shadow */
+.text-neon {
+  text-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary);
+}
+
+/* Light Mode Variables (Placeholder/Defaults) */
+:root {
+  --grid-background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.03));
+}
+
 .dark {
-  --background: oklch(0.145 0 0);
+  /* Standardized Background: Pure Black */
+  --background: #000000;
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+
+  /* Cards: Dark Gray / Glass */
+  --card: #0a0f0a;
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+
+  --popover: #0a0f0a;
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+
+  --primary: #15803d;
+  /* Neon Green */
+  --primary-foreground: #ffffff;
+
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
+
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
+
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
+
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+
+  --border: rgba(21, 128, 61, 0.3);
+  /* Green Glow Border */
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: #15803d;
+
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+
+  --sidebar: #050505;
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: #15803d;
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent: #111827;
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-border: rgba(21, 128, 61, 0.2);
+  --sidebar-ring: #15803d;
+
+  /* Standardized Neon Grid (from Landing Page) */
+  --grid-background: linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
 }
+
 
 @layer base {
   * {

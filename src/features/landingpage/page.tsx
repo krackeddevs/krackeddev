@@ -28,14 +28,7 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
 
     return (
         <main className="min-h-screen w-full bg-black relative flex flex-col">
-            {/* Global Grid Overlay */}
-            <div
-                className="fixed inset-0 pointer-events-none z-10 opacity-[0.15]"
-                style={{
-                    backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.4) 1px, transparent 1px)',
-                    backgroundSize: '20px 20px'
-                }}
-            />
+            {/* Global Grid Overlay Removed (Handled by globals.css) */}
 
             {/* CRT Scanline Overlay - Fixed to viewport */}
             {!showAnimation && (
