@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RpgBox, PixelButton, LoadingSpinner } from './PixelComponents';
-import { generateTrainingTip } from '../../services/mockJobService';
+import { generateTrainingTip } from '../../services/gameJobService';
 import { Scroll, ExternalLink, Target, RefreshCw } from 'lucide-react';
 
 interface Props {

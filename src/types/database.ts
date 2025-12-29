@@ -140,6 +140,67 @@ export interface BountyInquiry {
   createdAt?: string;
 }
 
+export interface Job {
+  id: string;
+  title: string;
+  company: string;
+  description: string;
+  location: string;
+  created_at: string;
+  company_logo?: string | null;
+  is_remote?: boolean;
+  employment_type?: string | null;
+  source_url?: string | null;
+  source_site?: string | null;
+  posted_at?: string | null;
+  scraped_at?: string | null;
+  updated_at?: string | null;
+  is_active?: boolean;
+  salary_min?: number | null;
+  salary_max?: number | null;
+  company_id?: string | null;
+  application_url?: string | null;
+  job_type?: 'internal' | 'external' | null;
+  application_method?: 'email' | 'url' | 'internal_form' | null;
+}
+
+export interface Company {
+  id: string;
+  name: string;
+  slug: string;
+  logo_url: string | null;
+  website_url: string | null;
+  banner_url: string | null;
+  size: string | null;
+  description: string | null;
+  is_verified?: boolean;
+  industry?: string | null;
+  location?: string | null;
+  linkedin_url?: string | null;
+  twitter_url?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CompanyMember {
+  id: string;
+  company_id: string;
+  user_id: string;
+  role: "owner" | "admin" | "member";
+  created_at: string;
+}
+
+export interface JobApplication {
+  id: string;
+  job_id: string;
+  user_id: string;
+  resume_url: string;
+  cover_letter?: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -174,17 +235,81 @@ export interface Database {
         Relationships: [];
       };
       jobs: {
-        Row: any;
-        Insert: any;
-        Update: any;
+        Row: Job;
+        Insert: Partial<Job>;
+        Update: Partial<Job>;
+        Relationships: [
+          {
+            foreignKeyName: "jobs_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      companies: {
+        Row: Company;
+        Insert: Partial<Company>;
+        Update: Partial<Company>;
         Relationships: [];
-      }
+      };
+      company_members: {
+        Row: CompanyMember;
+        Insert: Partial<CompanyMember>;
+        Update: Partial<CompanyMember>;
+        Relationships: [
+          {
+            foreignKeyName: "company_members_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: false;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "company_members_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      job_applications: {
+        Row: JobApplication;
+        Insert: Partial<JobApplication>;
+        Update: Partial<JobApplication>;
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_job_id_fkey";
+            columns: ["job_id"];
+            isOneToOne: false;
+            referencedRelation: "jobs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "job_applications_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      register_new_company: {
+        Args: {
+          p_name: string;
+          p_slug: string;
+          p_size: string;
+          p_website_url?: string | null;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       user_role: UserRole;

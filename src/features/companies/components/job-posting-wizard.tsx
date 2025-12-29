@@ -39,16 +39,22 @@ export function JobPostingWizard({ initialData, isEditing = false, jobId }: JobP
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
+    const defaultValues: CreateJobInput = {
+        title: initialData?.title || "",
+        description: initialData?.description || "",
+        location: initialData?.location || "",
+        employment_type: initialData?.employment_type || "Full-time",
+        job_type: (initialData?.job_type as "internal" | "external") || "external",
+        is_remote: initialData?.is_remote ?? false,
+        salary_min: initialData?.salary_min || undefined,
+        salary_max: initialData?.salary_max || undefined,
+        application_method: (initialData?.application_method as "url" | "email" | "internal_form") || "internal_form",
+        application_url: initialData?.application_url || "",
+    };
+
     const form = useForm<CreateJobInput>({
-        resolver: zodResolver(createJobSchema),
-        defaultValues: initialData || {
-            title: "",
-            description: "",
-            location: "",
-            employment_type: "Full-time",
-            is_remote: false,
-            application_method: "internal",
-        },
+        resolver: zodResolver(createJobSchema) as any,
+        defaultValues,
     });
 
     const applicationMethod = form.watch("application_method");
@@ -81,7 +87,7 @@ export function JobPostingWizard({ initialData, isEditing = false, jobId }: JobP
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-6">
 
                         <FormField
                             control={form.control}

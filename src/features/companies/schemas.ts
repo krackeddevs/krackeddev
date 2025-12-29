@@ -27,7 +27,7 @@ export const createJobSchema = z.object({
     title: z.string().min(3, "Title must be at least 3 characters"),
     description: z.string().min(10, "Description must be at least 10 characters"),
     location: z.string().min(2, "Location is required"),
-    job_type: z.enum(["internal", "external"]).default("external"), // For now defaulting to external as per schema, or maybe we want to support both?
+    job_type: z.enum(["internal", "external"]),
     // Actually, Native posting implies it's managed by us, but the APPLICATION method might vary.
     // The schema in 022_companies_schema.sql has job_type check (internal, external).
     // Let's assume Native Posting = Internal for now? Or maybe 'external' just means "External Company posted it"?
@@ -36,9 +36,9 @@ export const createJobSchema = z.object({
     employment_type: z.string().min(1, "Employment type is required"), // Full-time, etc.
     salary_min: z.coerce.number().optional(),
     salary_max: z.coerce.number().optional(),
-    application_method: z.enum(["url", "email", "internal_form"]).default("internal_form"),
+    application_method: z.enum(["url", "email", "internal_form"]),
     application_url: z.string().url("Invalid URL").optional().or(z.literal("")),
-    is_remote: z.boolean().default(false),
+    is_remote: z.boolean(),
 });
 
 export type CreateJobInput = z.infer<typeof createJobSchema>;

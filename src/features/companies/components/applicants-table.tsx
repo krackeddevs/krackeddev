@@ -72,59 +72,108 @@ export function ApplicantsTable({ companyId }: ApplicantsTableProps) {
     if (isLoading) return <Loader2 className="w-6 h-6 animate-spin mx-auto mt-10" />;
 
     return (
-        <div className="border border-white/10 rounded-lg overflow-hidden bg-black/40">
-            <Table>
-                <TableHeader className="bg-white/5">
-                    <TableRow className="hover:bg-transparent border-white/10">
-                        <TableHead className="text-gray-400">Candidate</TableHead>
-                        <TableHead className="text-gray-400">Applied For</TableHead>
-                        <TableHead className="text-gray-400">Date</TableHead>
-                        <TableHead className="text-gray-400">Resume</TableHead>
-                        <TableHead className="text-gray-400">Status</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {applications.map((app) => (
-                        <TableRow key={app.id} className="hover:bg-white/5 border-white/5">
-                            <TableCell className="font-medium text-white">
-                                <div>{app.candidate.fullName || app.candidate.username}</div>
-                                <div className="text-xs text-gray-500">{app.candidate.email}</div>
-                            </TableCell>
-                            <TableCell className="text-gray-300">{app.job.title}</TableCell>
-                            <TableCell className="text-gray-400">
+        <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-white/10 rounded-lg overflow-hidden bg-black/40">
+                <Table>
+                    <TableHeader className="bg-white/5">
+                        <TableRow className="hover:bg-transparent border-white/10">
+                            <TableHead className="text-gray-400">Candidate</TableHead>
+                            <TableHead className="text-gray-400">Applied For</TableHead>
+                            <TableHead className="text-gray-400">Date</TableHead>
+                            <TableHead className="text-gray-400">Resume</TableHead>
+                            <TableHead className="text-gray-400">Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {applications.map((app) => (
+                            <TableRow key={app.id} className="hover:bg-white/5 border-white/5">
+                                <TableCell className="font-medium text-white">
+                                    <div>{app.candidate.fullName || app.candidate.username}</div>
+                                    <div className="text-xs text-gray-500">{app.candidate.email}</div>
+                                </TableCell>
+                                <TableCell className="text-gray-300">{app.job.title}</TableCell>
+                                <TableCell className="text-gray-400">
+                                    {format(new Date(app.createdAt), "MMM d")}
+                                </TableCell>
+                                <TableCell>
+                                    <Button variant="ghost" size="sm" onClick={() => handleDownloadResume(app.resumeUrl)}>
+                                        <Download className="w-4 h-4 mr-2" />
+                                        PDF
+                                    </Button>
+                                </TableCell>
+                                <TableCell>
+                                    <Select defaultValue={app.status} onValueChange={(val) => handleStatusChange(app.id, val)}>
+                                        <SelectTrigger className="w-[130px] h-8 bg-black/50 border-white/10">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="new">New</SelectItem>
+                                            <SelectItem value="reviewing">Reviewing</SelectItem>
+                                            <SelectItem value="shortlisted">Shortlisted</SelectItem>
+                                            <SelectItem value="rejected">Rejected</SelectItem>
+                                            <SelectItem value="hired">Hired</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                        {applications.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                                    No applications yet.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-4">
+                {applications.map((app) => (
+                    <div key={app.id} className="bg-black/40 border border-white/10 rounded-lg p-4 space-y-4">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <div className="font-bold text-white text-lg">{app.candidate.fullName || app.candidate.username}</div>
+                                <div className="text-sm text-gray-500">{app.candidate.email}</div>
+                            </div>
+                            <div className="text-xs text-gray-400 bg-white/5 px-2 py-1 rounded">
                                 {format(new Date(app.createdAt), "MMM d")}
-                            </TableCell>
-                            <TableCell>
-                                <Button variant="ghost" size="sm" onClick={() => handleDownloadResume(app.resumeUrl)}>
-                                    <Download className="w-4 h-4 mr-2" />
-                                    PDF
-                                </Button>
-                            </TableCell>
-                            <TableCell>
-                                <Select defaultValue={app.status} onValueChange={(val) => handleStatusChange(app.id, val)}>
-                                    <SelectTrigger className="w-[130px] h-8 bg-black/50 border-white/10">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="new">New</SelectItem>
-                                        <SelectItem value="reviewing">Reviewing</SelectItem>
-                                        <SelectItem value="shortlisted">Shortlisted</SelectItem>
-                                        <SelectItem value="rejected">Rejected</SelectItem>
-                                        <SelectItem value="hired">Hired</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                    {applications.length === 0 && (
-                        <TableRow>
-                            <TableCell colSpan={5} className="text-center py-8 text-gray-500">
-                                No applications yet.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <div className="text-xs text-gray-500 uppercase tracking-wider">Applied For</div>
+                            <div className="text-sm text-white">{app.job.title}</div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 pt-2">
+                            <Button variant="outline" size="sm" className="w-full border-white/10" onClick={() => handleDownloadResume(app.resumeUrl)}>
+                                <Download className="w-4 h-4 mr-2" />
+                                Resume
+                            </Button>
+                            <Select defaultValue={app.status} onValueChange={(val) => handleStatusChange(app.id, val)}>
+                                <SelectTrigger className="w-full h-9 bg-black/50 border-white/10">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="new">New</SelectItem>
+                                    <SelectItem value="reviewing">Reviewing</SelectItem>
+                                    <SelectItem value="shortlisted">Shortlisted</SelectItem>
+                                    <SelectItem value="rejected">Rejected</SelectItem>
+                                    <SelectItem value="hired">Hired</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                ))}
+                {applications.length === 0 && (
+                    <div className="text-center py-8 text-gray-500 border border-white/10 rounded-lg bg-black/40">
+                        No applications yet.
+                    </div>
+                )}
+            </div>
+        </>
     );
 }

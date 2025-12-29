@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getUserCompany } from "@/features/companies/actions";
+import { getProfile } from "@/features/profiles/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -17,13 +18,16 @@ export default async function DashboardPage() {
     }
 
     const company = await getUserCompany();
+    const { data: profile } = await getProfile();
+
+    const displayName = profile?.full_name || profile?.username || user.email?.split("@")[0] || "User";
 
     return (
         <div className="space-y-8">
             {/* Welcome Section */}
             <div>
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                    Welcome back, <span className="text-neon-cyan">{user.email?.split("@")[0]}</span>
+                    Welcome back, <span className="text-neon-cyan">{displayName}</span>
                 </h1>
                 <p className="text-gray-400 mt-2">
                     Your command center for managing applications and profile.

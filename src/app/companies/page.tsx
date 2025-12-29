@@ -10,7 +10,9 @@ export const metadata: Metadata = {
     description: "Explore companies hiring on KrackedDev and discover job opportunities",
 };
 
-async function getCompanies() {
+import type { Company } from "@/types/database";
+
+async function getCompanies(): Promise<Company[]> {
     const supabase = await createClient();
 
     const { data: companies } = await supabase

@@ -71,6 +71,11 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                     const config = isWon ? wonConfig : statusConfig[submission.status];
                     const StatusIcon = config.icon;
 
+                    const date = new Date(submission.createdAt);
+                    const day = date.getDate();
+                    const month = date.toLocaleString('default', { month: 'short' });
+                    const year = date.getFullYear();
+
                     return (
                         <Link
                             key={submission.id}
@@ -78,45 +83,45 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                             className="block group"
                         >
                             <div className={cn(
-                                "flex items-center justify-between gap-4 p-3 bg-white/5 border border-white/10 hover:border-neon-primary/50 transition-colors",
+                                "flex items-start gap-3 p-3 bg-white/5 border border-white/10 hover:border-neon-primary/50 transition-colors rounded-lg overflow-hidden",
                                 isWon && "border-amber-500/30 bg-amber-900/10" // Highlight won submissions
                             )}>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                        {isWon && <Trophy className="w-4 h-4 text-amber-400 flex-shrink-0" />}
+                                {/* Date Block */}
+                                <div className="flex flex-col items-start leading-none font-mono text-muted-foreground w-[40px] flex-shrink-0">
+                                    <span className="text-xl font-bold text-white mb-1">{day}</span>
+                                    <span className="text-xs uppercase">{month}</span>
+                                    <span className="text-xs">{year}</span>
+                                </div>
+
+                                <div className="flex-1 min-w-0 flex flex-col gap-2">
+                                    <div className="flex items-center justify-between gap-2">
                                         <h4 className={cn(
-                                            "font-mono text-sm truncate group-hover:text-neon-primary transition-colors",
+                                            "font-mono text-sm truncate group-hover:text-neon-primary transition-colors pr-2 flex-1 min-w-0",
                                             isWon ? "text-amber-100" : "text-white"
                                         )}>
                                             {submission.bountyTitle}
                                         </h4>
+                                        <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-neon-primary transition-colors flex-shrink-0" />
                                     </div>
-                                    <p className="text-xs text-muted-foreground font-mono mt-1">
-                                        {new Date(submission.createdAt).toLocaleDateString("en-MY", {
-                                            year: "numeric",
-                                            month: "short",
-                                            day: "numeric",
-                                        })}
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <span className={cn(
-                                        "font-mono text-sm font-bold",
-                                        isWon ? "text-amber-400" : "text-neon-cyan"
-                                    )}>
-                                        RM{submission.bountyReward}
-                                    </span>
-                                    <Badge
-                                        variant="outline"
-                                        className={cn(
-                                            "font-mono text-xs flex items-center gap-1 border",
+
+                                    <div className="flex items-center flex-wrap gap-2">
+                                        <span className={cn(
+                                            "font-mono text-lg font-bold leading-none",
+                                            isWon ? "text-amber-400" : "text-green-500"
+                                        )}>
+                                            RM{submission.bountyReward}
+                                        </span>
+
+                                        <div className={cn(
+                                            "flex items-center gap-1.5 px-2 py-0.5 border backdrop-blur-sm rounded leading-none",
                                             config.color
-                                        )}
-                                    >
-                                        <StatusIcon className="w-3 h-3" />
-                                        {config.label}
-                                    </Badge>
-                                    <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-neon-primary transition-colors" />
+                                        )}>
+                                            <StatusIcon className="w-3 h-3" />
+                                            <span className="text-[10px] font-mono font-bold uppercase tracking-wide translate-y-[1px]">
+                                                {config.label}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </Link>
@@ -126,4 +131,3 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
         </Card>
     );
 }
-

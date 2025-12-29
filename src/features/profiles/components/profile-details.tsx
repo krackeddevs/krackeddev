@@ -42,7 +42,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
     const hasSocialLinks = profile.x_url || profile.linkedin_url || profile.website_url;
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-8 animate-in fade-in duration-500">
+        <div className="w-full space-y-8 animate-in fade-in duration-500">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
                 <div className="space-y-1">

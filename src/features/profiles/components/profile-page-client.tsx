@@ -18,7 +18,8 @@ export function ProfilePageClient({ initialData, githubStats, bountyStats, userS
     const [isEditing, setIsEditing] = useState(false);
 
     return (
-        <div className="container max-w-4xl mx-auto">
+        <div className="space-y-6">
+
             {isEditing ? (
                 <EditProfileForm
                     initialData={initialData}

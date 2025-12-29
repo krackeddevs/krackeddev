@@ -6,7 +6,7 @@ import React, {
     useEffect,
 } from 'react';
 import { Quest, QuestDifficulty, JobType } from '../../types/jobs';
-import { generateQuests } from '../../services/mockJobService';
+import { generateQuests } from '../../services/gameJobService';
 import { RpgBox, PixelButton, LoadingSpinner } from './PixelComponents';
 
 interface Props {

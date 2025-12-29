@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { companyRegistrationSchema, companyUpdateSchema, CompanyRegistrationInput, CompanyUpdateInput, CreateJobInput } from "./schemas";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Company, Job } from "@/types/database";
 
 function slugify(text: string) {
     return text
@@ -44,7 +45,7 @@ export async function registerCompany(data: CompanyRegistrationInput) {
     }
 
     // Use RPC for atomic creation to bypass RLS complexity
-    const { data: companyId, error: rpcError } = await supabase.rpc('register_new_company', {
+    const { data: companyId, error: rpcError } = await (supabase.rpc as any)('register_new_company', {
         p_name: data.name,
         p_slug: slug,
         p_size: data.size,
@@ -74,8 +75,7 @@ export async function updateCompany(companyId: string, data: CompanyUpdateInput)
         return { error: "Invalid data" };
     }
 
-    const { error } = await supabase
-        .from("companies")
+    const { error } = await (supabase.from("companies") as any)
         .update({
             name: data.name,
             description: data.description,
@@ -97,7 +97,9 @@ export async function updateCompany(companyId: string, data: CompanyUpdateInput)
     return { success: true };
 }
 
-export async function getUserCompany() {
+import { cache } from "react";
+
+export const getUserCompany = cache(async (): Promise<Company | null> => {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -109,19 +111,21 @@ export async function getUserCompany() {
     console.log("[getUserCompany] Fetching for user:", user.id);
 
     // Get company_member record
-    const { data: memberData, error: memberError } = await supabase
-        .from("company_members")
+    const { data: memberData, error: memberError } = await (supabase.from("company_members") as any)
         .select("company_id")
         .eq("user_id", user.id)
         .eq("role", "owner")
         .limit(1)
-        .single();
+        .maybeSingle();
 
     console.log("[getUserCompany] Member data:", memberData);
-    console.log("[getUserCompany] Member error:", memberError);
 
-    if (memberError || !memberData) {
+    if (memberError) {
         console.error("getUserCompany memberError:", JSON.stringify(memberError, null, 2));
+        return null;
+    }
+
+    if (!memberData) {
         return null;
     }
 
@@ -141,7 +145,7 @@ export async function getUserCompany() {
     }
 
     return companyData;
-}
+});
 
 export async function createJob(data: CreateJobInput) {
     const supabase = await createClient();
@@ -157,8 +161,8 @@ export async function createJob(data: CreateJobInput) {
         return { error: "You do not have a company profile" };
     }
 
-    const { error } = await supabase
-        .from("jobs")
+    const { error } = await (supabase
+        .from("jobs") as any)
         .insert({
             id: crypto.randomUUID(),
             title: data.title,
@@ -216,7 +220,7 @@ export async function getCompanyJobs() {
     return { data };
 }
 
-export async function getJobById(jobId: string) {
+export async function getJobById(jobId: string): Promise<{ data: Job | null; error?: string }> {
     const supabase = await createClient();
     const company = await getUserCompany();
 
@@ -227,8 +231,8 @@ export async function getJobById(jobId: string) {
         return { data: null, error: "No company found" };
     }
 
-    const { data, error } = await supabase
-        .from("jobs")
+    const { data, error } = await (supabase
+        .from("jobs") as any)
         .select("*")
         .eq("id", jobId)
         .eq("company_id", company.id)
@@ -241,7 +245,7 @@ export async function getJobById(jobId: string) {
         return { data: null, error: error.message };
     }
 
-    return { data };
+    return { data: data as Job };
 }
 
 export async function updateJob(jobId: string, jobData: CreateJobInput) {
@@ -252,8 +256,8 @@ export async function updateJob(jobId: string, jobData: CreateJobInput) {
         return { error: "No company found" };
     }
 
-    const { error } = await supabase
-        .from("jobs")
+    const { error } = await (supabase
+        .from("jobs") as any)
         .update({
             title: jobData.title,
             description: jobData.description,

@@ -16,12 +16,15 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
+import { ProfileData } from "@/features/profiles/actions";
+
 interface SidebarProps {
     user?: any;
     company?: any;
+    profile?: ProfileData;
 }
 
-export function DashboardSidebar({ user, company }: SidebarProps) {
+export function DashboardSidebar({ user, company, profile }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const supabase = createClient();
@@ -71,6 +74,10 @@ export function DashboardSidebar({ user, company }: SidebarProps) {
             icon: User, // Or a different icon
         },
     ];
+
+    // Determine display name and avatar text
+    const displayName = profile?.full_name || profile?.username || user?.email || "User";
+    const avatarText = (profile?.full_name?.[0] || profile?.username?.[0] || user?.email?.[0] || "U").toUpperCase();
 
     return (
         <div className="w-64 h-screen flex-shrink-0 border-r border-white/10 bg-black/40 backdrop-blur-xl fixed left-0 top-0 z-40 hidden md:flex flex-col">
@@ -127,7 +134,7 @@ export function DashboardSidebar({ user, company }: SidebarProps) {
                 {company && (
                     <div>
                         <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                            Employer
+                            Company
                         </h3>
                         <div className="space-y-1">
                             {companyItems.map((item) => {
@@ -165,14 +172,18 @@ export function DashboardSidebar({ user, company }: SidebarProps) {
             <div className="p-4 border-t border-white/10 bg-black/20">
                 <div className="flex items-center gap-3 mb-4 px-2">
                     <div className="w-8 h-8 rounded bg-gradient-to-br from-gray-800 to-gray-900 border border-white/10 flex items-center justify-center text-xs font-mono text-gray-400">
-                        {user?.email?.[0].toUpperCase()}
+                        {profile?.avatar_url ? (
+                            <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover rounded" />
+                        ) : (
+                            avatarText
+                        )}
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white truncate">
-                            {user?.email}
+                            {displayName}
                         </p>
                         <p className="text-xs text-gray-500 truncate">
-                            Level 1
+                            Level {profile?.level || 1}
                         </p>
                     </div>
                 </div>

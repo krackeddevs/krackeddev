@@ -11,7 +11,9 @@ interface CompanyPageProps {
     }>;
 }
 
-async function getCompany(slug: string) {
+import type { Company } from "@/types/database";
+
+async function getCompany(slug: string): Promise<Company | null> {
     const supabase = await createClient();
 
     const { data: company, error } = await supabase
