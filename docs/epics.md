@@ -70,6 +70,7 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 | **EPIC-5** | Santan Island Game Integration | FR17, FR18 | NFR2 |
 | **EPIC-6** | Chat & Community Platform | FR-CHAT-01, FR-QA-01, FR-QA-02, FR-QA-03, FR-QA-04 | NFR1, NFR5 |
 | **EPIC-7** | Profile Enhancement & Landing Page Polish | FR5, FR7, FR-LAND-01 | NFR1 |
+| **EPIC-10** | Multi-Theme System | - | NFR1 (Accessibility) |
 
 ## Epic List
 
@@ -589,3 +590,67 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 - [ ] Map panning/dragging is disabled.
 - [ ] State hover tooltips still work correctly.
 - [ ] Design inspired by mypeta.ai (clean, static, minimal).
+
+### EPIC-10: Multi-Theme System
+
+**Goal:** Implement a comprehensive theming system supporting Dark, Light, and Black & White modes with user preference persistence.
+
+- **Scope:** Theme Provider Setup, CSS Variable Refactoring, Theme-Specific Optimizations, User Preference Management.
+- **Value:** Improves accessibility, user choice, and visual comfort for different viewing preferences and environments.
+- **Complexity:** Medium-High (Extensive refactoring of hardcoded colors, theme-aware component updates).
+
+#### STORY-10.1: Theme Infrastructure & Provider Setup
+
+**As a** Developer
+**I want to** establish a robust theme infrastructure with provider setup
+**So that** the application can support multiple theme modes with user preference persistence.
+
+**Acceptance Criteria:**
+
+- [ ] `next-themes` package installed and configured.
+- [ ] `ThemeProvider` component created and integrated into root layout.
+- [ ] CSS variables defined for all three themes (dark, light, blackwhite).
+- [ ] Theme toggle UI component created with dropdown menu.
+- [ ] Theme preference persists across sessions via localStorage.
+- [ ] Theme changes apply immediately without page reload.
+- [ ] No hydration mismatches or console errors.
+- [ ] Default theme is "dark" matching current design.
+
+#### STORY-10.2: Refactor Hardcoded Colors to CSS Variables
+
+**As a** Developer
+**I want to** replace all hardcoded color values with CSS variables
+**So that** theme switching works consistently across all components.
+
+**Acceptance Criteria:**
+
+- [ ] All `bg-green-*` classes replaced with theme-aware alternatives.
+- [ ] All `text-green-*` classes replaced with theme-aware alternatives.
+- [ ] All `border-green-*` classes replaced with theme-aware alternatives.
+- [ ] Landing page components fully theme-aware.
+- [ ] Admin dashboard components fully theme-aware.
+- [ ] Bounty board components fully theme-aware.
+- [ ] Profile components fully theme-aware.
+- [ ] Toast notifications use theme-aware colors.
+- [ ] Visual hierarchy maintained in all three themes.
+- [ ] No visual regressions in any theme mode.
+
+#### STORY-10.3: Theme-Specific Optimizations & Polish
+
+**As a** User
+**I want** theme-specific visual optimizations
+**So that** each theme feels intentionally designed and provides optimal viewing experience.
+
+**Acceptance Criteria:**
+
+- [ ] Theme-specific animation variants created (glow effects).
+- [ ] Scanline effects optimized for each theme.
+- [ ] Light mode has toned-down neon effects.
+- [ ] Black & White mode uses high-contrast grayscale.
+- [ ] Theme-aware image filters implemented.
+- [ ] Smooth theme transition animations added.
+- [ ] Theme preview component created for settings.
+- [ ] Loading states adapt to current theme.
+- [ ] All themes pass WCAG AA contrast requirements.
+- [ ] User testing confirms each theme is visually comfortable.
+
