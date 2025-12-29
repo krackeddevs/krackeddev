@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { RetroContainer } from "./retro-container";
 
 interface MobileWarningModalProps {
@@ -61,6 +62,15 @@ export function MobileWarningModal({ isOpen }: MobileWarningModalProps) {
             >
               Switch to desktop to continue your journey.
             </p>
+
+            {/* Back to Home Button */}
+            <Link
+              href="/"
+              className="mt-2 px-6 py-3 bg-gray-800 text-white text-xs uppercase tracking-wider hover:bg-gray-700 transition-colors border-2 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
+              style={{ fontFamily: "'Press Start 2P', monospace" }}
+            >
+              Back to Home
+            </Link>
           </div>
         </RetroContainer>
       </div>
