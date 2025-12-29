@@ -1,52 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import { AIDialogueBox } from "./ai-dialogue-box";
+import { ChallengeTask } from "./challenge-task";
+import { ChallengeProgressBar } from "./challenge-progress-bar";
+import { LevelComplete } from "./level-complete";
 import { useDojoDialogue } from "../hooks/use-dojo-dialogue";
+import { useLevelProgress } from "../hooks/use-level-progress";
 import { DOJO_WELCOME_CONFIG } from "@/lib/ai/prompts";
+import { level0Setup } from "@/lib/game/dojo/levels/level-0-setup";
+
+type SceneState = "welcome" | "dialogue" | "level" | "complete";
 
 interface DojoSceneProps {
   onComplete?: () => void;
 }
 
 export function DojoScene({ onComplete }: DojoSceneProps) {
-  const [gameStarted, setGameStarted] = useState(false);
+  const [sceneState, setSceneState] = useState<SceneState>("welcome");
 
+  // AI dialogue hook (for intro)
   const {
-    phase,
+    phase: dialoguePhase,
     currentText,
     error,
     isStreaming,
     isLastMessage,
     hasMoreMessages,
-    start,
-    advance,
-    reset,
+    start: startDialogue,
+    advance: advanceDialogue,
+    reset: resetDialogue,
   } = useDojoDialogue({
-    onComplete,
+    onComplete: () => {
+      // After dialogue intro, transition to level challenges
+      setSceneState("level");
+    },
     maxMessages: DOJO_WELCOME_CONFIG.messageCount,
   });
 
-  const handleStart = () => {
-    setGameStarted(true);
-    start();
-  };
+  // Level progress hook
+  const {
+    currentChallenge,
+    currentChallengeIndex,
+    totalChallenges,
+    levelXpEarned,
+    isLevelComplete,
+    completeChallenge,
+    resetLevel,
+  } = useLevelProgress({ levelId: level0Setup.id });
 
-  const handleAdvance = () => {
-    advance();
-  };
+  // Handle START button click
+  const handleStart = useCallback(() => {
+    setSceneState("dialogue");
+    startDialogue();
+  }, [startDialogue]);
 
-  const handleRestart = () => {
-    setGameStarted(false);
-    reset();
-  };
+  // Handle dialogue advance
+  const handleAdvanceDialogue = useCallback(() => {
+    advanceDialogue();
+  }, [advanceDialogue]);
+
+  // Handle challenge completion
+  const handleChallengeComplete = useCallback(
+    (challengeId: string, xp: number) => {
+      completeChallenge(challengeId, xp);
+
+      // Check if this was the last challenge
+      if (currentChallengeIndex + 1 >= totalChallenges) {
+        setSceneState("complete");
+        onComplete?.();
+      }
+    },
+    [completeChallenge, currentChallengeIndex, totalChallenges, onComplete]
+  );
+
+  // Handle level replay
+  const handleReplay = useCallback(() => {
+    resetLevel();
+    resetDialogue();
+    setSceneState("welcome");
+  }, [resetLevel, resetDialogue]);
 
   // Welcome Screen
-  if (!gameStarted) {
+  if (sceneState === "welcome") {
     return (
       <div className="relative w-full h-full min-h-screen bg-black overflow-hidden flex items-center justify-center">
-        <div className="relative w-full max-w-5xl aspect-video">
+        <div className="relative w-full max-w-7xl aspect-video">
           <Image
             src="/map/dojo-start.png"
             alt="Dojo Welcome"
@@ -73,7 +113,7 @@ export function DojoScene({ onComplete }: DojoSceneProps) {
               className="px-8 py-4 bg-gray-800 text-white text-sm border-4 border-white hover:bg-gray-700 hover:scale-105 transition-all duration-200 shadow-lg"
               style={{ fontFamily: "'Press Start 2P', monospace" }}
             >
-              START
+              Start New Game
             </button>
           </div>
         </div>
@@ -81,9 +121,38 @@ export function DojoScene({ onComplete }: DojoSceneProps) {
     );
   }
 
+  // Level Complete Screen
+  if (sceneState === "complete" || isLevelComplete) {
+    return (
+      <div className="relative w-full h-full min-h-screen bg-black overflow-hidden flex items-center justify-center">
+        <div className="relative w-full max-w-7xl aspect-video">
+          <Image
+            src="/map/dojo.png"
+            alt="Dojo"
+            fill
+            priority
+            className="object-contain"
+            style={{
+              imageRendering: "pixelated",
+            }}
+          />
+
+          <LevelComplete
+            levelOrder={level0Setup.order}
+            levelTitle={level0Setup.title}
+            xpEarned={levelXpEarned}
+            onReplay={handleReplay}
+            hasNextLevel={false}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Main game scene (dialogue or level)
   return (
     <div className="relative w-full h-full min-h-screen bg-black overflow-hidden flex items-center justify-center">
-      <div className="relative w-full max-w-5xl aspect-video">
+      <div className="relative w-full max-w-7xl aspect-video">
         <Image
           src="/map/dojo.png"
           alt="Dojo"
@@ -103,46 +172,60 @@ export function DojoScene({ onComplete }: DojoSceneProps) {
           }}
         />
 
-        {/* Loading state - only show when streaming and no text yet */}
-        {phase === "streaming" && !currentText && (
-          <div className="absolute bottom-4 left-0 right-0 z-50 flex justify-center px-4">
-            <div className="relative w-full max-w-2xl">
-              <div className="bg-gray-800 p-1.5 rounded-md">
-                <div className="bg-white p-1 rounded-md">
-                  <div className="bg-white border-4 border-gray-800 rounded-md">
-                    <div className="absolute -top-5 left-8">
-                      <div className="bg-gray-800 p-0.5 rounded-md">
-                        <div className="bg-white px-5 py-2 rounded-md">
-                          <span
-                            className="text-gray-800 text-base font-bold uppercase tracking-wider"
-                            style={{
-                              fontFamily: "'Press Start 2P', monospace",
-                            }}
-                          >
-                            {DOJO_WELCOME_CONFIG.speaker}
-                          </span>
+        {/* Progress bar - only show during level */}
+        {sceneState === "level" && currentChallenge && (
+          <ChallengeProgressBar
+            levelOrder={level0Setup.order}
+            levelTitle={level0Setup.title}
+            currentIndex={currentChallengeIndex}
+            totalChallenges={totalChallenges}
+            xpEarned={levelXpEarned}
+            totalXp={level0Setup.totalXp}
+          />
+        )}
+
+        {/* Dialogue Phase - Loading state */}
+        {sceneState === "dialogue" &&
+          dialoguePhase === "streaming" &&
+          !currentText && (
+            <div className="absolute bottom-4 left-0 right-0 z-50 flex justify-center px-4">
+              <div className="relative w-full max-w-4xl">
+                <div className="bg-gray-800 p-1.5 rounded-md">
+                  <div className="bg-white p-1 rounded-md">
+                    <div className="bg-white border-4 border-gray-800 rounded-md">
+                      <div className="absolute -top-5 left-8">
+                        <div className="bg-gray-800 p-0.5 rounded-md">
+                          <div className="bg-white px-5 py-2 rounded-md">
+                            <span
+                              className="text-gray-800 text-base font-bold uppercase tracking-wider"
+                              style={{
+                                fontFamily: "'Press Start 2P', monospace",
+                              }}
+                            >
+                              {DOJO_WELCOME_CONFIG.speaker}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="px-6 py-6 min-h-28 flex items-center justify-center">
-                      <p
-                        className="text-gray-800 text-sm animate-pulse"
-                        style={{ fontFamily: "'Press Start 2P', monospace" }}
-                      >
-                        ...
-                      </p>
+                      <div className="px-6 py-6 min-h-28 flex items-center justify-center">
+                        <p
+                          className="text-gray-800 text-sm animate-pulse"
+                          style={{ fontFamily: "'Press Start 2P', monospace" }}
+                        >
+                          ...
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Error state */}
         {error && (
           <div className="absolute bottom-4 left-0 right-0 z-50 flex justify-center px-4">
-            <div className="bg-red-900/90 text-white p-4 rounded-md max-w-2xl">
+            <div className="bg-red-900/90 text-white p-4 rounded-md max-w-4xl">
               <p
                 className="text-sm mb-2"
                 style={{ fontFamily: "'Press Start 2P', monospace" }}
@@ -150,7 +233,7 @@ export function DojoScene({ onComplete }: DojoSceneProps) {
                 Error: {error}
               </p>
               <button
-                onClick={handleRestart}
+                onClick={handleReplay}
                 className="text-xs underline hover:no-underline"
                 style={{ fontFamily: "'Press Start 2P', monospace" }}
               >
@@ -160,38 +243,29 @@ export function DojoScene({ onComplete }: DojoSceneProps) {
           </div>
         )}
 
-        {/* AI Dialogue - show when we have text (streaming or ready) */}
-        {currentText && phase !== "complete" && !error && (
-          <AIDialogueBox
-            text={currentText}
+        {/* AI Dialogue - intro phase */}
+        {sceneState === "dialogue" &&
+          currentText &&
+          dialoguePhase !== "complete" &&
+          !error && (
+            <AIDialogueBox
+              text={currentText}
+              speaker={DOJO_WELCOME_CONFIG.speaker}
+              isStreaming={isStreaming}
+              isLastMessage={isLastMessage || !hasMoreMessages}
+              onAdvance={handleAdvanceDialogue}
+            />
+          )}
+
+        {/* Level challenges */}
+        {sceneState === "level" && currentChallenge && (
+          <ChallengeTask
+            challenge={currentChallenge}
             speaker={DOJO_WELCOME_CONFIG.speaker}
-            isStreaming={isStreaming}
-            isLastMessage={isLastMessage || !hasMoreMessages}
-            onAdvance={handleAdvance}
+            onComplete={handleChallengeComplete}
           />
         )}
       </div>
-
-      {/* Completion overlay */}
-      {phase === "complete" && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-          <div className="text-center p-8">
-            <p
-              className="text-white text-sm mb-6"
-              style={{ fontFamily: "'Press Start 2P', monospace" }}
-            >
-              Training complete.
-            </p>
-            <button
-              onClick={handleRestart}
-              className="px-6 py-3 bg-gray-800 text-white text-xs border-2 border-white hover:bg-gray-700 transition-colors"
-              style={{ fontFamily: "'Press Start 2P', monospace" }}
-            >
-              Train Again
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

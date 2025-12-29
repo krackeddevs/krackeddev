@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { RetroContainer } from "./retro-container";
 
 interface AIDialogueBoxProps {
   text: string;
@@ -69,40 +70,22 @@ export function AIDialogueBox({
       className="absolute bottom-4 left-0 right-0 z-50 flex justify-center px-4 cursor-pointer select-none"
       onClick={handleAdvance}
     >
-      <div className="relative w-full max-w-2xl">
-        <div className="bg-gray-800 p-1.5 rounded-md">
-          <div className="bg-white p-1 rounded-md">
-            <div className="bg-white border-4 border-gray-800 rounded-md">
-              {speaker && (
-                <div className="absolute -top-5 left-8">
-                  <div className="bg-gray-800 p-0.5 rounded-md">
-                    <div className="bg-white px-5 py-2 rounded-md">
-                      <span
-                        className="text-gray-800 text-base font-bold uppercase tracking-wider"
-                        style={{ fontFamily: "'Press Start 2P', monospace" }}
-                      >
-                        {speaker}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
+      <div className="relative w-full max-w-4xl">
+        <RetroContainer
+          speaker={speaker}
+          contentClassName="min-h-28 flex items-start"
+        >
+          <p
+            className="text-gray-800 text-base leading-relaxed tracking-wide whitespace-pre-wrap"
+            style={{ fontFamily: "'Press Start 2P', monospace" }}
+          >
+            {text}
 
-              <div className="px-6 py-6 min-h-28 flex items-start">
-                <p
-                  className="text-gray-800 text-base leading-relaxed tracking-wide whitespace-pre-wrap"
-                  style={{ fontFamily: "'Press Start 2P', monospace" }}
-                >
-                  {text}
-
-                  {isStreaming && (
-                    <span className="inline-block w-3 h-5 bg-gray-800 ml-1 animate-pulse" />
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+            {isStreaming && (
+              <span className="inline-block w-3 h-5 bg-gray-800 ml-1 animate-pulse" />
+            )}
+          </p>
+        </RetroContainer>
 
         <div className="flex items-center justify-center gap-3 mt-2">
           <span

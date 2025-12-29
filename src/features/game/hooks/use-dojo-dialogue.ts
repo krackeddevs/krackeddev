@@ -59,11 +59,9 @@ export function useDojoDialogue(options: UseDojoDialogueOptions = {}) {
       let userPrompt: string;
       if (messageIndex === 0) {
         userPrompt =
-          "I just entered the dojo for the first time. Welcome me and begin my training.";
-      } else if (messageIndex === maxMessages - 1) {
-        userPrompt = "Give me a final piece of wisdom before I leave.";
+          "I just entered The Dojo for the first time. Welcome me and briefly explain what this place is - a game to learn vibe coding from zero through levels and challenges.";
       } else {
-        userPrompt = "Continue with the next lesson.";
+        userPrompt = "Ask me if I'm ready to embark on this journey. Make it feel like the beginning of an adventure.";
       }
 
       conversationHistoryRef.current.push({ role: "user", content: userPrompt });
