@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload, label, totalUsers }: any) => {
 
 export function TechStackChart({ data, totalUsers }: TechStackChartProps) {
     return (
-        <div className="w-full h-[400px] border rounded-lg bg-card p-6 flex flex-col">
+        <div className="w-full h-[400px] border-2 border-white/10 rounded-lg bg-black/40 backdrop-blur-sm p-6 flex flex-col hover:border-white/20 transition-all duration-300">
             <div className="mb-6">
                 <h3 className="text-lg font-semibold">Top Tech Stacks</h3>
                 <p className="text-sm text-muted-foreground">Most popular technologies among developers</p>

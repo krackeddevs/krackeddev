@@ -106,7 +106,7 @@ export default function BountyListPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-900 relative">
+    <main className="min-h-screen relative">
       <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
       <div className="container mx-auto px-4 py-8 relative z-10">

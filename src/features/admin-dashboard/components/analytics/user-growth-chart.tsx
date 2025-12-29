@@ -37,7 +37,7 @@ export function UserGrowthChart({ data: initialData }: UserGrowthChartProps) {
     }, [period]);
 
     return (
-        <div className="w-full h-[300px] md:h-[400px] border rounded-lg bg-card p-4 flex flex-col">
+        <div className="w-full h-[300px] md:h-[400px] border-2 border-white/10 rounded-lg bg-black/40 backdrop-blur-sm p-4 flex flex-col hover:border-white/20 transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">User Growth</h3>
                 <Tabs value={period} onValueChange={(v) => setPeriod(v as any)} className="w-auto">

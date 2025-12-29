@@ -167,7 +167,7 @@ export const LoginModal = () => {
 
       {/* Modal Content */}
       <div className="relative z-10 w-full max-w-md mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
-        <div className="bg-[#0a0f0a] border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)]">
+        <div className="bg-card border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)]">
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-neon-primary/30">
             <h2
@@ -177,7 +177,7 @@ export const LoginModal = () => {
               {isAuthenticated
                 ? "Your Profile"
                 : viewState === "forgot-password" ||
-                    viewState === "forgot-password-success"
+                  viewState === "forgot-password-success"
                   ? "Reset Password"
                   : "Connect Account"}
             </h2>

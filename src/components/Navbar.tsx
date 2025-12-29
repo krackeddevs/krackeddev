@@ -61,8 +61,8 @@ const Navbar = () => {
       className={cn(
         "relative top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
         isScrolled || isMobileMenuOpen
-          ? "bg-background/80 backdrop-blur-lg border-primary/20 shadow-[0_0_20px_rgba(21,128,61,0.1)]"
-          : "bg-transparent",
+          ? "bg-background/70 backdrop-blur-md border-primary/20 shadow-[0_0_20px_rgba(21,128,61,0.1)]"
+          : "bg-background/20 backdrop-blur-sm border-transparent",
       )}
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">

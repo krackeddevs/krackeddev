@@ -41,7 +41,7 @@ export function RecentActivity({ recentUsers, recentBounties }: RecentActivityPr
     });
 
     return (
-        <Card className="h-full flex flex-col">
+        <Card className="h-full flex flex-col border-2 border-white/10 bg-black/40 backdrop-blur-sm hover:border-white/20 transition-all duration-300">
             <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>

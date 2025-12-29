@@ -135,7 +135,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
     if (loading) {
         return (
-            <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <main className="min-h-screen flex items-center justify-center">
                 <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent animate-spin rounded-full"></div>
             </main>
         );
@@ -143,7 +143,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
     if (!bounty) {
         return (
-            <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <main className="min-h-screen flex items-center justify-center">
                 <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
                 <div className="text-center relative z-10">
                     <div className="text-6xl mb-4">🔍</div>
@@ -171,7 +171,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     // FR9/FR10: Guest users see login required screen
     if (isGuest) {
         return (
-            <main className="min-h-screen bg-gray-900 relative">
+            <main className="min-h-screen relative">
                 <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
                 {/* Header with Navigation */}
@@ -208,7 +208,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     </div>
 
                     {/* Login Required Card */}
-                    <div className="bg-gray-900 border-2 border-neon-primary/50 p-8 text-center">
+                    <div className="bg-background/80 border-2 border-neon-primary/50 p-8 text-center">
                         <div className="w-16 h-16 mx-auto mb-6 bg-neon-primary/10 border-2 border-neon-primary flex items-center justify-center">
                             <Lock className="w-8 h-8 text-neon-primary" />
                         </div>
@@ -241,7 +241,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     }
 
     return (
-        <main className="min-h-screen bg-gray-900 relative">
+        <main className="min-h-screen relative">
             <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
             {/* Header with Navigation */}
@@ -273,7 +273,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
             {/* Sign Out Confirmation Modal */}
             {showSignOutConfirm && (
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4">
-                    <div className="bg-gray-900 border-2 border-cyan-500 p-6 max-w-md w-full">
+                    <div className="bg-background border-2 border-cyan-500 p-6 max-w-md w-full">
                         <h2 className="text-xl font-mono text-cyan-400 mb-4">
                             CONFIRM SIGN OUT
                         </h2>

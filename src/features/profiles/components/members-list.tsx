@@ -66,7 +66,7 @@ export function MembersList({ members }: MembersListProps) {
                             href={`/profile/${member.username}`}
                             className="block group"
                         >
-                            <div className="flex items-center gap-4 p-4 bg-gray-800/50 border border-gray-700 hover:border-neon-primary/50 transition-all h-[88px]">
+                            <div className="flex items-center gap-4 p-4 bg-black/40 backdrop-blur-sm border border-gray-800 hover:border-neon-primary hover:bg-neon-primary/5 transition-all h-[88px] group-hover:-translate-y-1">
                                 {/* Avatar */}
                                 {member.avatar_url ? (
                                     <img

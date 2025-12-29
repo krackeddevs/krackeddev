@@ -36,7 +36,7 @@ export default async function DashboardPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Profile Card */}
-                <Card className="bg-black/40 border-white/10 backdrop-blur-md hover:border-neon-cyan/50 transition-colors group">
+                <Card className="bg-black/40 border-2 border-white/10 backdrop-blur-sm hover:border-neon-cyan hover:bg-neon-cyan/5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)]">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-gray-300">My Profile</CardTitle>
                         <User className="h-4 w-4 text-neon-cyan group-hover:text-white transition-colors" />
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
                 </Card>
 
                 {/* Applications Card (Placeholder Stats for now) */}
-                <Card className="bg-black/40 border-white/10 backdrop-blur-md hover:border-purple-500/50 transition-colors group">
+                <Card className="bg-black/40 border-2 border-white/10 backdrop-blur-sm hover:border-purple-500 hover:bg-purple-500/5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-gray-300">Applications</CardTitle>
                         <FileText className="h-4 w-4 text-purple-500 group-hover:text-white transition-colors" />
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
 
                 {/* Company Card (Conditional) */}
                 {company ? (
-                    <Card className="bg-black/40 border-white/10 backdrop-blur-md hover:border-yellow-500/50 transition-colors group">
+                    <Card className="bg-black/40 border-2 border-white/10 backdrop-blur-sm hover:border-yellow-500 hover:bg-yellow-500/5 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(234,179,8,0.3)]">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-gray-300">{company.name}</CardTitle>
                             <Briefcase className="h-4 w-4 text-yellow-500 group-hover:text-white transition-colors" />
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
                         </CardContent>
                     </Card>
                 ) : (
-                    <Card className="bg-black/40 border-white/10 backdrop-blur-md hover:border-gray-500 transition-colors opacity-50 hover:opacity-100">
+                    <Card className="bg-black/40 border-2 border-white/10 backdrop-blur-sm hover:border-gray-500 hover:bg-white/5 transition-all duration-300 opacity-50 hover:opacity-100 hover:-translate-y-1">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-gray-300">Hiring?</CardTitle>
                             <Briefcase className="h-4 w-4 text-gray-500" />

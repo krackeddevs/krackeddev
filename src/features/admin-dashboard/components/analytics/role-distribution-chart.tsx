@@ -11,7 +11,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#a855f7', '#ec4899'
 
 export function RoleDistributionChart({ data }: RoleDistributionChartProps) {
     return (
-        <div className="w-full h-[250px] md:h-[400px] border rounded-lg bg-card p-4">
+        <div className="w-full h-[250px] md:h-[400px] border-2 border-white/10 rounded-lg bg-black/40 backdrop-blur-sm p-4 hover:border-white/20 transition-all duration-300">
             <h3 className="text-lg font-semibold mb-4">Developer Roles</h3>
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart margin={{ top: 20, right: 0, left: 0, bottom: 20 }}>

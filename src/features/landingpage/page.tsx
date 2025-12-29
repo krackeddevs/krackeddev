@@ -27,7 +27,7 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
 
     return (
-        <main className="min-h-screen w-full bg-black relative flex flex-col">
+        <main className="min-h-screen w-full relative flex flex-col">
             {/* Global Grid Overlay Removed (Handled by globals.css) */}
 
             {/* CRT Scanline Overlay - Fixed to viewport */}
@@ -54,7 +54,7 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
 
                     {/* Mobile Mini Profile (Visible only on mobile, placed above Game) */}
                     {isLoggedIn && miniProfileData && (
-                        <div className="md:hidden relative w-full px-4 py-2 bg-black border-b border-green-900/50">
+                        <div className="md:hidden relative w-full px-4 py-2 border-b border-green-900/50">
                             <MiniProfile data={miniProfileData} />
                         </div>
                     )}
@@ -64,12 +64,12 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                     {/* Desktop: flex-col (Map Top, Game Bottom) */}
                     <div className="flex flex-col-reverse md:flex-col w-full">
                         {/* Community Map Section */}
-                        <section className="relative w-full bg-black border-t border-green-900/50">
+                        <section className="relative w-full border-t border-green-900/50">
                             <CommunityMap />
                         </section>
 
                         {/* Game Section */}
-                        <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px] bg-black">
+                        <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px]">
                             <TownhallV2 />
 
                             {/* Scroll Indicator */}
@@ -81,26 +81,23 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                     </div>
 
                     {/* Live Stats Section */}
-                    <section className="relative w-full bg-black border-t border-green-900/50">
+                    <section className="relative w-full border-t border-green-900/50">
                         <LiveStats />
                     </section>
 
                     {/* Navigation Hub */}
-                    <section className="relative w-full bg-black border-t border-green-900/50">
+                    <section className="relative w-full border-t border-green-900/50">
                         <NavigationHub />
                     </section>
 
 
 
                     {/* Job Preview Section */}
-                    <section className="relative w-full bg-black border-t border-green-900/50">
+                    <section className="relative w-full border-t border-green-900/50">
                         <JobPreview />
                     </section>
 
-                    {/* Brand CTA Section */}
-                    <section className="relative w-full">
-                        <BrandCTA />
-                    </section>
+
 
                     {/* Floating Jobs Button - Top on left */}
                     <Link

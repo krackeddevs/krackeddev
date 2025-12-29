@@ -456,8 +456,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
       }
 
       // Render
-      ctx.fillStyle = "#000000"; // pure black background
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Optional background image (drawn behind map/buildings)
       if (backgroundImagePath) {
@@ -894,7 +893,7 @@ export const BaseGameWorld: React.FC<BaseGameWorldProps> = ({
   }, [nearBuilding, isMobile]);
 
   return (
-    <div className="w-full h-auto md:h-[85vh] bg-black text-white jobs-container relative overflow-hidden flex flex-col md:justify-center items-center">
+    <div className="w-full h-auto md:h-[85vh] text-white jobs-container relative overflow-hidden flex flex-col md:justify-center items-center">
       {/* Canvas Container with relative positioning for dialogs */}
       <div
         className={`relative w-full mx-auto flex flex-col items-center gap-4 ${isMobile ? "max-w-full" : "max-w-5xl"

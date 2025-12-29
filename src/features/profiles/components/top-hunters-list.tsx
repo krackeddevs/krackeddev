@@ -72,11 +72,11 @@ export function TopHuntersList({ hunters }: TopHuntersListProps) {
                                 className="block group"
                             >
                                 <div className={`
-                                    flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-800/50 border transition-all hover:border-neon-primary/50
-                                    ${originalRank === 0 ? "border-amber-500/50 bg-amber-900/10" :
+                                    flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-black/40 backdrop-blur-sm border transition-all hover:border-neon-primary hover:bg-neon-primary/5 group-hover:-translate-y-1
+                                    ${originalRank === 0 ? "border-amber-500/50" :
                                         originalRank === 1 ? "border-gray-500/50" :
                                             originalRank === 2 ? "border-orange-700/50" :
-                                                "border-gray-700"}
+                                                "border-gray-800"}
                                 `}>
                                     {/* Rank */}
                                     <div className={`

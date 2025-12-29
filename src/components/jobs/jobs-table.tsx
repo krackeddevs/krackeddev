@@ -140,7 +140,7 @@ export function JobsTable() {
             <div
               key={job.id || i}
               onClick={() => router.push(`/jobs/${job.id}`)}
-              className="group border border-white/10 p-5 space-y-4 bg-black/60 cursor-pointer hover:border-neon-cyan/50 hover:bg-neon-cyan/5 transition-all relative overflow-hidden"
+              className="group border border-white/10 p-5 space-y-4 bg-black/40 backdrop-blur-sm cursor-pointer hover:border-neon-cyan/50 hover:bg-neon-cyan/5 transition-all relative overflow-hidden"
             >
               {/* Active Glitch Border (Pseudo-element alternative) */}
               <div className="absolute top-0 left-0 w-1 h-full bg-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity" />

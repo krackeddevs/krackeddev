@@ -16,16 +16,26 @@ export function BountyCard({ bounty }: BountyCardProps) {
         <Link href={`/code/bounty/${bounty.slug}`}>
             <div
                 className={`
-          relative p-4 border-2 transition-all duration-200 cursor-pointer h-full
+          relative p-6 border-2 transition-all duration-300 cursor-pointer h-full backdrop-blur-sm flex flex-col justify-between group hover:-translate-y-1
           ${isRare
-                        ? "border-amber-500/50 bg-gradient-to-br from-gray-800/50 to-amber-900/20 hover:border-amber-400 shadow-lg shadow-amber-500/10"
+                        ? "bg-black/40 border-amber-500/50 hover:border-amber-400 hover:bg-amber-500/5"
                         : isActive
-                            ? "border-cyan-500/50 bg-gray-800/50 hover:bg-gray-800 hover:border-cyan-400"
+                            ? "bg-black/40 border-cyan-500/50 hover:border-cyan-400 hover:bg-cyan-500/5"
                             : isCompleted
-                                ? "border-green-500/30 bg-gray-800/30 hover:bg-gray-800/50 hover:border-green-500/50"
-                                : "border-gray-600/50 bg-gray-800/30 hover:bg-gray-800/50"
+                                ? "bg-black/40 border-green-500/50 hover:border-green-400 hover:bg-green-500/5"
+                                : "bg-black/40 border-green-400/30 hover:border-green-400 hover:bg-green-400/5"
                     }
         `}
+                style={{
+                    boxShadow: '0 0 0 rgba(0,0,0,0)',
+                }}
+                onMouseEnter={(e) => {
+                    const color = isRare ? '245, 158, 11' : isActive ? '6, 182, 212' : '34, 197, 94';
+                    e.currentTarget.style.boxShadow = `0 0 30px rgba(${color}, 0.3)`;
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+                }}
                 data-testid="bounty-card"
             >
                 {/* Bounty Number */}

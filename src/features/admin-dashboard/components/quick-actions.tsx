@@ -7,7 +7,7 @@ import { Plus, FileCheck, Shield, Zap } from "lucide-react";
 
 export function QuickActions() {
     return (
-        <Card className="border-green-500/30 bg-background/50">
+        <Card className="border-2 border-green-500/30 bg-black/40 backdrop-blur-sm hover:border-green-500 hover:bg-green-500/5 transition-all duration-300">
             <CardHeader>
                 <CardTitle className="font-mono text-green-500">Quick Actions</CardTitle>
                 <CardDescription>Common administrative tasks</CardDescription>

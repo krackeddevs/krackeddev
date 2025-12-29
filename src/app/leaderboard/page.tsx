@@ -12,7 +12,7 @@ export default async function LeaderboardPage() {
     const { data: hunters, error } = await fetchTopHunters(50);
 
     return (
-        <main className="min-h-screen bg-gray-900">
+        <main className="min-h-screen">
             <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
             <div className="relative z-10">
                 {/* Header */}

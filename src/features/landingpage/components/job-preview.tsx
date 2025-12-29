@@ -66,10 +66,10 @@ export function JobPreview() {
                 <div className="flex justify-between items-start">
                   <span
                     className={`px-2 py-1 text-xs font-mono border ${bounty.status === "open"
-                        ? "border-green-500 text-green-400 bg-green-900/20"
-                        : bounty.status === "completed"
-                          ? "border-blue-500 text-blue-400 bg-blue-900/20"
-                          : "border-gray-500 text-gray-400"
+                      ? "border-green-500 text-green-400 bg-green-900/20"
+                      : bounty.status === "completed"
+                        ? "border-blue-500 text-blue-400 bg-blue-900/20"
+                        : "border-gray-500 text-gray-400"
                       }`}
                   >
                     {bounty.status.toUpperCase()}

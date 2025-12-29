@@ -102,7 +102,7 @@ export default async function CompaniesPage() {
                                 href={`/companies/${company.slug}`}
                                 className="group"
                             >
-                                <div className="h-full border-2 border-green-400/30 bg-black/50 backdrop-blur-sm rounded-lg p-6
+                                <div className="h-full border-2 border-green-400/30 bg-black/40 backdrop-blur-sm rounded-lg p-6
                                     hover:border-green-400 hover:bg-green-400/5 transition-all duration-300
                                     hover:shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:-translate-y-1">
 

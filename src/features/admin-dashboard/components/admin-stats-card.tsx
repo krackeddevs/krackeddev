@@ -41,7 +41,7 @@ export function AdminStatsCard({
     }
 
     return (
-        <Card className="border-green-500/30 bg-black/40 hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-all duration-300">
+        <Card className="border-2 border-green-500/30 bg-black/40 backdrop-blur-sm hover:border-green-500 hover:bg-green-500/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium font-mono text-green-400 uppercase">{title}</CardTitle>
                 <Icon className="h-4 w-4 text-green-500" />
