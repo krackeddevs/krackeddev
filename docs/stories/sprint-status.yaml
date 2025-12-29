@@ -66,3 +66,22 @@ development_status:
   6-1-game-bridge-implementation: ready-for-dev
   6-2-game-page-refactor: ready-for-dev
   epic-6-retrospective: optional
+
+  epic-7: in-progress
+  7-1-profile-contribution-stats: done
+  7-2-dev-pulse-visualization: done
+  7-3-mini-profile-landing-page: done
+  7-4-landing-page-layout-swap: done
+  7-5-community-map-ux: done
+  epic-7-retrospective: optional
+
+  epic-8: backlog
+  8-1-xp-tracking-infrastructure: backlog
+  8-2-xp-earning-events-logic: backlog
+  8-3-level-progression-system: backlog
+  8-4-xp-ui-components: backlog
+  8-5-leaderboards-rankings: backlog
+  8-6-level-visual-rewards: backlog
+  8-7-social-feed-notifications: backlog
+  8-8-engagement-reports: backlog
+  epic-8-retrospective: optional

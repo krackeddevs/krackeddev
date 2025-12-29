@@ -82,6 +82,8 @@ Unlike traditional recruiters that just match existing supply, Kracked Devs *upg
 * **Developer Profile:** Public view with GitHub graph and Manual Stats (Earnings/Wins).
 * **Bounty Board:** Read-only list for Users. Admin-controlled posting. Submission via Repo URL form.
 * **Payments:** **MANUAL (Concierge).** All transactions processed off-platform/manual bank transfer.
+* **Townhall Chat:** Real-time global chat overlay for community "vibes".
+* **Community Q&A:** "Stack Overflow" style forum for questions and accepted answers (Async Knowledge).
 * **Community Hub:** Aggregation dashboard with links to Discord/Socials.
 
 ### Growth Features (Post-MVP)
@@ -131,6 +133,14 @@ You are operating the platform to ensure trust.
 3. **Payout:** You verify Sarah's payment is in bank. You manually transfer RM 150 to Aif.
 4. **Closure:** You mark the Bounty as "Completed" in the dashboard. The system updates the stats automatically.
 
+### Journey 4: The "Sensei" - Building Reputation
+Mostafa is a Senior Dev who doesn't need the money (Bounties) but wants to build a reputation as a mentor.
+**The Journey:**
+1. **Browse:** He checks the "Community Q&A" section.
+2. **Help:** He sees a Junior asking "How to fix CORS in Next.js?". He writes a detailed answer.
+3. **Reward:** The Junior marks his answer as "Accepted."
+4. **Outcome:** Mostafa gains **+50 XP**. His profile now shows "Helped 10 Devs." Recruiters see this as a signal of communication skills.
+
 ### Journey Requirements Summary
 
 * **Onboarding:** granular skill/level capture.
@@ -138,6 +148,11 @@ You are operating the platform to ensure trust.
 * **Admin Dashboard:** Needs "Approve/Reject" flow for Bounties and Submissions, plus basic **User Management** (Ban/Suspend).
 * **Notifications:** Email triggers for "Submission Received" and "Bounty Approved."
 * **Landing Page:** Must capture attention immediately with the Game positioned in the Hero Section.
+
+### New Feature: "Hybrid Community" Requirements
+* **Synchronous:** Chat must be persistent across pages (Global Overlay).
+* **Asynchronous:** Q&A Forum must support Markdown and Code Highlighting.
+* **Gamification:** All community actions (Chatting? Answering?) must hook into the XP System.
 
 ## Domain-Specific Requirements
 
@@ -298,6 +313,14 @@ Kracked Devs is a **Hybrid Web Application**:
   * "Latest Jobs" (Preview of Job Board).
 * **FR-LAND-04 (Brand CTA):** A prominent section inviting Companies to "Post a Rare Bounty" or "Hiring?" linking to the concierge form.
 * **FR-LAND-05 (Job Preview):** Display a dynamic list of the 3 most recent "Active" Job Openings (if any).
+
+### FR Area 1b: Community & Communication
+
+* **FR-CHAT-01 (Realtime):** Implement `TownhallChat` component using Supabase Realtime subscription to a `messages` table.
+* **FR-QA-01 (Question CRUD):** Auth users can Create, Read, Update Questions.
+* **FR-QA-02 (Answer Logic):** Auth users can submit answers.
+* **FR-QA-03 (Acceptance):** Question Author can toggle `is_accepted` on one Answer.
+* **FR-QA-04 (Ranking):** Questions/Answers sorted by `upvotes` descending.
 
 ### FR Area 2: User Profiles (The "CV")
 

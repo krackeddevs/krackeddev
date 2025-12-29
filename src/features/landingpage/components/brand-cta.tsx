@@ -7,16 +7,7 @@ export function BrandCTA() {
     const router = useRouter();
 
     return (
-        <div className="w-full bg-black/80 border-y border-green-500/30 relative overflow-hidden py-20 mt-12">
-            {/* Background Matrix-like effect or grid */}
-            <div
-                className="absolute inset-0 opacity-10"
-                style={{
-                    backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.3) 1px, transparent 1px)',
-                    backgroundSize: '40px 40px'
-                }}
-            />
-
+        <div className="w-full bg-black border-y border-green-500/30 relative overflow-hidden py-20 mt-12">
             <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 font-mono tracking-tighter">
                     NEED ELITE <span className="text-green-500 bg-green-500/10 px-2">TALENT?</span>

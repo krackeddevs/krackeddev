@@ -1,58 +1,49 @@
 "use client";
 
 import React, { useMemo, useState } from 'react';
-import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 import { scaleLinear } from 'd3-scale';
-import { Button } from '@/components/ui/button';
-import { Plus, Minus } from 'lucide-react';
-
-const GEO_URL = "/malaysia-states.json";
+import { MAP_PATHS } from '@/features/landingpage/components/map-paths';
 
 interface AnalyticsMapProps {
     data: { name: string; value: number }[];
 }
 
+// Map standard state names to what the data might have
+const STATE_NAMES = [
+    "Perlis", "Kedah", "Pulau Pinang", "Perak", "Terengganu", "Pahang",
+    "Kelantan", "Negeri Sembilan", "Melaka", "Selangor", "Wilayah Persekutuan Putrajaya",
+    "Wilayah Persekutuan Kuala Lumpur", "Johor", "Sabah", "Wilayah Persekutuan Labuan", "Sarawak"
+];
+
 export function AnalyticsMap({ data }: AnalyticsMapProps) {
-    const [position, setPosition] = useState({ coordinates: [109, 4] as [number, number], zoom: 1 });
     const [tooltipContent, setTooltipContent] = useState<string | null>(null);
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+    const [hoveredStateIndex, setHoveredStateIndex] = useState<number | null>(null);
 
     const colorScale = useMemo(() => {
         const max = Math.max(...data.map(d => d.value), 1);
         return scaleLinear<string>()
             .domain([0, max])
-            .range(["#2d3748", "#38b2ac"]); // Cyberpunk-ish teal range
+            .range(["#1f2937", "#38b2ac"]); // Dark gray to Teal
     }, [data]);
 
-    function handleZoomIn() {
-        if (position.zoom >= 4) return;
-        setPosition(pos => ({ ...pos, zoom: pos.zoom * 1.5 }));
-    }
+    const getStateValue = (index: number) => {
+        const stateName = STATE_NAMES[index];
+        if (!stateName) return 0;
 
-    function handleZoomOut() {
-        if (position.zoom <= 0.5) return; // Allow zooming out more (0.5x)
-        setPosition(pos => ({ ...pos, zoom: pos.zoom / 1.5 }));
-    }
-
-    function handleMoveEnd(position: { coordinates: [number, number]; zoom: number }) {
-        setPosition(position);
-    }
+        // Match broad or specific
+        const found = data.find((s) =>
+            s.name.toLowerCase().includes(stateName.toLowerCase()) ||
+            stateName.toLowerCase().includes(s.name.toLowerCase())
+        );
+        return found?.value || 0;
+    };
 
     return (
         <div className="w-full h-[300px] md:h-[400px] border rounded-lg bg-card p-4 flex flex-col relative overflow-hidden">
             <h3 className="text-lg font-semibold mb-2 md:mb-4 text-left">User Distribution (Malaysia)</h3>
 
-            {/* Zoom Controls */}
-            <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-                <Button variant="secondary" size="icon" onClick={handleZoomIn} className="h-8 w-8">
-                    <Plus className="h-4 w-4" />
-                </Button>
-                <Button variant="secondary" size="icon" onClick={handleZoomOut} className="h-8 w-8">
-                    <Minus className="h-4 w-4" />
-                </Button>
-            </div>
-
-            {/* Custom Tooltip */}
+            {/* Tooltip */}
             {tooltipContent && (
                 <div
                     className="absolute z-20 pointer-events-none bg-popover text-popover-foreground px-3 py-2 rounded-md shadow-md text-sm border border-border"
@@ -66,11 +57,8 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
             )}
 
             <div
-                className="w-full h-full cursor-grab active:cursor-grabbing touch-none" // prevent scroll on mobile when dragging map
+                className="w-full h-full flex items-center justify-center relative z-10"
                 onMouseMove={(e) => {
-                    // Update tooltip position relative to container
-                    // This is a bit expensive but gives the "following" effect
-                    // Optimization: throttle if needed, but for this simple map it's fine
                     const rect = e.currentTarget.getBoundingClientRect();
                     setTooltipPos({
                         x: e.clientX - rect.left,
@@ -78,70 +66,57 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
                     });
                 }}
             >
-                <ComposableMap
-                    projection="geoMercator"
-                    projectionConfig={{
-                        scale: 3500,
-                        center: [109, 4]
-                    }}
-                    width={800}
-                    height={400}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                    }}
+                <svg
+                    viewBox="0 0 940 400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-full h-full max-h-[350px]"
                 >
-                    <ZoomableGroup
-                        zoom={position.zoom}
-                        center={position.coordinates}
-                        onMoveEnd={handleMoveEnd}
-                        minZoom={0.5}
-                        maxZoom={4}
-                    >
-                        <Geographies geography={GEO_URL}>
-                            {({ geographies }) =>
-                                geographies.map((geo) => {
-                                    // Match state name from geo properties to our data
-                                    const stateName = geo.properties.name || geo.properties.STATE; // Fallback for diff geojson
-                                    const cur = data.find(s => s.name.toLowerCase().includes(stateName?.toLowerCase()));
-                                    return (
-                                        <Geography
-                                            key={geo.rsmKey}
-                                            geography={geo}
-                                            fill={cur ? colorScale(cur.value) : "#1a202c"}
-                                            stroke="#4a5568"
-                                            strokeWidth={0.5}
-                                            style={{
-                                                default: { outline: "none" },
-                                                hover: { fill: "#4fd1c5", outline: "none" },
-                                                pressed: { outline: "none" },
-                                            }}
-                                            onMouseEnter={() => {
-                                                setTooltipContent(`${stateName}: ${cur?.value || 0} Users`);
-                                            }}
-                                            onMouseLeave={() => {
-                                                setTooltipContent(null);
-                                            }}
-                                            // Handle Touch for Tooltip (Mobile)
-                                            onTouchStart={() => {
-                                                setTooltipContent(`${stateName}: ${cur?.value || 0} Users`);
-                                            }}
-                                        />
-                                    );
-                                })
-                            }
-                        </Geographies>
-                    </ZoomableGroup>
-                </ComposableMap>
+                    {MAP_PATHS.map((pathData, index) => {
+                        const val = getStateValue(index);
+                        const isActive = val > 0;
+                        const isHovered = hoveredStateIndex === index;
+                        const stateName = STATE_NAMES[index] || "Unknown";
+
+                        // Determine fill color
+                        let fill = "#1f2937"; // default dark gray (inactive)
+                        if (isActive) {
+                            fill = colorScale(val);
+                        }
+
+                        // Hover logic
+                        if (isHovered && !isActive) fill = "#374151"; // lighter gray on hover
+                        if (isHovered && isActive) fill = "#4fd1c5"; // brighter teal on hover active
+
+                        return (
+                            <path
+                                key={index}
+                                d={pathData}
+                                fill={fill}
+                                stroke={isHovered ? "#4fd1c5" : "#374151"}
+                                strokeWidth={isHovered ? "2" : "1"}
+                                className="transition-all duration-200 cursor-pointer"
+                                onMouseEnter={() => {
+                                    setHoveredStateIndex(index);
+                                    setTooltipContent(`${stateName}: ${val} Users`);
+                                }}
+                                onMouseLeave={() => {
+                                    setHoveredStateIndex(null);
+                                    setTooltipContent(null);
+                                }}
+                            />
+                        );
+                    })}
+                </svg>
             </div>
+
             {/* Legend/Info */}
-            <div className="absolute bottom-4 left-4 flex flex-wrap items-center gap-2 text-[10px] md:text-xs text-muted-foreground p-1 md:p-2 bg-background/80 rounded border">
+            <div className="absolute bottom-4 left-4 flex flex-wrap items-center gap-2 text-[10px] md:text-xs text-muted-foreground p-1 md:p-2 bg-background/80 rounded border z-20">
                 <div className="flex items-center">
                     <span className="w-2 h-2 md:w-3 md:h-3 bg-[#38b2ac] rounded-full inline-block mr-1"></span>
                     <span>Active</span>
                 </div>
                 <div className="flex items-center ml-2">
-                    <span className="w-2 h-2 md:w-3 md:h-3 bg-[#1a202c] rounded-full inline-block mr-1 border border-gray-600"></span>
+                    <span className="w-2 h-2 md:w-3 md:h-3 bg-[#1f2937] rounded-full inline-block mr-1 border border-gray-600"></span>
                     <span>No Users</span>
                 </div>
             </div>

@@ -2,6 +2,8 @@
 -- ADD ROLE COLUMN TO PROFILES TABLE
 -- For RBAC compliance (admin/user roles)
 -- Story 1.1 AC#4
+-- NOTE: This migration is now consolidated into 001_create_profiles_table.sql
+--       Kept for historical reference (already applied to production)
 -- ============================================
 
 -- Create enum type for user roles

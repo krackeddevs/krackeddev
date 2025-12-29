@@ -3,7 +3,14 @@
 -- Run this in Supabase SQL Editor
 -- ============================================
 
--- Create profiles table
+-- Create enum type for user roles
+DO $$ BEGIN
+  CREATE TYPE user_role AS ENUM ('admin', 'user');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
+
+-- Create profiles table with complete production schema
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   username TEXT,
@@ -16,11 +23,39 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   level INTEGER DEFAULT 1,
   xp INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  role user_role NOT NULL DEFAULT 'user'::user_role,
+  developer_role TEXT,
+  stack TEXT[],
+  location TEXT,
+  onboarding_completed BOOLEAN NOT NULL DEFAULT false,
+  status TEXT NOT NULL DEFAULT 'active'::text,
+  x_url TEXT,
+  linkedin_url TEXT,
+  website_url TEXT,
+  is_discoverable BOOLEAN DEFAULT false,
+  is_open_to_work BOOLEAN DEFAULT false,
+  is_hiring BOOLEAN DEFAULT false,
+  github_username TEXT,
+  github_access_token TEXT,
+  developer_score INTEGER DEFAULT 0,
+  portfolio_synced_at TIMESTAMPTZ,
+  contribution_stats JSONB,
+  CONSTRAINT check_status CHECK (status IN ('active', 'banned'))
 );
 
--- Create index for faster lookups
+-- Create indexes for faster lookups
 CREATE INDEX IF NOT EXISTS profiles_username_idx ON public.profiles(username);
+CREATE INDEX IF NOT EXISTS profiles_role_idx ON public.profiles(role);
+CREATE INDEX IF NOT EXISTS profiles_onboarding_completed_idx ON public.profiles(onboarding_completed);
+
+-- Unique constraints
+CREATE UNIQUE INDEX IF NOT EXISTS unique_username ON public.profiles(username);
+CREATE UNIQUE INDEX IF NOT EXISTS profiles_email_unique ON public.profiles(email) WHERE email IS NOT NULL;
+
+-- GIN index for JSONB contribution_stats queries
+CREATE INDEX IF NOT EXISTS profiles_contribution_stats_idx ON public.profiles USING gin(contribution_stats);
+
 
 -- Enable Row Level Security
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
@@ -55,7 +90,9 @@ BEGIN
     avatar_url,
     email,
     provider,
-    github_url
+    github_url,
+    role,
+    onboarding_completed
   )
   VALUES (
     NEW.id,
@@ -68,7 +105,9 @@ BEGIN
       WHEN NEW.raw_app_meta_data->>'provider' = 'github' 
       THEN 'https://github.com/' || (NEW.raw_user_meta_data->>'user_name')
       ELSE NULL
-    END
+    END,
+    'user'::user_role,
+    false
   );
   RETURN NEW;
 END;

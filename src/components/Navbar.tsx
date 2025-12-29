@@ -48,7 +48,7 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -75,6 +75,9 @@ const Navbar = () => {
           <span className="relative font-mono text-xl font-bold tracking-tighter text-foreground group-hover:text-neon-primary transition-colors duration-300">
             &lt;Kracked Devs /&gt;
           </span>
+          <span className="text-[10px] font-bold px-1.5 py-0.5 bg-yellow-500 text-black rounded uppercase tracking-wider animate-flicker shadow-[0_0_10px_rgba(234,179,8,0.8)]">
+            Beta
+          </span>
         </Link>
 
         {/* Right Side (Desktop) */}
@@ -86,11 +89,11 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 asChild
-                className="py-2 h-auto w-auto px-4 border border-white/50 hover:border-white hover:bg-white/10"
+                className="py-2 h-auto w-auto px-2 sm:px-4 border border-white/50 hover:border-white hover:bg-white/10"
               >
                 <Link href="/">
-                  <Home className="min-h-4 min-w-4 mr-2" />
-                  <span>Home</span>
+                  <Home className="min-h-4 min-w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Home</span>
                 </Link>
               </Button>
             )}
@@ -101,11 +104,11 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 asChild
-                className="py-2 h-auto w-auto px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
+                className="py-2 h-auto w-auto px-2 sm:px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
               >
                 <Link href="/admin/dashboard">
-                  <Shield className="min-h-4 min-w-4 mr-2" />
-                  <span>Admin</span>
+                  <Shield className="min-h-4 min-w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Admin</span>
                 </Link>
               </Button>
             )}
@@ -115,10 +118,10 @@ const Navbar = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+                  className="py-2 h-auto w-auto px-2 sm:px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
                   aria-label="Profile"
                 >
-                  <span>Profile</span>
+                  <span className="hidden sm:inline mr-2">Profile</span>
                   <User className="min-h-5 min-w-5" />
                 </Button>
               </DropdownMenuTrigger>
@@ -147,9 +150,9 @@ const Navbar = () => {
             <Button
               variant="ghost"
               onClick={() => openLoginModal()}
-              className="py-2 h-auto w-auto px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
+              className="py-2 h-auto w-auto px-2 sm:px-4 border border-white hover:border-neon-primary/40 hover:bg-white/5"
             >
-              <span>Login</span>
+              <span className="hidden sm:inline mr-2">Login</span>
               <User className="min-h-5 min-w-5" />
             </Button>
           )}

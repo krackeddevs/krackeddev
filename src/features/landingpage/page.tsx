@@ -1,7 +1,7 @@
 "use client";
 
 import "@/styles/jobs.css";
-import SplitTextAnimation from "./components/hero-animation";
+import { ParallaxIntro } from "./components/parallax-intro";
 import { TownhallV2 } from "./components/townhall";
 import { useLandingSequence } from "./hooks/use-landing-sequence";
 
@@ -12,34 +12,78 @@ import { NavigationHub } from "./components/navigation-hub";
 import { CommunityMap } from "./components/community-map";
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
-import { Users } from "lucide-react";
+import { Users, ChevronDown } from "lucide-react";
 
-export function LandingPage() {
+
+import { MiniProfile } from "./components/mini-profile";
+import { MiniProfileData } from "@/features/profiles/actions";
+
+interface LandingPageProps {
+    isLoggedIn: boolean;
+    miniProfileData?: MiniProfileData | null;
+}
+
+export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
 
     return (
-        <main className="min-h-screen w-full bg-gray-900 relative flex flex-col">
-            {/* Manifesto Modal - Shows once for new visitors */}
-            <ManifestoModal />
+        <main className="min-h-screen w-full bg-black relative flex flex-col">
+            {/* Global Grid Overlay */}
+            <div
+                className="fixed inset-0 pointer-events-none z-10 opacity-[0.15]"
+                style={{
+                    backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.4) 1px, transparent 1px)',
+                    backgroundSize: '20px 20px'
+                }}
+            />
 
+            {/* Manifesto Modal - Shows once for new visitors */}
+            <ManifestoModal isLoggedIn={isLoggedIn} />
+
+            {/* Parallax Intro with Loading, Parallax Layers, and Start Button */}
             {showAnimation && (
-                <SplitTextAnimation
-                    text="Welcome to Kracked Devs"
-                    onComplete={handleAnimationComplete}
-                />
+                <ParallaxIntro onComplete={handleAnimationComplete} />
             )}
 
             {!showAnimation && (
                 <>
-                    {/* Hero Section with Game */}
-                    <section className="relative w-full h-[90vh] min-h-[600px]">
-                        <TownhallV2 />
-                    </section>
+                    {/* Manifesto Modal - Shows once for new visitors, only after parallax intro */}
+                    <ManifestoModal isLoggedIn={isLoggedIn} />
 
-                    {/* Community Map Section */}
-                    <section className="relative w-full bg-black border-t border-green-900/50">
-                        <CommunityMap />
-                    </section>
+                    {/* Floating Mini Profile - Logged In Only */}
+                    {isLoggedIn && miniProfileData && (
+                        <div className="fixed top-24 right-6 z-[45] hidden md:block w-[280px]">
+                            <MiniProfile data={miniProfileData} />
+                        </div>
+                    )}
+
+                    {/* Mobile Mini Profile (Visible only on mobile, placed above Game) */}
+                    {isLoggedIn && miniProfileData && (
+                        <div className="md:hidden relative w-full px-4 py-2 bg-black border-b border-green-900/50">
+                            <MiniProfile data={miniProfileData} />
+                        </div>
+                    )}
+
+                    {/* Hero Section Wrapper: Game & Map */}
+                    {/* Mobile: flex-col-reverse (Game Top, Map Bottom) */}
+                    {/* Desktop: flex-col (Map Top, Game Bottom) */}
+                    <div className="flex flex-col-reverse md:flex-col w-full">
+                        {/* Community Map Section */}
+                        <section className="relative w-full bg-black border-t border-green-900/50">
+                            <CommunityMap />
+                        </section>
+
+                        {/* Game Section */}
+                        <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px] bg-black">
+                            <TownhallV2 />
+
+                            {/* Scroll Indicator */}
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-30">
+                                <span className="text-green-400/70 text-xs font-mono mb-1">Scroll for more</span>
+                                <ChevronDown className="w-6 h-6 text-green-400/70" />
+                            </div>
+                        </section>
+                    </div>
 
                     {/* Live Stats Section */}
                     <section className="relative w-full bg-black border-t border-green-900/50">
@@ -51,8 +95,10 @@ export function LandingPage() {
                         <NavigationHub />
                     </section>
 
+
+
                     {/* Job Preview Section */}
-                    <section className="relative w-full bg-black/90 border-t border-green-900/50">
+                    <section className="relative w-full bg-black border-t border-green-900/50">
                         <JobPreview />
                     </section>
 

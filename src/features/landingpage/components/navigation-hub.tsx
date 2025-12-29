@@ -13,6 +13,7 @@ const NAV_ITEMS = [
     borderColor: "group-hover:border-yellow-500/50",
     bgColor: "group-hover:bg-yellow-500/10",
   },
+  /*
   {
     title: "GAME WORLD",
     description: "Explore the virtual HQ, find hidden easter eggs and secrets.",
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
     borderColor: "group-hover:border-purple-500/50",
     bgColor: "group-hover:bg-purple-500/10",
   },
+  */
   {
     title: "AGENT DIRECTORY",
     description: "Connect with other operatives and build your squad.",
@@ -36,12 +38,12 @@ const NAV_ITEMS = [
 export function NavigationHub() {
   return (
     <div className="container mx-auto px-4 py-8 relative z-10">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="flex flex-col md:flex-row justify-center gap-6">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.title}
             href={item.href}
-            className="group relative block"
+            className="group relative block w-full md:max-w-sm flex-1"
           >
             <div
               className={`absolute inset-0 transition-opacity duration-300 opacity-0 ${item.bgColor.replace("group-hover:", "")}`}

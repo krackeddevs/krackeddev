@@ -12,12 +12,16 @@ export type ProfileData = {
     location: string | null;
     username: string | null;
     full_name: string | null;
+    avatar_url: string | null;
     x_url: string | null;
     linkedin_url: string | null;
     website_url: string | null;
+    contribution_stats?: unknown; // JSONB column
+    level?: number;
+    xp?: number;
 };
 
-export async function getProfile() {
+export async function getProfile(): Promise<{ data?: ProfileData; error?: string }> {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -47,7 +51,7 @@ export async function fetchPublicProfile(username: string): Promise<{ data?: Pro
 
     const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url")
+        .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url, level, xp, contribution_stats")
         .eq("username", username)
         .eq("status", "active")  // Only show active users
         .single();
@@ -86,6 +90,10 @@ export async function updateProfile(data: Partial<ProfileData>) {
         .eq("id", user.id);
 
     if (error) {
+        // Handle unique constraint violation for username
+        if (error.code === "23505" && error.message.includes("unique_username")) {
+            return { error: "Username already taken. Please choose another." };
+        }
         return { error: error.message };
     }
 
@@ -103,7 +111,21 @@ export async function fetchGithubStats(): Promise<{ data?: GithubStats; error?: 
     const isGithubUser = user?.app_metadata?.provider === 'github' ||
         user?.identities?.some(id => id.provider === 'github');
 
-    if (!session?.provider_token || !isGithubUser) {
+    // Try to get token from session first, fallback to stored token in DB
+    let accessToken = session?.provider_token;
+
+    if (!accessToken && user?.id) {
+        // Fallback: Retrieve stored GitHub token from profiles table
+        const { data: profileData } = await supabase
+            .from('profiles')
+            .select('github_access_token')
+            .eq('id', user.id)
+            .single();
+
+        accessToken = (profileData as any)?.github_access_token;
+    }
+
+    if (!accessToken || !isGithubUser) {
         return { error: "No GitHub token found or user not connected to GitHub." };
     }
 
@@ -111,7 +133,7 @@ export async function fetchGithubStats(): Promise<{ data?: GithubStats; error?: 
         const response = await fetch("https://api.github.com/graphql", {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${session.provider_token}`,
+                Authorization: `Bearer ${accessToken}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -395,3 +417,148 @@ export async function fetchUserSubmissions(): Promise<{ data: UserSubmission[]; 
     return { data: submissions };
 }
 
+import { calculateContributionStats } from "./utils/contribution-utils";
+import { ContributionStats, GithubContributionCalendar } from "./types";
+
+/**
+ * Fetch contribution stats for a user.
+ * - If viewing own profile, fetches fresh data from GitHub and updates DB cache.
+ * - If viewing others, relies on DB cache.
+ */
+export async function fetchContributionStats(username: string): Promise<{ data?: ContributionStats | null; error?: string }> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // 1. Fetch Profile from DB to get cached stats and ID
+    const { data, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, contribution_stats, portfolio_synced_at")
+        .eq("username", username)
+        .single();
+
+    // Explicitly cast to avoid 'never' inference if schema types are missing
+    const profile = data as { id: string; contribution_stats: any; portfolio_synced_at: string } | null;
+
+    if (profileError || !profile) {
+        return { error: "User not found" };
+    }
+
+    let statsData: GithubContributionCalendar | null = profile.contribution_stats as any;
+
+    // Handle potential double-encoded JSON (stringified JSON in DB)
+    if (typeof statsData === 'string') {
+        try {
+            statsData = JSON.parse(statsData);
+        } catch (e) {
+            console.error("Failed to parse contribution_stats:", e);
+            statsData = null;
+        }
+    }
+
+    // 2. If viewing own profile, try to refresh from GitHub
+    if (user && user.id === profile.id) {
+        // Refresh if data is missing OR it's been more than 1 hour
+        const lastSync = profile.portfolio_synced_at ? new Date(profile.portfolio_synced_at) : null;
+        const now = new Date();
+        const shouldRefresh = !statsData || !lastSync || (now.getTime() - lastSync.getTime() > 1000 * 60 * 60); // 1 hour
+
+        if (shouldRefresh) {
+            const { data: liveData, error: liveError } = await fetchGithubStats();
+
+            if (!liveError && liveData && liveData.contributionCalendar) {
+                // Transform to the shape we want to store (GithubContributionCalendar)
+                const newStats: GithubContributionCalendar = {
+                    totalContributions: liveData.totalContributions,
+                    weeks: liveData.contributionCalendar
+                };
+
+                // Update DB
+                await (supabase.from("profiles") as any)
+                    .update({
+                        contribution_stats: newStats,
+                        portfolio_synced_at: new Date().toISOString()
+                    })
+                    .eq("id", user.id);
+
+                statsData = newStats;
+            } else if (liveError) {
+                console.error("Failed to sync GitHub stats:", liveError);
+                // If sync failed and data is STALE (older than 24 hours), force return null
+                // This triggers the "Connect GitHub" UI, prompting the user to re-authenticate which fixes invalid tokens.
+                const isStale = !lastSync || (now.getTime() - lastSync.getTime() > 1000 * 60 * 60 * 24); // 24 hours
+                if (isStale) {
+                    return { data: null, error: "GitHub sync failed and data is stale. Please reconnect." };
+                }
+            }
+        }
+    }
+
+    // 3. Calculate Streaks
+    const contributionStats = calculateContributionStats(statsData);
+
+    // Attach Level/XP if available (mainly for public view where we fetch them)
+    if (contributionStats && profile) {
+        contributionStats.level = (profile as any).level || 1;
+        contributionStats.xp = (profile as any).xp || 0;
+    }
+
+    return { data: contributionStats || null };
+}
+
+
+
+export interface MiniProfileData {
+    username: string | null;
+    avatar_url: string | null;
+    developer_role: string | null;
+    bounties_won: number;
+    current_streak: number;
+    level: number;
+    xp: number;
+}
+
+export async function fetchMiniProfileData(userId: string): Promise<MiniProfileData | null> {
+    const supabase = await createClient();
+
+    // Fetch profile and contribution stats
+    const { data } = await supabase
+        .from("profiles")
+        .select("username, avatar_url, developer_role, contribution_stats, level, xp")
+        .eq("id", userId)
+        .single();
+
+    if (!data) return null;
+
+    // Explicit type casting to avoid inference issues with generic Supabase client
+    const profile = data as {
+        username: string | null;
+        avatar_url: string | null;
+        developer_role: string | null;
+        contribution_stats: any;
+        level: number;
+        xp: number;
+    };
+
+    // Fetch confirmed bounty wins
+    const { count: wins } = await supabase
+        .from("bounty_submissions")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("status", "approved");
+
+    // Calculate current streak from cached stats
+    // Cast to any to access weeks safely
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats: any = profile.contribution_stats;
+    const currentStreak = calculateContributionStats(stats)?.currentStreak || 0;
+
+    return {
+        username: profile.username,
+        avatar_url: profile.avatar_url,
+        developer_role: profile.developer_role,
+        bounties_won: wins || 0,
+        current_streak: currentStreak,
+        level: profile.level || 1,
+        xp: profile.xp || 0
+    };
+}

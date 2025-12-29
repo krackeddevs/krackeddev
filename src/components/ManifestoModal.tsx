@@ -32,7 +32,11 @@ export function useManifesto() {
     return context;
 }
 
-export function ManifestoModal() {
+interface ManifestoModalProps {
+    isLoggedIn: boolean;
+}
+
+export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [isZoomed, setIsZoomed] = useState(false);
@@ -42,6 +46,9 @@ export function ManifestoModal() {
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
+        // Only show if logged in
+        if (!isLoggedIn) return;
+
         const seen = localStorage.getItem(MANIFESTO_STORAGE_KEY);
 
         if (!seen) {
@@ -50,7 +57,7 @@ export function ManifestoModal() {
             }, 1500);
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [isLoggedIn]);
 
     // Helper to reset zoom state
     const resetZoomState = () => {
@@ -152,7 +159,7 @@ export function ManifestoModal() {
     return (
         <ManifestoContext.Provider value={{ openManifesto: handleOpen }}>
             {/* Floating Button to Reopen Manifesto */}
-            {!isOpen && (
+            {!isOpen && isLoggedIn && (
                 <button
                     onClick={handleOpen}
                     className="fixed bottom-6 left-6 z-50 group flex items-center gap-2 px-4 py-3 bg-gray-900/90 hover:bg-gray-800 border-2 border-green-500/50 hover:border-green-400 rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)]"
@@ -189,8 +196,8 @@ export function ManifestoModal() {
                                     onClick={handleZoomOut}
                                     disabled={zoomLevel <= 1}
                                     className={`p-1.5 sm:p-2 rounded-lg transition-colors ${zoomLevel <= 1
-                                            ? "text-gray-600 cursor-not-allowed"
-                                            : "text-gray-400 hover:text-white hover:bg-gray-800"
+                                        ? "text-gray-600 cursor-not-allowed"
+                                        : "text-gray-400 hover:text-white hover:bg-gray-800"
                                         }`}
                                     aria-label="Zoom out"
                                 >
@@ -205,8 +212,8 @@ export function ManifestoModal() {
                                     onClick={handleZoomIn}
                                     disabled={zoomLevel >= 4}
                                     className={`p-1.5 sm:p-2 rounded-lg transition-colors ${zoomLevel >= 4
-                                            ? "text-gray-600 cursor-not-allowed"
-                                            : "text-gray-400 hover:text-white hover:bg-gray-800"
+                                        ? "text-gray-600 cursor-not-allowed"
+                                        : "text-gray-400 hover:text-white hover:bg-gray-800"
                                         }`}
                                     aria-label="Zoom in"
                                 >
@@ -216,8 +223,8 @@ export function ManifestoModal() {
                                 <button
                                     onClick={toggleZoom}
                                     className={`p-1.5 sm:p-2 rounded-lg transition-colors ml-1 ${isZoomed
-                                            ? "text-green-400 bg-green-500/20"
-                                            : "text-gray-400 hover:text-white hover:bg-gray-800"
+                                        ? "text-green-400 bg-green-500/20"
+                                        : "text-gray-400 hover:text-white hover:bg-gray-800"
                                         }`}
                                     aria-label={isZoomed ? "Exit fullscreen" : "Fullscreen"}
                                 >
@@ -246,8 +253,8 @@ export function ManifestoModal() {
                                         onClick={prevPage}
                                         disabled={currentPage === 0}
                                         className={`absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2 md:p-3 rounded-full bg-gray-900/80 border border-green-500/50 transition-all ${currentPage === 0
-                                                ? "opacity-30 cursor-not-allowed"
-                                                : "hover:bg-green-500/20 hover:border-green-400"
+                                            ? "opacity-30 cursor-not-allowed"
+                                            : "hover:bg-green-500/20 hover:border-green-400"
                                             }`}
                                         aria-label="Previous page"
                                     >
@@ -258,8 +265,8 @@ export function ManifestoModal() {
                                         onClick={nextPage}
                                         disabled={currentPage === manifestoPages.length - 1}
                                         className={`absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2 md:p-3 rounded-full bg-gray-900/80 border border-green-500/50 transition-all ${currentPage === manifestoPages.length - 1
-                                                ? "opacity-30 cursor-not-allowed"
-                                                : "hover:bg-green-500/20 hover:border-green-400"
+                                            ? "opacity-30 cursor-not-allowed"
+                                            : "hover:bg-green-500/20 hover:border-green-400"
                                             }`}
                                         aria-label="Next page"
                                     >
@@ -315,7 +322,7 @@ export function ManifestoModal() {
                                             key={index}
                                             className="flex-shrink-0 w-full h-full flex items-center justify-center p-2 sm:p-4"
                                         >
-                                            <div 
+                                            <div
                                                 className="relative w-full h-[55vh] sm:h-[60vh] cursor-zoom-in"
                                                 onClick={handleImageClick}
                                             >
@@ -346,8 +353,8 @@ export function ManifestoModal() {
                                                 key={index}
                                                 onClick={() => goToPage(index)}
                                                 className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all ${currentPage === index
-                                                        ? "bg-green-400 scale-125"
-                                                        : "bg-gray-600 hover:bg-gray-500"
+                                                    ? "bg-green-400 scale-125"
+                                                    : "bg-gray-600 hover:bg-gray-500"
                                                     }`}
                                                 aria-label={`Go to page ${index + 1}`}
                                             />

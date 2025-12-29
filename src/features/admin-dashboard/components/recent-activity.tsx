@@ -1,12 +1,11 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow } from "date-fns";
-import { CreditCard, User } from "lucide-react";
+import { CreditCard, UserPlus } from "lucide-react";
 
 interface RecentActivityProps {
     recentUsers: {
@@ -26,98 +25,101 @@ interface RecentActivityProps {
     }[];
 }
 
+type ActivityItem =
+    | { type: 'user', data: RecentActivityProps['recentUsers'][0] }
+    | { type: 'bounty', data: RecentActivityProps['recentBounties'][0] };
+
 export function RecentActivity({ recentUsers, recentBounties }: RecentActivityProps) {
+    // Merge and sort activities
+    const activities: ActivityItem[] = [
+        ...recentUsers.map(user => ({ type: 'user' as const, data: user })),
+        ...recentBounties.map(bounty => ({ type: 'bounty' as const, data: bounty }))
+    ].sort((a, b) => {
+        const dateA = new Date(a.type === 'user' ? a.data.joinedAt : a.data.createdAt);
+        const dateB = new Date(b.type === 'user' ? b.data.joinedAt : b.data.createdAt);
+        return dateB.getTime() - dateA.getTime();
+    });
+
     return (
         <Card className="h-full flex flex-col">
             <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>
-                    Latest gathered platform data
+                    Latest platform events
                 </CardDescription>
             </CardHeader>
-            <CardContent>
-                <Tabs defaultValue="users" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="users">From Users</TabsTrigger>
-                        <TabsTrigger value="bounties">From Bounties</TabsTrigger>
-                    </TabsList>
-
-                    {/* Recent Users Tab */}
-                    <TabsContent value="users">
-                        <ScrollArea className="h-[300px] pr-4">
-                            <div className="space-y-4 pt-4">
-                                {recentUsers.map((user) => (
-                                    <div key={user.id} className="flex items-center justify-between space-x-4">
-                                        <div className="flex items-center space-x-4">
-                                            <Avatar>
-                                                <AvatarImage src={user.avatar} alt={user.name} />
-                                                <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
-                                            </Avatar>
-                                            <div className="space-y-1">
-                                                <p className="text-sm font-medium leading-none">{user.name}</p>
-                                                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                                                    <User className="w-3 h-3" />
-                                                    {user.role}
-                                                </p>
+            <CardContent className="flex-1 min-h-0">
+                <ScrollArea className="h-[calc(100%-20px)] pr-4">
+                    <div className="space-y-6 pt-2">
+                        {activities.map((item, index) => (
+                            <div key={`${item.type}-${item.data.id}`} className="flex items-start justify-between space-x-4">
+                                <div className="flex items-start space-x-3">
+                                    <div className="mt-1">
+                                        {item.type === 'user' ? (
+                                            <div className="p-2 bg-blue-500/10 rounded-full">
+                                                <UserPlus className="w-4 h-4 text-blue-500" />
                                             </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="text-xs text-muted-foreground">
-                                                {formatDistanceToNow(new Date(user.joinedAt), { addSuffix: true })}
-                                            </span>
-                                        </div>
+                                        ) : (
+                                            <div className="p-2 bg-purple-500/10 rounded-full">
+                                                <CreditCard className="w-4 h-4 text-purple-500" />
+                                            </div>
+                                        )}
                                     </div>
-                                ))}
-                                {recentUsers.length === 0 && (
-                                    <div className="text-center text-muted-foreground py-8">
-                                        No recent users found.
+                                    <div className="space-y-1">
+                                        {item.type === 'user' ? (
+                                            <>
+                                                <p className="text-sm font-medium leading-none">
+                                                    New User Registration
+                                                </p>
+                                                <div className="flex items-center gap-2">
+                                                    <Avatar className="w-5 h-5">
+                                                        <AvatarImage src={item.data.avatar} alt={item.data.name} />
+                                                        <AvatarFallback className="text-[10px]">{item.data.name.charAt(0).toUpperCase()}</AvatarFallback>
+                                                    </Avatar>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        <span className="font-medium text-foreground">{item.data.name}</span> joined as {item.data.role}
+                                                    </p>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="text-sm font-medium leading-none">
+                                                    New Bounty Posted
+                                                </p>
+                                                <div className="space-y-1">
+                                                    <p className="text-sm text-foreground line-clamp-1">
+                                                        {item.data.title}
+                                                    </p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        Reward: <span className="text-green-500 font-medium">RM {item.data.reward.toLocaleString()}</span>
+                                                    </p>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
-                                )}
+                                </div>
+                                <div className="flex flex-col items-end gap-1 min-w-[60px]">
+                                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                                        {formatDistanceToNow(new Date(item.type === 'user' ? item.data.joinedAt : item.data.createdAt), { addSuffix: true })}
+                                    </span>
+                                    {item.type === 'bounty' && (
+                                        <Badge variant={
+                                            item.data.status === 'open' || item.data.status === 'published' ? 'default' :
+                                                item.data.status === 'completed' || item.data.status === 'paid' ? 'secondary' : 'outline'
+                                        } className="text-[10px] px-1.5 py-0">
+                                            {item.data.status}
+                                        </Badge>
+                                    )}
+                                </div>
                             </div>
-                        </ScrollArea>
-                    </TabsContent>
-
-                    {/* Recent Bounties Tab */}
-                    <TabsContent value="bounties">
-                        <ScrollArea className="h-[300px] pr-4">
-                            <div className="space-y-4 pt-4">
-                                {recentBounties.map((bounty) => (
-                                    <div key={bounty.id} className="flex items-center justify-between space-x-4">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="p-2 bg-muted rounded-full">
-                                                <CreditCard className="w-4 h-4 text-foreground" />
-                                            </div>
-                                            <div className="space-y-1">
-                                                <p className="text-sm font-medium leading-none line-clamp-1 max-w-[180px] sm:max-w-[250px]">
-                                                    {bounty.title}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    Reward: RM {bounty.reward.toLocaleString()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col items-end gap-1">
-                                            <Badge variant={
-                                                bounty.status === 'open' || bounty.status === 'published' ? 'default' :
-                                                    bounty.status === 'completed' || bounty.status === 'paid' ? 'secondary' : 'outline'
-                                            } className="text-[10px] px-1.5 py-0">
-                                                {bounty.status}
-                                            </Badge>
-                                            <span className="text-[10px] text-muted-foreground">
-                                                {formatDistanceToNow(new Date(bounty.createdAt), { addSuffix: true })}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))}
-                                {recentBounties.length === 0 && (
-                                    <div className="text-center text-muted-foreground py-8">
-                                        No recent bounties found.
-                                    </div>
-                                )}
+                        ))}
+                        {activities.length === 0 && (
+                            <div className="text-center text-muted-foreground py-8">
+                                No recent activity found.
                             </div>
-                        </ScrollArea>
-                    </TabsContent>
-                </Tabs>
+                        )}
+                    </div>
+                </ScrollArea>
             </CardContent>
         </Card>
     );

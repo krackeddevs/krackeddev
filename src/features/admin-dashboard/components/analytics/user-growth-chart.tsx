@@ -7,27 +7,87 @@ interface UserGrowthChartProps {
     data: { date: string; count: number }[];
 }
 
-export function UserGrowthChart({ data }: UserGrowthChartProps) {
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getUserGrowth } from '../../actions';
+
+interface UserGrowthChartProps {
+    data: { date: string; count: number }[];
+}
+
+export function UserGrowthChart({ data: initialData }: UserGrowthChartProps) {
+    const [period, setPeriod] = React.useState<'daily' | 'weekly' | 'monthly'>('monthly');
+    const [data, setData] = React.useState(initialData);
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    React.useEffect(() => {
+        async function fetchData() {
+            // Optimization: If switching back to monthly and we have initialData (assuming initial is monthly),
+            // we could revert to it. But for simplicity and freshness, let's fetch.
+            // Actually, getAnalyticsData defaults to monthly.
+
+            setIsLoading(true);
+            const result = await getUserGrowth(period);
+            if (result.data) {
+                setData(result.data);
+            }
+            setIsLoading(false);
+        }
+
+        fetchData();
+    }, [period]);
+
     return (
-        <div className="w-full h-[300px] md:h-[400px] border rounded-lg bg-card p-4">
-            <h3 className="text-lg font-semibold mb-4">User Growth</h3>
-            <ResponsiveContainer width="100%" height="90%">
-                <AreaChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                    <defs>
-                        <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#38b2ac" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#38b2ac" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <XAxis dataKey="date" stroke="#9ca3af" tick={{ fontSize: 10 }} />
-                    <YAxis stroke="#9ca3af" tick={{ fontSize: 10 }} />
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <Tooltip
-                        contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
-                    />
-                    <Area type="monotone" dataKey="count" stroke="#38b2ac" fillOpacity={1} fill="url(#colorCount)" />
-                </AreaChart>
-            </ResponsiveContainer>
+        <div className="w-full h-[300px] md:h-[400px] border rounded-lg bg-card p-4 flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">User Growth</h3>
+                <Tabs value={period} onValueChange={(v) => setPeriod(v as any)} className="w-auto">
+                    <TabsList className="h-8">
+                        <TabsTrigger value="daily" className="text-xs px-2 h-6">Daily</TabsTrigger>
+                        <TabsTrigger value="weekly" className="text-xs px-2 h-6">Weekly</TabsTrigger>
+                        <TabsTrigger value="monthly" className="text-xs px-2 h-6">Monthly</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+            </div>
+            <div className="flex-1 min-h-0 relative">
+                {isLoading && (
+                    <div className="absolute inset-0 bg-background/50 flex items-center justify-center z-10 backdrop-blur-sm">
+                        <div className="text-sm text-muted-foreground animate-pulse">Loading...</div>
+                    </div>
+                )}
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <defs>
+                            <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#38b2ac" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="#38b2ac" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <XAxis
+                            dataKey="date"
+                            stroke="#9ca3af"
+                            tick={{ fontSize: 10 }}
+                            tickFormatter={(value) => {
+                                if (period === 'monthly') return value.substring(0, 7); // YYYY-MM
+                                return value.substring(5); // MM-DD
+                            }}
+                        />
+                        <YAxis stroke="#9ca3af" tick={{ fontSize: 10 }} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <Tooltip
+                            contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
+                            labelStyle={{ color: '#9ca3af' }}
+                        />
+                        <Area
+                            type="monotone"
+                            dataKey="count"
+                            stroke="#38b2ac"
+                            fillOpacity={1}
+                            fill="url(#colorCount)"
+                            animationDuration={500}
+                        />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     );
 }
