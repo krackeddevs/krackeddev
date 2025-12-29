@@ -107,15 +107,27 @@ export default function JobDetailClient({ id }: { id: string }) {
             </div>
 
             <div className="pt-6">
-              {job.sourceUrl && (
+              {job.applicationMethod === "email" ? (
                 <Button
                   className="bg-white text-black hover:bg-gray-200 h-10 px-6 font-mono rounded-none text-sm"
-                  onClick={() => window.open(job.sourceUrl!, "_blank")}
+                  onClick={() =>
+                    (window.location.href = `mailto:${job.applicationUrl}`)
+                  }
+                >
+                  Apply via Email
+                  <ExternalLink className="w-3 h-3 ml-2" />
+                </Button>
+              ) : (job.applicationUrl || job.sourceUrl) ? (
+                <Button
+                  className="bg-white text-black hover:bg-gray-200 h-10 px-6 font-mono rounded-none text-sm"
+                  onClick={() =>
+                    window.open(job.applicationUrl || job.sourceUrl!, "_blank")
+                  }
                 >
                   Apply Now
                   <ExternalLink className="w-3 h-3 ml-2" />
                 </Button>
-              )}
+              ) : null}
             </div>
 
             <div className="space-y-6 py-8">

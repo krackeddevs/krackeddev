@@ -109,6 +109,16 @@ const Navbar = () => {
                 </Link>
               </Button>
             )}
+
+          {/* Hiring Button */}
+          <Button
+            variant="ghost"
+            asChild
+            className="hidden md:flex py-2 h-auto w-auto px-2 sm:px-4 text-muted-foreground hover:text-foreground"
+          >
+            <Link href="/hire/register">Hiring?</Link>
+          </Button>
+
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -156,23 +166,25 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Toggle */}
-        {!shouldHideNavLinks && (
-          <div className="flex items-center gap-4 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-foreground hover:text-neon-primary"
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </Button>
-          </div>
-        )}
-      </div>
+        {
+          !shouldHideNavLinks && (
+            <div className="flex items-center gap-4 md:hidden">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-foreground hover:text-neon-primary"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </Button>
+            </div>
+          )
+        }
+      </div >
       <div className="border-t border-white/10 bg-white/5 backdrop-blur-md">
         <div className="overflow-hidden">
           <div className="marquee text-[10px] sm:text-xs font-mono text-foreground/80">
@@ -358,7 +370,7 @@ const Navbar = () => {
             : "w-0 opacity-0",
         )}
       />
-    </motion.nav>
+    </motion.nav >
   );
 };
 

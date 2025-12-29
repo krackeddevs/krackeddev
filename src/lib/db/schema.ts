@@ -40,6 +40,26 @@ export const profiles = pgTable(
 );
 
 // ============================================
+// COMPANIES TABLE
+// ============================================
+export const companies = pgTable('companies', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  logoUrl: text('logo_url'),
+  websiteUrl: text('website_url'),
+  linkedinUrl: text('linkedin_url'),
+  twitterUrl: text('twitter_url'),
+  description: text('description'),
+  size: text('size'),
+  industry: text('industry'),
+  location: text('location'),
+  isVerified: boolean('is_verified').default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+});
+
+// ============================================
 // PAGE VIEWS TABLE
 // ============================================
 export const pageViews = pgTable(
@@ -67,6 +87,7 @@ export const jobs = pgTable(
   {
     id: text('id').primaryKey(),
     title: text('title').notNull(),
+    companyId: uuid('company_id').references(() => companies.id), // Added relation
     company: text('company').notNull(),
     companyLogo: text('company_logo'),
     description: text('description').notNull(),
@@ -75,6 +96,9 @@ export const jobs = pgTable(
     salaryMin: integer('salary_min'),
     salaryMax: integer('salary_max'),
     employmentType: text('employment_type'),
+    jobType: text('job_type').default('external'), // internal vs external
+    applicationMethod: text('application_method').default('url'), // url, email, etc
+    applicationUrl: text('application_url'),
     sourceUrl: text('source_url'),
     sourceSite: text('source_site'),
     postedAt: timestamp('posted_at', { withTimezone: true }),
