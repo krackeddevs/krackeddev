@@ -90,3 +90,18 @@
 - [ ] Display Company Header (Logo, Name, Website, Socials).
 - [ ] "About" section.
 - [ ] List of "Active Jobs" by this company.
+
+### STORY-9.7: Company Verification Flow
+
+**As a** Hiring Manager
+**I want to** request verification for my company
+**So that** I can display a verified badge and build trust with job seekers.
+
+**Acceptance Criteria:**
+- [ ] Database: `company_verification_requests` table with business docs, email verification, and admin review fields.
+- [ ] UI: Multi-step verification request wizard in Company Dashboard.
+- [ ] Email Verification: Domain-matched email with 6-digit code.
+- [ ] Admin Panel: Review interface to approve/reject requests.
+- [ ] Notifications: Email alerts on status changes.
+- [ ] Verified Badge: Display on company profile and job listings after approval.
+

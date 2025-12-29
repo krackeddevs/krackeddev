@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, integer, timestamp, index, boolean, numeric, pgEnum } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 // ============================================
 // ENUMS
@@ -58,6 +59,58 @@ export const companies = pgTable('companies', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });
+
+// ============================================
+// COMPANY VERIFICATION REQUESTS TABLE
+// ============================================
+export const companyVerificationRequests = pgTable(
+  'company_verification_requests',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id, { onDelete: 'cascade' }),
+    requestedBy: uuid('requested_by')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+
+    // Business Details
+    businessRegistrationNumber: text('business_registration_number').notNull(),
+    registrationDocumentUrl: text('registration_document_url'),
+    taxId: text('tax_id'),
+
+    // Contact Verification
+    verificationEmail: text('verification_email').notNull(),
+    emailVerified: boolean('email_verified').notNull().default(false),
+    verificationCode: text('verification_code'),
+    codeExpiresAt: timestamp('code_expires_at', { withTimezone: true }),
+
+    // Requester Details
+    requesterName: text('requester_name').notNull(),
+    requesterTitle: text('requester_title').notNull(),
+    requesterPhone: text('requester_phone').notNull(),
+
+    // Context
+    reason: text('reason').notNull(),
+    expectedJobCount: text('expected_job_count').notNull(),
+
+    // Admin Review
+    status: text('status').notNull().default('pending'),
+    reviewedBy: uuid('reviewed_by').references(() => profiles.id),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+    adminNotes: text('admin_notes'),
+    rejectionReason: text('rejection_reason'),
+
+    // Timestamps
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  },
+  (table) => ({
+    companyIdIdx: index('idx_company_verification_requests_company_id').on(table.companyId),
+    statusIdx: index('idx_company_verification_requests_status').on(table.status),
+    createdAtIdx: index('idx_company_verification_requests_created_at').on(table.createdAt),
+  })
+);
 
 // ============================================
 // PAGE VIEWS TABLE
@@ -219,5 +272,28 @@ export const jobApplications = pgTable(
     jobIdIdx: index('job_applications_job_id_idx').on(table.jobId),
     userIdIdx: index('job_applications_user_id_idx').on(table.userId),
     statusIdx: index('job_applications_status_idx').on(table.status),
+  })
+);
+
+
+// ============================================
+// RELATIONS
+// ============================================
+
+export const companyVerificationRequestsRelations = relations(
+  companyVerificationRequests,
+  ({ one }) => ({
+    company: one(companies, {
+      fields: [companyVerificationRequests.companyId],
+      references: [companies.id],
+    }),
+    requester: one(profiles, {
+      fields: [companyVerificationRequests.requestedBy],
+      references: [profiles.id],
+    }),
+    reviewer: one(profiles, {
+      fields: [companyVerificationRequests.reviewedBy],
+      references: [profiles.id],
+    }),
   })
 );

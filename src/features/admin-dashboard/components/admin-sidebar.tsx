@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Target, Users, GitPullRequest } from 'lucide-react';
+import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck } from 'lucide-react';
 
 interface SidebarContentProps {
     className?: string;
@@ -43,6 +43,14 @@ export function AdminSidebarContent({ className, onLinkClick }: SidebarContentPr
                 >
                     <Users className="w-4 h-4" />
                     Users
+                </Link>
+                <Link
+                    href="/admin/verifications"
+                    onClick={onLinkClick}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+                >
+                    <BadgeCheck className="w-4 h-4" />
+                    Verifications
                 </Link>
             </nav>
         </div>

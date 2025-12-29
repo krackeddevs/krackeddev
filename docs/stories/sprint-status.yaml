@@ -85,3 +85,16 @@ development_status:
   8-7-social-feed-notifications: backlog
   8-8-engagement-reports: backlog
   epic-8-retrospective: optional
+
+  epic-9-jobs-platform-v2:
+    status: in-progress
+    stories:
+      9-1-job-scraper-api: completed
+      9-2-company-registration-dashboard: completed
+      9-3-job-listing-page: completed
+      9-4-job-detail-page: completed
+      9-5-internal-application-flow: completed
+      9-6-jobs-page-ux-refinement: completed
+      9-7-company-verification-flow: review
+  epic-9-retrospective: optional
+```
