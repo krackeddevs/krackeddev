@@ -25,9 +25,9 @@ export function AdminStatsCard({
 }: AdminStatsCardProps) {
     if (isLoading) {
         return (
-            <Card>
+            <Card className="border-green-500/30 bg-black/40">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
+                    <CardTitle className="text-sm font-medium font-mono">
                         <div className="h-4 w-24 bg-muted animate-pulse rounded" />
                     </CardTitle>
                     <div className="h-4 w-4 bg-muted animate-pulse rounded" />
@@ -41,20 +41,20 @@ export function AdminStatsCard({
     }
 
     return (
-        <Card className="hover:shadow-lg transition-shadow">
+        <Card className="border-green-500/30 bg-black/40 hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{title}</CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium font-mono text-green-400 uppercase">{title}</CardTitle>
+                <Icon className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
+                <div className="text-2xl font-bold font-mono text-green-500">{value}</div>
                 {(description || trend) && (
                     <div className="flex items-center gap-2 mt-1">
                         {trend && (
                             <span
                                 className={cn(
-                                    "flex items-center gap-1 text-xs font-medium",
-                                    trend.isPositive ? "text-green-600" : "text-red-600"
+                                    "flex items-center gap-1 text-xs font-medium font-mono",
+                                    trend.isPositive ? "text-green-400" : "text-red-400"
                                 )}
                             >
                                 {trend.isPositive ? (
@@ -66,7 +66,7 @@ export function AdminStatsCard({
                             </span>
                         )}
                         {description && (
-                            <p className="text-xs text-muted-foreground">{description}</p>
+                            <p className="text-xs text-muted-foreground font-mono">{description}</p>
                         )}
                     </div>
                 )}
