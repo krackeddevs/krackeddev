@@ -7,3 +7,4 @@ export { LevelComplete } from "./components/level-complete";
 export { useDojoDialogue } from "./hooks/use-dojo-dialogue";
 export { useLevelProgress } from "./hooks/use-level-progress";
 export { useChallenge } from "./hooks/use-challenge";
+export { MobileWarningModal } from "./components/mobile-warning-modal";
