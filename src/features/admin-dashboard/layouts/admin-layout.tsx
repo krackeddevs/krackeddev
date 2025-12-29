@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from 'react';
 import { AdminSidebar, AdminSidebarContent } from '../components/admin-sidebar';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -33,6 +33,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="left" className="w-[80%] max-w-[300px] p-0">
+                                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                                 <AdminSidebarContent className="p-4" onLinkClick={() => setOpen(false)} />
                             </SheetContent>
                         </Sheet>
