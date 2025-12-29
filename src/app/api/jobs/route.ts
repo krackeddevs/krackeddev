@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { jobs } from "@/lib/db/schema";
-import { and, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
+import { jobs, companies } from "@/lib/db/schema";
+import { and, desc, eq, gte, ilike, lte, or, sql, getTableColumns } from "drizzle-orm";
 
 export async function GET(req: NextRequest) {
   try {
@@ -55,9 +55,14 @@ export async function GET(req: NextRequest) {
     // Let's stick to simple "salary_min" filter for now as "Minimum Salary".
 
     // Construct Query
-    const data = await db
-      .select()
+    const results = await db
+      .select({
+        ...getTableColumns(jobs),
+        // Prioritize company profile logo, fallback to job post logo
+        companyLogo: sql<string>`COALESCE(${companies.logoUrl}, ${jobs.companyLogo})`,
+      })
       .from(jobs)
+      .leftJoin(companies, eq(jobs.companyId, companies.id))
       .where(and(...conditions))
       .limit(limit)
       .offset(offset)
@@ -69,10 +74,10 @@ export async function GET(req: NextRequest) {
     //   .from(jobs)
     //   .where(and(...conditions));
 
-    const nextCursor = data.length === limit ? offset + limit : null;
+    const nextCursor = results.length === limit ? offset + limit : null;
 
     return NextResponse.json({
-      data,
+      data: results,
       nextCursor,
     });
   } catch (error) {

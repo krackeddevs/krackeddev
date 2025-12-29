@@ -25,14 +25,36 @@ export const metadata: Metadata = {
   },
 };
 
+import "@/styles/jobs.css";
+
 export default function JobsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <>
-      {children}
-    </>
+    <div className="min-h-screen bg-black text-white relative selection:bg-neon-lime selection:text-black">
+      {/* Global Grid Overlay (Matching Landing Page) */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 opacity-[0.15]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0, 255, 0, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.4) 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+        }}
+      />
+
+      {/* CRT Scanline Overlay - Fixed to viewport */}
+      <div className="scanlines fixed inset-0 pointer-events-none z-50 h-screen"></div>
+
+      {/* Background Effects */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-neon-primary/10 rounded-full blur-3xl opacity-30" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-neon-secondary/10 rounded-full blur-3xl opacity-30" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10">{children}</div>
+    </div>
   );
 }
