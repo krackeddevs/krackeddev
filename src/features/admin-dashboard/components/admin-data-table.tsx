@@ -217,8 +217,8 @@ export function AdminDataTable<T extends { id: string }>({
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="flex items-center justify-between">
-                    <p className="text-sm text-muted-foreground">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p className="text-sm text-muted-foreground font-mono">
                         Showing {(currentPage - 1) * pageSize + 1} to{" "}
                         {Math.min(currentPage * pageSize, sortedData.length)} of{" "}
                         {sortedData.length} results
@@ -229,11 +229,12 @@ export function AdminDataTable<T extends { id: string }>({
                             size="sm"
                             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                             disabled={currentPage === 1}
+                            className="min-w-[100px]"
                         >
-                            <ChevronLeft className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-2">Previous</span>
+                            <ChevronLeft className="h-4 w-4 mr-1" />
+                            Previous
                         </Button>
-                        <span className="text-sm">
+                        <span className="text-sm font-mono px-2">
                             Page {currentPage} of {totalPages}
                         </span>
                         <Button
@@ -241,9 +242,10 @@ export function AdminDataTable<T extends { id: string }>({
                             size="sm"
                             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                             disabled={currentPage === totalPages}
+                            className="min-w-[100px]"
                         >
-                            <span className="hidden sm:inline mr-2">Next</span>
-                            <ChevronRight className="h-4 w-4" />
+                            Next
+                            <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                     </div>
                 </div>

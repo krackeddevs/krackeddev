@@ -2,7 +2,13 @@
 
 import { AdminDataTable, Column } from "@/features/admin-dashboard/components/admin-data-table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
+import { Ban, UserCheck } from "lucide-react";
+import { banUser, unbanUser } from "@/features/admin-dashboard/actions/user-actions";
+import { toast } from "@/lib/toast";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type User = {
     id: string;
@@ -18,6 +24,9 @@ interface UsersTableClientProps {
 }
 
 export function UsersTableClient({ users }: UsersTableClientProps) {
+    const router = useRouter();
+    const [processing, setProcessing] = useState<string | null>(null);
+
     const getRoleBadge = (role: string) => {
         const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
             admin: "destructive",
@@ -29,6 +38,23 @@ export function UsersTableClient({ users }: UsersTableClientProps) {
                 {role.toUpperCase()}
             </Badge>
         );
+    };
+
+    const handleBanToggle = async (user: User) => {
+        setProcessing(user.id);
+        const action = user.is_banned ? unbanUser : banUser;
+        const actionName = user.is_banned ? "unbanned" : "banned";
+
+        const { success, error } = await action(user.id);
+
+        if (success) {
+            toast.success(`User ${actionName} successfully`);
+            router.refresh();
+        } else {
+            toast.error(error || `Failed to ${actionName.slice(0, -2)} user`);
+        }
+
+        setProcessing(null);
     };
 
     const columns: Column<User>[] = [
@@ -77,6 +103,55 @@ export function UsersTableClient({ users }: UsersTableClientProps) {
                 ) : (
                     <Badge variant="outline">Active</Badge>
                 ),
+        },
+        {
+            key: "actions",
+            label: "Actions",
+            render: (user) => (
+                <div className="flex gap-2">
+                    <Button
+                        size="sm"
+                        variant={user.is_banned ? "default" : "destructive"}
+                        onClick={() => handleBanToggle(user)}
+                        disabled={processing === user.id}
+                    >
+                        {user.is_banned ? (
+                            <>
+                                <UserCheck className="w-4 h-4 mr-1" />
+                                Unban
+                            </>
+                        ) : (
+                            <>
+                                <Ban className="w-4 h-4 mr-1" />
+                                Ban
+                            </>
+                        )}
+                    </Button>
+                </div>
+            ),
+            mobileRender: (user) => (
+                <div className="flex flex-col gap-2 pt-2 border-t">
+                    <Button
+                        size="sm"
+                        variant={user.is_banned ? "default" : "destructive"}
+                        onClick={() => handleBanToggle(user)}
+                        disabled={processing === user.id}
+                        className="w-full"
+                    >
+                        {user.is_banned ? (
+                            <>
+                                <UserCheck className="w-4 h-4 mr-1" />
+                                Unban User
+                            </>
+                        ) : (
+                            <>
+                                <Ban className="w-4 h-4 mr-1" />
+                                Ban User
+                            </>
+                        )}
+                    </Button>
+                </div>
+            ),
         },
     ];
 
