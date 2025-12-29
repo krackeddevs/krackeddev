@@ -13,9 +13,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { useState } from "react";
+import { ApplicationModal } from "@/features/jobs/components/application-modal";
 
 export default function JobDetailClient({ id }: { id: string }) {
   const { data: job, isLoading, error } = useJob(id);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -75,9 +78,18 @@ export default function JobDetailClient({ id }: { id: string }) {
               <h1 className="text-2xl md:text-4xl font-bold font-mono text-white tracking-tight">
                 {job.title}
               </h1>
-              <div className="text-xl text-gray-300 font-mono">
-                {job.company}
-              </div>
+              {job.companySlug ? (
+                <Link
+                  href={`/companies/${job.companySlug}`}
+                  className="text-xl text-gray-300 hover:text-white transition-colors font-mono"
+                >
+                  {job.company} →
+                </Link>
+              ) : (
+                <div className="text-xl text-gray-300 font-mono">
+                  {job.company}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-y border-white/10 py-6">
@@ -117,6 +129,23 @@ export default function JobDetailClient({ id }: { id: string }) {
                   Apply via Email
                   <ExternalLink className="w-3 h-3 ml-2" />
                 </Button>
+              ) : job.applicationMethod === "internal_form" ? (
+                <>
+                  <Button
+                    className="bg-white text-black hover:bg-gray-200 h-10 px-6 font-mono rounded-none text-sm"
+                    onClick={() => setIsApplyModalOpen(true)}
+                  >
+                    Apply Now
+                    <Briefcase className="w-3 h-3 ml-2" />
+                  </Button>
+                  <ApplicationModal
+                    isOpen={isApplyModalOpen}
+                    onClose={() => setIsApplyModalOpen(false)}
+                    jobId={job.id}
+                    jobTitle={job.title}
+                    companyName={job.company}
+                  />
+                </>
               ) : (job.applicationUrl || job.sourceUrl) ? (
                 <Button
                   className="bg-white text-black hover:bg-gray-200 h-10 px-6 font-mono rounded-none text-sm"

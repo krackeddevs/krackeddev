@@ -162,7 +162,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
             {!isOpen && isLoggedIn && (
                 <button
                     onClick={handleOpen}
-                    className="fixed bottom-6 left-6 z-50 group flex items-center gap-2 px-4 py-3 bg-gray-900/90 hover:bg-gray-800 border-2 border-green-500/50 hover:border-green-400 rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)]"
+                    className="fixed bottom-6 left-6 z-50 group flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-gray-900/90 hover:bg-gray-800 border-2 border-green-500/50 hover:border-green-400 rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)]"
                     aria-label="Open Manifesto"
                 >
                     <Scroll className="w-5 h-5 text-green-400" />

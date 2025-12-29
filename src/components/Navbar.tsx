@@ -38,6 +38,7 @@ const Navbar = () => {
     "/onboarding",
   ];
   const isJobDetailPage = pathname?.startsWith("/jobs/");
+  const isDashboardPage = pathname?.startsWith("/dashboard");
   const shouldHideNavLinks =
     isHomepage || gamePages.includes(pathname) || isJobDetailPage;
 
@@ -48,6 +49,9 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Completely hide navbar on dashboard (after all hooks)
+  if (isDashboardPage) return null;
 
   return (
     <motion.nav

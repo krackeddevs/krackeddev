@@ -59,11 +59,18 @@ export function JobsList({ jobs }: JobsListProps) {
                                     {job.employment_type}
                                 </CardDescription>
                             </div>
-                            <Button variant="outline" size="sm" asChild>
-                                <Link href={`/jobs/${job.id}`} target="_blank">
-                                    View Live <ExternalLink className="ml-2 h-3 w-3" />
-                                </Link>
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button variant="outline" size="sm" asChild>
+                                    <Link href={`/dashboard/company/jobs/${job.id}/edit`}>
+                                        Edit
+                                    </Link>
+                                </Button>
+                                <Button variant="outline" size="sm" asChild>
+                                    <Link href={`/jobs/${job.id}`} target="_blank">
+                                        View Live <ExternalLink className="ml-2 h-3 w-3" />
+                                    </Link>
+                                </Button>
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -74,7 +81,7 @@ export function JobsList({ jobs }: JobsListProps) {
                                         : "Salary not specified"}
                                 </div>
                                 <div>
-                                    Posted {new Date(job.posted_at).toLocaleDateString()}
+                                    Posted {new Date(job.posted_at).toLocaleDateString('en-US')}
                                 </div>
                             </div>
                         </CardContent>

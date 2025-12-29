@@ -12,7 +12,7 @@ import { NavigationHub } from "./components/navigation-hub";
 import { CommunityMap } from "./components/community-map";
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
-import { Users, ChevronDown } from "lucide-react";
+import { Users, ChevronDown, Building2, ScrollText } from "lucide-react";
 
 
 import { MiniProfile } from "./components/mini-profile";
@@ -109,10 +109,19 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                         <BrandCTA />
                     </section>
 
-                    {/* Floating Members Button - Above Manifesto on left */}
+                    {/* Floating Companies Button - Top on left */}
+                    <Link
+                        href="/companies"
+                        className="fixed bottom-[128px] sm:bottom-[152px] left-6 flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-gray-900/90 hover:bg-gray-800 border-2 border-green-500/50 hover:border-green-400 rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] font-mono text-sm z-40"
+                    >
+                        <Building2 className="w-5 h-5 text-green-400" />
+                        <span className="text-green-400 hidden sm:inline">Companies</span>
+                    </Link>
+
+                    {/* Floating Members Button - Middle on left */}
                     <Link
                         href="/members"
-                        className="fixed bottom-20 left-6 flex items-center gap-2 px-4 py-3 bg-gray-900/90 hover:bg-gray-800 border-2 border-green-500/50 hover:border-green-400 rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] font-mono text-sm z-40"
+                        className="fixed bottom-[76px] sm:bottom-[88px] left-6 flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-gray-900/90 hover:bg-gray-800 border-2 border-green-500/50 hover:border-green-400 rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] font-mono text-sm z-40"
                     >
                         <Users className="w-5 h-5 text-green-400" />
                         <span className="text-green-400 hidden sm:inline">Community</span>

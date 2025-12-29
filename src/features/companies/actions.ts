@@ -101,24 +101,46 @@ export async function getUserCompany() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return null;
+    if (!user) {
+        console.log("[getUserCompany] No user found");
+        return null;
+    }
 
-    const { data, error } = await supabase
+    console.log("[getUserCompany] Fetching for user:", user.id);
+
+    // Get company_member record
+    const { data: memberData, error: memberError } = await supabase
         .from("company_members")
-        .select("company:companies(*)")
+        .select("company_id")
         .eq("user_id", user.id)
-        .eq("role", "owner") // Or admin/member if we want to support that later
-        .limit(1);
+        .eq("role", "owner")
+        .limit(1)
+        .single();
 
-    if (error) {
-        console.error("getUserCompany error:", JSON.stringify(error, null, 2));
+    console.log("[getUserCompany] Member data:", memberData);
+    console.log("[getUserCompany] Member error:", memberError);
+
+    if (memberError || !memberData) {
+        console.error("getUserCompany memberError:", JSON.stringify(memberError, null, 2));
+        return null;
     }
 
-    if (data && data.length > 0) {
-        return data[0].company;
+    // Get company
+    const { data: companyData, error: companyError } = await supabase
+        .from("companies")
+        .select("*")
+        .eq("id", memberData.company_id)
+        .single();
+
+    console.log("[getUserCompany] Company data:", companyData);
+    console.log("[getUserCompany] Company error:", companyError);
+
+    if (companyError) {
+        console.error("getUserCompany companyError:", JSON.stringify(companyError, null, 2));
+        return null;
     }
 
-    return null;
+    return companyData;
 }
 
 export async function createJob(data: CreateJobInput) {
@@ -170,13 +192,21 @@ export async function getCompanyJobs() {
     const supabase = await createClient();
     const company = await getUserCompany();
 
-    if (!company) return { data: [] };
+    console.log("[getCompanyJobs] Company:", company);
+
+    if (!company) {
+        console.log("[getCompanyJobs] No company found, returning empty array");
+        return { data: [] };
+    }
 
     const { data, error } = await supabase
         .from("jobs")
         .select("*")
         .eq("company_id", company.id)
         .order("posted_at", { ascending: false });
+
+    console.log("[getCompanyJobs] Jobs data:", data);
+    console.log("[getCompanyJobs] Jobs error:", error);
 
     if (error) {
         console.error("getCompanyJobs error:", error);
@@ -185,6 +215,71 @@ export async function getCompanyJobs() {
 
     return { data };
 }
+
+export async function getJobById(jobId: string) {
+    const supabase = await createClient();
+    const company = await getUserCompany();
+
+    console.log("[getJobById] Fetching job:", jobId, "for company:", company?.id);
+
+    if (!company) {
+        console.log("[getJobById] No company found");
+        return { data: null, error: "No company found" };
+    }
+
+    const { data, error } = await supabase
+        .from("jobs")
+        .select("*")
+        .eq("id", jobId)
+        .eq("company_id", company.id)
+        .maybeSingle(); // Use maybeSingle instead of single to handle 0 rows gracefully
+
+    console.log("[getJobById] Result - data:", data, "error:", error);
+
+    if (error) {
+        console.error("getJobById error:", error);
+        return { data: null, error: error.message };
+    }
+
+    return { data };
+}
+
+export async function updateJob(jobId: string, jobData: CreateJobInput) {
+    const supabase = await createClient();
+    const company = await getUserCompany();
+
+    if (!company) {
+        return { error: "No company found" };
+    }
+
+    const { error } = await supabase
+        .from("jobs")
+        .update({
+            title: jobData.title,
+            description: jobData.description,
+            location: jobData.location,
+            is_remote: jobData.is_remote,
+            employment_type: jobData.employment_type,
+            job_type: jobData.job_type,
+            salary_min: jobData.salary_min,
+            salary_max: jobData.salary_max,
+            application_method: jobData.application_method,
+            application_url: jobData.application_url,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("id", jobId)
+        .eq("company_id", company.id);
+
+    if (error) {
+        console.error("updateJob error:", error);
+        return { error: "Failed to update job" };
+    }
+
+    revalidatePath("/dashboard/company/jobs");
+    revalidatePath(`/jobs/${jobId}`);
+    return { success: true };
+}
+
 
 
 export async function getCompanyStats() {

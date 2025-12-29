@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createJobSchema, CreateJobInput } from "../schemas";
-import { createJob } from "../actions";
+import { createJob, updateJob } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,21 +29,25 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function JobPostingWizard() {
+interface JobPostingWizardProps {
+    initialData?: any;
+    isEditing?: boolean;
+    jobId?: string;
+}
+
+export function JobPostingWizard({ initialData, isEditing = false, jobId }: JobPostingWizardProps = {}) {
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
 
     const form = useForm<CreateJobInput>({
         resolver: zodResolver(createJobSchema),
-        defaultValues: {
+        defaultValues: initialData || {
             title: "",
             description: "",
             location: "",
             employment_type: "Full-time",
             is_remote: false,
-            job_type: "external",
-            application_method: "url",
-            application_url: "",
+            application_method: "internal",
         },
     });
 
@@ -52,11 +56,14 @@ export function JobPostingWizard() {
     function onSubmit(data: CreateJobInput) {
         startTransition(async () => {
             try {
-                const result = await createJob(data);
+                const result = isEditing && jobId
+                    ? await updateJob(jobId, data)
+                    : await createJob(data);
+
                 if (result?.error) {
                     toast.error(result.error);
                 } else if (result?.success) {
-                    toast.success("Job posted successfully!");
+                    toast.success(isEditing ? "Job updated successfully!" : "Job posted successfully!");
                     router.push("/dashboard/company/jobs");
                 }
             } catch (e) {
@@ -212,9 +219,9 @@ export function JobPostingWizard() {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
+                                                <SelectItem value="internal_form">Internal (On Platform)</SelectItem>
                                                 <SelectItem value="url">External Link</SelectItem>
                                                 <SelectItem value="email">Email</SelectItem>
-                                                {/* <SelectItem value="internal_form">Internal Form (Coming Soon)</SelectItem> */}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -236,6 +243,28 @@ export function JobPostingWizard() {
                                         </FormItem>
                                     )}
                                 />
+                            )}
+
+                            {applicationMethod === "email" && (
+                                <FormField
+                                    control={form.control}
+                                    name="application_url"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Contact Email</FormLabel>
+                                            <FormControl>
+                                                <Input type="email" placeholder="jobs@company.com" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+
+                            {applicationMethod === "internal_form" && (
+                                <div className="text-sm text-gray-600 bg-green-50 p-3 rounded border border-green-200">
+                                    ✅ Candidates will apply directly on the platform. You'll review applications in the "Applicants" tab.
+                                </div>
                             )}
                         </div>
 

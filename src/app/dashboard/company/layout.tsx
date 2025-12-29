@@ -21,5 +21,5 @@ export default async function DashboardCompanyLayout({
         redirect("/hire/register");
     }
 
-    return <CompanyDashboardLayout>{children}</CompanyDashboardLayout>;
+    return <div className="space-y-6">{children}</div>;
 }

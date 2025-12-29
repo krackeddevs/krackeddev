@@ -1,9 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Trophy, Gamepad2, Users, ArrowRight } from "lucide-react";
+import { Trophy, Gamepad2, Users, ArrowRight, Building2 } from "lucide-react";
 
 const NAV_ITEMS = [
+  {
+    title: "COMPANIES",
+    description: "Explore companies hiring on KrackedDev and find your next role.",
+    icon: Building2,
+    href: "/companies",
+    color: "text-green-500",
+    borderColor: "group-hover:border-green-500/50",
+    bgColor: "group-hover:bg-green-500/10",
+  },
   {
     title: "BOUNTY BOARD",
     description: "Complete missions, earn rewards, and level up your rank.",

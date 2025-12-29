@@ -195,3 +195,29 @@ export const bountySubmissions = pgTable(
     statusIdx: index('bounty_submissions_status_idx').on(table.status),
   })
 );
+
+// ============================================
+// JOB APPLICATIONS TABLE
+// ============================================
+export const jobApplications = pgTable(
+  'job_applications',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    jobId: text('job_id')
+      .notNull()
+      .references(() => jobs.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+    resumeUrl: text('resume_url').notNull(),
+    coverLetter: text('cover_letter'),
+    status: text('status').notNull().default('new'), // new, reviewing, shortlisted, rejected, hired
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    jobIdIdx: index('job_applications_job_id_idx').on(table.jobId),
+    userIdIdx: index('job_applications_user_id_idx').on(table.userId),
+    statusIdx: index('job_applications_status_idx').on(table.status),
+  })
+);

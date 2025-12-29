@@ -38,6 +38,7 @@ export function EditCompanyForm({ company }: EditCompanyFormProps) {
             linkedin_url: company.linkedin_url || "",
             twitter_url: company.twitter_url || "",
             logo_url: company.logo_url || "",
+            banner_url: company.banner_url || "",
             industry: company.industry || "",
             location: company.location || "",
         },
@@ -77,6 +78,41 @@ export function EditCompanyForm({ company }: EditCompanyFormProps) {
         }
     }
 
+    async function onBannerUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        try {
+            setUploading(true);
+            if (!e.target.files || e.target.files.length === 0) {
+                throw new Error('You must select an image to upload.');
+            }
+
+            const file = e.target.files[0];
+            const fileExt = file.name.split('.').pop();
+            const filePath = `banner-${company.id}-${Math.random()}.${fileExt}`;
+            const supabase = createClient();
+
+            const { error: uploadError } = await supabase.storage
+                .from('company-logos')
+                .upload(filePath, file);
+
+            if (uploadError) {
+                console.error(uploadError);
+                throw uploadError;
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('company-logos')
+                .getPublicUrl(filePath);
+
+            form.setValue("banner_url", publicUrl);
+            toast.success("Banner uploaded!");
+        } catch (error) {
+            toast.error("Error uploading banner.");
+        } finally {
+            setUploading(false);
+        }
+    }
+
+
     function onSubmit(data: CompanyUpdateInput) {
         startTransition(async () => {
             try {
@@ -111,6 +147,24 @@ export function EditCompanyForm({ company }: EditCompanyFormProps) {
                             <div className="grid w-full max-w-sm items-center gap-1.5">
                                 <FormLabel htmlFor="logo">Logo</FormLabel>
                                 <Input id="logo" type="file" disabled={uploading} onChange={onLogoUpload} accept="image/*" />
+                            </div>
+                        </div>
+
+                        {/* Banner Upload */}
+                        <div className="space-y-2">
+                            {form.watch("banner_url") && (
+                                <div className="relative w-full h-32 rounded-lg overflow-hidden bg-gray-100">
+                                    <img
+                                        src={form.watch("banner_url")}
+                                        alt="Company banner"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            )}
+                            <div className="grid w-full items-center gap-1.5">
+                                <FormLabel htmlFor="banner">Banner (Optional)</FormLabel>
+                                <Input id="banner" type="file" disabled={uploading} onChange={onBannerUpload} accept="image/*" />
+                                <p className="text-xs text-muted-foreground">Recommended: 1200x300px banner image</p>
                             </div>
                         </div>
 

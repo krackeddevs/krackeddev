@@ -15,6 +15,7 @@ export const companyUpdateSchema = z.object({
     linkedin_url: z.string().url("Invalid URL").optional().or(z.literal("")),
     twitter_url: z.string().url("Invalid URL").optional().or(z.literal("")),
     logo_url: z.string().url("Invalid URL").optional().or(z.literal("")),
+    banner_url: z.string().url("Invalid URL").optional().or(z.literal("")),
     industry: z.string().optional(),
     location: z.string().optional(),
 });
@@ -35,7 +36,7 @@ export const createJobSchema = z.object({
     employment_type: z.string().min(1, "Employment type is required"), // Full-time, etc.
     salary_min: z.coerce.number().optional(),
     salary_max: z.coerce.number().optional(),
-    application_method: z.enum(["url", "email", "internal_form"]).default("url"),
+    application_method: z.enum(["url", "email", "internal_form"]).default("internal_form"),
     application_url: z.string().url("Invalid URL").optional().or(z.literal("")),
     is_remote: z.boolean().default(false),
 });
