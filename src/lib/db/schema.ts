@@ -121,10 +121,12 @@ export const bounties = pgTable(
     winnerXHandle: text('winner_x_handle'),
     winnerXUrl: text('winner_x_url'),
     winnerSubmissionUrl: text('winner_submission_url'),
+    winnerUserId: uuid('winner_user_id').references(() => profiles.id, { onDelete: 'set null' }),
   },
   (table) => ({
     slugIdx: index('bounties_slug_idx').on(table.slug),
     statusIdx: index('bounties_status_idx').on(table.status),
+    winnerUserIdIdx: index('idx_bounties_winner_user_id').on(table.winnerUserId),
   })
 );
 

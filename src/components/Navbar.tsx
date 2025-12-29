@@ -24,8 +24,11 @@ const Navbar = () => {
   const pathname = usePathname();
   const isHomepage = pathname === "/";
   const { isAuthenticated, signOut, openLoginModal, profile } = useSupabase();
-  const { data: pageViews } = usePageViews(pathname || "/");
-  const { data: nextPrayer } = usePrayerTimes();
+  const { data: pageViews, isLoading: isLoadingViews } = usePageViews(pathname || "/");
+  const { data: nextPrayer, isLoading: isLoadingPrayer } = usePrayerTimes();
+  
+  // Stats are ready when both data sources have loaded
+  const statsReady = !isLoadingViews && !isLoadingPrayer;
 
   // Hide navigation links (middle section) on game pages and job detail pages, but keep header visible
   const gamePages = [
@@ -173,94 +176,101 @@ const Navbar = () => {
           </div>
         )}
       </div>
-      <div className="border-t border-white/10 bg-white/5 backdrop-blur-md">
-        <div className="overflow-hidden">
-          <div className="marquee text-[10px] sm:text-xs font-mono text-foreground/80">
-            <div className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20">
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
+      <AnimatePresence>
+        {statsReady && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="border-t border-white/10 bg-white/5 backdrop-blur-md"
+          >
+            <div className="overflow-hidden">
+              <div className="marquee text-[10px] sm:text-xs font-mono text-foreground/80">
+                <div className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20">
+                  <span className="text-foreground/60">
+                    Page visits:{" "}
+                    {pageViews != null ? pageViews.toLocaleString() : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">
+                    Next prayer (KL):{" "}
+                    {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">Stay kracked.</span>
+                  <span className="text-foreground/30">•</span>
+                </div>
+                <div
+                  className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+                  aria-hidden="true"
+                >
+                  <span className="text-foreground/60">
+                    Page visits:{" "}
+                    {pageViews != null ? pageViews.toLocaleString() : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">
+                    Next prayer (KL):{" "}
+                    {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">Stay kracked.</span>
+                  <span className="text-foreground/30">•</span>
+                </div>
+                <div
+                  className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+                  aria-hidden="true"
+                >
+                  <span className="text-foreground/60">
+                    Page visits:{" "}
+                    {pageViews != null ? pageViews.toLocaleString() : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">
+                    Next prayer (KL):{" "}
+                    {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">Stay kracked.</span>
+                  <span className="text-foreground/30">•</span>
+                </div>
+                <div
+                  className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+                  aria-hidden="true"
+                >
+                  <span className="text-foreground/60">
+                    Page visits:{" "}
+                    {pageViews != null ? pageViews.toLocaleString() : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">
+                    Next prayer (KL):{" "}
+                    {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">Stay kracked.</span>
+                  <span className="text-foreground/30">•</span>
+                </div>
+                <div
+                  className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
+                  aria-hidden="true"
+                >
+                  <span className="text-foreground/60">
+                    Page visits:{" "}
+                    {pageViews != null ? pageViews.toLocaleString() : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">
+                    Next prayer (KL):{" "}
+                    {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+                  </span>
+                  <span className="text-foreground/30">•</span>
+                  <span className="text-foreground/60">Stay kracked.</span>
+                  <span className="text-foreground/30">•</span>
+                </div>
+              </div>
             </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-          </div>
-        </div>
-        <style jsx>{`
+            <style jsx>{`
           .marquee {
             display: flex;
             width: max-content;
@@ -287,7 +297,9 @@ const Navbar = () => {
             }
           }
         `}</style>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Menu Dropdown */}
       <AnimatePresence>

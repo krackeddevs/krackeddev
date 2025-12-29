@@ -50,7 +50,6 @@ export default function CodePage() {
 
   return (
     <main className="min-h-screen w-full bg-gray-900 relative">
-      <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
       <CodeHubScene onBack={handleBack} onNavigate={handleNavigate} />
     </main>
   );

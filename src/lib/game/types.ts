@@ -13,4 +13,3 @@ export interface BuildingConfig {
   customData?: any; // Additional data for the building (e.g., post content)
   imagePath?: string; // Optional image path to render instead of colored box
 }
-

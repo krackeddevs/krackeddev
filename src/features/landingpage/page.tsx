@@ -37,10 +37,8 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                 }}
             />
 
-            {/* CRT Scanline Overlay - Fixed to viewport */}
-            {!showAnimation && (
-                <div className="scanlines fixed inset-0 pointer-events-none z-40 h-screen"></div>
-            )}
+            {/* Manifesto Modal - Shows once for new visitors */}
+            <ManifestoModal isLoggedIn={isLoggedIn} />
 
             {/* Parallax Intro with Loading, Parallax Layers, and Start Button */}
             {showAnimation && (
