@@ -49,18 +49,28 @@ export function JobPreview() {
             href={`/code/bounty/${bounty.slug}`}
             className="group relative block h-full"
           >
-            <div className="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-green-500/20" />
-            <div className="relative h-full bg-black/40 border border-gray-800 p-6 hover:border-green-500/50 transition-colors duration-300 flex flex-col justify-between backdrop-blur-sm">
+            <div
+              className="relative h-full bg-black/40 border-2 border-green-400/30 p-6 hover:border-green-400 hover:bg-green-400/5 transition-all duration-300 flex flex-col justify-between backdrop-blur-sm hover:-translate-y-1"
+              style={{
+                boxShadow: '0 0 0 rgba(34, 197, 94, 0)',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 197, 94, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 0 rgba(34, 197, 94, 0)';
+              }}
+            >
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <span
-                    className={`px-2 py-1 text-xs font-mono border ${
-                      bounty.status === "open"
+                    className={`px-2 py-1 text-xs font-mono border ${bounty.status === "open"
                         ? "border-green-500 text-green-400 bg-green-900/20"
                         : bounty.status === "completed"
                           ? "border-blue-500 text-blue-400 bg-blue-900/20"
                           : "border-gray-500 text-gray-400"
-                    }`}
+                      }`}
                   >
                     {bounty.status.toUpperCase()}
                   </span>
@@ -69,16 +79,16 @@ export function JobPreview() {
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-white group-hover:text-green-400 transition-colors line-clamp-2">
+                <h3 className="text-lg font-bold text-white group-hover:text-green-400 transition-colors line-clamp-2 font-mono">
                   {bounty.title}
                 </h3>
 
-                <p className="text-gray-400 text-sm line-clamp-2">
+                <p className="text-green-400/60 text-sm line-clamp-2 font-mono">
                   {bounty.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-gray-800 flex items-center justify-between text-xs text-gray-500 font-mono">
+              <div className="mt-6 pt-4 border-t border-green-400/20 flex items-center justify-between text-xs text-green-400/50 font-mono">
                 <span className="flex items-center gap-1">
                   <Trophy className="w-3 h-3" />
                   {bounty.type}
