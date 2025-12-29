@@ -1,10 +1,13 @@
 import { getAllVerificationRequests } from "@/features/companies/verification/admin-actions";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPageHeader } from "@/features/admin-dashboard/components/admin-page-header";
+import { AdminDataTable, Column } from "@/features/admin-dashboard/components/admin-data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { CheckCircle, XCircle, Clock, AlertCircle } from "lucide-react";
+
+type VerificationRequest = Awaited<ReturnType<typeof getAllVerificationRequests>>[number];
 
 export default async function AdminVerificationsPage() {
     const requests = await getAllVerificationRequests();
@@ -44,71 +47,111 @@ export default async function AdminVerificationsPage() {
         }
     };
 
+    const columns: Column<VerificationRequest>[] = [
+        {
+            key: "company",
+            label: "Company",
+            render: (request) => (
+                <div className="flex items-center gap-3">
+                    {request.company?.logoUrl && (
+                        <img
+                            src={request.company.logoUrl}
+                            alt={request.company.name}
+                            className="h-10 w-10 rounded object-cover"
+                        />
+                    )}
+                    <div>
+                        <div className="font-medium">{request.company?.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                            {request.verificationEmail}
+                        </div>
+                    </div>
+                </div>
+            ),
+            mobileRender: (request) => (
+                <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                        {request.company?.logoUrl && (
+                            <img
+                                src={request.company.logoUrl}
+                                alt={request.company.name}
+                                className="h-12 w-12 rounded object-cover"
+                            />
+                        )}
+                        <div>
+                            <div className="font-bold">{request.company?.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                                {request.verificationEmail}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            key: "requesterName",
+            label: "Requester",
+            render: (request) => (
+                <div>
+                    <div>{request.requesterName}</div>
+                    <div className="text-sm text-muted-foreground">
+                        {request.requesterTitle}
+                    </div>
+                </div>
+            ),
+        },
+        {
+            key: "status",
+            label: "Status",
+            sortable: true,
+            render: (request) => getStatusBadge(request.status),
+        },
+        {
+            key: "createdAt",
+            label: "Submitted",
+            sortable: true,
+            render: (request) =>
+                request.createdAt
+                    ? formatDistanceToNow(new Date(request.createdAt), {
+                        addSuffix: true,
+                    })
+                    : "N/A",
+        },
+        {
+            key: "actions",
+            label: "Actions",
+            render: (request) => (
+                <Link href={`/admin/verifications/${request.id}`}>
+                    <Button size="sm">View Details</Button>
+                </Link>
+            ),
+            mobileRender: (request) => (
+                <div className="flex justify-between items-center pt-2 border-t">
+                    <div className="flex gap-2">
+                        {getStatusBadge(request.status)}
+                    </div>
+                    <Link href={`/admin/verifications/${request.id}`}>
+                        <Button size="sm">View</Button>
+                    </Link>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight">Verification Requests</h1>
-                <p className="text-muted-foreground">Review and manage company verification requests</p>
-            </div>
+            <AdminPageHeader
+                title="Verification Requests"
+                description="Review and manage company verification requests"
+                breadcrumbs={[{ label: "Verifications" }]}
+            />
 
-            <div className="grid gap-4">
-                {requests.length === 0 ? (
-                    <Card>
-                        <CardContent className="py-10 text-center">
-                            <p className="text-muted-foreground">No verification requests found</p>
-                        </CardContent>
-                    </Card>
-                ) : (
-                    requests.map((request) => (
-                        <Card key={request.id}>
-                            <CardHeader>
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-center gap-3">
-                                        {request.company?.logoUrl && (
-                                            <img
-                                                src={request.company.logoUrl}
-                                                alt={request.company.name}
-                                                className="h-12 w-12 rounded object-cover"
-                                            />
-                                        )}
-                                        <div>
-                                            <CardTitle>{request.company?.name}</CardTitle>
-                                            <CardDescription>
-                                                Requested by {request.requesterName} •{" "}
-                                                {request.createdAt && formatDistanceToNow(new Date(request.createdAt), { addSuffix: true })}
-                                            </CardDescription>
-                                        </div>
-                                    </div>
-                                    {getStatusBadge(request.status)}
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex items-center justify-between">
-                                    <div className="space-y-1 text-sm">
-                                        <p>
-                                            <span className="text-muted-foreground">Email:</span> {request.verificationEmail}
-                                            {request.emailVerified && (
-                                                <CheckCircle className="inline ml-1 h-3 w-3 text-green-600" />
-                                            )}
-                                        </p>
-                                        <p>
-                                            <span className="text-muted-foreground">Registration:</span>{" "}
-                                            {request.businessRegistrationNumber}
-                                        </p>
-                                        <p>
-                                            <span className="text-muted-foreground">Expected Jobs:</span>{" "}
-                                            {request.expectedJobCount}
-                                        </p>
-                                    </div>
-                                    <Link href={`/admin/verifications/${request.id}`}>
-                                        <Button>View Details</Button>
-                                    </Link>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))
-                )}
-            </div>
+            <AdminDataTable
+                data={requests}
+                columns={columns}
+                searchPlaceholder="Search by company name or email..."
+                emptyMessage="No verification requests found"
+            />
         </div>
     );
 }
