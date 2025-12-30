@@ -1,5 +1,4 @@
-"use client";
-
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Flame, Trophy, Calendar } from "lucide-react";
 import { ContributionStats } from "../types";
@@ -16,16 +15,16 @@ export function ContributionStatsCard({ stats, isLoading = false, isOwnProfile =
     }
 
     // Fallback for empty stats (e.g. no GitHub connected)
-    // Fallback for empty stats (e.g. no GitHub connected)
     if (!stats) {
         if (isOwnProfile === true) {
             return (
-                <div className="w-full bg-black/40 border border-white/10 rounded-xl p-6 text-center space-y-3 backdrop-blur-md">
-                    <p className="text-gray-400 font-mono text-sm">
+                <div className="w-full bg-card/40 border border-border rounded-xl p-6 text-center space-y-3 backdrop-blur-md">
+                    <p className="text-muted-foreground font-mono text-sm">
                         Connect GitHub to track your contribution streaks.
                     </p>
                     <button
                         onClick={() => {
+                            // eslint-disable-next-line @typescript-eslint/no-var-requires
                             const { createClient } = require("@/lib/supabase/client");
                             const supabase = createClient();
                             supabase.auth.signInWithOAuth({
@@ -35,7 +34,7 @@ export function ContributionStatsCard({ stats, isLoading = false, isOwnProfile =
                                 }
                             });
                         }}
-                        className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-mono text-white transition-colors"
+                        className="px-4 py-2 bg-muted/50 hover:bg-muted border border-border rounded-lg text-xs font-mono text-foreground transition-colors"
                     >
                         Connect GitHub Account
                     </button>
@@ -44,8 +43,8 @@ export function ContributionStatsCard({ stats, isLoading = false, isOwnProfile =
         }
 
         return (
-            <div className="w-full bg-black/40 border border-white/10 rounded-xl p-6 text-center space-y-3 backdrop-blur-md">
-                <p className="text-gray-500 font-mono text-sm">
+            <div className="w-full bg-card/40 border border-border rounded-xl p-6 text-center space-y-3 backdrop-blur-md">
+                <p className="text-muted-foreground font-mono text-sm">
                     No contribution data available for this user.
                 </p>
             </div>
@@ -57,7 +56,7 @@ export function ContributionStatsCard({ stats, isLoading = false, isOwnProfile =
     return (
         <div className="space-y-4 w-full">
             {/* Player Level & XP */}
-            <div className="bg-black/80 backdrop-blur-sm border border-neon-primary/30 rounded-xl p-4 flex items-center justify-between relative overflow-hidden group hover:border-neon-primary/60 transition-colors">
+            <div className="bg-card/40 backdrop-blur-sm border border-neon-primary/30 rounded-xl p-4 flex items-center justify-between relative overflow-hidden group hover:border-neon-primary/60 transition-colors">
                 <div className="absolute inset-0 bg-neon-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 <div className="flex items-center gap-3 relative z-10">
@@ -66,7 +65,7 @@ export function ContributionStatsCard({ stats, isLoading = false, isOwnProfile =
                     </div>
                     <div>
                         <div className="text-xs font-mono text-muted-foreground uppercase tracking-widest">Player Level</div>
-                        <div className="text-2xl font-bold font-mono text-white leading-none">
+                        <div className="text-2xl font-bold font-mono text-foreground leading-none">
                             Lvl. {stats.level || 1}
                         </div>
                     </div>
@@ -104,7 +103,7 @@ export function ContributionStatsCard({ stats, isLoading = false, isOwnProfile =
                     value={contributionsThisWeek}
                     unit="commits"
                     color="green" // Standard green
-                    glow={contributionsThisWeek > 0}
+                    glow={true}
                 />
             </div>
         </div>
@@ -127,57 +126,54 @@ function StatItem({
     glow: boolean
 }) {
 
+    // Map color names to CSS vars for theme compatibility
+    const glowColorVar = {
+        "--glow-color": color === 'orange' ? 'var(--neon-accent)' : color === 'yellow' ? 'var(--neon-secondary)' : 'var(--neon-primary)'
+    } as React.CSSProperties;
+
+    // Use theme-aware classes
     const colorClasses = {
-        orange: "text-orange-500",
-        yellow: "text-yellow-400",
-        green: "text-green-500"
+        orange: "text-rank-bronze",
+        yellow: "text-rank-gold",
+        green: "text-neon-primary"
     };
 
     const borderClasses = {
-        orange: "border-orange-500/30",
-        yellow: "border-yellow-500/30",
-        green: "border-green-500/30"
+        orange: "border-rank-bronze/30",
+        yellow: "border-rank-gold/30",
+        green: "border-neon-primary/30"
     };
 
     const glowStyle = glow ? {
         boxShadow: `0 0 20px -5px var(--glow-color)`
     } : {};
 
-    // Map color names to hex for CSS var
-    const glowColorVar = {
-        "--glow-color": color === 'orange' ? '#f97316' : color === 'yellow' ? '#facc15' : '#22c55e'
-    } as React.CSSProperties;
-
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`
-        relative overflow-hidden
-        bg-black/80 backdrop-blur-sm
-        border ${borderClasses[color]}
-        rounded-xl p-4
-        flex flex-row md:flex-col items-center justify-between md:justify-center
-        group hover:bg-white/5 transition-colors duration-300
-      `}
+            className={cn(
+                "relative overflow-hidden bg-card/40 backdrop-blur-sm border rounded-xl p-4 flex flex-row md:flex-col items-center justify-between md:justify-center group hover:bg-muted/5 transition-colors duration-300",
+                borderClasses[color]
+            )}
             style={{
                 ...glowStyle,
                 ...glowColorVar
             }}
         >
-            <div className={`p-2 rounded-full bg-white/5 mb-0 md:mb-3 ${colorClasses[color]}`}>
+            <div className={cn("p-2 rounded-full bg-foreground/5 mb-0 md:mb-3", colorClasses[color])}>
                 <Icon className="w-5 h-5 md:w-6 md:h-6" />
             </div>
 
             <div className="text-right md:text-center">
-                <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-1">
+                <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider mb-1">
                     {label}
                 </div>
                 <div className="flex items-baseline justify-end md:justify-center gap-1">
-                    <span className={`text-2xl md:text-3xl font-bold font-mono ${colorClasses[color]}`}>
+                    <span className={cn("text-2xl md:text-3xl font-bold font-mono", colorClasses[color])}>
                         {value}
                     </span>
-                    <span className="text-xs text-gray-500 font-mono">
+                    <span className="text-xs text-muted-foreground font-mono">
                         {unit}
                     </span>
                 </div>
@@ -190,7 +186,7 @@ function StatsSkeleton() {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full animate-pulse">
             {[1, 2, 3].map(i => (
-                <div key={i} className="h-24 bg-gray-900/50 rounded-xl border border-gray-800"></div>
+                <div key={i} className="h-24 bg-muted/50 rounded-xl border border-border"></div>
             ))}
         </div>
     );

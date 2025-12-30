@@ -15,17 +15,17 @@ interface MySubmissionsProps {
 const statusConfig = {
     pending: {
         label: "Under Review",
-        color: "text-yellow-400 bg-yellow-900/30 border-yellow-500/30",
+        color: "text-rank-bronze bg-rank-bronze/10 border-rank-bronze/30",
         icon: Clock,
     },
     approved: {
         label: "Accepted",
-        color: "text-green-400 bg-green-900/30 border-green-500/30",
+        color: "text-neon-primary bg-neon-primary/10 border-neon-primary/30",
         icon: CheckCircle,
     },
     rejected: {
         label: "Rejected",
-        color: "text-red-400 bg-red-900/30 border-red-500/30",
+        color: "text-destructive bg-destructive/10 border-destructive/30",
         icon: XCircle,
     },
 };
@@ -33,14 +33,14 @@ const statusConfig = {
 // Special config for WON submissions (approved + paid)
 const wonConfig = {
     label: "Won!",
-    color: "text-amber-400 bg-amber-900/40 border-amber-500/50",
+    color: "text-rank-gold bg-rank-gold/20 border-rank-gold/50",
     icon: Trophy,
 };
 
 export function MySubmissions({ submissions, className }: MySubmissionsProps) {
     if (submissions.length === 0) {
         return (
-            <Card className={cn("bg-black/40 border-white/10 backdrop-blur-md", className)}>
+            <Card className={cn("bg-card/40 border-border backdrop-blur-md", className)}>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                         <FileText className="w-4 h-4" />
@@ -57,7 +57,7 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
     }
 
     return (
-        <Card className={cn("bg-black/40 border-white/10 backdrop-blur-md", className)}>
+        <Card className={cn("bg-card/40 border-border backdrop-blur-md", className)}>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                     <FileText className="w-4 h-4" />
@@ -71,6 +71,11 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                     const config = isWon ? wonConfig : statusConfig[submission.status];
                     const StatusIcon = config.icon;
 
+                    const date = new Date(submission.createdAt);
+                    const day = date.getDate();
+                    const month = date.toLocaleString('default', { month: 'short' });
+                    const year = date.getFullYear();
+
                     return (
                         <Link
                             key={submission.id}
@@ -78,45 +83,45 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                             className="block group"
                         >
                             <div className={cn(
-                                "flex items-center justify-between gap-4 p-3 bg-white/5 border border-white/10 hover:border-neon-primary/50 transition-colors",
-                                isWon && "border-amber-500/30 bg-amber-900/10" // Highlight won submissions
+                                "flex items-start gap-3 p-3 bg-card/20 border border-border hover:border-neon-primary/50 hover:bg-muted/10 transition-colors rounded-lg overflow-hidden",
+                                isWon && "border-rank-gold/30 bg-rank-gold/5" // Highlight won submissions
                             )}>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
-                                        {isWon && <Trophy className="w-4 h-4 text-amber-400 flex-shrink-0" />}
+                                {/* Date Block */}
+                                <div className="flex flex-col items-start leading-none font-mono text-muted-foreground w-[40px] flex-shrink-0">
+                                    <span className="text-xl font-bold text-foreground mb-1">{day}</span>
+                                    <span className="text-xs uppercase">{month}</span>
+                                    <span className="text-xs">{year}</span>
+                                </div>
+
+                                <div className="flex-1 min-w-0 flex flex-col gap-2">
+                                    <div className="flex items-center justify-between gap-2">
                                         <h4 className={cn(
-                                            "font-mono text-sm truncate group-hover:text-neon-primary transition-colors",
-                                            isWon ? "text-amber-100" : "text-white"
+                                            "font-mono text-sm truncate group-hover:text-neon-primary transition-colors pr-2 flex-1 min-w-0",
+                                            isWon ? "text-rank-gold" : "text-foreground"
                                         )}>
                                             {submission.bountyTitle}
                                         </h4>
+                                        <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-neon-primary transition-colors flex-shrink-0" />
                                     </div>
-                                    <p className="text-xs text-muted-foreground font-mono mt-1">
-                                        {new Date(submission.createdAt).toLocaleDateString("en-MY", {
-                                            year: "numeric",
-                                            month: "short",
-                                            day: "numeric",
-                                        })}
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <span className={cn(
-                                        "font-mono text-sm font-bold",
-                                        isWon ? "text-amber-400" : "text-neon-cyan"
-                                    )}>
-                                        RM{submission.bountyReward}
-                                    </span>
-                                    <Badge
-                                        variant="outline"
-                                        className={cn(
-                                            "font-mono text-xs flex items-center gap-1 border",
+
+                                    <div className="flex items-center flex-wrap gap-2">
+                                        <span className={cn(
+                                            "font-mono text-lg font-bold leading-none",
+                                            isWon ? "text-rank-gold" : "text-neon-primary"
+                                        )}>
+                                            RM{submission.bountyReward}
+                                        </span>
+
+                                        <div className={cn(
+                                            "flex items-center gap-1.5 px-2 py-0.5 border backdrop-blur-sm rounded leading-none",
                                             config.color
-                                        )}
-                                    >
-                                        <StatusIcon className="w-3 h-3" />
-                                        {config.label}
-                                    </Badge>
-                                    <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-neon-primary transition-colors" />
+                                        )}>
+                                            <StatusIcon className="w-3 h-3" />
+                                            <span className="text-[10px] font-mono font-bold uppercase tracking-wide translate-y-[1px]">
+                                                {config.label}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </Link>
@@ -126,4 +131,3 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
         </Card>
     );
 }
-

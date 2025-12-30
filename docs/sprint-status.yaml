@@ -70,3 +70,19 @@ development_status:
   5-2-game-authentication-bridge: backlog
   5-3-syncing-game-progress: backlog
   epic-5-retrospective: optional
+
+  epic-9: in-progress
+  9-1-companies-schema-migration: done
+  9-2-company-registration-dashboard: done
+  9-3-native-job-posting-flow: done
+  9-4-public-jobs-page-redesign: done
+  9-5-internal-application-flow: ready-for-dev
+  9-6-public-company-profile: drafted
+  epic-9-retrospective: optional
+
+  epic-10: backlog
+  10-1-theme-infrastructure-provider: ready-for-dev
+  10-2-refactor-hardcoded-colors: backlog
+  10-3-theme-optimizations-polish: backlog
+  epic-10-retrospective: optional
+

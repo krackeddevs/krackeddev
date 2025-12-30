@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 // Basic type definition if not available
-type JobType = typeof import("@/lib/db/schema").jobs.$inferSelect;
+type JobType = typeof import("@/lib/db/schema").jobs.$inferSelect & {
+  companySlug?: string | null;
+};
 
 export function useJob(id: string) {
   return useQuery({

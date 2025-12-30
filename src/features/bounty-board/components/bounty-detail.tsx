@@ -47,7 +47,7 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
             <div className="mb-8">
                 {/* Bounty Number & Status */}
                 <div className="flex items-center gap-3 mb-4">
-                    <span className="text-gray-500 font-mono text-sm">
+                    <span className="text-muted-foreground font-mono text-sm">
                         BOUNTY #{bounty.id.slice(0, 8)}
                     </span>
                     <span
@@ -66,18 +66,18 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
 
                 {/* Title */}
                 <h1
-                    className="text-2xl md:text-3xl font-bold font-mono text-white mb-4"
+                    className="text-2xl md:text-3xl font-bold font-mono text-foreground mb-4"
                     data-testid="bounty-title"
                 >
                     {bounty.title}
                 </h1>
 
                 {/* Description */}
-                <p className="text-gray-400 text-lg">{bounty.description}</p>
+                <p className="text-muted-foreground text-lg">{bounty.description}</p>
 
                 {/* Reward Badge */}
                 <div
-                    className="mt-6 inline-block bg-yellow-500 text-black px-6 py-3 font-mono font-bold text-2xl"
+                    className="mt-6 inline-block bg-rank-gold text-black px-6 py-3 font-mono font-bold text-2xl"
                     data-testid="reward-badge"
                 >
                     RM{bounty.reward}
@@ -94,21 +94,21 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
             {/* Meta Info Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                 {/* Deadline */}
-                <div className="bg-gray-800/30 border border-gray-700 p-4">
+                <div className="bg-card/30 border border-border p-4">
                     <div className="flex items-center gap-3">
                         <Clock
-                            className={`w-5 h-5 ${isDeadlinePassed ? "text-red-500" : "text-gray-500"}`}
+                            className={`w-5 h-5 ${isDeadlinePassed ? "text-destructive" : "text-muted-foreground"}`}
                         />
                         <div>
-                            <div className="text-gray-500 text-xs font-mono">DEADLINE</div>
+                            <div className="text-muted-foreground text-xs font-mono">DEADLINE</div>
                             <div
-                                className={`font-mono text-sm ${isDeadlinePassed ? "text-red-400" : "text-white"}`}
+                                className={`font-mono text-sm ${isDeadlinePassed ? "text-destructive" : "text-foreground"}`}
                                 data-testid="deadline"
                             >
                                 {formatDeadline(bounty.deadline)}
                             </div>
                             {isDeadlinePassed && (
-                                <span className="text-red-400 text-xs font-mono">
+                                <span className="text-destructive text-xs font-mono">
                                     (Deadline passed)
                                 </span>
                             )}
@@ -117,12 +117,12 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
                 </div>
 
                 {/* Reward */}
-                <div className="bg-gray-800/30 border border-gray-700 p-4">
+                <div className="bg-card/30 border border-border p-4">
                     <div className="flex items-center gap-3">
-                        <Trophy className="w-5 h-5 text-yellow-500" />
+                        <Trophy className="w-5 h-5 text-rank-gold" />
                         <div>
-                            <div className="text-gray-500 text-xs font-mono">REWARD</div>
-                            <div className="text-white font-mono">RM{bounty.reward}</div>
+                            <div className="text-muted-foreground text-xs font-mono">REWARD</div>
+                            <div className="text-foreground font-mono">RM{bounty.reward}</div>
                         </div>
                     </div>
                 </div>
@@ -130,12 +130,12 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
 
             {/* Tags */}
             <div className="mb-8">
-                <h2 className="text-sm font-mono text-gray-500 mb-3">TAGS</h2>
+                <h2 className="text-sm font-mono text-muted-foreground mb-3">TAGS</h2>
                 <div className="flex flex-wrap gap-2" data-testid="tags-container">
                     {bounty.tags.map((tag) => (
                         <span
                             key={tag}
-                            className="px-3 py-1 bg-gray-800 border border-gray-700 text-gray-300 font-mono text-sm"
+                            className="px-3 py-1 bg-muted border border-border text-muted-foreground font-mono text-sm"
                         >
                             {tag}
                         </span>
@@ -145,10 +145,10 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
 
             {/* Long Description */}
             <div className="mb-8">
-                <h2 className="text-lg font-mono text-white mb-4">DETAILS</h2>
-                <div className="bg-gray-800/30 border border-gray-700 p-6">
-                    <div className="prose prose-invert max-w-none prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700">
-                        <pre className="whitespace-pre-wrap font-mono text-sm text-gray-300 leading-relaxed">
+                <h2 className="text-lg font-mono text-foreground mb-4">DETAILS</h2>
+                <div className="bg-card/30 border border-border p-6">
+                    <div className="prose dark:prose-invert max-w-none prose-pre:bg-muted prose-pre:border prose-pre:border-border">
+                        <pre className="whitespace-pre-wrap font-mono text-sm text-foreground/80 leading-relaxed">
                             {bounty.longDescription}
                         </pre>
                     </div>
@@ -158,14 +158,14 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
             {/* Requirements */}
             {bounty.requirements.length > 0 && (
                 <div className="mb-8">
-                    <h2 className="text-lg font-mono text-white mb-4">REQUIREMENTS</h2>
-                    <div className="bg-gray-800/30 border border-gray-700 p-6 space-y-3">
+                    <h2 className="text-lg font-mono text-foreground mb-4">REQUIREMENTS</h2>
+                    <div className="bg-card/30 border border-border p-6 space-y-3">
                         {bounty.requirements.map((req, index) => (
                             <div key={index} className="flex items-start gap-3">
-                                <div className="w-6 h-6 bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center text-cyan-400 font-mono text-xs shrink-0">
+                                <div className="w-6 h-6 bg-neon-cyan/20 border border-neon-cyan/50 flex items-center justify-center text-neon-cyan font-mono text-xs shrink-0">
                                     {index + 1}
                                 </div>
-                                <span className="text-gray-300">{req}</span>
+                                <span className="text-muted-foreground">{req}</span>
                             </div>
                         ))}
                     </div>
@@ -174,7 +174,7 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
 
             {/* Links */}
             <div className="mb-8">
-                <h2 className="text-lg font-mono text-white mb-4">LINKS</h2>
+                <h2 className="text-lg font-mono text-foreground mb-4">LINKS</h2>
                 <div className="flex flex-wrap gap-4">
                     {/* Bounty Post on X */}
                     {bounty.bountyPostUrl && (
@@ -219,7 +219,7 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
                     )}
 
                     {!bounty.repositoryUrl && !bounty.bountyPostUrl && (
-                        <p className="text-gray-500 text-sm font-mono">
+                        <p className="text-muted-foreground text-sm font-mono">
                             No links available for this bounty.
                         </p>
                     )}
@@ -230,16 +230,16 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
             {children}
 
             {/* Footer Navigation */}
-            <div className="border-t border-gray-800 pt-8 flex justify-between items-center">
+            <div className="border-t border-border pt-8 flex justify-between items-center">
                 <Link
                     href="/code/bounty"
-                    className="text-gray-400 hover:text-white font-mono text-sm flex items-center gap-2"
+                    className="text-muted-foreground hover:text-foreground font-mono text-sm flex items-center gap-2"
                 >
                     ← All Bounties
                 </Link>
                 <Link
                     href="/code"
-                    className="text-cyan-400 hover:text-cyan-300 font-mono text-sm"
+                    className="text-neon-cyan hover:text-neon-cyan/80 font-mono text-sm"
                 >
                     Back to Code Hub
                 </Link>

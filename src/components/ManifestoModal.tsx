@@ -17,27 +17,13 @@ const manifestoPages = [
     },
 ];
 
-// Context to allow opening the modal from anywhere
-interface ManifestoContextType {
-    openManifesto: () => void;
-}
-
-const ManifestoContext = createContext<ManifestoContextType | null>(null);
-
-export function useManifesto() {
-    const context = useContext(ManifestoContext);
-    if (!context) {
-        throw new Error("useManifesto must be used within a ManifestoProvider");
-    }
-    return context;
-}
-
 interface ManifestoModalProps {
-    isLoggedIn: boolean;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
-export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
-    const [isOpen, setIsOpen] = useState(false);
+export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
+    // Zoom/Pan state remains internal as it's UI state
     const [currentPage, setCurrentPage] = useState(0);
     const [isZoomed, setIsZoomed] = useState(false);
     const [zoomLevel, setZoomLevel] = useState(1);
@@ -45,19 +31,16 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
+    // Reset zoom state when modal opens/closes
     useEffect(() => {
-        // Only show if logged in
-        if (!isLoggedIn) return;
-
-        const seen = localStorage.getItem(MANIFESTO_STORAGE_KEY);
-
-        if (!seen) {
-            const timer = setTimeout(() => {
-                setIsOpen(true);
-            }, 1500);
-            return () => clearTimeout(timer);
+        if (isOpen) {
+            setCurrentPage(0);
+            resetZoomState();
+        } else {
+            resetZoomState();
         }
-    }, [isLoggedIn]);
+    }, [isOpen]);
+
 
     // Helper to reset zoom state
     const resetZoomState = () => {
@@ -67,15 +50,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
     };
 
     const handleClose = () => {
-        localStorage.setItem(MANIFESTO_STORAGE_KEY, "true");
-        setIsOpen(false);
-        resetZoomState();
-    };
-
-    const handleOpen = () => {
-        setCurrentPage(0);
-        resetZoomState();
-        setIsOpen(true);
+        onClose();
     };
 
     const nextPage = () => {
@@ -157,21 +132,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
     };
 
     return (
-        <ManifestoContext.Provider value={{ openManifesto: handleOpen }}>
-            {/* Floating Button to Reopen Manifesto */}
-            {!isOpen && isLoggedIn && (
-                <button
-                    onClick={handleOpen}
-                    className="fixed bottom-6 left-6 z-50 group flex items-center gap-2 px-4 py-3 bg-gray-900/90 hover:bg-gray-800 border-2 border-green-500/50 hover:border-green-400 rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)]"
-                    aria-label="Open Manifesto"
-                >
-                    <Scroll className="w-5 h-5 text-green-400" />
-                    <span className="font-mono text-sm text-green-400 hidden sm:inline">
-                        Manifesto
-                    </span>
-                </button>
-            )}
-
+        <>
             {/* Modal */}
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4">
@@ -182,10 +143,10 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                     />
 
                     {/* Modal Container */}
-                    <div className={`relative z-10 w-full max-h-[95vh] flex flex-col bg-gray-900 border-2 border-green-500/50 rounded-lg overflow-hidden shadow-[0_0_50px_rgba(34,197,94,0.3)] transition-all duration-300 ${isZoomed ? 'max-w-6xl' : 'max-w-4xl'}`}>
+                    <div className={`relative z-10 w-full max-h-[95vh] flex flex-col bg-popover border-2 border-neon-primary/50 rounded-lg overflow-hidden shadow-[0_0_50px_var(--neon-primary)] transition-all duration-300 ${isZoomed ? 'max-w-6xl' : 'max-w-4xl'}`}>
                         {/* Header */}
-                        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gray-900/90 border-b border-green-500/30">
-                            <h2 className="font-mono text-lg sm:text-xl md:text-2xl font-bold text-green-400 tracking-wider flex items-center gap-2">
+                        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-popover/90 border-b border-neon-primary/30">
+                            <h2 className="font-mono text-lg sm:text-xl md:text-2xl font-bold text-neon-primary tracking-wider flex items-center gap-2">
                                 <Scroll className="w-5 h-5 sm:w-6 sm:h-6" />
                                 <span className="hidden xs:inline">OUR </span>MANIFESTO
                             </h2>
@@ -196,15 +157,15 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                                     onClick={handleZoomOut}
                                     disabled={zoomLevel <= 1}
                                     className={`p-1.5 sm:p-2 rounded-lg transition-colors ${zoomLevel <= 1
-                                        ? "text-gray-600 cursor-not-allowed"
-                                        : "text-gray-400 hover:text-white hover:bg-gray-800"
+                                        ? "text-muted-foreground/50 cursor-not-allowed"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                         }`}
                                     aria-label="Zoom out"
                                 >
                                     <ZoomOut className="w-4 h-4 sm:w-5 sm:h-5" />
                                 </button>
 
-                                <span className="text-xs sm:text-sm font-mono text-gray-400 min-w-[3rem] text-center">
+                                <span className="text-xs sm:text-sm font-mono text-muted-foreground min-w-[3rem] text-center">
                                     {Math.round(zoomLevel * 100)}%
                                 </span>
 
@@ -212,8 +173,8 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                                     onClick={handleZoomIn}
                                     disabled={zoomLevel >= 4}
                                     className={`p-1.5 sm:p-2 rounded-lg transition-colors ${zoomLevel >= 4
-                                        ? "text-gray-600 cursor-not-allowed"
-                                        : "text-gray-400 hover:text-white hover:bg-gray-800"
+                                        ? "text-muted-foreground/50 cursor-not-allowed"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                         }`}
                                     aria-label="Zoom in"
                                 >
@@ -223,8 +184,8 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                                 <button
                                     onClick={toggleZoom}
                                     className={`p-1.5 sm:p-2 rounded-lg transition-colors ml-1 ${isZoomed
-                                        ? "text-green-400 bg-green-500/20"
-                                        : "text-gray-400 hover:text-white hover:bg-gray-800"
+                                        ? "text-neon-primary bg-neon-primary/20"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                         }`}
                                     aria-label={isZoomed ? "Exit fullscreen" : "Fullscreen"}
                                 >
@@ -233,7 +194,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
 
                                 <button
                                     onClick={handleClose}
-                                    className="p-1.5 sm:p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors ml-1 sm:ml-2"
+                                    className="p-1.5 sm:p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors ml-1 sm:ml-2"
                                     aria-label="Close manifesto"
                                 >
                                     <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -243,7 +204,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
 
                         {/* Image Container */}
                         <div
-                            className="relative flex-1 overflow-hidden bg-black"
+                            className="relative flex-1 overflow-hidden bg-background"
                             style={{ minHeight: isZoomed ? '70vh' : '50vh' }}
                         >
                             {/* Navigation Arrows - Hidden when zoomed */}
@@ -252,25 +213,25 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                                     <button
                                         onClick={prevPage}
                                         disabled={currentPage === 0}
-                                        className={`absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2 md:p-3 rounded-full bg-gray-900/80 border border-green-500/50 transition-all ${currentPage === 0
+                                        className={`absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2 md:p-3 rounded-full bg-popover/80 border border-neon-primary/50 transition-all ${currentPage === 0
                                             ? "opacity-30 cursor-not-allowed"
-                                            : "hover:bg-green-500/20 hover:border-green-400"
+                                            : "hover:bg-neon-primary/20 hover:border-neon-primary"
                                             }`}
                                         aria-label="Previous page"
                                     >
-                                        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-400" />
+                                        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-neon-primary" />
                                     </button>
 
                                     <button
                                         onClick={nextPage}
                                         disabled={currentPage === manifestoPages.length - 1}
-                                        className={`absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2 md:p-3 rounded-full bg-gray-900/80 border border-green-500/50 transition-all ${currentPage === manifestoPages.length - 1
+                                        className={`absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-1.5 sm:p-2 md:p-3 rounded-full bg-popover/80 border border-neon-primary/50 transition-all ${currentPage === manifestoPages.length - 1
                                             ? "opacity-30 cursor-not-allowed"
-                                            : "hover:bg-green-500/20 hover:border-green-400"
+                                            : "hover:bg-neon-primary/20 hover:border-neon-primary"
                                             }`}
                                         aria-label="Next page"
                                     >
-                                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-400" />
+                                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-neon-primary" />
                                     </button>
                                 </>
                             )}
@@ -278,7 +239,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                             {/* Tap to zoom hint - Mobile only */}
                             {!isZoomed && (
                                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 sm:hidden">
-                                    <span className="text-xs text-gray-400 bg-black/60 px-2 py-1 rounded">
+                                    <span className="text-xs text-muted-foreground bg-background/60 px-2 py-1 rounded">
                                         Double-tap to zoom
                                     </span>
                                 </div>
@@ -343,7 +304,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                         </div>
 
                         {/* Footer with pagination and CTA */}
-                        <div className="flex flex-col items-center gap-2 sm:gap-4 px-4 sm:px-6 py-3 sm:py-5 bg-gray-900/90 border-t border-green-500/30">
+                        <div className="flex flex-col items-center gap-2 sm:gap-4 px-4 sm:px-6 py-3 sm:py-5 bg-popover/90 border-t border-neon-primary/30">
                             {/* Page Indicators - Hidden when zoomed */}
                             {!isZoomed && (
                                 <>
@@ -353,8 +314,8 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                                                 key={index}
                                                 onClick={() => goToPage(index)}
                                                 className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all ${currentPage === index
-                                                    ? "bg-green-400 scale-125"
-                                                    : "bg-gray-600 hover:bg-gray-500"
+                                                    ? "bg-neon-primary scale-125"
+                                                    : "bg-muted-foreground/50 hover:bg-muted-foreground"
                                                     }`}
                                                 aria-label={`Go to page ${index + 1}`}
                                             />
@@ -362,7 +323,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                                     </div>
 
                                     {/* Page Counter */}
-                                    <p className="text-gray-400 font-mono text-xs sm:text-sm">
+                                    <p className="text-muted-foreground font-mono text-xs sm:text-sm">
                                         Page {currentPage + 1} of {manifestoPages.length}
                                     </p>
                                 </>
@@ -370,7 +331,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
 
                             {/* Zoom instruction when zoomed */}
                             {isZoomed && (
-                                <p className="text-gray-400 font-mono text-xs sm:text-sm">
+                                <p className="text-muted-foreground font-mono text-xs sm:text-sm">
                                     Drag to pan • Use +/- to zoom • Click outside or X to close
                                 </p>
                             )}
@@ -378,7 +339,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                             {/* CTA Button */}
                             <button
                                 onClick={isZoomed ? toggleZoom : handleClose}
-                                className="group relative px-6 sm:px-8 py-2.5 sm:py-3 bg-green-500 hover:bg-green-400 text-black font-bold font-mono text-sm sm:text-lg rounded transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,197,94,0.5)]"
+                                className="group relative px-6 sm:px-8 py-2.5 sm:py-3 bg-neon-primary hover:bg-neon-primary/80 text-background font-bold font-mono text-sm sm:text-lg rounded transition-all duration-300 hover:shadow-[0_0_20px_var(--neon-primary)]"
                             >
                                 <span className="flex items-center gap-2">
                                     {isZoomed ? "EXIT ZOOM" : "ENTER THE ISLAND"}
@@ -389,6 +350,6 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                     </div>
                 </div>
             )}
-        </ManifestoContext.Provider>
+        </>
     );
 }

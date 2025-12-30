@@ -1,3 +1,5 @@
+"use client";
+
 import { AdminLayout } from '@/features/admin-dashboard';
 import { ReactNode } from 'react';
 

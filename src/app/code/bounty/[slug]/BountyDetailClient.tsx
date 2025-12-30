@@ -135,7 +135,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
     if (loading) {
         return (
-            <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <main className="min-h-screen flex items-center justify-center">
                 <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent animate-spin rounded-full"></div>
             </main>
         );
@@ -143,10 +143,15 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
     if (!bounty) {
         return (
+<<<<<<< HEAD
             <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+=======
+            <main className="min-h-screen flex items-center justify-center">
+                <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+>>>>>>> epic/9-jobs-platform-v2
                 <div className="text-center relative z-10">
                     <div className="text-6xl mb-4">🔍</div>
-                    <h1 className="text-2xl font-mono text-white mb-4">
+                    <h1 className="text-2xl font-mono text-foreground mb-4">
                         Bounty Not Found
                     </h1>
                     <p className="text-gray-400 mb-6">
@@ -154,7 +159,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     </p>
                     <button
                         onClick={() => router.push("/code/bounty")}
-                        className="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-mono"
+                        className="inline-flex items-center text-neon-cyan hover:text-neon-cyan/80 font-mono"
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Back to Bounty Board
@@ -170,13 +175,19 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     // FR9/FR10: Guest users see login required screen
     if (isGuest) {
         return (
+<<<<<<< HEAD
             <main className="min-h-screen bg-gray-900 relative">
+=======
+            <main className="min-h-screen relative">
+                <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+
+>>>>>>> epic/9-jobs-platform-v2
                 {/* Header with Navigation */}
                 <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
                     <div className="container mx-auto px-4 py-3 max-w-4xl">
                         <button
                             onClick={() => router.push("/code/bounty")}
-                            className="inline-flex items-center text-gray-400 hover:text-white transition-colors font-mono text-sm"
+                            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm"
                         >
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             <span className="hidden md:inline">Back to Bounty Board</span>
@@ -189,14 +200,14 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     {/* Bounty Preview Card */}
                     <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-8 mb-8">
                         <div className="flex flex-wrap items-center gap-3 mb-4">
-                            <span className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 font-mono text-xs uppercase">
+                            <span className="px-3 py-1 bg-neon-cyan/20 border border-neon-cyan/50 text-neon-cyan font-mono text-xs uppercase">
                                 {bounty.status}
                             </span>
-                            <span className="text-2xl font-mono font-bold text-cyan-400">
+                            <span className="text-2xl font-mono font-bold text-rank-gold">
                                 RM{bounty.reward}
                             </span>
                         </div>
-                        <h1 className="text-2xl md:text-3xl font-bold font-mono text-white mb-4">
+                        <h1 className="text-2xl md:text-3xl font-bold font-mono text-foreground mb-4">
                             {bounty.title}
                         </h1>
                         <p className="text-gray-400 font-mono text-sm line-clamp-2">
@@ -205,11 +216,11 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     </div>
 
                     {/* Login Required Card */}
-                    <div className="bg-gray-900 border-2 border-neon-primary/50 p-8 text-center">
+                    <div className="bg-background/80 border-2 border-neon-primary/50 p-8 text-center">
                         <div className="w-16 h-16 mx-auto mb-6 bg-neon-primary/10 border-2 border-neon-primary flex items-center justify-center">
                             <Lock className="w-8 h-8 text-neon-primary" />
                         </div>
-                        <h2 className="text-xl font-bold font-mono text-white mb-3">
+                        <h2 className="text-xl font-bold font-mono text-foreground mb-3">
                             Login Required
                         </h2>
                         <p className="text-gray-400 mb-6 max-w-md mx-auto">
@@ -238,14 +249,20 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     }
 
     return (
+<<<<<<< HEAD
         <main className="min-h-screen bg-gray-900 relative">
+=======
+        <main className="min-h-screen relative">
+            <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+
+>>>>>>> epic/9-jobs-platform-v2
             {/* Header with Navigation */}
             <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
                 <div className="container mx-auto px-4 py-3 max-w-4xl">
                     <div className="flex items-center justify-between">
                         <button
                             onClick={() => router.push("/code/bounty")}
-                            className="inline-flex items-center text-gray-400 hover:text-white transition-colors font-mono text-sm"
+                            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm"
                         >
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             <span className="hidden md:inline">Back to Bounty Board</span>
@@ -255,7 +272,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                         {user && (
                             <button
                                 onClick={() => setShowSignOutConfirm(true)}
-                                className="hidden md:flex items-center gap-2 text-gray-400 hover:text-white transition-colors font-mono text-sm px-3 py-1.5 border border-gray-700 hover:border-gray-600"
+                                className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-mono text-sm px-3 py-1.5 border border-border hover:border-foreground/20"
                             >
                                 <LogOut className="w-4 h-4" />
                                 Sign Out
@@ -267,8 +284,8 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
             {/* Sign Out Confirmation Modal */}
             {showSignOutConfirm && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4">
-                    <div className="bg-gray-900 border-2 border-cyan-500 p-6 max-w-md w-full">
+                <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-[60] p-4">
+                    <div className="bg-background border-2 border-cyan-500 p-6 max-w-md w-full">
                         <h2 className="text-xl font-mono text-cyan-400 mb-4">
                             CONFIRM SIGN OUT
                         </h2>
@@ -278,7 +295,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setShowSignOutConfirm(false)}
-                                className="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-mono py-2 transition-colors"
+                                className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-mono py-2 transition-colors"
                             >
                                 Cancel
                             </button>
@@ -302,15 +319,15 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     {/* Submission Form - Only for active bounties AND logged in users */}
                     {canSubmit && (
                         <div className="mb-8">
-                            <h2 className="text-lg font-mono text-white mb-4 flex items-center gap-2">
-                                <Link2 className="w-5 h-5 text-cyan-400" />
+                            <h2 className="text-lg font-mono text-foreground mb-4 flex items-center gap-2">
+                                <Link2 className="w-5 h-5 text-neon-cyan" />
                                 SUBMIT YOUR SOLUTION
                             </h2>
-                            <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-6">
+                            <div className="bg-gray-800/50 border-2 border-neon-cyan/30 p-6">
                                 {submitted ? (
                                     <div className="text-center py-4">
                                         <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                                        <h3 className="text-xl font-mono text-white mb-2">
+                                        <h3 className="text-xl font-mono text-foreground mb-2">
                                             Submission Received!
                                         </h3>
                                         <p className="text-gray-400 mb-4">
@@ -336,7 +353,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                                                     value={prUrl}
                                                     onChange={(e) => setPrUrl(e.target.value)}
                                                     placeholder="https://your-demo.vercel.app or https://github.com/.../pull/123"
-                                                    className="w-full bg-gray-900 border border-gray-600 px-4 py-3 font-mono text-sm text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
+                                                    className="w-full bg-card border border-border px-4 py-3 font-mono text-sm text-foreground placeholder-muted-foreground focus:border-cyan-500 focus:outline-none"
                                                     required
                                                 />
                                                 {error && (
@@ -348,7 +365,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                                             <button
                                                 type="submit"
                                                 disabled={submitting}
-                                                className="bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-mono font-bold px-6 py-3 flex items-center gap-2 transition-colors"
+                                                className="bg-neon-cyan hover:bg-neon-cyan/90 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-mono font-bold px-6 py-3 flex items-center gap-2 transition-colors"
                                             >
                                                 {submitting ? (
                                                     <>
@@ -375,9 +392,9 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
                     {/* Completed Notice */}
                     {bounty.status === "completed" && (
-                        <div className="mb-8 bg-green-500/10 border border-green-500/30 p-6 text-center">
-                            <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-3" />
-                            <div className="text-green-400 font-mono text-lg mb-2">
+                        <div className="mb-8 bg-neon-primary/10 border border-neon-primary/30 p-6 text-center">
+                            <CheckCircle className="w-8 h-8 text-neon-primary mx-auto mb-3" />
+                            <div className="text-neon-primary font-mono text-lg mb-2">
                                 This bounty has been completed!
                             </div>
                             <p className="text-gray-400 text-sm">
@@ -399,7 +416,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     {/* Existing Submissions */}
                     {submissions.length > 0 && (
                         <div className="mb-8">
-                            <h2 className="text-lg font-mono text-white mb-4">
+                            <h2 className="text-lg font-mono text-foreground mb-4">
                                 SUBMISSIONS ({submissions.length})
                             </h2>
                             <div className="space-y-4">

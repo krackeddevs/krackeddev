@@ -54,7 +54,7 @@ export function JobsFilter() {
     <div className="space-y-6">
       {/* Search Bar */}
       <div className="flex gap-4">
-        <div className="relative w-full max-w-sm">
+        <div className="relative w-full max-w-sm group">
           <Input
             placeholder="Frontend Engineer..."
             value={localSearch}
@@ -64,7 +64,7 @@ export function JobsFilter() {
                 handleSearch();
               }
             }}
-            className="bg-black border-white/20 text-white placeholder:text-gray-600 pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-white transition-colors"
+            className="bg-input border-border text-foreground placeholder:text-muted-foreground pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-neon-cyan transition-all group-hover:border-foreground/50"
           />
           {localSearch && (
             <button
@@ -72,15 +72,15 @@ export function JobsFilter() {
                 setLocalSearch("");
                 setSearch(null);
               }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-sm transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-neon-cyan/20 rounded-sm transition-colors group"
               aria-label="Clear search"
             >
-              <X className="w-3 h-3 md:w-4 md:h-4 text-gray-400 hover:text-white" />
+              <X className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground group-hover:text-neon-cyan" />
             </button>
           )}
         </div>
         <Button
-          className="bg-white text-black hover:bg-gray-200 h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm"
+          className="bg-card text-neon-cyan border border-neon-cyan/50 hover:bg-neon-cyan hover:text-black h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm transition-all shadow-[0_0_10px_var(--neon-cyan)] hover:shadow-[0_0_20px_var(--neon-cyan)]"
           variant="default"
           onClick={handleSearch}
         >
@@ -91,7 +91,9 @@ export function JobsFilter() {
 
       {/* Filter Buttons */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 text-sm font-mono">
-        <span className="text-gray-500">Filter by</span>
+        <span className="text-muted-foreground uppercase tracking-wider text-xs">
+          // Filter by
+        </span>
 
         <div className="flex flex-wrap gap-2">
           {/* Location Filter */}
@@ -100,8 +102,9 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-transparent border-white/20 text-gray-300 hover:text-white hover:border-white hover:bg-transparent rounded-none h-8 md:h-10 text-xs md:text-sm gap-2",
-                  location && "text-white border-white bg-white/5"
+                  "bg-card/50 border-border text-muted-foreground hover:text-neon-cyan hover:border-neon-cyan/50 hover:bg-neon-cyan/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  location &&
+                  "text-neon-cyan border-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_var(--neon-cyan)]"
                 )}
               >
                 <MapPin className="w-3 h-3 md:w-4 md:h-4" />
@@ -109,7 +112,7 @@ export function JobsFilter() {
                 {location ? (
                   <div
                     role="button"
-                    className="ml-1 rounded-full p-0.5 hover:bg-white/20"
+                    className="ml-1 rounded-full p-0.5 hover:bg-neon-cyan/20"
                     onPointerDown={(e) => e.stopPropagation()}
                     onClick={(e) => {
                       e.preventDefault();
@@ -125,18 +128,20 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-[#0A0A0A] border-white/20 text-white"
+              className="w-56 bg-popover border-neon-cyan/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
-              <DropdownMenuLabel>Select Location</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-white/10" />
+              <DropdownMenuLabel className="text-neon-cyan font-mono text-xs uppercase tracking-wider">
+                Select Location
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-neon-cyan/20" />
               <DropdownMenuRadioGroup
                 value={location || ""}
                 onValueChange={(val) => setLocation(val || null)}
               >
                 <DropdownMenuRadioItem
                   value=""
-                  className="focus:bg-white/10 focus:text-white cursor-pointer"
+                  className="focus:bg-neon-cyan/10 focus:text-neon-cyan cursor-pointer font-mono text-xs"
                 >
                   Any Location
                 </DropdownMenuRadioItem>
@@ -144,7 +149,7 @@ export function JobsFilter() {
                   <DropdownMenuRadioItem
                     key={loc}
                     value={loc}
-                    className="focus:bg-white/10 focus:text-white cursor-pointer"
+                    className="focus:bg-neon-cyan/10 focus:text-neon-cyan cursor-pointer font-mono text-xs"
                   >
                     {loc}
                   </DropdownMenuRadioItem>
@@ -159,16 +164,17 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-transparent border-white/20 text-gray-300 hover:text-white hover:border-white hover:bg-transparent rounded-none h-8 md:h-10 text-xs md:text-sm gap-2",
-                  type && "text-white border-white bg-white/5"
+                  "bg-card/50 border-border text-muted-foreground hover:text-neon-purple hover:border-neon-purple/50 hover:bg-neon-purple/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  type &&
+                  "text-neon-purple border-neon-purple bg-neon-purple/10 shadow-[0_0_10px_var(--neon-purple)]"
                 )}
               >
                 <Briefcase className="w-3 h-3 md:w-4 md:h-4" />
-                {type || "Employment Type"}
+                {type || "Type"}
                 {type ? (
                   <div
                     role="button"
-                    className="ml-1 rounded-full p-0.5 hover:bg-white/20"
+                    className="ml-1 rounded-full p-0.5 hover:bg-neon-purple/20"
                     onPointerDown={(e) => e.stopPropagation()}
                     onClick={(e) => {
                       e.preventDefault();
@@ -184,18 +190,20 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-[#0A0A0A] border-white/20 text-white"
+              className="w-56 bg-popover border-neon-purple/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
-              <DropdownMenuLabel>Select Type</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-white/10" />
+              <DropdownMenuLabel className="text-neon-purple font-mono text-xs uppercase tracking-wider">
+                Select Type
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-neon-purple/20" />
               <DropdownMenuRadioGroup
                 value={type || ""}
                 onValueChange={(val) => setType(val || null)}
               >
                 <DropdownMenuRadioItem
                   value=""
-                  className="focus:bg-white/10 focus:text-white cursor-pointer"
+                  className="focus:bg-neon-purple/10 focus:text-neon-purple cursor-pointer font-mono text-xs"
                 >
                   Any Type
                 </DropdownMenuRadioItem>
@@ -203,7 +211,7 @@ export function JobsFilter() {
                   <DropdownMenuRadioItem
                     key={t}
                     value={t}
-                    className="focus:bg-white/10 focus:text-white cursor-pointer"
+                    className="focus:bg-neon-purple/10 focus:text-neon-purple cursor-pointer font-mono text-xs"
                   >
                     {t}
                   </DropdownMenuRadioItem>
@@ -218,18 +226,19 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-transparent border-white/20 text-gray-300 hover:text-white hover:border-white hover:bg-transparent rounded-none h-8 md:h-10 text-xs md:text-sm gap-2",
-                  (salaryMin || 0) > 0 && "text-white border-white bg-white/5"
+                  "bg-card/50 border-border text-muted-foreground hover:text-neon-lime hover:border-neon-lime/50 hover:bg-neon-lime/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  (salaryMin || 0) > 0 &&
+                  "text-neon-lime border-neon-lime bg-neon-lime/10 shadow-[0_0_10px_var(--neon-lime)]"
                 )}
               >
                 <DollarSign className="w-3 h-3 md:w-4 md:h-4" />
                 {(salaryMin || 0) > 0
                   ? `> RM ${(salaryMin || 0).toLocaleString()}`
-                  : "Salary Range"}
+                  : "Salary"}
                 {(salaryMin || 0) > 0 ? (
                   <div
                     role="button"
-                    className="ml-1 rounded-full p-0.5 hover:bg-white/20"
+                    className="ml-1 rounded-full p-0.5 hover:bg-neon-lime/20"
                     onPointerDown={(e) => e.stopPropagation()}
                     onClick={(e) => {
                       e.preventDefault();
@@ -245,11 +254,13 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-[#0A0A0A] border-white/20 text-white"
+              className="w-56 bg-popover border-neon-lime/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
-              <DropdownMenuLabel>Minimum Salary</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-white/10" />
+              <DropdownMenuLabel className="text-neon-lime font-mono text-xs uppercase tracking-wider">
+                Minimum Salary
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-neon-lime/20" />
               <DropdownMenuRadioGroup
                 value={(salaryMin || 0).toString()}
                 onValueChange={(v) => setSalaryMin(parseInt(v) || null)}
@@ -258,7 +269,7 @@ export function JobsFilter() {
                   <DropdownMenuRadioItem
                     key={opt.value}
                     value={opt.value.toString()}
-                    className="focus:bg-white/10 focus:text-white cursor-pointer"
+                    className="focus:bg-neon-lime/10 focus:text-neon-lime cursor-pointer font-mono text-xs"
                   >
                     {opt.label}
                   </DropdownMenuRadioItem>

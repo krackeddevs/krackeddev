@@ -21,7 +21,7 @@ export function BountyStats({ stats, className }: BountyStatsProps) {
     return (
         <div className={cn("grid grid-cols-2 gap-4", className)}>
             {/* Wins Card */}
-            <Card className="bg-black/40 border-white/10 backdrop-blur-md relative overflow-hidden group hover:border-neon-primary/50 transition-colors duration-300">
+            <Card className="bg-card/40 border-border backdrop-blur-md relative overflow-hidden group hover:border-neon-primary/50 transition-colors duration-300">
                 <div className="absolute inset-0 bg-neon-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <CardContent className="p-6 flex flex-col items-center justify-center text-center space-y-2">
                     <div className="p-3 rounded-full bg-neon-primary/10 text-neon-primary mb-1 group-hover:scale-110 transition-transform duration-300">
@@ -31,7 +31,7 @@ export function BountyStats({ stats, className }: BountyStatsProps) {
                         <p className="text-xs uppercase tracking-widest text-muted-foreground font-mono">
                             Verif. Wins
                         </p>
-                        <h3 className="text-3xl font-bold font-mono text-white tracking-tighter">
+                        <h3 className="text-3xl font-bold font-mono text-foreground tracking-tighter">
                             {stats.totalWins}
                         </h3>
                     </div>
@@ -39,7 +39,7 @@ export function BountyStats({ stats, className }: BountyStatsProps) {
             </Card>
 
             {/* Earnings Card */}
-            <Card className="bg-black/40 border-white/10 backdrop-blur-md relative overflow-hidden group hover:border-neon-yellow/50 transition-colors duration-300">
+            <Card className="bg-card/40 border-border backdrop-blur-md relative overflow-hidden group hover:border-neon-yellow/50 transition-colors duration-300">
                 <div className="absolute inset-0 bg-neon-yellow/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <CardContent className="p-6 flex flex-col items-center justify-center text-center space-y-2">
                     <div className="p-3 rounded-full bg-neon-yellow/10 text-neon-yellow mb-1 group-hover:scale-110 transition-transform duration-300">
@@ -49,7 +49,7 @@ export function BountyStats({ stats, className }: BountyStatsProps) {
                         <p className="text-xs uppercase tracking-widest text-muted-foreground font-mono">
                             Total Earnings
                         </p>
-                        <h3 className="text-2xl font-bold font-mono text-white tracking-tighter">
+                        <h3 className="text-2xl font-bold font-mono text-foreground tracking-tighter">
                             {formattedEarnings}
                         </h3>
                     </div>

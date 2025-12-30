@@ -7,12 +7,19 @@ interface RoleDistributionChartProps {
     data: { name: string; value: number }[];
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#a855f7', '#ec4899'];
+const COLORS = [
+    'var(--chart-1)',
+    'var(--chart-2)',
+    'var(--chart-3)',
+    'var(--chart-4)',
+    'var(--chart-5)',
+    'var(--chart-1)', // Repeat safely
+];
 
 export function RoleDistributionChart({ data }: RoleDistributionChartProps) {
     return (
-        <div className="w-full h-[250px] md:h-[400px] border rounded-lg bg-card p-4">
-            <h3 className="text-lg font-semibold mb-4">Developer Roles</h3>
+        <div className="w-full h-[250px] md:h-[400px] border-2 border-border rounded-lg bg-card/40 backdrop-blur-sm p-4 hover:border-border/80 transition-all duration-300">
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Developer Roles</h3>
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart margin={{ top: 20, right: 0, left: 0, bottom: 20 }}>
                     <Pie
@@ -30,7 +37,8 @@ export function RoleDistributionChart({ data }: RoleDistributionChartProps) {
                         ))}
                     </Pie>
                     <Tooltip
-                        contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
+                        contentStyle={{ backgroundColor: 'var(--popover)', borderColor: 'var(--border)', color: 'var(--popover-foreground)', borderRadius: 'var(--radius)' }}
+                        itemStyle={{ color: 'var(--popover-foreground)' }}
                     />
                     <Legend verticalAlign="top" height={36} />
                 </PieChart>

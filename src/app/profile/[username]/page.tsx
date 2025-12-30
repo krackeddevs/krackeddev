@@ -52,7 +52,12 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
     }
 
     return (
+<<<<<<< HEAD
         <main className="min-h-screen bg-gray-900">
+=======
+        <main className="min-h-screen">
+            <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+>>>>>>> epic/9-jobs-platform-v2
             <div className="relative z-10 py-8">
                 <PublicProfileDetails
                     profile={profile}

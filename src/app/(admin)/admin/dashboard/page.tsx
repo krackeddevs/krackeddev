@@ -5,8 +5,10 @@ import { AnalyticsMap } from '@/features/admin-dashboard/components/analytics/an
 import { TechStackChart } from '@/features/admin-dashboard/components/analytics/tech-stack-chart';
 import { RoleDistributionChart } from '@/features/admin-dashboard/components/analytics/role-distribution-chart';
 import { UserGrowthChart } from '@/features/admin-dashboard/components/analytics/user-growth-chart';
-import { StatsCard } from '@/features/admin-dashboard/components/stats-card';
 import { RecentActivity } from '@/features/admin-dashboard/components/recent-activity';
+import { AdminPageHeader } from '@/features/admin-dashboard/components/admin-page-header';
+import { AdminStatsCard } from '@/features/admin-dashboard/components/admin-stats-card';
+import { QuickActions } from '@/features/admin-dashboard/components/quick-actions';
 import {
     Users,
     Target,
@@ -27,42 +29,49 @@ export default async function AdminDashboardPage() {
 
     return (
         <div className="space-y-6 pb-8">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
-            </div>
+            <AdminPageHeader
+                title="Dashboard Overview"
+                description="Monitor platform metrics and user activity"
+            />
 
             {/* Metrics Row */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatsCard
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                <AdminStatsCard
                     title="Total Users"
                     value={data.totalUsers}
                     icon={Users}
-                    trend={data.userGrowthRate}
-                    trendLabel="from last month"
+                    trend={{
+                        value: data.userGrowthRate,
+                        isPositive: data.userGrowthRate > 0
+                    }}
                     description="Registered developers"
                 />
-                <StatsCard
+                <AdminStatsCard
                     title="Active Bounties"
                     value={data.activeBounties}
                     icon={Target}
-                    trendLabel="Currently open"
-                    description="Opportunities available"
+                    description="Currently open"
                 />
-                <StatsCard
+                <AdminStatsCard
                     title="Total Rewards"
                     value={`RM ${data.totalRewards.toLocaleString()}`}
                     icon={DollarSign}
                     description="Total bounty value"
                 />
-                <StatsCard
+                <AdminStatsCard
                     title="Bounty Growth"
                     value={`${data.bountyGrowthRate}%`}
                     icon={TrendingUp}
-                    trend={data.bountyGrowthRate}
-                    trendLabel="from last month"
+                    trend={{
+                        value: data.bountyGrowthRate,
+                        isPositive: data.bountyGrowthRate > 0
+                    }}
                     description="Platform scaling"
                 />
             </div>
+
+            {/* Quick Actions */}
+            <QuickActions />
 
             {/* Main Content Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { jobs } from "@/lib/db/schema";
+import { jobs, companies } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function GET(
@@ -10,15 +10,26 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const job = await db.query.jobs.findFirst({
-      where: eq(jobs.id, id),
-    });
+    const result = await db
+      .select({
+        job: jobs,
+        companySlug: companies.slug,
+      })
+      .from(jobs)
+      .leftJoin(companies, eq(jobs.companyId, companies.id))
+      .where(eq(jobs.id, id))
+      .limit(1);
 
-    if (!job) {
+    const record = result[0];
+
+    if (!record) {
       return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
 
-    return NextResponse.json(job);
+    return NextResponse.json({
+      ...record.job,
+      companySlug: record.companySlug,
+    });
   } catch (error) {
     console.error("Error fetching job details:", error);
     return NextResponse.json(

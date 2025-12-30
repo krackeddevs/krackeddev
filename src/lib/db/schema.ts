@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, integer, timestamp, index, boolean, numeric, pgEnum } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 // ============================================
 // ENUMS
@@ -40,6 +41,78 @@ export const profiles = pgTable(
 );
 
 // ============================================
+// COMPANIES TABLE
+// ============================================
+export const companies = pgTable('companies', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  logoUrl: text('logo_url'),
+  websiteUrl: text('website_url'),
+  linkedinUrl: text('linkedin_url'),
+  twitterUrl: text('twitter_url'),
+  description: text('description'),
+  size: text('size'),
+  industry: text('industry'),
+  location: text('location'),
+  isVerified: boolean('is_verified').default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+});
+
+// ============================================
+// COMPANY VERIFICATION REQUESTS TABLE
+// ============================================
+export const companyVerificationRequests = pgTable(
+  'company_verification_requests',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    companyId: uuid('company_id')
+      .notNull()
+      .references(() => companies.id, { onDelete: 'cascade' }),
+    requestedBy: uuid('requested_by')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+
+    // Business Details
+    businessRegistrationNumber: text('business_registration_number').notNull(),
+    registrationDocumentUrl: text('registration_document_url'),
+    taxId: text('tax_id'),
+
+    // Contact Verification
+    verificationEmail: text('verification_email').notNull(),
+    emailVerified: boolean('email_verified').notNull().default(false),
+    verificationCode: text('verification_code'),
+    codeExpiresAt: timestamp('code_expires_at', { withTimezone: true }),
+
+    // Requester Details
+    requesterName: text('requester_name').notNull(),
+    requesterTitle: text('requester_title').notNull(),
+    requesterPhone: text('requester_phone').notNull(),
+
+    // Context
+    reason: text('reason').notNull(),
+    expectedJobCount: text('expected_job_count').notNull(),
+
+    // Admin Review
+    status: text('status').notNull().default('pending'),
+    reviewedBy: uuid('reviewed_by').references(() => profiles.id),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+    adminNotes: text('admin_notes'),
+    rejectionReason: text('rejection_reason'),
+
+    // Timestamps
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  },
+  (table) => ({
+    companyIdIdx: index('idx_company_verification_requests_company_id').on(table.companyId),
+    statusIdx: index('idx_company_verification_requests_status').on(table.status),
+    createdAtIdx: index('idx_company_verification_requests_created_at').on(table.createdAt),
+  })
+);
+
+// ============================================
 // PAGE VIEWS TABLE
 // ============================================
 export const pageViews = pgTable(
@@ -67,6 +140,7 @@ export const jobs = pgTable(
   {
     id: text('id').primaryKey(),
     title: text('title').notNull(),
+    companyId: uuid('company_id').references(() => companies.id), // Added relation
     company: text('company').notNull(),
     companyLogo: text('company_logo'),
     description: text('description').notNull(),
@@ -75,6 +149,9 @@ export const jobs = pgTable(
     salaryMin: integer('salary_min'),
     salaryMax: integer('salary_max'),
     employmentType: text('employment_type'),
+    jobType: text('job_type').default('external'), // internal vs external
+    applicationMethod: text('application_method').default('url'), // url, email, etc
+    applicationUrl: text('application_url'),
     sourceUrl: text('source_url'),
     sourceSite: text('source_site'),
     postedAt: timestamp('posted_at', { withTimezone: true }),
@@ -171,5 +248,54 @@ export const bountySubmissions = pgTable(
     bountySlugIdx: index('bounty_submissions_bounty_slug_idx').on(table.bountySlug),
     userIdIdx: index('bounty_submissions_user_id_idx').on(table.userId),
     statusIdx: index('bounty_submissions_status_idx').on(table.status),
+  })
+);
+
+// ============================================
+// JOB APPLICATIONS TABLE
+// ============================================
+export const jobApplications = pgTable(
+  'job_applications',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    jobId: text('job_id')
+      .notNull()
+      .references(() => jobs.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'cascade' }),
+    resumeUrl: text('resume_url').notNull(),
+    coverLetter: text('cover_letter'),
+    status: text('status').notNull().default('new'), // new, reviewing, shortlisted, rejected, hired
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => ({
+    jobIdIdx: index('job_applications_job_id_idx').on(table.jobId),
+    userIdIdx: index('job_applications_user_id_idx').on(table.userId),
+    statusIdx: index('job_applications_status_idx').on(table.status),
+  })
+);
+
+
+// ============================================
+// RELATIONS
+// ============================================
+
+export const companyVerificationRequestsRelations = relations(
+  companyVerificationRequests,
+  ({ one }) => ({
+    company: one(companies, {
+      fields: [companyVerificationRequests.companyId],
+      references: [companies.id],
+    }),
+    requester: one(profiles, {
+      fields: [companyVerificationRequests.requestedBy],
+      references: [profiles.id],
+    }),
+    reviewer: one(profiles, {
+      fields: [companyVerificationRequests.reviewedBy],
+      references: [profiles.id],
+    }),
   })
 );

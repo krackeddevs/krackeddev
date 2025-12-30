@@ -20,12 +20,7 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
     const [hoveredStateIndex, setHoveredStateIndex] = useState<number | null>(null);
 
-    const colorScale = useMemo(() => {
-        const max = Math.max(...data.map(d => d.value), 1);
-        return scaleLinear<string>()
-            .domain([0, max])
-            .range(["#1f2937", "#38b2ac"]); // Dark gray to Teal
-    }, [data]);
+    const maxVal = useMemo(() => Math.max(...data.map(d => d.value), 1), [data]);
 
     const getStateValue = (index: number) => {
         const stateName = STATE_NAMES[index];
@@ -40,8 +35,8 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
     };
 
     return (
-        <div className="w-full h-[300px] md:h-[400px] border rounded-lg bg-card p-4 flex flex-col relative overflow-hidden">
-            <h3 className="text-lg font-semibold mb-2 md:mb-4 text-left">User Distribution (Malaysia)</h3>
+        <div className="w-full h-[300px] md:h-[400px] border-2 border-border rounded-lg bg-card/40 backdrop-blur-sm p-4 flex flex-col relative overflow-hidden hover:border-border/80 transition-all duration-300">
+            <h3 className="text-lg font-semibold mb-2 md:mb-4 text-left text-foreground">User Distribution (Malaysia)</h3>
 
             {/* Tooltip */}
             {tooltipContent && (
@@ -76,25 +71,22 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
                         const isActive = val > 0;
                         const isHovered = hoveredStateIndex === index;
                         const stateName = STATE_NAMES[index] || "Unknown";
+                        const percentage = Math.min((val / maxVal) * 100, 100);
 
-                        // Determine fill color
-                        let fill = "#1f2937"; // default dark gray (inactive)
-                        if (isActive) {
-                            fill = colorScale(val);
-                        }
-
-                        // Hover logic
-                        if (isHovered && !isActive) fill = "#374151"; // lighter gray on hover
-                        if (isHovered && isActive) fill = "#4fd1c5"; // brighter teal on hover active
+                        // Use CSS color-mix for theme-aware gradients!
+                        // Base: muted (inactive) -> Target: neon-primary (active)
+                        const fillStyle = isActive
+                            ? { fill: `color-mix(in srgb, var(--muted), var(--neon-primary) ${percentage}%)` }
+                            : { fill: 'var(--muted)' };
 
                         return (
                             <path
                                 key={index}
                                 d={pathData}
-                                fill={fill}
-                                stroke={isHovered ? "#4fd1c5" : "#374151"}
+                                style={fillStyle}
+                                stroke={isHovered ? "var(--neon-cyan)" : "var(--border)"}
                                 strokeWidth={isHovered ? "2" : "1"}
-                                className="transition-all duration-200 cursor-pointer"
+                                className={`transition-all duration-200 cursor-pointer ${isHovered && !isActive ? 'hover:fill-muted-foreground/50' : ''} ${isHovered && isActive ? 'brightness-110' : ''}`}
                                 onMouseEnter={() => {
                                     setHoveredStateIndex(index);
                                     setTooltipContent(`${stateName}: ${val} Users`);
@@ -112,11 +104,11 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
             {/* Legend/Info */}
             <div className="absolute bottom-4 left-4 flex flex-wrap items-center gap-2 text-[10px] md:text-xs text-muted-foreground p-1 md:p-2 bg-background/80 rounded border z-20">
                 <div className="flex items-center">
-                    <span className="w-2 h-2 md:w-3 md:h-3 bg-[#38b2ac] rounded-full inline-block mr-1"></span>
+                    <span className="w-2 h-2 md:w-3 md:h-3 bg-neon-primary rounded-full inline-block mr-1"></span>
                     <span>Active</span>
                 </div>
                 <div className="flex items-center ml-2">
-                    <span className="w-2 h-2 md:w-3 md:h-3 bg-[#1f2937] rounded-full inline-block mr-1 border border-gray-600"></span>
+                    <span className="w-2 h-2 md:w-3 md:h-3 bg-muted rounded-full inline-block mr-1 border border-border"></span>
                     <span>No Users</span>
                 </div>
             </div>

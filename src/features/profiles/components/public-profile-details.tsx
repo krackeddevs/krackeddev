@@ -120,7 +120,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                             <CardContent className="pt-6">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="text-center p-4 bg-white/5 border border-white/10">
-                                        <Trophy className="w-6 h-6 text-amber-400 mx-auto mb-2" />
+                                        <Trophy className="w-6 h-6 text-rank-gold mx-auto mb-2" />
                                         <p className="text-2xl font-bold font-mono text-white">{bountyStats.totalWins}</p>
                                         <p className="text-xs text-muted-foreground font-mono uppercase">Bounties Won</p>
                                     </div>
@@ -136,7 +136,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
 
                     {/* Dev Pulse Visualization - Main Column */}
                     {pulseData && (
-                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
+                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_var(--neon-primary)]">
                             <DevPulse data={pulseData} />
                         </div>
                     )}

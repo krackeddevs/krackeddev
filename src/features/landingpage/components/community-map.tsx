@@ -78,12 +78,10 @@ export function CommunityMap() {
     return Math.max(...data.map((d) => d.value), 1);
   }, [data]);
 
-  const colorScale = useMemo(() => {
-    // Darker green for higher values
-    // Using base green (#22c55e) to dark green (#14532d)
-    return scaleLinear<string>()
+  const opacityScale = useMemo(() => {
+    return scaleLinear<number>()
       .domain([1, maxUsers])
-      .range(["#22c55e", "#14532d"]);
+      .range([0.4, 1]);
   }, [maxUsers]);
 
   const getStateValue = (index: number) => {
@@ -101,7 +99,7 @@ export function CommunityMap() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[400px]">
-        <div className="text-green-400 font-mono">Loading community data...</div>
+        <div className="text-neon-primary font-mono">Loading community data...</div>
       </div>
     );
   }
@@ -109,17 +107,17 @@ export function CommunityMap() {
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8">
       <div className="text-center mb-6">
-        <h2 className="text-2xl md:text-3xl font-mono font-bold text-green-400 mb-2">
+        <h2 className="text-2xl md:text-3xl font-mono font-bold text-neon-primary mb-2">
           🇲🇾 Our Community
         </h2>
-        <p className="text-gray-400 font-mono text-sm">
+        <p className="text-muted-foreground font-mono text-sm">
           <Users className="inline-block w-4 h-4 mr-2" />
           {totalUsers} developers across Malaysia
         </p>
       </div>
 
       <div
-        className="relative w-full h-[300px] md:h-[400px] bg-black overflow-hidden rounded-lg p-4 flex items-center justify-center z-20"
+        className="relative w-full h-[300px] md:h-[400px] bg-card border border-border overflow-hidden rounded-lg p-4 flex items-center justify-center z-20"
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
@@ -128,10 +126,10 @@ export function CommunityMap() {
         {/* Tooltip */}
         {hoveredStateIndex !== null && (
           <div
-            className="absolute z-20 pointer-events-none bg-black/90 text-green-400 px-3 py-2 font-mono text-sm border border-green-500/50 rounded shadow-[0_0_10px_rgba(34,197,94,0.2)]"
+            className="absolute z-20 pointer-events-none bg-popover/90 text-neon-primary px-3 py-2 font-mono text-sm border border-neon-primary/50 rounded shadow-[0_0_10px_rgba(34,197,94,0.2)]"
             style={{ left: tooltipPos.x + 10, top: tooltipPos.y + 10 }}
           >
-            <span className="font-bold text-white">{GUESSED_STATE_NAMES[hoveredStateIndex] || "Unknown"}</span>
+            <span className="font-bold text-popover-foreground">{GUESSED_STATE_NAMES[hoveredStateIndex] || "Unknown"}</span>
             <br />
             {getStateValue(hoveredStateIndex)} devs
           </div>
@@ -148,24 +146,32 @@ export function CommunityMap() {
             const isActive = val > 0;
             const isHovered = hoveredStateIndex === index;
 
-            // Determine fill color
-            let fill = "#1f2937"; // default dark gray (inactive)
+            // Use opacity for intensity to support CSS variables (and B&W mode)
+            let fill = "var(--muted)";
+            let fillOpacity = 1;
+
             if (isActive) {
-              fill = colorScale(val);
+              fill = "var(--neon-primary)";
+              fillOpacity = opacityScale(val);
             }
 
-            // Hover logic
-            if (isHovered && !isActive) fill = "#374151"; // lighter gray on hover
-            if (isHovered && isActive) fill = "#4ade80"; // highlight bright green on hover active
+            // Hover logic overrides
+            if (isHovered && !isActive) {
+              fill = "var(--accent)";
+            }
+            if (isHovered && isActive) {
+              fill = "var(--neon-primary)";
+              fillOpacity = 1; // max bright on hover
+            }
 
             return (
               <path
                 key={index}
                 d={pathData}
                 fill={fill}
-                stroke={isHovered ? "#4ade80" : "#374151"}
+                stroke={isHovered ? "var(--neon-primary)" : "var(--border)"}
                 strokeWidth={isHovered ? "2" : "1.5"}
-                fillOpacity={1} // Force solid opacity
+                fillOpacity={fillOpacity}
                 className="transition-all duration-200 cursor-pointer"
                 onMouseEnter={() => setHoveredStateIndex(index)}
                 onMouseLeave={() => setHoveredStateIndex(null)}
@@ -175,13 +181,13 @@ export function CommunityMap() {
         </svg>
 
         {/* Legend - increased z-index */}
-        <div className="absolute bottom-4 left-4 z-20 flex items-center gap-4 text-xs font-mono text-gray-400 p-2 bg-black border border-green-500/30 rounded">
+        <div className="absolute bottom-4 left-4 z-20 flex items-center gap-4 text-xs font-mono text-muted-foreground p-2 bg-card border border-border rounded">
           <div className="flex items-center">
-            <span className="w-3 h-3 bg-green-500 inline-block mr-1 rounded-sm"></span>
+            <span className="w-3 h-3 bg-neon-primary inline-block mr-1 rounded-sm"></span>
             <span>Active</span>
           </div>
           <div className="flex items-center">
-            <span className="w-3 h-3 bg-[#1f2937] inline-block mr-1 border border-gray-600 rounded-sm"></span>
+            <span className="w-3 h-3 bg-muted inline-block mr-1 border border-border rounded-sm"></span>
             <span>No devs yet</span>
           </div>
         </div>

@@ -33,19 +33,19 @@ export function MembersList({ members }: MembersListProps) {
         <div className="space-y-4">
             {/* Search Input */}
             <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                     type="text"
                     placeholder="Search by name, role, or location..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-700 focus:border-neon-primary outline-none font-mono text-sm text-white placeholder-gray-500 transition-colors"
+                    className="w-full pl-10 pr-4 py-3 bg-card/50 border border-border focus:border-neon-primary outline-none font-mono text-sm text-foreground placeholder-muted-foreground transition-colors"
                 />
             </div>
 
             {/* Results count */}
             {searchQuery && (
-                <p className="text-gray-400 font-mono text-sm">
+                <p className="text-muted-foreground font-mono text-sm">
                     Found {filteredMembers.length} member{filteredMembers.length !== 1 ? "s" : ""}
                 </p>
             )}
@@ -53,8 +53,8 @@ export function MembersList({ members }: MembersListProps) {
             {/* Members Grid */}
             {filteredMembers.length === 0 ? (
                 <div className="text-center py-12">
-                    <User className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400 font-mono">
+                    <User className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground font-mono">
                         {searchQuery ? "No members match your search." : "No members found."}
                     </p>
                 </div>
@@ -66,29 +66,29 @@ export function MembersList({ members }: MembersListProps) {
                             href={`/profile/${member.username}`}
                             className="block group"
                         >
-                            <div className="flex items-center gap-4 p-4 bg-gray-800/50 border border-gray-700 hover:border-neon-primary/50 transition-all h-[88px]">
+                            <div className="flex items-center gap-4 p-4 bg-card/40 backdrop-blur-sm border border-border hover:border-neon-primary hover:bg-neon-primary/5 transition-all h-[88px] group-hover:-translate-y-1">
                                 {/* Avatar */}
                                 {member.avatar_url ? (
                                     <img
                                         src={member.avatar_url}
                                         alt={member.username || "User"}
-                                        className="w-12 h-12 rounded-full border-2 border-white/10 group-hover:border-neon-primary/50 transition-colors flex-shrink-0"
+                                        className="w-12 h-12 rounded-full border-2 border-border group-hover:border-neon-primary/50 transition-colors flex-shrink-0"
                                     />
                                 ) : (
-                                    <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white/10 flex-shrink-0">
-                                        <User className="w-6 h-6 text-gray-400" />
+                                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center border-2 border-border flex-shrink-0">
+                                        <User className="w-6 h-6 text-muted-foreground" />
                                     </div>
                                 )}
 
                                 {/* Info */}
                                 <div className="flex-1 min-w-0 overflow-hidden">
-                                    <h3 className="font-mono text-white group-hover:text-neon-primary transition-colors truncate text-sm">
+                                    <h3 className="font-mono text-foreground group-hover:text-neon-primary transition-colors truncate text-sm">
                                         {member.full_name || member.username || "Anonymous"}
                                     </h3>
-                                    <div className="text-xs text-gray-400 font-mono uppercase truncate h-4">
+                                    <div className="text-xs text-muted-foreground font-mono uppercase truncate h-4">
                                         {member.developer_role || "DEVELOPER"}
                                     </div>
-                                    <div className="flex items-center gap-1 text-xs text-gray-500 font-mono mt-0.5 truncate">
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground font-mono mt-0.5 truncate">
                                         {member.location ? (
                                             <>
                                                 <MapPin className="w-3 h-3 flex-shrink-0" />

@@ -13,14 +13,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { useState } from "react";
+import { ApplicationModal } from "@/features/jobs/components/application-modal";
 
 export default function JobDetailClient({ id }: { id: string }) {
   const { data: job, isLoading, error } = useJob(id);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   if (isLoading) {
     return (
       <div className="min-h-screen pt-32 pb-16 flex items-center justify-center">
-        <div className="text-white font-mono animate-pulse">
+        <div className="text-foreground font-mono animate-pulse">
           Loading job details...
         </div>
       </div>
@@ -36,7 +39,7 @@ export default function JobDetailClient({ id }: { id: string }) {
         <Link href="/jobs">
           <Button
             variant="outline"
-            className="text-white border-white/20 hover:bg-white/10"
+            className="text-foreground border-border hover:bg-muted/10"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Jobs
@@ -64,7 +67,7 @@ export default function JobDetailClient({ id }: { id: string }) {
         <div className="mb-8">
           <Link
             href="/jobs"
-            className="inline-flex items-center text-gray-400 hover:text-white transition-colors font-mono text-sm mb-6"
+            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm mb-6"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Jobs
@@ -72,12 +75,21 @@ export default function JobDetailClient({ id }: { id: string }) {
 
           <div className="space-y-6">
             <div className="space-y-6">
-              <h1 className="text-2xl md:text-4xl font-bold font-mono text-white tracking-tight">
+              <h1 className="text-2xl md:text-4xl font-bold font-mono text-foreground tracking-tight">
                 {job.title}
               </h1>
-              <div className="text-xl text-gray-300 font-mono">
-                {job.company}
-              </div>
+              {job.companySlug ? (
+                <Link
+                  href={`/companies/${job.companySlug}`}
+                  className="text-xl text-muted-foreground hover:text-foreground transition-colors font-mono"
+                >
+                  {job.company} →
+                </Link>
+              ) : (
+                <div className="text-xl text-gray-300 font-mono">
+                  {job.company}
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-y border-white/10 py-6">
@@ -107,19 +119,48 @@ export default function JobDetailClient({ id }: { id: string }) {
             </div>
 
             <div className="pt-6">
-              {job.sourceUrl && (
+              {job.applicationMethod === "email" ? (
                 <Button
                   className="bg-white text-black hover:bg-gray-200 h-10 px-6 font-mono rounded-none text-sm"
-                  onClick={() => window.open(job.sourceUrl!, "_blank")}
+                  onClick={() =>
+                    (window.location.href = `mailto:${job.applicationUrl}`)
+                  }
+                >
+                  Apply via Email
+                  <ExternalLink className="w-3 h-3 ml-2" />
+                </Button>
+              ) : job.applicationMethod === "internal_form" ? (
+                <>
+                  <Button
+                    className="bg-white text-black hover:bg-gray-200 h-10 px-6 font-mono rounded-none text-sm"
+                    onClick={() => setIsApplyModalOpen(true)}
+                  >
+                    Apply Now
+                    <Briefcase className="w-3 h-3 ml-2" />
+                  </Button>
+                  <ApplicationModal
+                    isOpen={isApplyModalOpen}
+                    onClose={() => setIsApplyModalOpen(false)}
+                    jobId={job.id}
+                    jobTitle={job.title}
+                    companyName={job.company}
+                  />
+                </>
+              ) : (job.applicationUrl || job.sourceUrl) ? (
+                <Button
+                  className="bg-white text-black hover:bg-gray-200 h-10 px-6 font-mono rounded-none text-sm"
+                  onClick={() =>
+                    window.open(job.applicationUrl || job.sourceUrl!, "_blank")
+                  }
                 >
                   Apply Now
                   <ExternalLink className="w-3 h-3 ml-2" />
                 </Button>
-              )}
+              ) : null}
             </div>
 
             <div className="space-y-6 py-8">
-              <h2 className="text-2xl font-bold font-mono text-white">
+              <h2 className="text-2xl font-bold font-mono text-foreground">
                 Job Description
               </h2>
               <div
