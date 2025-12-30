@@ -24,6 +24,7 @@ The core of the knowledge base is the "Stack Overflow-style" Q&A forum. This sto
     - **Question Block**: Full body markdown, voting controls (left), author card (bottom).
     - **Answers List**: Sorted by Accepted -> Votes -> Highest.
     - **Answer Block**: Body markdown, voting usage, author card.
+    - **UI Standardization**: Both Listing and Detail pages MUST use the shared `PageHeader` and `Container` components to match `/jobs` exactly. No custom layouts.
 
 ### Database Schema
 - [ ] **Create `questions` table**:

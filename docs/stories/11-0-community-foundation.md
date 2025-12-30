@@ -22,6 +22,7 @@ The Community Platform requires a cohesive interface that integrates seamlessly 
         - **Members**: Links to `/members` (Integration of existing route).
         - **Leaderboard**: Links to `/leaderboard` (Integration of existing route).
     - **Redirect**: Ensure `/community` renders the Townhall/Feed by default.
+    - **UI Standardization**: The layout layout MUST follow the established pattern used in `/companies`, `/bounties`, and `/jobs` (Standard PageHeader, Breadcrumbs, Container spacing).
 
 ### Theme Standardization
 - [ ] **Theme Support**:

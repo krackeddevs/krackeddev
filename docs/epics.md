@@ -600,6 +600,32 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 - **Value:** Improves accessibility, user choice, and visual comfort for different viewing preferences and environments.
 - **Complexity:** Medium-High (Extensive refactoring of hardcoded colors, theme-aware component updates).
 
+### EPIC-11: Community Platform
+
+**Goal:** Transform the platform into a "Guild" with realtime chat, Q&A forums, and a reputation system.
+
+- **Scope:** Townhall Chat, Q&A Forum, XP System, Moderation.
+- **Value:** Retention, SEO, and community building.
+- **Complexity:** High (Realtime, Gamification, Content Safety).
+
+#### STORY-11.0: Community Platform Foundation
+- **Goal:** Shared layout and navigation infrastructure.
+
+#### STORY-11.1: Townhall Chat UI & Realtime
+- **Goal:** Persistent floating chat overlay.
+
+#### STORY-11.2: Community Q&A Listing & Details
+- **Goal:** Question browsing and reading experience.
+
+#### STORY-11.3: Asking & Answering (Markdown + Code)
+- **Goal:** Rich text editor for technical content.
+
+#### STORY-11.4: Accepted Answer Logic & Gamification
+- **Goal:** XP rewards and reputation engine.
+
+#### STORY-11.5: Moderation System
+- **Goal:** Flagging and admin moderation tools.
+
 #### STORY-10.1: Theme Infrastructure & Provider Setup
 
 **As a** Developer

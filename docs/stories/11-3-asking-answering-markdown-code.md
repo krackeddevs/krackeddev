@@ -11,17 +11,19 @@ Since this is a developer community, standard text inputs aren't enough. We need
 
 ### Editor Component
 - [ ] **RichTextEditor UI**:
-    - Tabs: "Write" and "Preview".
-    - Toolbar: Bold, Italic, Link, List, Code Block, Inline Code.
-    - Drag-and-drop image upload (uploads to Supabase Storage -> inserts markdown link).
-    - Code Block support: Auto-detect language or dropdown.
-- [ ] **Preview Mode**:
-    - Real-time rendering of the markdown.
-    - Matches the final display output exactly.
+    - **Stack Overflow Experience**: Editor must support split-pane (Write/Preview) or WYSIWYG Markdown.
+    - **Code Snippets**:
+        - Support GFM (GitHub Flavored Markdown) fenced code blocks (```js).
+        - Syntax Highlighting in Preview mode (using `rehype-highlight` or `prism`).
+    - **Image Uploading**:
+        - **Drag & Drop**: Users can drag images directly into the text area.
+        - **Paste Support**: Users can paste screenshots from clipboard.
+        - **Storage**: Auto-upload to Supabase bucket `community-images` and insert markdown `![alt](url)`.
+    - **URL Sharing**: Auto-linkify URLs.
 - [ ] **Validation**:
     - Title: Required, Min 15 chars, Max 150 chars.
     - Body: Required, Min 30 chars.
-    - Tags: Min 1, Max 5.
+    - **UI Standardization**: The "Ask Question" form page MUST use the standard form layout (centered max-width container) used in `/post-bounty` or `/settings`.
 
 ### Server Actions
 - [ ] `createQuestion(data)`:
@@ -84,6 +86,11 @@ Since this is a developer community, standard text inputs aren't enough. We need
 - **Library**: `react-markdown` v9+ requires `remark-gfm` for tables/strikethrough. Ensure this plugin is installed.
 
 ## Technical Notes
-- **Sanitization**: CRITICAL. Use `isomorphic-dompurify` before saving or before rendering.
-- **Code Highlighting**: `rehype-highlight` is standard with `react-markdown`. theme: `atom-one-dark` or similar.
-- **Optimistic UI**: When posting an answer, append it to the list immediately while awaiting server response.
+- **Security (XSS Prevention)**:
+    - **Input Sanitization**: MUST use `isomorphic-dompurify` on the **Server Side** (in the Server Action) before saving `body` to the database. Never trust client input.
+    - **Output Sanitization**: Double-check sanitization on render (React usually handles this, but `dangerouslySetInnerHTML` for markdown requires care).
+- **Code Highlighting**: Use `react-syntax-highlighter` or `shiki` for production-grade highlighting.
+- **Storage Policy**: `community-images` bucket RLS:
+    - INSERT: Authenticated Users only.
+    - SELECT: Public.
+    - MAX FILE SIZE: 5MB per image to prevent abuse.
