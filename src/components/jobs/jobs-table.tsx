@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useJobs } from "@/lib/hooks/jobs/use-jobs";
 import { columns } from "./columns";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryStates } from "nuqs";
 import { jobSearchParams } from "@/lib/search-params";
@@ -21,13 +21,20 @@ export function JobsTable() {
   const [filters] = useQueryStates(jobSearchParams);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, isLoading } =
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useJobs({
       search: filters.search || "",
       location: filters.location || "",
       type: filters.type || "",
       salaryMin: filters.salaryMin || 0,
     });
+
+  // Auto-load all pages on mount
+  useEffect(() => {
+    if (!isLoading && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, isLoading, fetchNextPage]);
 
   // Flatten all pages
   const allJobs = useMemo(
