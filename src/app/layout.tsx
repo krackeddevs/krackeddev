@@ -11,6 +11,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import QueryProvider from "@/components/providers/query-provider";
 import { ParallaxProvider } from "@/components/providers/parallax-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ChatOverlay } from "@/features/chat/components/chat-overlay";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -111,6 +112,7 @@ export default function RootLayout({
                   <div className="flex-grow">{children}</div>
                   <Toaster theme="dark" position="top-center" offset={16} />
                   <LoginModal />
+                  <ChatOverlay />
                 </NuqsAdapter>
               </QueryProvider>
             </SupabaseProvider>

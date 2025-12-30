@@ -190,6 +190,20 @@ export interface CompanyMember {
   created_at: string;
 }
 
+export interface Message {
+  id: string;
+  channel_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  is_deleted: boolean;
+  // Drizzle
+  channelId?: string;
+  userId?: string;
+  createdAt?: string;
+  isDeleted?: boolean;
+}
+
 export interface JobApplication {
   id: string;
   job_id: string;
@@ -197,6 +211,31 @@ export interface JobApplication {
   resume_url: string;
   cover_letter?: string | null;
   status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Question {
+  id: string;
+  title: string;
+  slug: string;
+  body: string;
+  author_id: string;
+  tags: string[];
+  upvotes: number;
+  view_count: number;
+  accepted_answer_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Answer {
+  id: string;
+  question_id: string;
+  body: string;
+  author_id: string;
+  is_accepted: boolean;
+  upvotes: number;
   created_at: string;
   updated_at: string;
 }
@@ -296,6 +335,62 @@ export interface Database {
           }
         ];
       };
+      messages: {
+        Row: Message;
+        Insert: Partial<Message>;
+        Update: Partial<Message>;
+        Relationships: [
+          {
+            foreignKeyName: "messages_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      questions: {
+        Row: Question;
+        Insert: Partial<Question>;
+        Update: Partial<Question>;
+        Relationships: [
+          {
+            foreignKeyName: "questions_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fk_accepted_answer";
+            columns: ["accepted_answer_id"];
+            isOneToOne: false;
+            referencedRelation: "answers";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      answers: {
+        Row: Answer;
+        Insert: Partial<Answer>;
+        Update: Partial<Answer>;
+        Relationships: [
+          {
+            foreignKeyName: "answers_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "answers_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -309,6 +404,12 @@ export interface Database {
           p_website_url?: string | null;
         };
         Returns: string;
+      };
+      increment_question_view: {
+        Args: {
+          question_id: string;
+        };
+        Returns: void;
       };
     };
     Enums: {

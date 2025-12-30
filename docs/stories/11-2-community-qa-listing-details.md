@@ -10,7 +10,7 @@ The core of the knowledge base is the "Stack Overflow-style" Q&A forum. This sto
 ## Acceptance Criteria
 
 ### UI Components
-- [ ] **QuestionsList Page** (`/community`):
+- [x] **QuestionsList Page** (`/community`):
     - Layout: Sidebar (filters) + Main Content (list) + Right Rail (stats/hot topics).
     - **Filter Bar**: "Newest", "Top Voted", "Unanswered".
     - **Search Input**: Keyword search.
@@ -20,50 +20,50 @@ The core of the knowledge base is the "Stack Overflow-style" Q&A forum. This sto
         - Tags (badges).
         - Stats: Votes, Answers, Views.
         - Author info + Timestamp.
-- [ ] **QuestionDetail Page** (`/community/question/[slug]`):
+- [x] **QuestionDetail Page** (`/community/question/[slug]`):
     - **Question Block**: Full body markdown, voting controls (left), author card (bottom).
     - **Answers List**: Sorted by Accepted -> Votes -> Highest.
     - **Answer Block**: Body markdown, voting usage, author card.
     - **UI Standardization**: Both Listing and Detail pages MUST use the shared `PageHeader` and `Container` components to match `/jobs` exactly. No custom layouts.
 
 ### Database Schema
-- [ ] **Create `questions` table**:
+- [x] **Create `questions` table**:
     - `id`, `title`, `slug` (unique), `body`, `author_id`, `tags` (array), `upvotes`, `view_count`, `accepted_answer_id`.
-- [ ] **Create `answers` table**:
+- [x] **Create `answers` table**:
     - `id`, `question_id`, `body`, `author_id`, `is_accepted`, `upvotes`.
-- [ ] **Indices**:
+- [x] **Indices**:
     - `slug` (for lookup).
     - `tags` (GIN index for array filtering).
 
 ### Server Actions
-- [ ] `getQuestions(filter, page)`: Fetch paginated list.
-- [ ] `getQuestionBySlug(slug)`: Fetch single question with answers.
-- [ ] `incrementViewCount(questionId)`: Atomic increment + dedupe logic (cookie/IP).
+- [x] `getQuestions(filter, page)`: Fetch paginated list.
+- [x] `getQuestionBySlug(slug)`: Fetch single question with answers.
+- [x] `incrementViewCount(questionId)`: Atomic increment + dedupe logic (cookie/IP).
 
 ---
 
 ## Tasks/Subtasks
 
 ### Task 1: Database Setup
-- [ ] Create migration for `questions` and `answers` tables.
-- [ ] Seed dummy data for testing layout.
+- [x] Create migration for `questions` and `answers` tables.
+- [x] Seed dummy data for testing layout.
 
 ### Task 2: Listing Page UI
-- [ ] Implement `QuestionsList` component with data fetching.
-- [ ] Implement `QuestionCard` component.
-- [ ] Implement `FilterBar` logic (update URL params).
-- [ ] Build Search input (debounce -> URL update).
+- [x] Implement `QuestionsList` component with data fetching.
+- [x] Implement `QuestionCard` component.
+- [x] Implement `FilterBar` logic (update URL params).
+- [x] Build Search input (debounce -> URL update).
 
 ### Task 3: Detail Page UI
-- [ ] Implement Dynamic Route `[slug]/page.tsx`.
-- [ ] Build `QuestionDetail` layout with sidebar.
-- [ ] Implement `VotingControl` component (visual stub for now).
+- [x] Implement Dynamic Route `[slug]/page.tsx`.
+- [x] Build `QuestionDetail` layout with sidebar.
+- [x] Implement `VotingControl` component (visual stub for now).
 
 ## Testing & Definition of Done
-- [ ] **Unit Tests**: Test `QuestionCard` component.
-- [ ] **Integration Tests**: Verify database fetching for List and Detail views.
-- [ ] **SEO**: Verify Meta Tags are present on detail page.
-- [ ] **a11y**: Ensure filter buttons are accessible.
+- [x] **Unit Tests**: Test `QuestionCard` component.
+- [x] **Integration Tests**: Verify database fetching for List and Detail views.
+- [x] **SEO**: Verify Meta Tags are present on detail page.
+- [x] **a11y**: Ensure filter buttons are accessible.
 
 ## Analytics & Instrumentation
 - [ ] **Track Events**:

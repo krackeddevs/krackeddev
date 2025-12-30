@@ -72,7 +72,7 @@ export function FloatingNav({ onOpenManifesto }: FloatingNavProps) {
                         {/* Community Button */}
                         <motion.div variants={itemVariants}>
                             <Link
-                                href="/members"
+                                href="/community"
                                 className="flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-background/90 hover:bg-muted border-2 border-neon-primary/50 hover:border-neon-primary rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_var(--neon-primary)] font-mono text-sm w-full"
                             >
                                 <Users className="w-5 h-5 text-neon-primary shrink-0" />

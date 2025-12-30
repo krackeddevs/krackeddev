@@ -10,48 +10,48 @@ Central to the "Guild" vision is a sense of presence. The Townhall Chat is a per
 ## Acceptance Criteria
 
 ### Component Architecture
-- [ ] **ChatOverlay Component**:
+- [x] **ChatOverlay Component**:
     - Floating widget fixed to bottom-right (collapsible).
     - Persists across route navigation (in RootLayout).
     - Collapsed state shows "Online: X" count and "Chat" label.
     - Expanded state shows Header, Channel Tabs, Message List, Input Area.
-- [ ] **Channel System**:
+- [x] **Channel System**:
     - Tabs for `#general` (default), `#bounty-hunting`, `#looking-for-group`.
     - Active tab state persistence.
-- [ ] **Message List**:
+- [x] **Message List**:
     - Auto-scroll to bottom on new message.
     - "New messages" indicator if scrolled up.
     - Infinite scroll for history (fetch prev 20 messages).
-- [ ] **Message Bubble**:
+- [x] **Message Bubble**:
     - Author Avatar, Username, Timestamp (relative).
     - Special badging for "Admin" or "Moderator".
     - Own messages right-aligned (or distinct bg), others left-aligned.
 
 ### Realtime Logic
-- [ ] **Supabase Subscription**:
+- [x] **Supabase Subscription**:
     - Subscribe to `messages` table changes (INSERT).
     - Broadcaster presence tracking (online users count).
-- [ ] **Optimistic UI**:
+- [x] **Optimistic UI**:
     - Append message immediately to local state on send.
     - Append message immediately to local state on send.
     - Show error/retry option if send fails.
-- [ ] **Connection State Handling**:
+- [x] **Connection State Handling**:
     - Show visual indicator if disconnected (e.g., "Generic 'Offline' badge").
     - Auto-reconnect logic (Surprise Realtime handles this, but UI must reflect state).
     - Handle "Replay" of missed messages on reconnect.
 
 ### Database Schema
-- [ ] **Create `messages` table**:
+- [x] **Create `messages` table**:
     - `id` (uuid, PK)
     - `channel_id` (text, e.g., 'general')
     - `user_id` (uuid, FK to profiles)
     - `content` (text)
     - `created_at` (timestamptz)
     - `is_deleted` (boolean)
-- [ ] **RLS Policies**:
+- [x] **RLS Policies**:
     - INSERT: Authenticated users only.
     - SELECT: Authenticated users only.
-- [ ] **Indexes**:
+- [x] **Indexes**:
     - `channel_id`, `created_at` (for fast sorting/filtering).
 
 ---
@@ -59,25 +59,25 @@ Central to the "Guild" vision is a sense of presence. The Townhall Chat is a per
 ## Tasks/Subtasks
 
 ### Task 1: Database & Backend
-- [ ] Create `messages` table migration with RLS.
-- [ ] Create `getChannelMessages` server action (fetch last 50).
-- [ ] Create `sendMessage` server action with Rate Limiting logic (Redis/KV or DB timestamp check).
+- [x] Create `messages` table migration with RLS.
+- [x] Create `getChannelMessages` server action (fetch last 50).
+- [x] Create `sendMessage` server action with Rate Limiting logic (Redis/KV or DB timestamp check).
 
 ### Task 2: UI Implementation
-- [ ] Create `ChatOverlay` shell (open/close animation).
-- [ ] Implement `MessageList` with virtual scrolling/pagination.
-- [ ] Build `MessageInput` with emoji picker (optional) and send button.
-- [ ] Implement Presence hook (`usePresence`) to show online count.
+- [x] Create `ChatOverlay` shell (open/close animation).
+- [x] Implement `MessageList` with virtual scrolling/pagination.
+- [x] Build `MessageInput` with emoji picker (optional) and send button.
+- [x] Implement Presence hook (`usePresence`) to show online count.
 
 ### Task 3: Integration
-- [ ] Connect `useSubscription` to listening for new inserts.
-- [ ] Handle "System Messages" (e.g., "Welcome to Santan Island").
+- [x] Connect `useSubscription` to listening for new inserts.
+- [x] Handle "System Messages" (e.g., "Welcome to Santan Island").
 
 ## Testing & Definition of Done
-- [ ] **Unit Tests**: Test `MessageBubble` rendering.
-- [ ] **Integration Tests**: Mock Supabase Realtime and verify message list update.
-- [ ] **E2E**: Verify full chat flow (Send -> Receive).
-- [ ] **Mobile**: Verify overlay behavior on small screens.
+- [x] **Unit Tests**: Test `MessageBubble` rendering.
+- [x] **Integration Tests**: Mock Supabase Realtime and verify message list update.
+- [x] **E2E**: Verify full chat flow (Send -> Receive).
+- [x] **Mobile**: Verify overlay behavior on small screens.
 
 ## Analytics & Instrumentation
 - [ ] **Track Events**:

@@ -2,7 +2,6 @@
 
 import "@/styles/jobs.css";
 import { ParallaxIntro } from "./components/parallax-intro";
-import { TownhallV2 } from "./components/townhall";
 import { useLandingSequence } from "./hooks/use-landing-sequence";
 
 import { BrandCTA } from "./components/brand-cta";
@@ -13,7 +12,7 @@ import { FloatingNav } from "./components/floating-nav";
 import { CommunityMap } from "./components/community-map";
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
-import { Users, ChevronDown, Building2, ScrollText, Briefcase } from "lucide-react";
+import { Users, Building2, ScrollText, Briefcase } from "lucide-react";
 import { useState, useEffect } from "react";
 
 
@@ -95,16 +94,15 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                             <CommunityMap />
                         </section>
 
-                        {/* Game Section */}
-                        <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px]">
+                        {/* Game Section (Hidden for now) */}
+                        {/* <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px]">
                             <TownhallV2 />
 
-                            {/* Scroll Indicator */}
                             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-30">
                                 <span className="text-green-400/70 text-xs font-mono mb-1">Scroll for more</span>
                                 <ChevronDown className="w-6 h-6 text-green-400/70" />
                             </div>
-                        </section>
+                        </section> */}
                     </div>
 
                     {/* Live Stats Section */}

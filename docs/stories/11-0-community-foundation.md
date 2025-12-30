@@ -10,11 +10,11 @@ The Community Platform requires a cohesive interface that integrates seamlessly 
 ## Acceptance Criteria
 
 ### Layout & Navigation
-- [ ] **Community Layout**: Create `src/app/community/layout.tsx`.
+- [x] **Community Layout**: Create `src/app/community/layout.tsx`.
     - Must wrap all community routes.
     - Must include the standard application Navbar and Footer.
     - Must provide a container for the "Townhall Chat" overlay (Story 11.1).
-- [ ] **Unified Community Hub**:
+- [x] **Unified Community Hub**:
     - **Navigation Update**: Repoint the main "Community" button (Navbar/FloatingNav) from `/members` to `/community`.
     - **CommunitySubNav**: Implement a tabbed navigation bar available on all `/community/*` routes.
         - **Townhall**: Links to `/community` (Home/Feed).
@@ -25,15 +25,15 @@ The Community Platform requires a cohesive interface that integrates seamlessly 
     - **UI Standardization**: The layout layout MUST follow the established pattern used in `/companies`, `/bounties`, and `/jobs` (Standard PageHeader, Breadcrumbs, Container spacing).
 
 ### Theme Standardization
-- [ ] **Theme Support**:
+- [x] **Theme Support**:
     - Ensure all new components support `light`, `dark`, and `monochrome` themes.
     - Use existing CSS variables/Tailwind utility classes for colors (e.g., `bg-background`, `text-foreground`).
     - **Monochrome Specifics**: strict grayscale, high contrast borders.
-- [ ] **UI Components**:
+- [x] **UI Components**:
     - Standardize specific "Community" UI elements (Buttons, Cards, Inputs) to match the core design system.
 
 ### Responsive Design
-- [ ] **Mobile Layout**:
+- [x] **Mobile Layout**:
     - Ensure the layout is fully responsive.
     - Floating elements (like Chat) must have mobile-specific behavior (e.g., full screen vs overlay).
 
@@ -42,25 +42,25 @@ The Community Platform requires a cohesive interface that integrates seamlessly 
 ## Tasks/Subtasks
 
 ### Task 1: Route & Layout Setup
-- [ ] Create `/community` route group.
-- [ ] Implement `layout.tsx` with standard Navbar/Footer integration.
-- [ ] Add "Community" to the main navigation menu `src/config/navigation.ts` (or equivalent).
+- [x] Create `/community` route group.
+- [x] Implement `layout.tsx` with standard Navbar/Footer integration.
+- [x] Add "Community" to the main navigation menu `src/config/navigation.ts` (or equivalent).
 
 ### Task 2: Sub-Navigation Component
-- [ ] Build `CommunitySubNav` component.
-- [ ] Implement active state logic (highlight current tab).
-- [ ] Ensure responsive design (scrollable horizontal list on mobile).
+- [x] Build `CommunitySubNav` component.
+- [x] Implement active state logic (highlight current tab).
+- [x] Ensure responsive design (scrollable horizontal list on mobile).
 
 ### Task 3: Theme Validation
-- [ ] Create a "Theme Test Page" (temporary) in `/community/test-theme`.
-- [ ] Verify buttons, cards, and text against all 3 themes.
-- [ ] Fix any discrepancies in `globals.css` if community-specific variables are needed.
+- [x] Create a "Theme Test Page" (temporary) in `/community/test-theme`.
+- [x] Verify buttons, cards, and text against all 3 themes.
+- [x] Fix any discrepancies in `globals.css` if community-specific variables are needed.
 
 ## Testing & Definition of Done
-- [ ] **Unit Tests**: N/A (Layout Check).
-- [ ] **Integration Tests**: Verify Navigation links work.
-- [ ] **Visual Tests**: Check against Light, Dark, Monochrome themes.
-- [ ] **Accessibility**: Ensure tabs are keyboard navigable.
+- [x] **Unit Tests**: N/A (Layout Check).
+- [x] **Integration Tests**: Verify Navigation links work.
+- [x] **Visual Tests**: Check against Light, Dark, Monochrome themes.
+- [x] **Accessibility**: Ensure tabs are keyboard navigable.
 
 ## Analytics & Instrumentation
 - [ ] **Track Events**:
