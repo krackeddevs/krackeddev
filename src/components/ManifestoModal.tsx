@@ -17,27 +17,13 @@ const manifestoPages = [
     },
 ];
 
-// Context to allow opening the modal from anywhere
-interface ManifestoContextType {
-    openManifesto: () => void;
-}
-
-const ManifestoContext = createContext<ManifestoContextType | null>(null);
-
-export function useManifesto() {
-    const context = useContext(ManifestoContext);
-    if (!context) {
-        throw new Error("useManifesto must be used within a ManifestoProvider");
-    }
-    return context;
-}
-
 interface ManifestoModalProps {
-    isLoggedIn: boolean;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
-export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
-    const [isOpen, setIsOpen] = useState(false);
+export function ManifestoModal({ isOpen, onClose }: ManifestoModalProps) {
+    // Zoom/Pan state remains internal as it's UI state
     const [currentPage, setCurrentPage] = useState(0);
     const [isZoomed, setIsZoomed] = useState(false);
     const [zoomLevel, setZoomLevel] = useState(1);
@@ -45,19 +31,16 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
+    // Reset zoom state when modal opens/closes
     useEffect(() => {
-        // Only show if logged in
-        if (!isLoggedIn) return;
-
-        const seen = localStorage.getItem(MANIFESTO_STORAGE_KEY);
-
-        if (!seen) {
-            const timer = setTimeout(() => {
-                setIsOpen(true);
-            }, 1500);
-            return () => clearTimeout(timer);
+        if (isOpen) {
+            setCurrentPage(0);
+            resetZoomState();
+        } else {
+            resetZoomState();
         }
-    }, [isLoggedIn]);
+    }, [isOpen]);
+
 
     // Helper to reset zoom state
     const resetZoomState = () => {
@@ -67,15 +50,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
     };
 
     const handleClose = () => {
-        localStorage.setItem(MANIFESTO_STORAGE_KEY, "true");
-        setIsOpen(false);
-        resetZoomState();
-    };
-
-    const handleOpen = () => {
-        setCurrentPage(0);
-        resetZoomState();
-        setIsOpen(true);
+        onClose();
     };
 
     const nextPage = () => {
@@ -157,21 +132,7 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
     };
 
     return (
-        <ManifestoContext.Provider value={{ openManifesto: handleOpen }}>
-            {/* Floating Button to Reopen Manifesto */}
-            {!isOpen && isLoggedIn && (
-                <button
-                    onClick={handleOpen}
-                    className="fixed bottom-6 left-6 z-50 group flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-background/90 hover:bg-muted border-2 border-neon-primary/50 hover:border-neon-primary rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_var(--neon-primary)]"
-                    aria-label="Open Manifesto"
-                >
-                    <Scroll className="w-5 h-5 text-neon-primary" />
-                    <span className="font-mono text-sm text-neon-primary hidden sm:inline">
-                        Manifesto
-                    </span>
-                </button>
-            )}
-
+        <>
             {/* Modal */}
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4">
@@ -389,6 +350,6 @@ export function ManifestoModal({ isLoggedIn }: ManifestoModalProps) {
                     </div>
                 </div>
             )}
-        </ManifestoContext.Provider>
+        </>
     );
 }

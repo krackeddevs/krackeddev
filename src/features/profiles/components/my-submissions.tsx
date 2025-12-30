@@ -15,17 +15,17 @@ interface MySubmissionsProps {
 const statusConfig = {
     pending: {
         label: "Under Review",
-        color: "text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
+        color: "text-rank-bronze bg-rank-bronze/10 border-rank-bronze/30",
         icon: Clock,
     },
     approved: {
         label: "Accepted",
-        color: "text-green-600 dark:text-green-400 bg-green-500/10 border-green-500/30",
+        color: "text-neon-primary bg-neon-primary/10 border-neon-primary/30",
         icon: CheckCircle,
     },
     rejected: {
         label: "Rejected",
-        color: "text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/30",
+        color: "text-destructive bg-destructive/10 border-destructive/30",
         icon: XCircle,
     },
 };
@@ -33,7 +33,7 @@ const statusConfig = {
 // Special config for WON submissions (approved + paid)
 const wonConfig = {
     label: "Won!",
-    color: "text-amber-600 dark:text-amber-400 bg-amber-500/20 border-amber-500/50",
+    color: "text-rank-gold bg-rank-gold/20 border-rank-gold/50",
     icon: Trophy,
 };
 
@@ -84,7 +84,7 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                         >
                             <div className={cn(
                                 "flex items-start gap-3 p-3 bg-card/20 border border-border hover:border-neon-primary/50 hover:bg-muted/10 transition-colors rounded-lg overflow-hidden",
-                                isWon && "border-amber-500/30 bg-amber-500/5" // Highlight won submissions
+                                isWon && "border-rank-gold/30 bg-rank-gold/5" // Highlight won submissions
                             )}>
                                 {/* Date Block */}
                                 <div className="flex flex-col items-start leading-none font-mono text-muted-foreground w-[40px] flex-shrink-0">
@@ -97,7 +97,7 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                                     <div className="flex items-center justify-between gap-2">
                                         <h4 className={cn(
                                             "font-mono text-sm truncate group-hover:text-neon-primary transition-colors pr-2 flex-1 min-w-0",
-                                            isWon ? "text-amber-600 dark:text-amber-100" : "text-foreground"
+                                            isWon ? "text-rank-gold" : "text-foreground"
                                         )}>
                                             {submission.bountyTitle}
                                         </h4>
@@ -107,7 +107,7 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                                     <div className="flex items-center flex-wrap gap-2">
                                         <span className={cn(
                                             "font-mono text-lg font-bold leading-none",
-                                            isWon ? "text-amber-600 dark:text-amber-400" : "text-green-600 dark:text-green-500"
+                                            isWon ? "text-rank-gold" : "text-neon-primary"
                                         )}>
                                             RM{submission.bountyReward}
                                         </span>

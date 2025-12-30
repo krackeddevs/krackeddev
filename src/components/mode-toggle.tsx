@@ -35,7 +35,7 @@ export function ModeToggle() {
                     System
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("blackwhite")}>
-                    High Contrast
+                    Monochrome
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

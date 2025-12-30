@@ -9,10 +9,12 @@ import { BrandCTA } from "./components/brand-cta";
 import { LiveStats } from "./components/live-stats";
 import { JobPreview } from "./components/job-preview";
 import { NavigationHub } from "./components/navigation-hub";
+import { FloatingNav } from "./components/floating-nav";
 import { CommunityMap } from "./components/community-map";
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
 import { Users, ChevronDown, Building2, ScrollText, Briefcase } from "lucide-react";
+import { useState, useEffect } from "react";
 
 
 import { MiniProfile } from "./components/mini-profile";
@@ -25,6 +27,28 @@ interface LandingPageProps {
 
 export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
+    const [manifestoOpen, setManifestoOpen] = useState(false);
+
+    useEffect(() => {
+        // Auto-open logic for first time visitors
+        if (!isLoggedIn) return;
+
+        const MANIFESTO_STORAGE_KEY = "kd_manifesto_seen";
+        const seen = localStorage.getItem(MANIFESTO_STORAGE_KEY);
+
+        if (!seen) {
+            const timer = setTimeout(() => {
+                setManifestoOpen(true);
+            }, 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [isLoggedIn]);
+
+    const handleManifestoClose = () => {
+        const MANIFESTO_STORAGE_KEY = "kd_manifesto_seen";
+        localStorage.setItem(MANIFESTO_STORAGE_KEY, "true");
+        setManifestoOpen(false);
+    };
 
     return (
         <main className="min-h-screen w-full relative flex flex-col">
@@ -43,7 +67,10 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
             {!showAnimation && (
                 <>
                     {/* Manifesto Modal - Shows once for new visitors, only after parallax intro */}
-                    <ManifestoModal isLoggedIn={isLoggedIn} />
+                    <ManifestoModal
+                        isOpen={manifestoOpen}
+                        onClose={handleManifestoClose}
+                    />
 
                     {/* Floating Mini Profile - Logged In Only */}
                     {isLoggedIn && miniProfileData && (
@@ -90,41 +117,13 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                         <NavigationHub />
                     </section>
 
-
-
                     {/* Job Preview Section */}
                     <section className="relative w-full border-t border-green-900/50">
                         <JobPreview />
                     </section>
 
-
-
-                    {/* Floating Jobs Button - Top on left */}
-                    <Link
-                        href="/jobs"
-                        className="fixed bottom-[192px] sm:bottom-[216px] left-6 flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-background/90 hover:bg-muted border-2 border-neon-primary/50 hover:border-neon-primary rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_var(--neon-primary)] font-mono text-sm z-40"
-                    >
-                        <Briefcase className="w-5 h-5 text-neon-primary" />
-                        <span className="text-neon-primary hidden sm:inline">Jobs</span>
-                    </Link>
-
-                    {/* Floating Companies Button - Second on left */}
-                    <Link
-                        href="/companies"
-                        className="fixed bottom-[128px] sm:bottom-[152px] left-6 flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-background/90 hover:bg-muted border-2 border-neon-primary/50 hover:border-neon-primary rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_var(--neon-primary)] font-mono text-sm z-40"
-                    >
-                        <Building2 className="w-5 h-5 text-neon-primary" />
-                        <span className="text-neon-primary hidden sm:inline">Companies</span>
-                    </Link>
-
-                    {/* Floating Members Button - Third on left */}
-                    <Link
-                        href="/members"
-                        className="fixed bottom-[76px] sm:bottom-[88px] left-6 flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-background/90 hover:bg-muted border-2 border-neon-primary/50 hover:border-neon-primary rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_var(--neon-primary)] font-mono text-sm z-40"
-                    >
-                        <Users className="w-5 h-5 text-neon-primary" />
-                        <span className="text-neon-primary hidden sm:inline">Community</span>
-                    </Link>
+                    {/* Collapsible Floating Navigation */}
+                    <FloatingNav onOpenManifesto={() => setManifestoOpen(true)} />
                 </>
             )}
         </main>
