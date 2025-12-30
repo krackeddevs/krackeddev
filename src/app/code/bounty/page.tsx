@@ -114,15 +114,15 @@ export default function BountyListPage() {
         <div className="mb-8">
           <Link
             href="/code"
-            className="inline-flex items-center text-gray-400 hover:text-white transition-colors font-mono text-sm mb-4"
+            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Code Hub
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold font-mono text-white mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold font-mono text-foreground mb-2">
             BOUNTY BOARD
           </h1>
-          <p className="text-gray-400">
+          <p className="text-muted-foreground">
             Earn rewards by contributing to open-source projects. Complete
             bounties, get paid.
           </p>
@@ -134,7 +134,7 @@ export default function BountyListPage() {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-16">
-            <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent animate-spin rounded-full"></div>
+            <div className="w-12 h-12 border-4 border-neon-primary border-t-transparent animate-spin rounded-full"></div>
           </div>
         )}
 
@@ -158,15 +158,15 @@ export default function BountyListPage() {
         )}
 
         {/* Follow CTA */}
-        <div className="mt-12 bg-gray-800/30 border border-gray-700 p-6 text-center">
-          <p className="text-gray-400 mb-4">
+        <div className="mt-12 bg-card/30 border border-border p-6 text-center">
+          <p className="text-muted-foreground mb-4">
             Stay updated on new bounties and announcements
           </p>
           <a
             href="https://x.com/KrackedDevs"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 font-mono font-bold hover:bg-gray-200 transition-colors"
+            className="inline-flex items-center gap-2 bg-foreground text-background px-6 py-3 font-mono font-bold hover:bg-muted-foreground transition-colors"
           >
             <XIcon className="w-5 h-5" />
             Follow @KrackedDevs

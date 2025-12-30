@@ -5,89 +5,92 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Minimal Green Neon Palette */
-  --background-secondary: #0a0f0a;
-  /* zinc-50 - softer white */
+  /* =========================
+     LIGHT MODE (Default)
+     Theme: "Digital Garden"
+     Aesthetic: Clean White, Emerald/Green Text, Subtle Grids
+     ========================= */
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  /* zinc-50 */
+  /* Backgrounds */
+  --background: oklch(0.99 0 0);
+  /* Pure White */
+  --background-secondary: oklch(0.97 0 0);
+  /* Light Grey */
+  --foreground: #022c22;
+  /* Emerald 950 (Very Dark Green) for standard text */
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  /* zinc-50 */
+  /* Surface / Cards */
+  --card: #ffffff;
+  --card-foreground: #022c22;
+  --popover: #ffffff;
+  --popover-foreground: #022c22;
 
-  --primary: oklch(0.205 0 0);
-  /* green-700 */
-  --primary-foreground: oklch(0.985 0 0);
-  /* zinc-950 - softer black */
+  /* Brand Colors */
+  --primary: #15803d;
+  /* Green 700 */
+  --primary-foreground: #ffffff;
 
-  --secondary: oklch(0.97 0 0);
-  /* green-700 */
-  --secondary-foreground: oklch(0.205 0 0);
-  /* zinc-950 */
+  --secondary: #dcfce7;
+  /* Green 100 */
+  --secondary-foreground: #14532d;
+  /* Green 900 */
 
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  /* zinc-600 - dark gray for unimportant text */
+  --muted: #f1f5f9;
+  /* Slate 100 */
+  --muted-foreground: #64748b;
+  /* Slate 500 */
 
-  --accent: oklch(0.97 0 0);
-  /* green-700 */
-  --accent-foreground: oklch(0.205 0 0);
-  /* zinc-950 */
+  --accent: #dcfce7;
+  /* Green 100 */
+  --accent-foreground: #14532d;
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: #fafafa;
-  /* zinc-50 */
 
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  /* green-700 */
+  /* Interface */
+  --border: #e2e8f0;
+  /* Slate 200 */
+  --input: #e2e8f0;
+  --ring: #15803d;
+  /* Green 700 */
 
-  --radius: 0.625rem;
+  /* Radius */
+  --radius: 0.5rem;
 
-  /* Minimal Green Neon Palette */
+  /* Neon/Brand Variables (Adapted for Light Mode) */
   --neon-primary: #15803d;
-  /* green-700 */
-  --neon-secondary: #15803d;
-  /* green-700 */
-  --neon-accent: #15803d;
-  /* green-700 */
-  --neon-cyan: #15803d;
-  /* green-700 */
+  /* Keep dominant green */
+  --neon-secondary: #166534;
+  /* Darker green */
+  --neon-accent: #22c55e;
+  --neon-cyan: #0891b2;
+  /* Cyan 600 - darker for white background */
 
-  --scanline-color: rgba(21, 128, 61, 0.05);
+  --scanline-color: rgba(21, 128, 61, 0.03);
+  --scanline-overlay-color: transparent;
 
-  --background: oklch(1 0 0);
+  /* Light Mode Grid: Very subtle gray grid on white */
+  --grid-background: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
 
-  --foreground: oklch(0.145 0 0);
+  /* Sidebar (Admin) */
+  --sidebar: #f8fafc;
+  /* Slate 50 */
+  --sidebar-foreground: #0f172a;
+  /* Slate 900 */
+  --sidebar-primary: #0f172a;
+  --sidebar-primary-foreground: #f8fafc;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #cbd5e1;
 
+  /* Charts */
   --chart-1: oklch(0.646 0.222 41.116);
-
   --chart-2: oklch(0.6 0.118 184.704);
-
   --chart-3: oklch(0.398 0.07 227.392);
-
   --chart-4: oklch(0.828 0.189 84.429);
-
   --chart-5: oklch(0.769 0.188 70.08);
-
-  --sidebar: oklch(0.985 0 0);
-
-  --sidebar-foreground: oklch(0.145 0 0);
-
-  --sidebar-primary: oklch(0.205 0 0);
-
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-
-  --sidebar-accent: oklch(0.97 0 0);
-
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-
-  --sidebar-border: oklch(0.922 0 0);
-
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 @theme inline {
@@ -584,11 +587,7 @@ input:-webkit-autofill:active {
   text-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary);
 }
 
-/* Light Mode Variables (Placeholder/Defaults) */
-:root {
-  --grid-background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.03));
-}
+
 
 .dark {
   /* Standardized Background: Pure Black */
@@ -637,9 +636,83 @@ input:-webkit-autofill:active {
   --sidebar-border: rgba(21, 128, 61, 0.2);
   --sidebar-ring: #15803d;
 
+  --scanline-overlay-color: rgba(0, 0, 0, 0.25);
+
+  /* Neon Variables for Dark Mode (Bright Green) */
+  --neon-primary: #4ade80;
+  /* Green 400 */
+  --neon-secondary: #22c55e;
+  /* Green 500 */
+  --neon-accent: #15803d;
+  /* Green 700 */
+  --neon-cyan: #06b6d4;
+  /* Cyan 500 */
+
   /* Standardized Neon Grid (from Landing Page) */
   --grid-background: linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+}
+
+.blackwhite {
+  /* High Contrast / Noir Mode */
+  --background: #000000;
+  --foreground: #ffffff;
+
+  --card: #000000;
+  --card-foreground: #ffffff;
+
+  --popover: #000000;
+  --popover-foreground: #ffffff;
+
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+
+  --secondary: #ffffff;
+  --secondary-foreground: #000000;
+
+  --muted: #1a1a1a;
+  --muted-foreground: #a3a3a3;
+
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+
+  --destructive: #ef4444;
+  /* Keep red for destructive actions? Or make it white/black? Plan says strict grayscale. */
+  --destructive-foreground: #ffffff;
+
+  --border: #ffffff;
+  --input: #ffffff;
+  --ring: #ffffff;
+
+  /* No Colors - Grayscale Charts */
+  --chart-1: #ffffff;
+  --chart-2: #e5e5e5;
+  --chart-3: #d4d4d4;
+  --chart-4: #a3a3a3;
+  --chart-5: #737373;
+
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #ffffff;
+  --sidebar-ring: #ffffff;
+
+  /* Override Neons to White */
+  --neon-primary: #ffffff;
+  --neon-secondary: #d4d4d4;
+  --neon-accent: #ffffff;
+  --neon-cyan: #ffffff;
+
+  /* White Grid */
+  --grid-background: linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+
+  /* Scanlines */
+  --scanline-color: rgba(255, 255, 255, 0.05);
+  --scanline-overlay-color: rgba(0, 0, 0, 0.1);
 }
 
 

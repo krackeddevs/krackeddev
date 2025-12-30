@@ -28,12 +28,12 @@ export default async function DashboardLayout({
     const { data: profile } = await getProfile();
 
     return (
-        <div className="fixed inset-0 bg-black text-white overflow-hidden z-40">
+        <div className="fixed inset-0 bg-background text-foreground overflow-hidden z-40">
             {/* Global Grid Overlay (Matching Landing Page) */}
             <div
                 className="fixed inset-0 pointer-events-none z-10 opacity-[0.15]"
                 style={{
-                    backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.4) 1px, transparent 1px)',
+                    backgroundImage: 'var(--grid-background)',
                     backgroundSize: '20px 20px'
                 }}
             />

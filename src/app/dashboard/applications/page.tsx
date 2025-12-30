@@ -13,8 +13,8 @@ export default async function ApplicationsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-white">My Applications</h1>
-                <p className="text-gray-400 text-sm mt-1">
+                <h1 className="text-2xl font-bold text-foreground">My Applications</h1>
+                <p className="text-muted-foreground text-sm mt-1">
                     Track the status of your job applications.
                 </p>
             </div>

@@ -74,12 +74,12 @@ export function AuthModal({ isOpen, onClose, user, isAuthenticated }: AuthModalP
 
             {/* Modal Content */}
             <div className="relative z-10 w-full max-w-md mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
-                <div className="bg-[#0a0f0a] border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)]">
+                <div className="bg-popover border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)]">
                     {/* Header */}
                     <div className="flex items-center justify-between px-6 py-4 border-b border-neon-primary/30">
                         <h2
                             id="auth-modal-title"
-                            className="text-lg font-bold text-green-400 uppercase tracking-wider"
+                            className="text-lg font-bold text-neon-primary uppercase tracking-wider"
                         >
                             {isAuthenticated ? 'Your Profile' : 'Connect Account'}
                         </h2>
@@ -150,8 +150,8 @@ export function AuthModal({ isOpen, onClose, user, isAuthenticated }: AuthModalP
                                             className="w-24 h-24 object-cover p-0.5 bg-green-400"
                                         />
                                     </div>
-                                    <p className="text-sm text-white">Welcome to Kracked Devs!</p>
-                                    <p className="text-white/50">
+                                    <p className="text-sm text-foreground">Welcome to Kracked Devs!</p>
+                                    <p className="text-muted-foreground">
                                         A community of cracked developers who want to level up together.
                                     </p>
                                 </div>

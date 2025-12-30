@@ -37,9 +37,9 @@ export function UserGrowthChart({ data: initialData }: UserGrowthChartProps) {
     }, [period]);
 
     return (
-        <div className="w-full h-[300px] md:h-[400px] border-2 border-white/10 rounded-lg bg-black/40 backdrop-blur-sm p-4 flex flex-col hover:border-white/20 transition-all duration-300">
+        <div className="w-full h-[300px] md:h-[400px] border-2 border-border rounded-lg bg-card/40 backdrop-blur-sm p-4 flex flex-col hover:border-border/80 transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">User Growth</h3>
+                <h3 className="text-lg font-semibold text-foreground">User Growth</h3>
                 <Tabs value={period} onValueChange={(v) => setPeriod(v as any)} className="w-auto">
                     <TabsList className="h-8">
                         <TabsTrigger value="daily" className="text-xs px-2 h-6">Daily</TabsTrigger>
@@ -58,29 +58,29 @@ export function UserGrowthChart({ data: initialData }: UserGrowthChartProps) {
                     <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                         <defs>
                             <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#38b2ac" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#38b2ac" stopOpacity={0} />
+                                <stop offset="5%" stopColor="var(--neon-primary)" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="var(--neon-primary)" stopOpacity={0} />
                             </linearGradient>
                         </defs>
                         <XAxis
                             dataKey="date"
-                            stroke="#9ca3af"
-                            tick={{ fontSize: 10 }}
+                            stroke="var(--muted-foreground)"
+                            tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
                             tickFormatter={(value) => {
                                 if (period === 'monthly') return value.substring(0, 7); // YYYY-MM
                                 return value.substring(5); // MM-DD
                             }}
                         />
-                        <YAxis stroke="#9ca3af" tick={{ fontSize: 10 }} />
-                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <YAxis stroke="var(--muted-foreground)" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                         <Tooltip
-                            contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
-                            labelStyle={{ color: '#9ca3af' }}
+                            contentStyle={{ backgroundColor: 'var(--popover)', borderColor: 'var(--border)', color: 'var(--popover-foreground)' }}
+                            labelStyle={{ color: 'var(--muted-foreground)' }}
                         />
                         <Area
                             type="monotone"
                             dataKey="count"
-                            stroke="#38b2ac"
+                            stroke="var(--neon-primary)"
                             fillOpacity={1}
                             fill="url(#colorCount)"
                             animationDuration={500}

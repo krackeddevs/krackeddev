@@ -34,9 +34,9 @@ const CustomTooltip = ({ active, payload, label, totalUsers }: any) => {
 
 export function TechStackChart({ data, totalUsers }: TechStackChartProps) {
     return (
-        <div className="w-full h-[400px] border-2 border-white/10 rounded-lg bg-black/40 backdrop-blur-sm p-6 flex flex-col hover:border-white/20 transition-all duration-300">
+        <div className="w-full h-[400px] border-2 border-border rounded-lg bg-card/40 backdrop-blur-sm p-6 flex flex-col hover:border-border/80 transition-all duration-300">
             <div className="mb-6">
-                <h3 className="text-lg font-semibold">Top Tech Stacks</h3>
+                <h3 className="text-lg font-semibold text-foreground">Top Tech Stacks</h3>
                 <p className="text-sm text-muted-foreground">Most popular technologies among developers</p>
             </div>
 
@@ -45,28 +45,28 @@ export function TechStackChart({ data, totalUsers }: TechStackChartProps) {
                     <BarChart data={data} layout="vertical" margin={{ top: 0, right: 30, left: 30, bottom: 0 }}>
                         <defs>
                             <linearGradient id="techBarGradient" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.8} />
-                                <stop offset="100%" stopColor="#d946ef" stopOpacity={0.8} />
+                                <stop offset="0%" stopColor="var(--neon-primary)" stopOpacity={0.8} />
+                                <stop offset="100%" stopColor="var(--neon-secondary)" stopOpacity={0.8} />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#374151" opacity={0.3} />
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" opacity={0.3} />
                         <XAxis
                             type="number"
-                            stroke="#9ca3af"
-                            tick={{ fontSize: 11 }}
+                            stroke="var(--muted-foreground)"
+                            tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                             axisLine={false}
                             tickLine={false}
                         />
                         <YAxis
                             dataKey="name"
                             type="category"
-                            stroke="#9ca3af"
+                            stroke="var(--muted-foreground)"
                             width={100}
-                            tick={{ fontSize: 12, fill: '#e5e7eb' }}
+                            tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
                             axisLine={false}
                             tickLine={false}
                         />
-                        <Tooltip content={<CustomTooltip totalUsers={totalUsers} />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
+                        <Tooltip content={<CustomTooltip totalUsers={totalUsers} />} cursor={{ fill: 'var(--muted)' }} />
                         <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={20}>
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill="url(#techBarGradient)" />

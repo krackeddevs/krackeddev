@@ -67,19 +67,19 @@ export function BountyFilters({
 
     return (
         <div
-            className="bg-gray-800/30 border border-gray-700 p-4 mb-8"
+            className="bg-card/30 border border-border p-4 mb-8"
             data-testid="bounty-filters"
         >
             <div className="flex flex-col md:flex-row gap-4">
                 {/* Search */}
                 <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
                         type="text"
                         placeholder="Search bounties..."
                         value={filters.search}
                         onChange={(e) => updateFilter("search", e.target.value)}
-                        className="w-full bg-gray-900 border border-gray-600 pl-10 pr-4 py-2 font-mono text-sm text-white placeholder-gray-500 focus:border-cyan-500 focus:outline-none"
+                        className="w-full bg-input border border-border pl-10 pr-4 py-2 font-mono text-sm text-foreground placeholder-muted-foreground focus:border-neon-primary focus:outline-none"
                         data-testid="search-input"
                     />
                 </div>
@@ -90,7 +90,7 @@ export function BountyFilters({
                     onChange={(e) =>
                         updateFilter("status", e.target.value as BountyStatus | "all")
                     }
-                    className="bg-gray-900 border border-gray-600 px-4 py-2 font-mono text-sm text-white focus:border-cyan-500 focus:outline-none"
+                    className="bg-input border border-border px-4 py-2 font-mono text-sm text-foreground focus:border-neon-primary focus:outline-none"
                     data-testid="status-filter"
                 >
                     {STATUS_OPTIONS.map((option) => (
@@ -106,7 +106,7 @@ export function BountyFilters({
                     onChange={(e) =>
                         updateFilter("difficulty", e.target.value as BountyDifficulty | "all")
                     }
-                    className="bg-gray-900 border border-gray-600 px-4 py-2 font-mono text-sm text-white focus:border-cyan-500 focus:outline-none"
+                    className="bg-input border border-border px-4 py-2 font-mono text-sm text-foreground focus:border-neon-primary focus:outline-none"
                     data-testid="difficulty-filter"
                 >
                     {DIFFICULTY_OPTIONS.map((option) => (
@@ -121,25 +121,25 @@ export function BountyFilters({
                     <div className="relative">
                         <button
                             onClick={() => setShowTagDropdown(!showTagDropdown)}
-                            className="bg-gray-900 border border-gray-600 px-4 py-2 font-mono text-sm text-white focus:border-cyan-500 focus:outline-none min-w-[140px] text-left"
+                            className="bg-input border border-border px-4 py-2 font-mono text-sm text-foreground focus:border-neon-primary focus:outline-none min-w-[140px] text-left"
                             data-testid="tags-filter-button"
                         >
                             Tags {filters.tags.length > 0 && `(${filters.tags.length})`}
                         </button>
                         {showTagDropdown && (
-                            <div className="absolute top-full left-0 mt-1 bg-gray-900 border border-gray-600 p-2 z-50 max-h-48 overflow-y-auto min-w-[200px]">
+                            <div className="absolute top-full left-0 mt-1 bg-popover border border-border p-2 z-50 max-h-48 overflow-y-auto min-w-[200px]">
                                 {availableTags.map((tag) => (
                                     <label
                                         key={tag}
-                                        className="flex items-center gap-2 px-2 py-1 hover:bg-gray-800 cursor-pointer"
+                                        className="flex items-center gap-2 px-2 py-1 hover:bg-accent hover:text-accent-foreground cursor-pointer"
                                     >
                                         <input
                                             type="checkbox"
                                             checked={filters.tags.includes(tag)}
                                             onChange={() => toggleTag(tag)}
-                                            className="accent-cyan-500"
+                                            className="accent-neon-primary"
                                         />
-                                        <span className="text-gray-300 text-sm font-mono">{tag}</span>
+                                        <span className="text-foreground text-sm font-mono">{tag}</span>
                                     </label>
                                 ))}
                             </div>
@@ -151,14 +151,14 @@ export function BountyFilters({
             {/* Active Filter Tags */}
             {hasActiveFilters && (
                 <div className="flex items-center gap-2 mt-4 flex-wrap">
-                    <span className="text-gray-500 text-sm font-mono">Active filters:</span>
+                    <span className="text-muted-foreground text-sm font-mono">Active filters:</span>
 
                     {filters.search && (
-                        <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-mono flex items-center gap-1">
+                        <span className="px-2 py-1 bg-neon-primary/10 text-neon-primary text-xs font-mono flex items-center gap-1 border border-neon-primary/20">
                             &quot;{filters.search}&quot;
                             <button
                                 onClick={() => updateFilter("search", "")}
-                                className="hover:text-white"
+                                className="hover:text-foreground"
                             >
                                 <X className="w-3 h-3" />
                             </button>
@@ -166,11 +166,11 @@ export function BountyFilters({
                     )}
 
                     {filters.status !== "all" && (
-                        <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-mono flex items-center gap-1">
+                        <span className="px-2 py-1 bg-neon-primary/10 text-neon-primary text-xs font-mono flex items-center gap-1 border border-neon-primary/20">
                             {filters.status}
                             <button
                                 onClick={() => updateFilter("status", "all")}
-                                className="hover:text-white"
+                                className="hover:text-foreground"
                             >
                                 <X className="w-3 h-3" />
                             </button>
@@ -178,11 +178,11 @@ export function BountyFilters({
                     )}
 
                     {filters.difficulty !== "all" && (
-                        <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-mono flex items-center gap-1">
+                        <span className="px-2 py-1 bg-neon-primary/10 text-neon-primary text-xs font-mono flex items-center gap-1 border border-neon-primary/20">
                             {filters.difficulty}
                             <button
                                 onClick={() => updateFilter("difficulty", "all")}
-                                className="hover:text-white"
+                                className="hover:text-foreground"
                             >
                                 <X className="w-3 h-3" />
                             </button>
@@ -192,10 +192,10 @@ export function BountyFilters({
                     {filters.tags.map((tag) => (
                         <span
                             key={tag}
-                            className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-mono flex items-center gap-1"
+                            className="px-2 py-1 bg-neon-primary/10 text-neon-primary text-xs font-mono flex items-center gap-1 border border-neon-primary/20"
                         >
                             {tag}
-                            <button onClick={() => toggleTag(tag)} className="hover:text-white">
+                            <button onClick={() => toggleTag(tag)} className="hover:text-foreground">
                                 <X className="w-3 h-3" />
                             </button>
                         </span>
@@ -203,7 +203,7 @@ export function BountyFilters({
 
                     <button
                         onClick={clearAllFilters}
-                        className="text-cyan-400 hover:text-cyan-300 font-mono text-xs underline"
+                        className="text-neon-primary hover:text-neon-primary/80 font-mono text-xs underline"
                         data-testid="clear-filters-button"
                     >
                         Clear all

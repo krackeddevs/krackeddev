@@ -17,6 +17,7 @@ import {
 import { useSupabase } from "@/context/SupabaseContext";
 import { usePageViews } from "@/lib/hooks/use-page-views";
 import { usePrayerTimes } from "@/lib/hooks/use-prayer-times";
+import { ModeToggle } from "./mode-toggle";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -113,6 +114,8 @@ const Navbar = () => {
                 </Link>
               </Button>
             )}
+
+          <ModeToggle />
 
           {/* Hiring Button */}
           <Button

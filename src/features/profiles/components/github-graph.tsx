@@ -20,15 +20,15 @@ export function GithubGraph({ data, totalContributions, className }: GithubGraph
     const recentWeeks = data.slice(-24);
 
     return (
-        <div className={cn("w-full bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md shadow-sm", className)}>
+        <div className={cn("w-full bg-card/40 border border-border rounded-xl overflow-hidden backdrop-blur-md shadow-sm", className)}>
             {/* Header matching DevPulse */}
-            <div className="flex flex-col md:flex-row items-center justify-between p-6 border-b border-white/5 gap-4">
+            <div className="flex flex-col md:flex-row items-center justify-between p-6 border-b border-border gap-4">
                 <div className="flex items-center gap-2">
                     <Grid className="w-5 h-5 text-neon-primary" />
-                    <span className="font-mono font-bold text-white tracking-tight uppercase text-sm">Contribution Matrix</span>
+                    <span className="font-mono font-bold text-foreground tracking-tight uppercase text-sm">Contribution Matrix</span>
                 </div>
 
-                <div className="flex bg-white/5 p-1 rounded-lg">
+                <div className="flex bg-muted/20 p-1 rounded-lg">
                     <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                         <span className="text-neon-primary font-bold">{totalContributions}</span> CYCLES
                     </div>
@@ -36,9 +36,9 @@ export function GithubGraph({ data, totalContributions, className }: GithubGraph
             </div>
 
             {/* Body */}
-            <div className="p-6 relative bg-black/20 flex justify-center items-center min-h-[160px]">
-                {/* Grid Background Effect */}
-                <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+            <div className="p-6 relative bg-card/20 flex justify-center items-center min-h-[160px]">
+                {/* Grid Background Effect - Updated for B&W/Light Mode */}
+                <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: "var(--grid-background)", backgroundSize: "20px 20px" }} />
 
                 <div className="flex gap-1.5 justify-end overflow-hidden z-10">
                     {recentWeeks.map((week, wIndex) => (
@@ -49,7 +49,7 @@ export function GithubGraph({ data, totalContributions, className }: GithubGraph
                                 // Cap at 1.0. Assume ~5-10 commits is "high" day.
                                 const intensity = hasContribution
                                     ? Math.min(0.3 + (day.contributionCount * 0.15), 1)
-                                    : 0.05;
+                                    : 0.1; // Increased base opacity for visibility in light mode
 
                                 return (
                                     <div
@@ -57,11 +57,11 @@ export function GithubGraph({ data, totalContributions, className }: GithubGraph
                                         className={cn(
                                             "w-3.5 h-3.5 rounded-[2px] transition-all duration-300",
                                             hasContribution
-                                                ? "bg-neon-primary shadow-[0_0_4px_rgba(34,197,94,0.3)] hover:shadow-[0_0_8px_rgba(34,197,94,0.6)] hover:scale-110"
-                                                : "bg-white/5 hover:bg-white/10"
+                                                ? "bg-neon-primary shadow-[0_0_4px_var(--neon-primary)] hover:shadow-[0_0_8px_var(--neon-primary)] hover:scale-110"
+                                                : "bg-muted-foreground/10 hover:bg-muted-foreground/20"
                                         )}
                                         style={{
-                                            opacity: intensity
+                                            opacity: hasContribution ? intensity : 1 // Logic adjustment: Use alpha color for empty cells instead of opacity
                                         }}
                                         title={`${day.contributionCount} contributions on ${day.date}`}
                                     />
@@ -71,8 +71,8 @@ export function GithubGraph({ data, totalContributions, className }: GithubGraph
                     ))}
                 </div>
 
-                {/* Vignette */}
-                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_50%,rgba(0,0,0,0.2)_100%)]" />
+                {/* Vignette - Disabled for cleaner look in light mode, or keep subtle */}
+                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_50%,var(--background)_150%)] opacity-50" />
             </div>
         </div>
     );

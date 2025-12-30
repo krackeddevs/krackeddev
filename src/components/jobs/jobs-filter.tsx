@@ -64,7 +64,7 @@ export function JobsFilter() {
                 handleSearch();
               }
             }}
-            className="bg-black/50 border-white/20 text-white placeholder:text-gray-600 pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-neon-cyan transition-all group-hover:border-white/40"
+            className="bg-input border-border text-foreground placeholder:text-muted-foreground pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-neon-cyan transition-all group-hover:border-foreground/50"
           />
           {localSearch && (
             <button
@@ -75,12 +75,12 @@ export function JobsFilter() {
               className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-neon-cyan/20 rounded-sm transition-colors group"
               aria-label="Clear search"
             >
-              <X className="w-3 h-3 md:w-4 md:h-4 text-gray-400 group-hover:text-neon-cyan" />
+              <X className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground group-hover:text-neon-cyan" />
             </button>
           )}
         </div>
         <Button
-          className="bg-white/10 text-neon-cyan border border-neon-cyan/50 hover:bg-neon-cyan hover:text-black h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_20px_rgba(0,255,255,0.4)]"
+          className="bg-card text-neon-cyan border border-neon-cyan/50 hover:bg-neon-cyan hover:text-black h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_20px_rgba(0,255,255,0.4)]"
           variant="default"
           onClick={handleSearch}
         >
@@ -91,7 +91,7 @@ export function JobsFilter() {
 
       {/* Filter Buttons */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 text-sm font-mono">
-        <span className="text-gray-500 uppercase tracking-wider text-xs">
+        <span className="text-muted-foreground uppercase tracking-wider text-xs">
           // Filter by
         </span>
 
@@ -102,7 +102,7 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-black/50 border-white/20 text-gray-400 hover:text-neon-cyan hover:border-neon-cyan/50 hover:bg-neon-cyan/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  "bg-card/50 border-border text-muted-foreground hover:text-neon-cyan hover:border-neon-cyan/50 hover:bg-neon-cyan/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   location &&
                   "text-neon-cyan border-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_rgba(0,255,255,0.1)]"
                 )}
@@ -128,7 +128,7 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-black border-neon-cyan/20 text-white rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+              className="w-56 bg-popover border-neon-cyan/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
               <DropdownMenuLabel className="text-neon-cyan font-mono text-xs uppercase tracking-wider">
@@ -164,7 +164,7 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-black/50 border-white/20 text-gray-400 hover:text-neon-purple hover:border-neon-purple/50 hover:bg-neon-purple/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  "bg-card/50 border-border text-muted-foreground hover:text-neon-purple hover:border-neon-purple/50 hover:bg-neon-purple/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   type &&
                   "text-neon-purple border-neon-purple bg-neon-purple/10 shadow-[0_0_10px_rgba(180,0,255,0.1)]"
                 )}
@@ -190,7 +190,7 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-black border-neon-purple/20 text-white rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+              className="w-56 bg-popover border-neon-purple/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
               <DropdownMenuLabel className="text-neon-purple font-mono text-xs uppercase tracking-wider">
@@ -226,7 +226,7 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-black/50 border-white/20 text-gray-400 hover:text-neon-lime hover:border-neon-lime/50 hover:bg-neon-lime/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  "bg-card/50 border-border text-muted-foreground hover:text-neon-lime hover:border-neon-lime/50 hover:bg-neon-lime/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   (salaryMin || 0) > 0 &&
                   "text-neon-lime border-neon-lime bg-neon-lime/10 shadow-[0_0_10px_rgba(0,255,0,0.1)]"
                 )}
@@ -254,7 +254,7 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-black border-neon-lime/20 text-white rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+              className="w-56 bg-popover border-neon-lime/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
               <DropdownMenuLabel className="text-neon-lime font-mono text-xs uppercase tracking-wider">

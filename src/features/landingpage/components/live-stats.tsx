@@ -45,26 +45,26 @@ export function LiveStats() {
         {statItems.map((item, idx) => (
           <div
             key={idx}
-            className="group relative bg-black/40 border border-green-500/30 p-8 rounded-sm backdrop-blur-sm overflow-hidden"
+            className="group relative bg-card/60 border border-neon-primary/30 p-8 rounded-sm backdrop-blur-sm overflow-hidden"
           >
             {/* CRT Scanline overlay for card */}
             <div className="absolute inset-0 bg-[linear-gradient(transparent_0%,rgba(0,255,0,0.05)_50%,transparent_100%)] bg-[length:100%_4px] animate-scanline pointer-events-none" />
 
             <div className="relative z-10 flex flex-col items-center justify-center text-center">
-              <span className="text-sm md:text-base text-green-500/80 font-mono tracking-[0.2em] mb-2 uppercase">
+              <span className="text-sm md:text-base text-neon-primary/80 font-mono tracking-[0.2em] mb-2 uppercase">
                 {item.label}
               </span>
-              <div className="text-4xl md:text-5xl font-bold text-white font-mono drop-shadow-[0_0_10px_rgba(0,255,0,0.5)]">
+              <div className="text-4xl md:text-5xl font-bold text-foreground font-mono drop-shadow-[0_0_10px_var(--neon-primary)]">
                 {item.prefix}
                 <Counter end={item.value} />
               </div>
             </div>
 
             {/* Corner acccents */}
-            <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-green-500" />
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-green-500" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-green-500" />
-            <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-green-500" />
+            <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-neon-primary" />
+            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-neon-primary" />
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-neon-primary" />
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-neon-primary" />
           </div>
         ))}
       </div>

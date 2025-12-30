@@ -44,12 +44,12 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
     return (
         <div className="w-full space-y-8 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border pb-6">
                 <div className="space-y-1">
                     {profile.full_name && (
                         <p className="text-sm text-muted-foreground font-mono">{profile.full_name}</p>
                     )}
-                    <h1 className="text-3xl font-bold font-mono tracking-tighter bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold font-mono tracking-tighter bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
                         {profile.username || "Anonymous Netrunner"}
                     </h1>
                     <div className="flex items-center gap-2 text-muted-foreground">
@@ -100,7 +100,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
 
                     {/* Dev Pulse Visualization - Main Column */}
                     {pulseData && (
-                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
+                        <div className="border border-border rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
                             <DevPulse data={pulseData} />
                         </div>
                     )}
@@ -112,7 +112,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                         />
                     )}
 
-                    <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                    <Card className="bg-card/40 border-border backdrop-blur-md">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                                 <Terminal className="w-4 h-4" />
@@ -120,7 +120,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-zinc-300 leading-relaxed font-mono text-sm">
+                            <p className="text-muted-foreground leading-relaxed font-mono text-sm">
                                 {profile.bio || "No lore data available for this user."}
                             </p>
                         </CardContent>
@@ -138,7 +138,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                 {/* Stats / Attributes Column */}
                 <div className="space-y-6">
                     {/* Location */}
-                    <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                    <Card className="bg-card/40 border-border backdrop-blur-md">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-neon-secondary font-mono text-sm uppercase tracking-widest">
                                 <MapPin className="w-4 h-4" />
@@ -146,7 +146,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <p className="text-zinc-300 font-mono text-sm">
+                            <p className="text-muted-foreground font-mono text-sm">
                                 {profile.location || "Unknown Location"}
                             </p>
 
@@ -155,7 +155,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                     </Card>
 
                     {/* Tech Stack */}
-                    <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                    <Card className="bg-card/40 border-border backdrop-blur-md">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-neon-cyan font-mono text-sm uppercase tracking-widest">
                                 <Code2 className="w-4 h-4" />
@@ -169,7 +169,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                                         <Badge
                                             key={tech}
                                             variant="outline"
-                                            className="border-white/20 text-zinc-300 font-mono text-xs hover:border-neon-cyan hover:text-neon-cyan transition-colors"
+                                            className="border-border text-muted-foreground font-mono text-xs hover:border-neon-cyan hover:text-neon-cyan transition-colors"
                                         >
                                             {tech}
                                         </Badge>
@@ -184,9 +184,9 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                     {githubStats ? (
                         <TopLanguages languages={githubStats.topLanguages} />
                     ) : (
-                        <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                        <Card className="bg-card/40 border-border backdrop-blur-md">
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-zinc-400 font-mono text-sm uppercase tracking-widest">
+                                <CardTitle className="flex items-center gap-2 text-muted-foreground font-mono text-sm uppercase tracking-widest">
                                     <Github className="w-4 h-4" />
                                     GitHub Sync
                                 </CardTitle>
@@ -197,7 +197,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                                 </p>
                                 <Button
                                     variant="outline"
-                                    className="w-full border-white/20 hover:bg-white/10 text-zinc-300 font-mono text-xs"
+                                    className="w-full border-border hover:bg-muted text-muted-foreground font-mono text-xs"
                                     onClick={handleLinkGithub}
                                 >
                                     Connect GitHub

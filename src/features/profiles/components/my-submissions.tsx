@@ -15,17 +15,17 @@ interface MySubmissionsProps {
 const statusConfig = {
     pending: {
         label: "Under Review",
-        color: "text-yellow-400 bg-yellow-900/30 border-yellow-500/30",
+        color: "text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
         icon: Clock,
     },
     approved: {
         label: "Accepted",
-        color: "text-green-400 bg-green-900/30 border-green-500/30",
+        color: "text-green-600 dark:text-green-400 bg-green-500/10 border-green-500/30",
         icon: CheckCircle,
     },
     rejected: {
         label: "Rejected",
-        color: "text-red-400 bg-red-900/30 border-red-500/30",
+        color: "text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/30",
         icon: XCircle,
     },
 };
@@ -33,14 +33,14 @@ const statusConfig = {
 // Special config for WON submissions (approved + paid)
 const wonConfig = {
     label: "Won!",
-    color: "text-amber-400 bg-amber-900/40 border-amber-500/50",
+    color: "text-amber-600 dark:text-amber-400 bg-amber-500/20 border-amber-500/50",
     icon: Trophy,
 };
 
 export function MySubmissions({ submissions, className }: MySubmissionsProps) {
     if (submissions.length === 0) {
         return (
-            <Card className={cn("bg-black/40 border-white/10 backdrop-blur-md", className)}>
+            <Card className={cn("bg-card/40 border-border backdrop-blur-md", className)}>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                         <FileText className="w-4 h-4" />
@@ -57,7 +57,7 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
     }
 
     return (
-        <Card className={cn("bg-black/40 border-white/10 backdrop-blur-md", className)}>
+        <Card className={cn("bg-card/40 border-border backdrop-blur-md", className)}>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                     <FileText className="w-4 h-4" />
@@ -83,12 +83,12 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                             className="block group"
                         >
                             <div className={cn(
-                                "flex items-start gap-3 p-3 bg-white/5 border border-white/10 hover:border-neon-primary/50 transition-colors rounded-lg overflow-hidden",
-                                isWon && "border-amber-500/30 bg-amber-900/10" // Highlight won submissions
+                                "flex items-start gap-3 p-3 bg-card/20 border border-border hover:border-neon-primary/50 hover:bg-muted/10 transition-colors rounded-lg overflow-hidden",
+                                isWon && "border-amber-500/30 bg-amber-500/5" // Highlight won submissions
                             )}>
                                 {/* Date Block */}
                                 <div className="flex flex-col items-start leading-none font-mono text-muted-foreground w-[40px] flex-shrink-0">
-                                    <span className="text-xl font-bold text-white mb-1">{day}</span>
+                                    <span className="text-xl font-bold text-foreground mb-1">{day}</span>
                                     <span className="text-xs uppercase">{month}</span>
                                     <span className="text-xs">{year}</span>
                                 </div>
@@ -97,7 +97,7 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                                     <div className="flex items-center justify-between gap-2">
                                         <h4 className={cn(
                                             "font-mono text-sm truncate group-hover:text-neon-primary transition-colors pr-2 flex-1 min-w-0",
-                                            isWon ? "text-amber-100" : "text-white"
+                                            isWon ? "text-amber-600 dark:text-amber-100" : "text-foreground"
                                         )}>
                                             {submission.bountyTitle}
                                         </h4>
@@ -107,7 +107,7 @@ export function MySubmissions({ submissions, className }: MySubmissionsProps) {
                                     <div className="flex items-center flex-wrap gap-2">
                                         <span className={cn(
                                             "font-mono text-lg font-bold leading-none",
-                                            isWon ? "text-amber-400" : "text-green-500"
+                                            isWon ? "text-amber-600 dark:text-amber-400" : "text-green-600 dark:text-green-500"
                                         )}>
                                             RM{submission.bountyReward}
                                         </span>

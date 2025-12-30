@@ -48,23 +48,23 @@ export function JobsTable() {
 
   if (isLoading) {
     return (
-      <div className="text-white font-mono animate-pulse">Loading jobs...</div>
+      <div className="text-foreground font-mono animate-pulse">Loading jobs...</div>
     );
   }
 
   return (
     <div className="w-full">
       {/* Desktop Table View */}
-      <div className="hidden md:block w-full border border-white/10 rounded-none bg-black/40 backdrop-blur-sm">
+      <div className="hidden md:block w-full border border-border rounded-none bg-card/40 backdrop-blur-sm">
         <div className="w-full">
           <table className="w-full font-mono text-sm text-left">
-            <thead className="text-gray-400 bg-white/5 border-b border-white/10">
+            <thead className="text-muted-foreground bg-muted/50 border-b border-border">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-6 py-4 font-semibold text-neon-cyan/80 text-xs uppercase tracking-wider border-r border-white/5 last:border-r-0"
+                      className="px-6 py-4 font-semibold text-neon-cyan/80 text-xs uppercase tracking-wider border-r border-border last:border-r-0"
                     >
                       {header.isPlaceholder
                         ? null
@@ -77,13 +77,13 @@ export function JobsTable() {
                 </tr>
               ))}
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-border/50">
               {/* TODO: Add empty state */}
               {table.getRowModel().rows.length === 0 && (
                 <tr>
                   <td
                     colSpan={columns.length}
-                    className="px-6 py-12 text-center text-gray-500 font-mono"
+                    className="px-6 py-12 text-center text-muted-foreground font-mono"
                   >
                     No signals detected in this sector. Try widening your search parameters.
                   </td>
@@ -98,7 +98,7 @@ export function JobsTable() {
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="px-6 py-4 border-r border-white/5 last:border-r-0 align-middle"
+                      className="px-6 py-4 border-r border-border last:border-r-0 align-middle"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -116,7 +116,7 @@ export function JobsTable() {
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         {flatData.length === 0 && !isLoading && (
-          <div className="text-center text-gray-500 py-12 border border-dashed border-white/10 rounded-sm font-mono text-sm">
+          <div className="text-center text-muted-foreground py-12 border border-dashed border-border rounded-sm font-mono text-sm">
             No signals detected.
           </div>
         )}
@@ -140,22 +140,22 @@ export function JobsTable() {
             <div
               key={job.id || i}
               onClick={() => router.push(`/jobs/${job.id}`)}
-              className="group border border-white/10 p-5 space-y-4 bg-black/40 backdrop-blur-sm cursor-pointer hover:border-neon-cyan/50 hover:bg-neon-cyan/5 transition-all relative overflow-hidden"
+              className="group border border-border p-5 space-y-4 bg-card/40 backdrop-blur-sm cursor-pointer hover:border-neon-cyan/50 hover:bg-neon-cyan/5 transition-all relative overflow-hidden"
             >
               {/* Active Glitch Border (Pseudo-element alternative) */}
               <div className="absolute top-0 left-0 w-1 h-full bg-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="flex justify-between items-start gap-4">
                 <div>
-                  <h3 className="text-white font-semibold text-lg leading-tight mb-1 group-hover:text-neon-cyan transition-colors">
+                  <h3 className="text-foreground font-semibold text-lg leading-tight mb-1 group-hover:text-neon-cyan transition-colors">
                     {job.title}
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
                     {job.companyLogo && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={job.companyLogo} alt={job.company} className="w-5 h-5 rounded-sm object-cover bg-white/10" />
+                      <img src={job.companyLogo} alt={job.company} className="w-5 h-5 rounded-sm object-cover bg-muted" />
                     )}
-                    <p className="text-gray-400 text-sm font-mono">{job.company}</p>
+                    <p className="text-muted-foreground text-sm font-mono">{job.company}</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2">
@@ -168,14 +168,14 @@ export function JobsTable() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/5">
+              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border">
                 <div className="flex flex-col gap-1 text-xs font-mono">
-                  <span className="text-gray-500">Salary (MYR)</span>
+                  <span className="text-muted-foreground">Salary (MYR)</span>
                   <span className="text-neon-lime">{formatSalary()}</span>
                 </div>
                 <div className="flex flex-col gap-1 text-xs font-mono">
-                  <span className="text-gray-500">Location</span>
-                  <span className="text-gray-300 truncate">{job.location}</span>
+                  <span className="text-muted-foreground">Location</span>
+                  <span className="text-foreground/80 truncate">{job.location}</span>
                 </div>
               </div>
             </div>
@@ -186,7 +186,7 @@ export function JobsTable() {
       {/* Infinite Scroll Trigger */}
       <div
         ref={ref}
-        className="py-4 text-center text-gray-500 font-mono text-xs uppercase tracking-widest"
+        className="py-4 text-center text-muted-foreground font-mono text-xs uppercase tracking-widest"
       >
         {isFetchingNextPage
           ? "Loading more..."

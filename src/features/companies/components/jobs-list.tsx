@@ -53,38 +53,38 @@ export function JobsList({ jobs }: JobsListProps) {
             </DashboardHeader>
 
             {/* Desktop Table View */}
-            <div className="hidden md:block border border-white/10 rounded-lg overflow-hidden bg-black/40">
+            <div className="hidden md:block border border-border rounded-lg overflow-hidden bg-card/40">
                 <Table>
-                    <TableHeader className="bg-white/5">
-                        <TableRow className="hover:bg-transparent border-white/10">
-                            <TableHead className="text-gray-400">Title</TableHead>
-                            <TableHead className="text-gray-400">Location</TableHead>
-                            <TableHead className="text-gray-400">Type</TableHead>
-                            <TableHead className="text-gray-400">Posted</TableHead>
-                            <TableHead className="text-gray-400">Status</TableHead>
-                            <TableHead className="text-right text-gray-400">Actions</TableHead>
+                    <TableHeader className="bg-muted/50">
+                        <TableRow className="hover:bg-transparent border-border">
+                            <TableHead className="text-muted-foreground">Title</TableHead>
+                            <TableHead className="text-muted-foreground">Location</TableHead>
+                            <TableHead className="text-muted-foreground">Type</TableHead>
+                            <TableHead className="text-muted-foreground">Posted</TableHead>
+                            <TableHead className="text-muted-foreground">Status</TableHead>
+                            <TableHead className="text-right text-muted-foreground">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {jobs.map((job) => (
-                            <TableRow key={job.id} className="hover:bg-white/5 border-white/5">
-                                <TableCell className="font-medium text-white">{job.title}</TableCell>
-                                <TableCell className="text-gray-300">
+                            <TableRow key={job.id} className="hover:bg-muted/5 border-muted/20">
+                                <TableCell className="font-medium text-foreground">{job.title}</TableCell>
+                                <TableCell className="text-muted-foreground">
                                     <div className="flex items-center gap-2">
                                         <MapPin className="h-3.5 w-3.5" />
                                         {job.location}
                                         {job.is_remote && " (Remote)"}
                                     </div>
                                 </TableCell>
-                                <TableCell className="text-gray-400">{job.employment_type}</TableCell>
-                                <TableCell className="text-gray-400">
+                                <TableCell className="text-muted-foreground">{job.employment_type}</TableCell>
+                                <TableCell className="text-muted-foreground">
                                     {new Date(job.posted_at).toLocaleDateString('en-US')}
                                 </TableCell>
                                 <TableCell>
                                     {!job.is_active ? (
                                         <Badge variant="secondary">Inactive</Badge>
                                     ) : (
-                                        <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Active</Badge>
+                                        <Badge className="bg-neon-secondary/20 text-neon-secondary border-neon-secondary/30">Active</Badge>
                                     )}
                                 </TableCell>
                                 <TableCell className="text-right">
@@ -110,14 +110,14 @@ export function JobsList({ jobs }: JobsListProps) {
             {/* Mobile Card View */}
             <div className="grid gap-4 md:hidden">
                 {jobs.map((job) => (
-                    <Card key={job.id} className="overflow-hidden bg-black/40 border-white/10">
+                    <Card key={job.id} className="overflow-hidden bg-card/40 border-border">
                         <CardHeader className="pb-3 grid grid-cols-[1fr_auto] items-start gap-4 space-y-0">
                             <div className="space-y-1">
-                                <CardTitle className="text-xl flex items-center gap-2 text-white">
+                                <CardTitle className="text-xl flex items-center gap-2 text-foreground">
                                     {job.title}
                                     {!job.is_active && <Badge variant="secondary">Inactive</Badge>}
                                 </CardTitle>
-                                <CardDescription className="flex items-center gap-2 text-sm text-gray-400">
+                                <CardDescription className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <MapPin className="h-3.5 w-3.5" /> {job.location}
                                     {job.is_remote && " (Remote)"}
                                     <span className="inline-block mx-1">•</span>
@@ -125,7 +125,7 @@ export function JobsList({ jobs }: JobsListProps) {
                                 </CardDescription>
                             </div>
                             <div className="flex gap-2">
-                                <Button variant="outline" size="sm" asChild className="border-white/10 text-gray-300 hover:text-white hover:bg-white/5">
+                                <Button variant="outline" size="sm" asChild className="border-border text-muted-foreground hover:text-foreground hover:bg-muted/10">
                                     <Link href={`/dashboard/company/jobs/${job.id}/edit`}>
                                         Edit
                                     </Link>
@@ -133,7 +133,7 @@ export function JobsList({ jobs }: JobsListProps) {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-1">
                                     <DollarSign className="h-3.5 w-3.5" />
                                     {job.salary_min && job.salary_max
@@ -145,7 +145,7 @@ export function JobsList({ jobs }: JobsListProps) {
                                 </div>
                             </div>
                             <div className="mt-4">
-                                <Button variant="secondary" className="w-full bg-white/5 hover:bg-white/10 text-white border border-white/10" asChild>
+                                <Button variant="secondary" className="w-full bg-muted/20 hover:bg-muted/30 text-foreground border border-border" asChild>
                                     <Link href={`/jobs/${job.id}`} target="_blank">
                                         View Live Job <ExternalLink className="ml-2 h-3 w-3" />
                                     </Link>

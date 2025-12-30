@@ -33,16 +33,8 @@ export default function JobsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-black text-white relative selection:bg-neon-lime selection:text-black">
-      {/* Global Grid Overlay (Matching Landing Page) */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-[0.15]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(0, 255, 0, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.4) 1px, transparent 1px)",
-          backgroundSize: "20px 20px",
-        }}
-      />
+    <div className="min-h-screen bg-background text-foreground relative selection:bg-neon-lime selection:text-black">
+      {/* Global Grid Overlay (Managed by global CSS on body, but ensuring visibility here if needed or just letting transparency work) */}
 
       {/* CRT Scanline Overlay - Fixed to viewport */}
       <div className="scanlines fixed inset-0 pointer-events-none z-50 h-screen"></div>

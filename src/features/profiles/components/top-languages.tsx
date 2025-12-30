@@ -13,7 +13,7 @@ export function TopLanguages({ languages }: TopLanguagesProps) {
     if (!languages || languages.length === 0) return null;
 
     return (
-        <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+        <Card className="bg-card/40 border-border backdrop-blur-md">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-neon-cyan font-mono text-sm uppercase tracking-widest">
                     <Code2 className="w-4 h-4" />

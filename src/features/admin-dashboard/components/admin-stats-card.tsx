@@ -25,7 +25,7 @@ export function AdminStatsCard({
 }: AdminStatsCardProps) {
     if (isLoading) {
         return (
-            <Card className="border-green-500/30 bg-black/40">
+            <Card className="border-border bg-card/40">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium font-mono">
                         <div className="h-4 w-24 bg-muted animate-pulse rounded" />
@@ -41,20 +41,20 @@ export function AdminStatsCard({
     }
 
     return (
-        <Card className="border-2 border-green-500/30 bg-black/40 backdrop-blur-sm hover:border-green-500 hover:bg-green-500/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:-translate-y-1 transition-all duration-300">
+        <Card className="border-2 border-border bg-card/40 backdrop-blur-sm hover:border-neon-primary hover:bg-neon-primary/5 hover:shadow-[0_0_30px_var(--neon-primary)] hover:-translate-y-1 transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium font-mono text-green-400 uppercase">{title}</CardTitle>
-                <Icon className="h-4 w-4 text-green-500" />
+                <CardTitle className="text-sm font-medium font-mono text-neon-primary uppercase">{title}</CardTitle>
+                <Icon className="h-4 w-4 text-neon-primary" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold font-mono text-green-500">{value}</div>
+                <div className="text-2xl font-bold font-mono text-foreground">{value}</div>
                 {(description || trend) && (
                     <div className="flex items-center gap-2 mt-1">
                         {trend && (
                             <span
                                 className={cn(
                                     "flex items-center gap-1 text-xs font-medium font-mono",
-                                    trend.isPositive ? "text-green-400" : "text-red-400"
+                                    trend.isPositive ? "text-neon-primary" : "text-red-500"
                                 )}
                             >
                                 {trend.isPositive ? (

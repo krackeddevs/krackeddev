@@ -16,30 +16,20 @@ export function BountyCard({ bounty }: BountyCardProps) {
         <Link href={`/code/bounty/${bounty.slug}`}>
             <div
                 className={`
-          relative p-6 border-2 transition-all duration-300 cursor-pointer h-full backdrop-blur-sm flex flex-col justify-between group hover:-translate-y-1
-          ${isRare
-                        ? "bg-black/40 border-amber-500/50 hover:border-amber-400 hover:bg-amber-500/5"
+                    relative p-6 border-2 transition-all duration-300 cursor-pointer h-full backdrop-blur-sm flex flex-col justify-between group hover:-translate-y-1
+                    ${isRare
+                        ? "bg-card/40 border-amber-500/50 hover:border-amber-500 hover:bg-amber-500/5 hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]"
                         : isActive
-                            ? "bg-black/40 border-cyan-500/50 hover:border-cyan-400 hover:bg-cyan-500/5"
+                            ? "bg-card/40 border-neon-cyan/50 hover:border-neon-cyan hover:bg-neon-cyan/5 hover:shadow-[0_0_30px_var(--neon-cyan)]"
                             : isCompleted
-                                ? "bg-black/40 border-green-500/50 hover:border-green-400 hover:bg-green-500/5"
-                                : "bg-black/40 border-green-400/30 hover:border-green-400 hover:bg-green-400/5"
+                                ? "bg-card/40 border-neon-secondary/50 hover:border-neon-secondary hover:bg-neon-secondary/5 hover:shadow-[0_0_30px_var(--neon-secondary)]"
+                                : "bg-card/40 border-neon-secondary/30 hover:border-neon-secondary hover:bg-neon-secondary/5 hover:shadow-[0_0_30px_var(--neon-secondary)]"
                     }
-        `}
-                style={{
-                    boxShadow: '0 0 0 rgba(0,0,0,0)',
-                }}
-                onMouseEnter={(e) => {
-                    const color = isRare ? '245, 158, 11' : isActive ? '6, 182, 212' : '34, 197, 94';
-                    e.currentTarget.style.boxShadow = `0 0 30px rgba(${color}, 0.3)`;
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
-                }}
+                `}
                 data-testid="bounty-card"
             >
                 {/* Bounty Number */}
-                <div className="absolute -top-3 -left-1 bg-gray-700 text-gray-300 px-2 py-0.5 font-mono text-xs">
+                <div className="absolute -top-3 -left-1 bg-muted text-muted-foreground px-2 py-0.5 font-mono text-xs">
                     #{bounty.id}
                 </div>
 
@@ -65,14 +55,14 @@ export function BountyCard({ bounty }: BountyCardProps) {
                 <div className="space-y-3 mt-2">
                     {/* Title */}
                     <h3
-                        className="font-mono text-lg text-white pr-12 leading-tight"
+                        className="font-mono text-lg text-foreground pr-12 leading-tight"
                         data-testid="bounty-title"
                     >
                         {bounty.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-gray-400 text-sm line-clamp-2">
+                    <p className="text-muted-foreground text-sm line-clamp-2">
                         {bounty.description}
                     </p>
 
@@ -84,7 +74,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
                         >
                             <Trophy className="w-4 h-4 text-yellow-500" />
                             <span className="text-green-400 font-mono text-sm">Winner:</span>
-                            <span className="text-white font-mono text-sm">
+                            <span className="text-foreground font-mono text-sm">
                                 {bounty.winner.xHandle ? `@${bounty.winner.xHandle}` : bounty.winner.name}
                             </span>
                         </div>
@@ -95,20 +85,20 @@ export function BountyCard({ bounty }: BountyCardProps) {
                         {bounty.tags.slice(0, 3).map((tag) => (
                             <span
                                 key={tag}
-                                className="px-2 py-1 bg-gray-700/50 text-gray-300 text-xs font-mono"
+                                className="px-2 py-1 bg-muted/50 text-muted-foreground text-xs font-mono"
                             >
                                 {tag}
                             </span>
                         ))}
                         {bounty.tags.length > 3 && (
-                            <span className="px-2 py-1 text-gray-500 text-xs font-mono">
+                            <span className="px-2 py-1 text-muted-foreground text-xs font-mono">
                                 +{bounty.tags.length - 3}
                             </span>
                         )}
                     </div>
 
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+                    <div className="flex items-center justify-between pt-2 border-t border-border">
                         <div className="flex items-center gap-2">
                             <span
                                 className={`px-2 py-1 text-xs font-mono border ${difficultyColors[bounty.difficulty]
@@ -125,7 +115,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
                                 {bounty.status.toUpperCase()}
                             </span>
                         </div>
-                        <div className="flex items-center gap-1 text-gray-500 text-xs">
+                        <div className="flex items-center gap-1 text-muted-foreground text-xs">
                             <Clock className="w-3 h-3" />
                             <span data-testid="deadline">
                                 {new Date(bounty.deadline).toLocaleDateString("en-MY", {

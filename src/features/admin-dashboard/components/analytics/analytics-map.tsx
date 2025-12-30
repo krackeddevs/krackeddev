@@ -40,8 +40,8 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
     };
 
     return (
-        <div className="w-full h-[300px] md:h-[400px] border-2 border-white/10 rounded-lg bg-black/40 backdrop-blur-sm p-4 flex flex-col relative overflow-hidden hover:border-white/20 transition-all duration-300">
-            <h3 className="text-lg font-semibold mb-2 md:mb-4 text-left">User Distribution (Malaysia)</h3>
+        <div className="w-full h-[300px] md:h-[400px] border-2 border-border rounded-lg bg-card/40 backdrop-blur-sm p-4 flex flex-col relative overflow-hidden hover:border-border/80 transition-all duration-300">
+            <h3 className="text-lg font-semibold mb-2 md:mb-4 text-left text-foreground">User Distribution (Malaysia)</h3>
 
             {/* Tooltip */}
             {tooltipContent && (

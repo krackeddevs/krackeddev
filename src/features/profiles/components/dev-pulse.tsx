@@ -74,22 +74,22 @@ export function DevPulse({ data, className }: DevPulseProps) {
     }, [currentData, maxCount]);
 
     return (
-        <div className={cn("w-full bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md shadow-sm flex flex-col min-h-[300px]", className)}>
+        <div className={cn("w-full bg-card/40 border border-border rounded-xl overflow-hidden backdrop-blur-md shadow-sm flex flex-col min-h-[300px]", className)}>
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-b border-white/5 gap-3 shrink-0">
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-b border-border/50 gap-3 shrink-0">
                 <div className="flex items-center gap-2">
                     <Activity className="w-5 h-5 text-neon-primary" />
-                    <h2 className="text-sm font-bold text-white tracking-tight uppercase">Activity Trends</h2>
+                    <h2 className="text-sm font-bold text-foreground tracking-tight uppercase">Activity Trends</h2>
                 </div>
 
-                <div className="flex bg-white/5 p-0.5 rounded-lg scale-90 origin-right">
+                <div className="flex bg-muted/50 p-0.5 rounded-lg scale-90 origin-right">
                     {(["daily", "monthly", "yearly"] as const).map(t => (
                         <button
                             key={t}
                             onClick={() => setTimeframe(t)}
                             className={cn(
                                 "px-2 py-1 rounded transition-colors text-[10px] font-mono uppercase",
-                                timeframe === t ? "bg-neon-primary text-black font-bold" : "text-gray-400 hover:text-white"
+                                timeframe === t ? "bg-neon-primary text-black font-bold" : "text-muted-foreground hover:text-foreground"
                             )}
                         >
                             {t === 'daily' ? '7D' : t === 'monthly' ? '30D' : '1Y'}
@@ -99,13 +99,13 @@ export function DevPulse({ data, className }: DevPulseProps) {
             </div>
 
             {/* Body */}
-            <div className="relative flex-grow flex flex-col bg-black/20 overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none z-0" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+            <div className="relative flex-grow flex flex-col bg-muted/10 overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none z-0 opacity-20" style={{ backgroundImage: "var(--grid-background)", backgroundSize: "20px 20px" }} />
 
                 <div className="relative w-full h-full p-4 flex items-center justify-center z-10">
                     <div className="relative w-full h-full flex items-center overflow-hidden">
                         <svg className="w-full h-full" viewBox="0 0 1000 200" preserveAspectRatio="none">
-                            <line x1="0" y1="100" x2="1000" y2="100" stroke="#333" strokeWidth="1" strokeDasharray="4 4" />
+                            <line x1="0" y1="100" x2="1000" y2="100" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" className="opacity-30" />
 
                             <defs>
                                 <linearGradient id="liveGradient" x1="0" y1="0" x2="1" y2="0">
@@ -160,7 +160,7 @@ export function DevPulse({ data, className }: DevPulseProps) {
                 </div>
 
                 <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none z-20">
-                    <p className="text-[10px] text-muted-foreground font-mono bg-black/40 inline-block px-2 rounded backdrop-blur-sm border border-white/5">
+                    <p className="text-[10px] text-muted-foreground font-mono bg-card/40 inline-block px-2 rounded backdrop-blur-sm border border-border/50">
                         {cyclesInView} TOTAL CONTRIBUTIONS • LIVE SIGNAL
                     </p>
                 </div>

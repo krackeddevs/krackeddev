@@ -23,7 +23,7 @@ export default function JobDetailClient({ id }: { id: string }) {
   if (isLoading) {
     return (
       <div className="min-h-screen pt-32 pb-16 flex items-center justify-center">
-        <div className="text-white font-mono animate-pulse">
+        <div className="text-foreground font-mono animate-pulse">
           Loading job details...
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function JobDetailClient({ id }: { id: string }) {
         <Link href="/jobs">
           <Button
             variant="outline"
-            className="text-white border-white/20 hover:bg-white/10"
+            className="text-foreground border-border hover:bg-muted/10"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Jobs
@@ -67,7 +67,7 @@ export default function JobDetailClient({ id }: { id: string }) {
         <div className="mb-8">
           <Link
             href="/jobs"
-            className="inline-flex items-center text-gray-400 hover:text-white transition-colors font-mono text-sm mb-6"
+            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm mb-6"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Jobs
@@ -75,13 +75,13 @@ export default function JobDetailClient({ id }: { id: string }) {
 
           <div className="space-y-6">
             <div className="space-y-6">
-              <h1 className="text-2xl md:text-4xl font-bold font-mono text-white tracking-tight">
+              <h1 className="text-2xl md:text-4xl font-bold font-mono text-foreground tracking-tight">
                 {job.title}
               </h1>
               {job.companySlug ? (
                 <Link
                   href={`/companies/${job.companySlug}`}
-                  className="text-xl text-gray-300 hover:text-white transition-colors font-mono"
+                  className="text-xl text-muted-foreground hover:text-foreground transition-colors font-mono"
                 >
                   {job.company} →
                 </Link>
@@ -160,7 +160,7 @@ export default function JobDetailClient({ id }: { id: string }) {
             </div>
 
             <div className="space-y-6 py-8">
-              <h2 className="text-2xl font-bold font-mono text-white">
+              <h2 className="text-2xl font-bold font-mono text-foreground">
                 Job Description
               </h2>
               <div

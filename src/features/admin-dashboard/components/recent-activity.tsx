@@ -41,7 +41,7 @@ export function RecentActivity({ recentUsers, recentBounties }: RecentActivityPr
     });
 
     return (
-        <Card className="h-full flex flex-col border-2 border-white/10 bg-black/40 backdrop-blur-sm hover:border-white/20 transition-all duration-300">
+        <Card className="h-full flex flex-col border-2 border-border bg-card/40 backdrop-blur-sm hover:border-border/80 transition-all duration-300">
             <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>
@@ -60,8 +60,8 @@ export function RecentActivity({ recentUsers, recentBounties }: RecentActivityPr
                                                 <UserPlus className="w-4 h-4 text-blue-500" />
                                             </div>
                                         ) : (
-                                            <div className="p-2 bg-purple-500/10 rounded-full">
-                                                <CreditCard className="w-4 h-4 text-purple-500" />
+                                            <div className="p-2 bg-neon-secondary/10 rounded-full">
+                                                <CreditCard className="w-4 h-4 text-neon-secondary" />
                                             </div>
                                         )}
                                     </div>
@@ -91,7 +91,7 @@ export function RecentActivity({ recentUsers, recentBounties }: RecentActivityPr
                                                         {item.data.title}
                                                     </p>
                                                     <p className="text-xs text-muted-foreground">
-                                                        Reward: <span className="text-green-500 font-medium">RM {item.data.reward.toLocaleString()}</span>
+                                                        Reward: <span className="text-neon-primary font-medium">RM {item.data.reward.toLocaleString()}</span>
                                                     </p>
                                                 </div>
                                             </>
