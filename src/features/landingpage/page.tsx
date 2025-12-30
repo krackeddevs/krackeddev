@@ -54,9 +54,6 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
         <main className="min-h-screen w-full relative flex flex-col">
             {/* Global Grid Overlay Removed (Handled by globals.css) */}
 
-            {/* Manifesto Modal - Shows once for new visitors */}
-            <ManifestoModal isLoggedIn={isLoggedIn} />
-
             {/* Parallax Intro with Loading, Parallax Layers, and Start Button */}
             {showAnimation && (
                 <ParallaxIntro onComplete={handleAnimationComplete} />

@@ -7,6 +7,7 @@ export async function banUser(userId: string) {
 
     const { error } = await supabase
         .from("profiles")
+        // @ts-expect-error - is_banned column not yet in generated types (pending migration)
         .update({ is_banned: true })
         .eq("id", userId);
 
@@ -22,6 +23,7 @@ export async function unbanUser(userId: string) {
 
     const { error } = await supabase
         .from("profiles")
+        // @ts-expect-error - is_banned column not yet in generated types (pending migration)
         .update({ is_banned: false })
         .eq("id", userId);
 
@@ -37,6 +39,7 @@ export async function updateUserRole(userId: string, role: string) {
 
     const { error } = await supabase
         .from("profiles")
+        // @ts-expect-error - Supabase types restrictive for updates
         .update({ role })
         .eq("id", userId);
 

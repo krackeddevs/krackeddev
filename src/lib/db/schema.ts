@@ -23,6 +23,7 @@ export const profiles = pgTable(
     level: integer('level').default(1),
     xp: integer('xp').default(0),
     role: userRoleEnum('role').notNull().default('user'),
+    isBanned: boolean('is_banned').notNull().default(false),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
     developerRole: text('developer_role'),
