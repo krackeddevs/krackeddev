@@ -68,17 +68,19 @@ export async function GET(req: NextRequest) {
       .offset(offset)
       .orderBy(desc(jobs.postedAt));
 
-    // Get total count for metadata (optional but useful)
-    // const totalCount = await db
-    //   .select({ count: sql<number>`count(*)` })
-    //   .from(jobs)
-    //   .where(and(...conditions));
+    // Get total count for pagination
+    const totalResult = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(jobs)
+      .where(and(...conditions));
 
+    const total = totalResult[0]?.count || 0;
     const nextCursor = results.length === limit ? offset + limit : null;
 
     return NextResponse.json({
       data: results,
       nextCursor,
+      total,
     });
   } catch (error) {
     console.error("Error fetching jobs:", error);

@@ -5,11 +5,10 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useJobs } from "@/lib/hooks/jobs/use-jobs";
+import { useJobsPaginated } from "@/lib/hooks/jobs/use-jobs-paginated";
 import { columns } from "./columns";
-import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useQueryStates } from "nuqs";
+import { useQueryStates, parseAsInteger } from "nuqs";
 import { jobSearchParams } from "@/lib/search-params";
 import { differenceInHours } from "date-fns";
 import { Pagination } from "./pagination";
@@ -18,44 +17,34 @@ const JOBS_PER_PAGE = 20;
 
 export function JobsTable() {
   const router = useRouter();
-  const [filters] = useQueryStates(jobSearchParams);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters] = useQueryStates({
+    ...jobSearchParams,
+    page: parseAsInteger.withDefault(1),
+  });
 
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useJobs({
-      search: filters.search || "",
-      location: filters.location || "",
-      type: filters.type || "",
-      salaryMin: filters.salaryMin || 0,
-    });
+  const { data, isLoading } = useJobsPaginated({
+    search: filters.search || "",
+    location: filters.location || "",
+    type: filters.type || "",
+    salaryMin: filters.salaryMin || 0,
+    page: filters.page,
+    limit: JOBS_PER_PAGE,
+  });
 
-  // Auto-load all pages on mount
-  useEffect(() => {
-    if (!isLoading && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, isLoading, fetchNextPage]);
+  const jobs = data?.data ?? [];
+  const total = data?.total ?? 0;
 
-  // Flatten all pages
-  const allJobs = useMemo(
-    () => data?.pages.flatMap((page) => page.data) ?? [],
-    [data]
-  );
-
-  // Calculate pagination
-  const totalPages = Math.ceil(allJobs.length / JOBS_PER_PAGE);
-  const startIndex = (currentPage - 1) * JOBS_PER_PAGE;
-  const endIndex = startIndex + JOBS_PER_PAGE;
-  const currentJobs = allJobs.slice(startIndex, endIndex);
+  // Calculate exact total pages from total count
+  const totalPages = Math.ceil(total / JOBS_PER_PAGE);
 
   const table = useReactTable({
-    data: currentJobs,
+    data: jobs,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setFilters({ page });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -127,12 +116,12 @@ export function JobsTable() {
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
-        {currentJobs.length === 0 && !isLoading && (
+        {jobs.length === 0 && !isLoading && (
           <div className="text-center text-muted-foreground py-12 border border-dashed border-border rounded-sm font-mono text-sm">
             No signals detected.
           </div>
         )}
-        {currentJobs.map((job, i) => {
+        {jobs.map((job, i) => {
           const formatSalary = () => {
             const min = job.salaryMin;
             const max = job.salaryMax;
@@ -196,9 +185,9 @@ export function JobsTable() {
       </div>
 
       {/* Pagination Controls */}
-      {allJobs.length > 0 && (
+      {jobs.length > 0 && (
         <Pagination
-          currentPage={currentPage}
+          currentPage={filters.page}
           totalPages={totalPages}
           onPageChange={handlePageChange}
           isLoading={isLoading}

@@ -16,7 +16,7 @@ export function useJobs(options: UseJobsOptions = {}) {
     queryKey: ["jobs", options],
     queryFn: async ({ pageParam = 0 }) => {
       const params = new URLSearchParams({
-        limit: "10",
+        limit: "20",
         cursor: pageParam.toString(),
       });
 
