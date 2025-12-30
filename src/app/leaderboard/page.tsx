@@ -17,7 +17,7 @@ export default async function LeaderboardPage() {
             <div className="relative z-10">
                 {/* Header */}
                 <div className="bg-card/50 border-b border-border">
-                    <div className="container mx-auto px-4 py-6 max-w-4xl">
+                    <div className="container mx-auto px-4 py-6 max-w-5xl">
                         <Link
                             href="/"
                             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-mono text-sm mb-4"
@@ -58,7 +58,7 @@ export default async function LeaderboardPage() {
                 </div>
 
                 {/* Leaderboard */}
-                <div className="container mx-auto px-4 py-8 max-w-4xl">
+                <div className="container mx-auto px-4 py-8 max-w-5xl">
                     {error ? (
                         <div className="text-center py-12 text-red-400 font-mono">
                             {error}

@@ -33,7 +33,7 @@ export function MembersList({ members }: MembersListProps) {
         <div className="space-y-4">
             {/* Search Input */}
             <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
                     type="text"
                     placeholder="Search by name, role, or location..."
@@ -53,7 +53,7 @@ export function MembersList({ members }: MembersListProps) {
             {/* Members Grid */}
             {filteredMembers.length === 0 ? (
                 <div className="text-center py-12">
-                    <User className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                    <User className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                     <p className="text-muted-foreground font-mono">
                         {searchQuery ? "No members match your search." : "No members found."}
                     </p>
