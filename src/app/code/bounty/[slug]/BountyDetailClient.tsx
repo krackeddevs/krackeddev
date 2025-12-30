@@ -171,259 +171,251 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
     // FR9/FR10: Guest users see login required screen
     if (isGuest) {
         return (
-<<<<<<< HEAD
-            <main className="min-h-screen bg-gray-900 relative">
-=======
             <main className="min-h-screen relative">
-                    <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+                <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
->>>>>>> epic/9-jobs-platform-v2
-                    {/* Header with Navigation */}
-                    <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
-                        <div className="container mx-auto px-4 py-3 max-w-4xl">
-                            <button
-                                onClick={() => router.push("/code/bounty")}
-                                className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm"
-                            >
-                                <ArrowLeft className="w-4 h-4 mr-2" />
-                                <span className="hidden md:inline">Back to Bounty Board</span>
-                                <span className="md:hidden">Back</span>
-                            </button>
+                {/* Header with Navigation */}
+                <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
+                    <div className="container mx-auto px-4 py-3 max-w-4xl">
+                        <button
+                            onClick={() => router.push("/code/bounty")}
+                            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm"
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            <span className="hidden md:inline">Back to Bounty Board</span>
+                            <span className="md:hidden">Back</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+                    {/* Bounty Preview Card */}
+                    <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-8 mb-8">
+                        <div className="flex flex-wrap items-center gap-3 mb-4">
+                            <span className="px-3 py-1 bg-neon-cyan/20 border border-neon-cyan/50 text-neon-cyan font-mono text-xs uppercase">
+                                {bounty.status}
+                            </span>
+                            <span className="text-2xl font-mono font-bold text-rank-gold">
+                                RM{bounty.reward}
+                            </span>
                         </div>
+                        <h1 className="text-2xl md:text-3xl font-bold font-mono text-foreground mb-4">
+                            {bounty.title}
+                        </h1>
+                        <p className="text-gray-400 font-mono text-sm line-clamp-2">
+                            {bounty.description?.substring(0, 150)}...
+                        </p>
                     </div>
 
-                    <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl">
-                        {/* Bounty Preview Card */}
-                        <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-8 mb-8">
-                            <div className="flex flex-wrap items-center gap-3 mb-4">
-                                <span className="px-3 py-1 bg-neon-cyan/20 border border-neon-cyan/50 text-neon-cyan font-mono text-xs uppercase">
-                                    {bounty.status}
-                                </span>
-                                <span className="text-2xl font-mono font-bold text-rank-gold">
-                                    RM{bounty.reward}
-                                </span>
-                            </div>
-                            <h1 className="text-2xl md:text-3xl font-bold font-mono text-foreground mb-4">
-                                {bounty.title}
-                            </h1>
-                            <p className="text-gray-400 font-mono text-sm line-clamp-2">
-                                {bounty.description?.substring(0, 150)}...
-                            </p>
+                    {/* Login Required Card */}
+                    <div className="bg-background/80 border-2 border-neon-primary/50 p-8 text-center">
+                        <div className="w-16 h-16 mx-auto mb-6 bg-neon-primary/10 border-2 border-neon-primary flex items-center justify-center">
+                            <Lock className="w-8 h-8 text-neon-primary" />
                         </div>
-
-                        {/* Login Required Card */}
-                        <div className="bg-background/80 border-2 border-neon-primary/50 p-8 text-center">
-                            <div className="w-16 h-16 mx-auto mb-6 bg-neon-primary/10 border-2 border-neon-primary flex items-center justify-center">
-                                <Lock className="w-8 h-8 text-neon-primary" />
-                            </div>
-                            <h2 className="text-xl font-bold font-mono text-foreground mb-3">
-                                Login Required
-                            </h2>
-                            <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                                Sign in to view full bounty details, requirements, and submit your solution.
-                            </p>
+                        <h2 className="text-xl font-bold font-mono text-foreground mb-3">
+                            Login Required
+                        </h2>
+                        <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                            Sign in to view full bounty details, requirements, and submit your solution.
+                        </p>
+                        <button
+                            onClick={() => openLoginModal(true)}
+                            className="inline-flex items-center gap-2 bg-neon-primary hover:bg-neon-primary/90 text-black font-mono font-bold px-8 py-3 transition-colors"
+                        >
+                            <LogIn className="w-5 h-5" />
+                            Sign In to View Details
+                        </button>
+                        <p className="text-gray-500 text-sm mt-4 font-mono">
+                            Don&apos;t have an account?{" "}
                             <button
                                 onClick={() => openLoginModal(true)}
-                                className="inline-flex items-center gap-2 bg-neon-primary hover:bg-neon-primary/90 text-black font-mono font-bold px-8 py-3 transition-colors"
+                                className="text-neon-primary hover:underline"
                             >
-                                <LogIn className="w-5 h-5" />
-                                Sign In to View Details
+                                Sign up for free
                             </button>
-                            <p className="text-gray-500 text-sm mt-4 font-mono">
-                                Don&apos;t have an account?{" "}
-                                <button
-                                    onClick={() => openLoginModal(true)}
-                                    className="text-neon-primary hover:underline"
-                                >
-                                    Sign up for free
-                                </button>
-                            </p>
-                        </div>
+                        </p>
                     </div>
-                </main>
+                </div>
+            </main>
         );
     }
 
     return (
-<<<<<<< HEAD
-        <main className="min-h-screen bg-gray-900 relative">
-=======
         <main className="min-h-screen relative">
-                <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+            <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
 
->>>>>>> epic/9-jobs-platform-v2
-                {/* Header with Navigation */}
-                <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
-                    <div className="container mx-auto px-4 py-3 max-w-4xl">
-                        <div className="flex items-center justify-between">
+            {/* Header with Navigation */}
+            <div className="bg-gray-800/50 border-b border-gray-700 sticky top-0 z-40 backdrop-blur-sm">
+                <div className="container mx-auto px-4 py-3 max-w-4xl">
+                    <div className="flex items-center justify-between">
+                        <button
+                            onClick={() => router.push("/code/bounty")}
+                            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm"
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            <span className="hidden md:inline">Back to Bounty Board</span>
+                            <span className="md:hidden">Back</span>
+                        </button>
+
+                        {user && (
                             <button
-                                onClick={() => router.push("/code/bounty")}
-                                className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm"
+                                onClick={() => setShowSignOutConfirm(true)}
+                                className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-mono text-sm px-3 py-1.5 border border-border hover:border-foreground/20"
                             >
-                                <ArrowLeft className="w-4 h-4 mr-2" />
-                                <span className="hidden md:inline">Back to Bounty Board</span>
-                                <span className="md:hidden">Back</span>
+                                <LogOut className="w-4 h-4" />
+                                Sign Out
                             </button>
+                        )}
+                    </div>
+                </div>
+            </div>
 
-                            {user && (
-                                <button
-                                    onClick={() => setShowSignOutConfirm(true)}
-                                    className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-mono text-sm px-3 py-1.5 border border-border hover:border-foreground/20"
-                                >
-                                    <LogOut className="w-4 h-4" />
-                                    Sign Out
-                                </button>
-                            )}
+            {/* Sign Out Confirmation Modal */}
+            {showSignOutConfirm && (
+                <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-[60] p-4">
+                    <div className="bg-background border-2 border-cyan-500 p-6 max-w-md w-full">
+                        <h2 className="text-xl font-mono text-cyan-400 mb-4">
+                            CONFIRM SIGN OUT
+                        </h2>
+                        <p className="text-gray-300 mb-6">
+                            Are you sure you want to sign out?
+                        </p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setShowSignOutConfirm(false)}
+                                className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-mono py-2 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowSignOutConfirm(false);
+                                    signOut();
+                                }}
+                                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-mono py-2 transition-colors"
+                            >
+                                Sign Out
+                            </button>
                         </div>
                     </div>
                 </div>
+            )}
 
-                {/* Sign Out Confirmation Modal */}
-                {showSignOutConfirm && (
-                    <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-[60] p-4">
-                        <div className="bg-background border-2 border-cyan-500 p-6 max-w-md w-full">
-                            <h2 className="text-xl font-mono text-cyan-400 mb-4">
-                                CONFIRM SIGN OUT
+            <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl">
+                {/* Bounty Detail Component */}
+                <BountyDetail bounty={bounty}>
+                    {/* Submission Form - Only for active bounties AND logged in users */}
+                    {canSubmit && (
+                        <div className="mb-8">
+                            <h2 className="text-lg font-mono text-foreground mb-4 flex items-center gap-2">
+                                <Link2 className="w-5 h-5 text-neon-cyan" />
+                                SUBMIT YOUR SOLUTION
                             </h2>
-                            <p className="text-gray-300 mb-6">
-                                Are you sure you want to sign out?
-                            </p>
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={() => setShowSignOutConfirm(false)}
-                                    className="flex-1 bg-muted hover:bg-muted/80 text-foreground font-mono py-2 transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setShowSignOutConfirm(false);
-                                        signOut();
-                                    }}
-                                    className="flex-1 bg-red-500 hover:bg-red-600 text-white font-mono py-2 transition-colors"
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                <div className="container mx-auto px-4 py-8 relative z-10 max-w-4xl">
-                    {/* Bounty Detail Component */}
-                    <BountyDetail bounty={bounty}>
-                        {/* Submission Form - Only for active bounties AND logged in users */}
-                        {canSubmit && (
-                            <div className="mb-8">
-                                <h2 className="text-lg font-mono text-foreground mb-4 flex items-center gap-2">
-                                    <Link2 className="w-5 h-5 text-neon-cyan" />
-                                    SUBMIT YOUR SOLUTION
-                                </h2>
-                                <div className="bg-gray-800/50 border-2 border-neon-cyan/30 p-6">
-                                    {submitted ? (
-                                        <div className="text-center py-4">
-                                            <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                                            <h3 className="text-xl font-mono text-foreground mb-2">
-                                                Submission Received!
-                                            </h3>
-                                            <p className="text-gray-400 mb-4">
-                                                Your submission has been received for review. We&apos;ll
-                                                notify you once it&apos;s been reviewed.
-                                            </p>
+                            <div className="bg-gray-800/50 border-2 border-neon-cyan/30 p-6">
+                                {submitted ? (
+                                    <div className="text-center py-4">
+                                        <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                                        <h3 className="text-xl font-mono text-foreground mb-2">
+                                            Submission Received!
+                                        </h3>
+                                        <p className="text-gray-400 mb-4">
+                                            Your submission has been received for review. We&apos;ll
+                                            notify you once it&apos;s been reviewed.
+                                        </p>
+                                        <button
+                                            onClick={() => setSubmitted(false)}
+                                            className="text-cyan-400 hover:text-cyan-300 font-mono text-sm"
+                                        >
+                                            Submit Another Link
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <form onSubmit={handleSubmit}>
+                                        <label className="block mb-2 text-gray-400 font-mono text-sm">
+                                            Submission Link
+                                        </label>
+                                        <div className="flex flex-col md:flex-row gap-4">
+                                            <div className="flex-1">
+                                                <input
+                                                    type="url"
+                                                    value={prUrl}
+                                                    onChange={(e) => setPrUrl(e.target.value)}
+                                                    placeholder="https://your-demo.vercel.app or https://github.com/.../pull/123"
+                                                    className="w-full bg-card border border-border px-4 py-3 font-mono text-sm text-foreground placeholder-muted-foreground focus:border-cyan-500 focus:outline-none"
+                                                    required
+                                                />
+                                                {error && (
+                                                    <p className="text-red-400 text-sm mt-2 font-mono">
+                                                        {error}
+                                                    </p>
+                                                )}
+                                            </div>
                                             <button
-                                                onClick={() => setSubmitted(false)}
-                                                className="text-cyan-400 hover:text-cyan-300 font-mono text-sm"
+                                                type="submit"
+                                                disabled={submitting}
+                                                className="bg-neon-cyan hover:bg-neon-cyan/90 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-mono font-bold px-6 py-3 flex items-center gap-2 transition-colors"
                                             >
-                                                Submit Another Link
+                                                {submitting ? (
+                                                    <>
+                                                        <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
+                                                        Submitting...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Send className="w-4 h-4" />
+                                                        Submit
+                                                    </>
+                                                )}
                                             </button>
                                         </div>
-                                    ) : (
-                                        <form onSubmit={handleSubmit}>
-                                            <label className="block mb-2 text-gray-400 font-mono text-sm">
-                                                Submission Link
-                                            </label>
-                                            <div className="flex flex-col md:flex-row gap-4">
-                                                <div className="flex-1">
-                                                    <input
-                                                        type="url"
-                                                        value={prUrl}
-                                                        onChange={(e) => setPrUrl(e.target.value)}
-                                                        placeholder="https://your-demo.vercel.app or https://github.com/.../pull/123"
-                                                        className="w-full bg-card border border-border px-4 py-3 font-mono text-sm text-foreground placeholder-muted-foreground focus:border-cyan-500 focus:outline-none"
-                                                        required
-                                                    />
-                                                    {error && (
-                                                        <p className="text-red-400 text-sm mt-2 font-mono">
-                                                            {error}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <button
-                                                    type="submit"
-                                                    disabled={submitting}
-                                                    className="bg-neon-cyan hover:bg-neon-cyan/90 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-mono font-bold px-6 py-3 flex items-center gap-2 transition-colors"
-                                                >
-                                                    {submitting ? (
-                                                        <>
-                                                            <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
-                                                            Submitting...
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <Send className="w-4 h-4" />
-                                                            Submit
-                                                        </>
-                                                    )}
-                                                </button>
-                                            </div>
-                                            <p className="text-gray-500 text-xs mt-3 font-mono">
-                                                Submit your deployed app, GitHub PR, or any link showing your work.
-                                                Tag @KrackedDevs on X for extra visibility!
-                                            </p>
-                                        </form>
-                                    )}
-                                </div>
+                                        <p className="text-gray-500 text-xs mt-3 font-mono">
+                                            Submit your deployed app, GitHub PR, or any link showing your work.
+                                            Tag @KrackedDevs on X for extra visibility!
+                                        </p>
+                                    </form>
+                                )}
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {/* Completed Notice */}
-                        {bounty.status === "completed" && (
-                            <div className="mb-8 bg-neon-primary/10 border border-neon-primary/30 p-6 text-center">
-                                <CheckCircle className="w-8 h-8 text-neon-primary mx-auto mb-3" />
-                                <div className="text-neon-primary font-mono text-lg mb-2">
-                                    This bounty has been completed!
-                                </div>
-                                <p className="text-gray-400 text-sm">
-                                    Congratulations to the winner. Check out other active bounties on
-                                    the board.
-                                </p>
+                    {/* Completed Notice */}
+                    {bounty.status === "completed" && (
+                        <div className="mb-8 bg-neon-primary/10 border border-neon-primary/30 p-6 text-center">
+                            <CheckCircle className="w-8 h-8 text-neon-primary mx-auto mb-3" />
+                            <div className="text-neon-primary font-mono text-lg mb-2">
+                                This bounty has been completed!
                             </div>
-                        )}
+                            <p className="text-gray-400 text-sm">
+                                Congratulations to the winner. Check out other active bounties on
+                                the board.
+                            </p>
+                        </div>
+                    )}
 
-                        {/* Expired Notice */}
-                        {bounty.status === "expired" && (
-                            <div className="mb-8 bg-gray-800/30 border border-gray-600 p-6 text-center">
-                                <div className="text-gray-500 font-mono">
-                                    This bounty has expired and is no longer accepting submissions.
-                                </div>
+                    {/* Expired Notice */}
+                    {bounty.status === "expired" && (
+                        <div className="mb-8 bg-gray-800/30 border border-gray-600 p-6 text-center">
+                            <div className="text-gray-500 font-mono">
+                                This bounty has expired and is no longer accepting submissions.
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {/* Existing Submissions */}
-                        {submissions.length > 0 && (
-                            <div className="mb-8">
-                                <h2 className="text-lg font-mono text-foreground mb-4">
-                                    SUBMISSIONS ({submissions.length})
-                                </h2>
-                                <div className="space-y-4">
-                                    {submissions.map((submission) => (
-                                        <SubmissionCard key={submission.id} submission={submission} />
-                                    ))}
-                                </div>
+                    {/* Existing Submissions */}
+                    {submissions.length > 0 && (
+                        <div className="mb-8">
+                            <h2 className="text-lg font-mono text-foreground mb-4">
+                                SUBMISSIONS ({submissions.length})
+                            </h2>
+                            <div className="space-y-4">
+                                {submissions.map((submission) => (
+                                    <SubmissionCard key={submission.id} submission={submission} />
+                                ))}
                             </div>
-                        )}
-                    </BountyDetail>
-                </div>
-            </main>
-            );
+                        </div>
+                    )}
+                </BountyDetail>
+            </div>
+        </main>
+    );
 }
