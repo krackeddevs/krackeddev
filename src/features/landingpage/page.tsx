@@ -95,16 +95,15 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                             <CommunityMap />
                         </section>
 
-                        {/* Game Section */}
-                        <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px]">
+                        {/* Game Section (Hidden for now) */}
+                        {/* <section className="relative w-full h-auto md:h-[85vh] md:min-h-[600px]">
                             <TownhallV2 />
 
-                            {/* Scroll Indicator */}
                             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-30">
                                 <span className="text-green-400/70 text-xs font-mono mb-1">Scroll for more</span>
                                 <ChevronDown className="w-6 h-6 text-green-400/70" />
                             </div>
-                        </section>
+                        </section> */}
                     </div>
 
                     {/* Live Stats Section */}
