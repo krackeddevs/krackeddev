@@ -32,8 +32,8 @@ export function TopLanguages({ languages }: TopLanguagesProps) {
                                 className="h-full rounded-full transition-all duration-1000 ease-out"
                                 style={{
                                     width: `${lang.percentage * 100}%`,
-                                    backgroundColor: lang.color || "#22c55e",
-                                    boxShadow: `0 0 10px ${lang.color || "#22c55e"}`
+                                    backgroundColor: lang.color || "var(--neon-primary)",
+                                    boxShadow: `0 0 10px ${lang.color || "var(--neon-primary)"}`
                                 }}
                             />
                         </div>

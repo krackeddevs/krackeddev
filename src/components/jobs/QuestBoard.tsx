@@ -126,15 +126,15 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
     const getDifficultyColor = (diff: QuestDifficulty) => {
         switch (diff) {
             case QuestDifficulty.LEGENDARY:
-                return 'text-purple-400';
+                return 'text-neon-purple';
             case QuestDifficulty.EXPERT:
-                return 'text-red-400';
+                return 'text-destructive';
             case QuestDifficulty.HARD:
-                return 'text-orange-400';
+                return 'text-neon-warning';
             case QuestDifficulty.MEDIUM:
-                return 'text-yellow-400';
+                return 'text-rank-gold';
             default:
-                return 'text-green-400';
+                return 'text-neon-primary';
         }
     };
 
@@ -146,7 +146,7 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
                 <PixelButton onClick={onBack} className="text-xs">
                     ⬅ Town
                 </PixelButton>
-                <h2 className="text-2xl text-yellow-400 text-shadow-lg underline decoration-4 underline-offset-4 decoration-red-900">
+                <h2 className="text-2xl text-rank-gold text-shadow-lg underline decoration-4 underline-offset-4 decoration-destructive">
                     GUILD QUEST BOARD
                 </h2>
                 <div className="w-24"></div> {/* Spacer */}
@@ -163,7 +163,7 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Search for a role..."
-                        className="flex-1 bg-blue-900 border-2 border-blue-500 p-3 text-white placeholder-blue-300 outline-none focus:border-yellow-400 font-mono"
+                        className="flex-1 bg-card border-2 border-border p-3 text-foreground placeholder-muted-foreground outline-none focus:border-rank-gold font-mono"
                     />
                     <PixelButton onClick={() => handleSearch()} disabled={loading}>
                         {loading ? 'Cast...' : 'Scry'}
@@ -171,7 +171,7 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
                 </form>
 
                 {/* Filters Panel */}
-                <div className="flex flex-col gap-3 p-3 bg-blue-900/40 border border-blue-700/50 text-xs font-mono">
+                <div className="flex flex-col gap-3 p-3 bg-card/40 border border-border text-xs font-mono">
                     {/* Job Type Filter (Class) */}
                     <div className="flex items-center gap-2 overflow-x-auto pb-2 retro-scrollbar">
                         <span className="text-blue-300 uppercase font-bold whitespace-nowrap">
@@ -182,8 +182,8 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
                                 type="button"
                                 onClick={() => setFilterType('ALL')}
                                 className={`px-3 py-1 border whitespace-nowrap transition-all ${filterType === 'ALL'
-                                    ? 'bg-yellow-500 text-black border-white font-bold'
-                                    : 'bg-black/50 text-gray-400 border-gray-600 hover:border-gray-400'
+                                    ? 'bg-rank-gold text-black border-white font-bold'
+                                    : 'bg-muted/50 text-muted-foreground border-border hover:border-foreground/50'
                                     }`}
                             >
                                 ALL
@@ -194,8 +194,8 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
                                     key={type}
                                     onClick={() => setFilterType(type)}
                                     className={`px-3 py-1 border whitespace-nowrap transition-all ${filterType === type
-                                        ? 'bg-gray-800 border-white text-white font-bold shadow-inner'
-                                        : 'bg-black/50 text-gray-500 border-gray-600 hover:border-gray-400'
+                                        ? 'bg-card border-white text-foreground font-bold shadow-inner'
+                                        : 'bg-muted/50 text-muted-foreground border-border hover:border-foreground/50'
                                         }`}
                                 >
                                     {type}
@@ -286,15 +286,15 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
                             <div
                                 key={quest.id}
                                 onClick={() => onSelectQuest(quest)}
-                                className="group relative bg-blue-900/50 border-2 border-blue-400 p-4 hover:bg-blue-800 hover:border-yellow-400 cursor-pointer transition-all active:translate-y-1"
+                                className="group relative bg-card/50 border-2 border-border p-4 hover:bg-card hover:border-rank-gold cursor-pointer transition-all active:translate-y-1"
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
-                                        <h3 className="text-yellow-300 text-lg mb-1 group-hover:text-white">
+                                        <h3 className="text-rank-gold text-lg mb-1 group-hover:text-foreground">
                                             {quest.title}
                                         </h3>
                                         <div className="text-xs text-gray-300 font-mono flex items-center gap-2">
-                                            <span className="bg-blue-950 px-1 border border-blue-700 text-blue-200">
+                                            <span className="bg-muted px-1 border border-border text-muted-foreground">
                                                 {quest.jobType}
                                             </span>
                                             <span>{quest.realTitle}</span>
@@ -314,11 +314,11 @@ const QuestBoard: React.FC<Props> = ({ onBack, onSelectQuest }) => {
                                         <span className="text-blue-200">
                                             📍 {quest.location}
                                         </span>
-                                        <span className="text-green-300">
+                                        <span className="text-neon-primary">
                                             💰 {quest.reward}
                                         </span>
                                     </div>
-                                    <div className="text-purple-300">
+                                    <div className="text-neon-purple">
                                         +{quest.xp} XP
                                     </div>
                                 </div>

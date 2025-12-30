@@ -63,20 +63,20 @@ export interface BountyStats {
 
 // Color mappings for UI
 export const difficultyColors: Record<BountyDifficulty, string> = {
-    beginner: "bg-green-500/20 text-green-400 border-green-500/50",
-    intermediate: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",
-    advanced: "bg-orange-500/20 text-orange-400 border-orange-500/50",
-    expert: "bg-red-500/20 text-red-400 border-red-500/50",
+    beginner: "bg-neon-primary/20 text-neon-primary border-neon-primary/50",
+    intermediate: "bg-rank-gold/20 text-rank-gold border-rank-gold/50",
+    advanced: "bg-rank-bronze/20 text-rank-bronze border-rank-bronze/50",
+    expert: "bg-destructive/20 text-destructive border-destructive/50",
 };
 
 export const statusColors: Record<BountyStatus, string> = {
-    active: "bg-cyan-500/20 text-cyan-400 border-cyan-500/50",
-    claimed: "bg-purple-500/20 text-purple-400 border-purple-500/50",
-    completed: "bg-green-500/20 text-green-400 border-green-500/50",
-    expired: "bg-gray-500/20 text-gray-400 border-gray-500/50",
+    active: "bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50",
+    claimed: "bg-neon-purple/20 text-neon-purple border-neon-purple/50",
+    completed: "bg-neon-primary/20 text-neon-primary border-neon-primary/50",
+    expired: "bg-muted/20 text-muted-foreground border-muted/50",
 };
 
 export const rarityColors: Record<BountyRarity, string> = {
-    normal: "bg-gray-500/20 text-gray-400 border-gray-500/50",
-    rare: "bg-amber-500/20 text-amber-400 border-amber-500/50 shadow-amber-500/20 shadow-lg",
+    normal: "bg-muted/20 text-muted-foreground border-muted/50",
+    rare: "bg-rank-gold/20 text-rank-gold border-rank-gold/50 shadow-rank-gold/20 shadow-lg",
 };

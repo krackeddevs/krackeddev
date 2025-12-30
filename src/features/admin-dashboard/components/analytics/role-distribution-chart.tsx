@@ -37,7 +37,8 @@ export function RoleDistributionChart({ data }: RoleDistributionChartProps) {
                         ))}
                     </Pie>
                     <Tooltip
-                        contentStyle={{ backgroundColor: 'var(--popover)', borderColor: 'var(--border)', color: 'var(--popover-foreground)' }}
+                        contentStyle={{ backgroundColor: 'var(--popover)', borderColor: 'var(--border)', color: 'var(--popover-foreground)', borderRadius: 'var(--radius)' }}
+                        itemStyle={{ color: 'var(--popover-foreground)' }}
                     />
                     <Legend verticalAlign="top" height={36} />
                 </PieChart>

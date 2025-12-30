@@ -20,14 +20,26 @@ interface BountiesTableClientProps {
 
 export function BountiesTableClient({ bounties }: BountiesTableClientProps) {
     const getStatusBadge = (status: string) => {
-        const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-            open: "default",
-            in_progress: "secondary",
-            completed: "outline",
-            closed: "destructive",
-        };
+        let style = {};
+        switch (status) {
+            case "open":
+                style = { backgroundColor: 'var(--status-success)', color: 'var(--background)', borderColor: 'var(--status-success)' };
+                break;
+            case "in_progress":
+                style = { backgroundColor: 'var(--status-warning)', color: 'var(--background)', borderColor: 'var(--status-warning)' };
+                break;
+            case "completed":
+                style = { backgroundColor: 'var(--status-info)', color: 'var(--background)', borderColor: 'var(--status-info)' };
+                break;
+            case "closed":
+                style = { backgroundColor: 'var(--status-error)', color: 'var(--background)', borderColor: 'var(--status-error)' };
+                break;
+            default:
+                style = { backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' };
+        }
+
         return (
-            <Badge variant={variants[status] || "secondary"}>
+            <Badge variant="outline" className="border" style={style}>
                 {status.replace('_', ' ').toUpperCase()}
             </Badge>
         );
@@ -59,7 +71,7 @@ export function BountiesTableClient({ bounties }: BountiesTableClientProps) {
             label: "Reward",
             sortable: true,
             render: (bounty) => (
-                <div className="flex items-center gap-1 font-semibold text-green-600">
+                <div className="flex items-center gap-1 font-semibold text-neon-primary">
                     <DollarSign className="h-4 w-4" />
                     RM {bounty.reward_amount.toLocaleString()}
                 </div>

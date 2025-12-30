@@ -38,7 +38,7 @@ export function BountyList({ bounties, filters, onClearFilters }: BountyListProp
                 {hasActiveFilters && (
                     <button
                         onClick={onClearFilters}
-                        className="text-cyan-400 hover:text-cyan-300 font-mono text-sm"
+                        className="text-neon-cyan hover:text-neon-cyan/80 font-mono text-sm"
                         data-testid="empty-state-clear-filters"
                     >
                         Clear filters
@@ -53,8 +53,8 @@ export function BountyList({ bounties, filters, onClearFilters }: BountyListProp
             {/* Active Bounties Section */}
             {activeBounties.length > 0 && (
                 <div className="mb-12" data-testid="active-bounties-section">
-                    <h2 className="text-xl font-bold font-mono text-cyan-400 mb-4 flex items-center gap-2">
-                        <div className="w-2 h-2 bg-cyan-400 animate-pulse"></div>
+                    <h2 className="text-xl font-bold font-mono text-neon-cyan mb-4 flex items-center gap-2">
+                        <div className="w-2 h-2 bg-neon-cyan animate-pulse"></div>
                         ACTIVE BOUNTIES
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -77,7 +77,7 @@ export function BountyList({ bounties, filters, onClearFilters }: BountyListProp
                             href="https://x.com/KrackedDevs"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-cyan-400 hover:text-cyan-300"
+                            className="text-neon-cyan hover:text-neon-cyan/80"
                         >
                             @KrackedDevs
                         </a>{" "}
@@ -89,7 +89,7 @@ export function BountyList({ bounties, filters, onClearFilters }: BountyListProp
             {/* Completed Bounties Section */}
             {completedBounties.length > 0 && (
                 <div className="mb-12" data-testid="completed-bounties-section">
-                    <h2 className="text-xl font-bold font-mono text-green-400 mb-4 flex items-center gap-2">
+                    <h2 className="text-xl font-bold font-mono text-neon-primary mb-4 flex items-center gap-2">
                         <CheckCircle className="w-5 h-5" />
                         COMPLETED BOUNTIES
                     </h2>

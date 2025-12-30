@@ -47,21 +47,21 @@ export function SubmissionsTableClient({ submissions, userId }: SubmissionsTable
         switch (status) {
             case "pending":
                 return (
-                    <Badge variant="secondary" className="gap-1">
+                    <Badge variant="outline" className="gap-1 bg-background" style={{ borderColor: 'var(--status-warning)', color: 'var(--status-warning)' }}>
                         <AlertCircle className="h-3 w-3" />
                         Pending
                     </Badge>
                 );
             case "approved":
                 return (
-                    <Badge variant="default" className="gap-1">
+                    <Badge className="gap-1 border" style={{ backgroundColor: 'var(--status-success)', borderColor: 'var(--status-success)', color: 'var(--background)' }}>
                         <CheckCircle className="h-3 w-3" />
                         Approved
                     </Badge>
                 );
             case "rejected":
                 return (
-                    <Badge variant="destructive" className="gap-1">
+                    <Badge className="gap-1 border" style={{ backgroundColor: 'var(--status-error)', borderColor: 'var(--status-error)', color: 'var(--background)' }}>
                         <XCircle className="h-3 w-3" />
                         Rejected
                     </Badge>
@@ -143,7 +143,7 @@ export function SubmissionsTableClient({ submissions, userId }: SubmissionsTable
                         href={submission.pullRequestUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-blue-500 hover:text-blue-400 flex items-center gap-1 mt-1"
+                        className="text-sm text-neon-cyan hover:text-neon-cyan/80 flex items-center gap-1 mt-1"
                     >
                         <GitPullRequest className="w-3 h-3" />
                         {submission.pullRequestUrl.replace("https://github.com/", "")}
@@ -156,13 +156,13 @@ export function SubmissionsTableClient({ submissions, userId }: SubmissionsTable
                     <div className="font-bold">{submission.bountyTitle}</div>
                     <div className="flex items-center justify-between">
                         {getStatusBadge(submission.status)}
-                        <span className="text-green-600 font-semibold">RM{submission.bountyReward}</span>
+                        <span className="text-neon-primary font-semibold">RM{submission.bountyReward}</span>
                     </div>
                     <a
                         href={submission.pullRequestUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-blue-500 hover:text-blue-400 flex items-center gap-1"
+                        className="text-sm text-neon-cyan hover:text-neon-cyan/80 flex items-center gap-1"
                     >
                         <GitPullRequest className="w-3 h-3" />
                         PR Link
@@ -176,7 +176,7 @@ export function SubmissionsTableClient({ submissions, userId }: SubmissionsTable
             label: "Reward",
             sortable: true,
             render: (submission) => (
-                <span className="font-semibold text-green-600">
+                <span className="font-semibold text-neon-primary">
                     RM{submission.bountyReward}
                 </span>
             ),
@@ -189,7 +189,7 @@ export function SubmissionsTableClient({ submissions, userId }: SubmissionsTable
                 <div className="space-y-1">
                     {getStatusBadge(submission.status)}
                     {submission.paymentRef && (
-                        <div className="text-xs text-green-600 flex items-center gap-1">
+                        <div className="text-xs text-neon-primary flex items-center gap-1">
                             <CreditCard className="w-3 h-3" />
                             Paid: {submission.paymentRef}
                         </div>

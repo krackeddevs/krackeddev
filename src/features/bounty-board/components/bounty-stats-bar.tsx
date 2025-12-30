@@ -19,8 +19,8 @@ export function BountyStatsBar({ stats }: BountyStatsBarProps) {
                     {stats.activeBounties}
                 </div>
             </div>
-            <div className="bg-card/50 border border-amber-500/30 p-4">
-                <div className="text-amber-500 font-mono text-sm">
+            <div className="bg-card/50 border border-rank-gold/30 p-4">
+                <div className="text-rank-gold font-mono text-sm">
                     Available Rewards
                 </div>
                 <div
@@ -39,8 +39,8 @@ export function BountyStatsBar({ stats }: BountyStatsBarProps) {
                     {stats.completedBounties}
                 </div>
             </div>
-            <div className="bg-card/50 border border-purple-500/30 p-4">
-                <div className="text-purple-500 font-mono text-sm">Total Paid</div>
+            <div className="bg-card/50 border border-neon-purple/30 p-4">
+                <div className="text-neon-purple font-mono text-sm">Total Paid</div>
                 <div className="text-2xl font-bold text-foreground" data-testid="total-paid">
                     RM{stats.totalPaid}
                 </div>

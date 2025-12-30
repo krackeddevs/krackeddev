@@ -25,26 +25,26 @@ export function AdminPageHeader({
         <div className="mb-8">
             {/* Breadcrumbs */}
             {breadcrumbs.length > 0 && (
-                <nav className="flex items-center gap-2 text-sm text-green-400/70 mb-4 overflow-x-auto font-mono">
+                <nav className="flex items-center gap-2 text-sm text-neon-primary/70 mb-4 overflow-x-auto font-mono">
                     <Link
                         href="/admin/dashboard"
-                        className="flex items-center gap-1 hover:text-green-400 transition-colors"
+                        className="flex items-center gap-1 hover:text-neon-primary transition-colors"
                     >
                         <Home className="w-4 h-4" />
                         <span className="hidden sm:inline">DASHBOARD</span>
                     </Link>
                     {breadcrumbs.map((crumb, index) => (
                         <div key={index} className="flex items-center gap-2">
-                            <ChevronRight className="w-4 h-4 flex-shrink-0 text-green-500/50" />
+                            <ChevronRight className="w-4 h-4 flex-shrink-0 text-neon-primary/50" />
                             {crumb.href ? (
                                 <Link
                                     href={crumb.href}
-                                    className="hover:text-green-400 transition-colors whitespace-nowrap uppercase"
+                                    className="hover:text-neon-primary transition-colors whitespace-nowrap uppercase"
                                 >
                                     {crumb.label}
                                 </Link>
                             ) : (
-                                <span className="text-green-400 font-medium whitespace-nowrap uppercase">
+                                <span className="text-neon-primary font-medium whitespace-nowrap uppercase">
                                     {crumb.label}
                                 </span>
                             )}
@@ -53,11 +53,11 @@ export function AdminPageHeader({
                 </nav>
             )}
 
-            {/* Header with green accent line */}
-            <div className="border-l-4 border-green-500 pl-4 mb-4">
+            {/* Header with neon accent line */}
+            <div className="border-l-4 border-neon-primary pl-4 mb-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight font-mono text-green-500 uppercase">
+                        <h1 className="text-3xl font-bold tracking-tight font-mono text-neon-primary uppercase">
                             {title}
                         </h1>
                         {description && (
@@ -73,7 +73,7 @@ export function AdminPageHeader({
             </div>
 
             {/* Decorative line */}
-            <div className="h-px bg-gradient-to-r from-green-500/50 via-green-500/20 to-transparent" />
+            <div className="h-px bg-gradient-to-r from-neon-primary/50 via-neon-primary/20 to-transparent" />
         </div>
     );
 }

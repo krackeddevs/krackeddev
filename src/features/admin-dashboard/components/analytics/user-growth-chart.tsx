@@ -74,8 +74,9 @@ export function UserGrowthChart({ data: initialData }: UserGrowthChartProps) {
                         <YAxis stroke="var(--muted-foreground)" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                         <Tooltip
-                            contentStyle={{ backgroundColor: 'var(--popover)', borderColor: 'var(--border)', color: 'var(--popover-foreground)' }}
+                            contentStyle={{ backgroundColor: 'var(--popover)', borderColor: 'var(--border)', color: 'var(--popover-foreground)', borderRadius: 'var(--radius)' }}
                             labelStyle={{ color: 'var(--muted-foreground)' }}
+                            itemStyle={{ color: 'var(--popover-foreground)' }}
                         />
                         <Area
                             type="monotone"

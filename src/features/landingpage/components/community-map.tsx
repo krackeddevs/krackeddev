@@ -78,12 +78,10 @@ export function CommunityMap() {
     return Math.max(...data.map((d) => d.value), 1);
   }, [data]);
 
-  const colorScale = useMemo(() => {
-    // Darker green for higher values
-    // Using base green (#22c55e) to dark green (#14532d)
-    return scaleLinear<string>()
+  const opacityScale = useMemo(() => {
+    return scaleLinear<number>()
       .domain([1, maxUsers])
-      .range(["#22c55e", "#14532d"]);
+      .range([0.4, 1]);
   }, [maxUsers]);
 
   const getStateValue = (index: number) => {
@@ -101,7 +99,7 @@ export function CommunityMap() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[400px]">
-        <div className="text-green-400 font-mono">Loading community data...</div>
+        <div className="text-neon-primary font-mono">Loading community data...</div>
       </div>
     );
   }
@@ -148,15 +146,23 @@ export function CommunityMap() {
             const isActive = val > 0;
             const isHovered = hoveredStateIndex === index;
 
-            // Determine fill color
-            let fill = "var(--muted)"; // default (inactive) uses CSS variable manually or via class if possible, but here we need string.
+            // Use opacity for intensity to support CSS variables (and B&W mode)
+            let fill = "var(--muted)";
+            let fillOpacity = 1;
+
             if (isActive) {
-              fill = colorScale(val);
+              fill = "var(--neon-primary)";
+              fillOpacity = opacityScale(val);
             }
 
-            // Hover logic
-            if (isHovered && !isActive) fill = "var(--accent)"; // lighter on hover
-            if (isHovered && isActive) fill = "#4ade80"; // highlight bright green on hover active
+            // Hover logic overrides
+            if (isHovered && !isActive) {
+              fill = "var(--accent)";
+            }
+            if (isHovered && isActive) {
+              fill = "var(--neon-primary)";
+              fillOpacity = 1; // max bright on hover
+            }
 
             return (
               <path
@@ -165,7 +171,7 @@ export function CommunityMap() {
                 fill={fill}
                 stroke={isHovered ? "var(--neon-primary)" : "var(--border)"}
                 strokeWidth={isHovered ? "2" : "1.5"}
-                fillOpacity={1} // Force solid opacity
+                fillOpacity={fillOpacity}
                 className="transition-all duration-200 cursor-pointer"
                 onMouseEnter={() => setHoveredStateIndex(index)}
                 onMouseLeave={() => setHoveredStateIndex(null)}
@@ -177,7 +183,7 @@ export function CommunityMap() {
         {/* Legend - increased z-index */}
         <div className="absolute bottom-4 left-4 z-20 flex items-center gap-4 text-xs font-mono text-muted-foreground p-2 bg-card border border-border rounded">
           <div className="flex items-center">
-            <span className="w-3 h-3 bg-green-500 inline-block mr-1 rounded-sm"></span>
+            <span className="w-3 h-3 bg-neon-primary inline-block mr-1 rounded-sm"></span>
             <span>Active</span>
           </div>
           <div className="flex items-center">

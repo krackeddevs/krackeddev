@@ -28,7 +28,7 @@ export default async function MembersPage() {
 
             {/* Tab Navigation */}
             <div className="flex items-center gap-4 mb-4">
-              <div className="flex items-center gap-2 px-4 py-2 bg-neon-primary/10 border-2 border-neon-primary text-neon-primary">
+              <div className="flex items-center gap-2 px-4 py-2 border-2 border-neon-primary/50 text-neon-primary bg-neon-primary/10 rounded-lg">
                 <Users className="w-4 h-4" />
                 <span className="font-mono text-sm">Members</span>
               </div>

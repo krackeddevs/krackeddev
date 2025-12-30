@@ -77,7 +77,13 @@ const Navbar = () => {
           <span className="relative font-mono text-xl font-bold tracking-tighter text-foreground group-hover:text-neon-primary transition-colors duration-300">
             &lt;Kracked Devs /&gt;
           </span>
-          <span className="text-[10px] font-bold px-1.5 py-0.5 bg-yellow-500 text-black rounded uppercase tracking-wider animate-flicker shadow-[0_0_10px_rgba(234,179,8,0.8)]">
+          <span
+            className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider animate-flicker shadow-[0_0_10px_rgba(234,179,8,0.8)]"
+            style={{
+              backgroundColor: 'var(--rank-gold)',
+              color: 'var(--background)'
+            }}
+          >
             Beta
           </span>
         </Link>
@@ -106,7 +112,7 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 asChild
-                className="py-2 h-auto w-auto px-2 sm:px-4 border border-yellow-500/50 hover:border-yellow-400 hover:bg-yellow-500/10 text-yellow-400"
+                className="py-2 h-auto w-auto px-2 sm:px-4 border border-rank-gold/50 hover:border-rank-gold hover:bg-rank-gold/10 text-rank-gold"
               >
                 <Link href="/admin/dashboard">
                   <Shield className="min-h-4 min-w-4 sm:mr-2" />

@@ -21,7 +21,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
         <div className="relative">
             {/* Banner */}
             {company.banner_url ? (
-                <div className="h-64 w-full overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600">
+                <div className="h-64 w-full overflow-hidden bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20">
                     <img
                         src={company.banner_url}
                         alt={`${company.name} banner`}
@@ -29,7 +29,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
                     />
                 </div>
             ) : (
-                <div className="h-64 w-full bg-gradient-to-r from-blue-500 to-purple-600" />
+                <div className="h-64 w-full bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20" />
             )}
 
             {/* Company Info Overlay */}
@@ -48,7 +48,7 @@ export function CompanyHeader({ company }: CompanyHeaderProps) {
                         <div className="flex items-center gap-2">
                             <h1 className="text-3xl font-bold">{company.name}</h1>
                             {company.is_verified && (
-                                <BadgeCheck className="h-6 w-6 text-blue-500" />
+                                <BadgeCheck className="h-6 w-6 text-neon-cyan" />
                             )}
                         </div>
 

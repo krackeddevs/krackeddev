@@ -155,7 +155,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     </p>
                     <button
                         onClick={() => router.push("/code/bounty")}
-                        className="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-mono"
+                        className="inline-flex items-center text-neon-cyan hover:text-neon-cyan/80 font-mono"
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Back to Bounty Board
@@ -192,10 +192,10 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     {/* Bounty Preview Card */}
                     <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-8 mb-8">
                         <div className="flex flex-wrap items-center gap-3 mb-4">
-                            <span className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 font-mono text-xs uppercase">
+                            <span className="px-3 py-1 bg-neon-cyan/20 border border-neon-cyan/50 text-neon-cyan font-mono text-xs uppercase">
                                 {bounty.status}
                             </span>
-                            <span className="text-2xl font-mono font-bold text-cyan-400">
+                            <span className="text-2xl font-mono font-bold text-rank-gold">
                                 RM{bounty.reward}
                             </span>
                         </div>
@@ -308,10 +308,10 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                     {canSubmit && (
                         <div className="mb-8">
                             <h2 className="text-lg font-mono text-foreground mb-4 flex items-center gap-2">
-                                <Link2 className="w-5 h-5 text-cyan-400" />
+                                <Link2 className="w-5 h-5 text-neon-cyan" />
                                 SUBMIT YOUR SOLUTION
                             </h2>
-                            <div className="bg-gray-800/50 border-2 border-cyan-500/30 p-6">
+                            <div className="bg-gray-800/50 border-2 border-neon-cyan/30 p-6">
                                 {submitted ? (
                                     <div className="text-center py-4">
                                         <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
@@ -353,7 +353,7 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
                                             <button
                                                 type="submit"
                                                 disabled={submitting}
-                                                className="bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-mono font-bold px-6 py-3 flex items-center gap-2 transition-colors"
+                                                className="bg-neon-cyan hover:bg-neon-cyan/90 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-mono font-bold px-6 py-3 flex items-center gap-2 transition-colors"
                                             >
                                                 {submitting ? (
                                                     <>
@@ -380,9 +380,9 @@ export default function BountyDetailClient({ slug }: BountyDetailClientProps) {
 
                     {/* Completed Notice */}
                     {bounty.status === "completed" && (
-                        <div className="mb-8 bg-green-500/10 border border-green-500/30 p-6 text-center">
-                            <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-3" />
-                            <div className="text-green-400 font-mono text-lg mb-2">
+                        <div className="mb-8 bg-neon-primary/10 border border-neon-primary/30 p-6 text-center">
+                            <CheckCircle className="w-8 h-8 text-neon-primary mx-auto mb-3" />
+                            <div className="text-neon-primary font-mono text-lg mb-2">
                                 This bounty has been completed!
                             </div>
                             <p className="text-gray-400 text-sm">

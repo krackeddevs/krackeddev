@@ -133,15 +133,15 @@ function StatItem({
 
     // Use theme-aware classes
     const colorClasses = {
-        orange: "text-orange-500 dark:text-orange-400",
-        yellow: "text-yellow-600 dark:text-yellow-400",
-        green: "text-green-600 dark:text-green-500"
+        orange: "text-rank-bronze",
+        yellow: "text-rank-gold",
+        green: "text-neon-primary"
     };
 
     const borderClasses = {
-        orange: "border-orange-500/30",
-        yellow: "border-yellow-500/30",
-        green: "border-green-500/30"
+        orange: "border-rank-bronze/30",
+        yellow: "border-rank-gold/30",
+        green: "border-neon-primary/30"
     };
 
     const glowStyle = glow ? {

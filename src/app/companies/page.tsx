@@ -55,7 +55,7 @@ export default async function CompaniesPage() {
                             <>
                                 <span className="hidden sm:inline text-muted-foreground/30">•</span>
                                 <div className="flex items-center gap-2">
-                                    <BadgeCheck className="h-4 w-4 text-blue-400" />
+                                    <BadgeCheck className="h-4 w-4 text-neon-cyan" />
                                     <span>{verifiedCount} verified</span>
                                 </div>
                             </>
@@ -97,7 +97,7 @@ export default async function CompaniesPage() {
                             >
                                 <div className="h-full border-2 border-border bg-card/40 backdrop-blur-sm rounded-lg p-6
                                     hover:border-neon-primary hover:bg-neon-primary/5 transition-all duration-300
-                                    hover:shadow-[0_0_30px_rgba(21,128,61,0.2)] hover:-translate-y-1">
+                                    hover:shadow-[0_0_30px_var(--neon-primary)] hover:-translate-y-1">
 
                                     {/* Company Logo & Name */}
                                     <div className="flex items-start gap-4 mb-4">
@@ -120,7 +120,7 @@ export default async function CompaniesPage() {
                                                     {company.name}
                                                 </h3>
                                                 {company.is_verified && (
-                                                    <BadgeCheck className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                                                    <BadgeCheck className="w-5 h-5 text-neon-cyan flex-shrink-0 mt-0.5" />
                                                 )}
                                             </div>
                                             {company.industry && (

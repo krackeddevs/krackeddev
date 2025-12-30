@@ -100,7 +100,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
 
                     {/* Dev Pulse Visualization - Main Column */}
                     {pulseData && (
-                        <div className="border border-border rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_rgba(34,197,94,0.05)]">
+                        <div className="border border-border rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_var(--neon-primary)]">
                             <DevPulse data={pulseData} />
                         </div>
                     )}

@@ -77,7 +77,7 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
 
                 {/* Reward Badge */}
                 <div
-                    className="mt-6 inline-block bg-yellow-500 text-black px-6 py-3 font-mono font-bold text-2xl"
+                    className="mt-6 inline-block bg-rank-gold text-black px-6 py-3 font-mono font-bold text-2xl"
                     data-testid="reward-badge"
                 >
                     RM{bounty.reward}
@@ -97,18 +97,18 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
                 <div className="bg-card/30 border border-border p-4">
                     <div className="flex items-center gap-3">
                         <Clock
-                            className={`w-5 h-5 ${isDeadlinePassed ? "text-red-500" : "text-muted-foreground"}`}
+                            className={`w-5 h-5 ${isDeadlinePassed ? "text-destructive" : "text-muted-foreground"}`}
                         />
                         <div>
                             <div className="text-muted-foreground text-xs font-mono">DEADLINE</div>
                             <div
-                                className={`font-mono text-sm ${isDeadlinePassed ? "text-red-400" : "text-foreground"}`}
+                                className={`font-mono text-sm ${isDeadlinePassed ? "text-destructive" : "text-foreground"}`}
                                 data-testid="deadline"
                             >
                                 {formatDeadline(bounty.deadline)}
                             </div>
                             {isDeadlinePassed && (
-                                <span className="text-red-400 text-xs font-mono">
+                                <span className="text-destructive text-xs font-mono">
                                     (Deadline passed)
                                 </span>
                             )}
@@ -119,7 +119,7 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
                 {/* Reward */}
                 <div className="bg-card/30 border border-border p-4">
                     <div className="flex items-center gap-3">
-                        <Trophy className="w-5 h-5 text-yellow-500" />
+                        <Trophy className="w-5 h-5 text-rank-gold" />
                         <div>
                             <div className="text-muted-foreground text-xs font-mono">REWARD</div>
                             <div className="text-foreground font-mono">RM{bounty.reward}</div>
@@ -162,7 +162,7 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
                     <div className="bg-card/30 border border-border p-6 space-y-3">
                         {bounty.requirements.map((req, index) => (
                             <div key={index} className="flex items-start gap-3">
-                                <div className="w-6 h-6 bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center text-cyan-400 font-mono text-xs shrink-0">
+                                <div className="w-6 h-6 bg-neon-cyan/20 border border-neon-cyan/50 flex items-center justify-center text-neon-cyan font-mono text-xs shrink-0">
                                     {index + 1}
                                 </div>
                                 <span className="text-muted-foreground">{req}</span>
@@ -239,7 +239,7 @@ export function BountyDetail({ bounty, children }: BountyDetailProps) {
                 </Link>
                 <Link
                     href="/code"
-                    className="text-cyan-400 hover:text-cyan-300 font-mono text-sm"
+                    className="text-neon-cyan hover:text-neon-cyan/80 font-mono text-sm"
                 >
                     Back to Code Hub
                 </Link>

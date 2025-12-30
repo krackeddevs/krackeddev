@@ -65,27 +65,46 @@ export function TopHuntersList({ hunters }: TopHuntersListProps) {
                         // Find original rank
                         const originalRank = hunters.findIndex(h => h.id === hunter.id);
 
+                        // Determine semantic styles based on rank
+                        let rankStyle: React.CSSProperties = {};
+                        if (originalRank === 0) {
+                            rankStyle = {
+                                borderColor: 'var(--rank-gold)',
+                                backgroundColor: 'var(--rank-gold-bg)',
+                                color: 'var(--rank-gold)'
+                            };
+                        } else if (originalRank === 1) {
+                            rankStyle = {
+                                borderColor: 'var(--rank-silver)',
+                                backgroundColor: 'var(--rank-silver-bg)',
+                                color: 'var(--rank-silver)'
+                            };
+                        } else if (originalRank === 2) {
+                            rankStyle = {
+                                borderColor: 'var(--rank-bronze)',
+                                backgroundColor: 'var(--rank-bronze-bg)',
+                                color: 'var(--rank-bronze)'
+                            };
+                        }
+
+                        // Determine container border style
+                        const containerStyle = (originalRank <= 2) ? { borderColor: originalRank === 0 ? 'var(--rank-gold)' : originalRank === 1 ? 'var(--rank-silver)' : 'var(--rank-bronze)' } : {};
+
                         return (
                             <Link
                                 key={hunter.id}
                                 href={`/profile/${hunter.username}`}
                                 className="block group"
                             >
-                                <div className={`
-                                    flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-card/40 backdrop-blur-sm border transition-all hover:border-neon-primary hover:bg-neon-primary/5 group-hover:-translate-y-1 rounded-xl
-                                    ${originalRank === 0 ? "border-amber-500/50" :
-                                        originalRank === 1 ? "border-slate-400/50 dark:border-gray-500/50" :
-                                            originalRank === 2 ? "border-orange-600/50 dark:border-orange-700/50" :
-                                                "border-border"}
-                                `}>
+                                <div
+                                    className={`flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-card/40 backdrop-blur-sm border transition-all hover:border-neon-primary hover:bg-neon-primary/5 group-hover:-translate-y-1 rounded-xl ${originalRank > 2 ? 'border-border' : ''}`}
+                                    style={originalRank <= 2 ? { ...containerStyle, borderColor: `${containerStyle.borderColor}80` } : {}}
+                                >
                                     {/* Rank */}
-                                    <div className={`
-                                        w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-mono font-bold text-sm sm:text-lg shrink-0 rounded-lg
-                                        ${originalRank === 0 ? "bg-amber-500/10 text-amber-600 border border-amber-500 dark:bg-amber-500/20 dark:text-amber-400" :
-                                            originalRank === 1 ? "bg-slate-200/50 text-slate-700 border border-slate-400 dark:bg-gray-500/20 dark:text-gray-300 dark:border-gray-500" :
-                                                originalRank === 2 ? "bg-orange-100/50 text-orange-700 border border-orange-600 dark:bg-orange-700/20 dark:text-orange-400 dark:border-orange-700" :
-                                                    "bg-muted/50 text-muted-foreground border border-border"}
-                                    `}>
+                                    <div
+                                        className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-mono font-bold text-sm sm:text-lg shrink-0 rounded-lg ${originalRank > 2 ? 'bg-muted/50 text-muted-foreground border border-border' : 'border'}`}
+                                        style={originalRank <= 2 ? rankStyle : {}}
+                                    >
                                         #{originalRank + 1}
                                     </div>
 
@@ -123,7 +142,10 @@ export function TopHuntersList({ hunters }: TopHuntersListProps) {
                                     {/* Stats - Vertical stack on mobile, horizontal on desktop */}
                                     <div className="flex flex-col items-end gap-1 sm:flex-row sm:items-center sm:gap-6 shrink-0">
                                         <div className="text-right sm:text-center">
-                                            <div className="flex items-center justify-end sm:justify-center gap-1 text-amber-600 dark:text-amber-400">
+                                            <div
+                                                className={`flex items-center justify-end sm:justify-center gap-1 ${originalRank <= 2 ? '' : 'text-foreground'}`}
+                                                style={originalRank <= 2 ? { color: rankStyle.color } : {}}
+                                            >
                                                 <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
                                                 <span className="font-mono font-bold text-sm sm:text-base">{hunter.totalWins}</span>
                                             </div>

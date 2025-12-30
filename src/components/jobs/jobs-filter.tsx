@@ -80,7 +80,7 @@ export function JobsFilter() {
           )}
         </div>
         <Button
-          className="bg-card text-neon-cyan border border-neon-cyan/50 hover:bg-neon-cyan hover:text-black h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_20px_rgba(0,255,255,0.4)]"
+          className="bg-card text-neon-cyan border border-neon-cyan/50 hover:bg-neon-cyan hover:text-black h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm transition-all shadow-[0_0_10px_var(--neon-cyan)] hover:shadow-[0_0_20px_var(--neon-cyan)]"
           variant="default"
           onClick={handleSearch}
         >
@@ -104,7 +104,7 @@ export function JobsFilter() {
                 className={cn(
                   "bg-card/50 border-border text-muted-foreground hover:text-neon-cyan hover:border-neon-cyan/50 hover:bg-neon-cyan/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   location &&
-                  "text-neon-cyan border-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_rgba(0,255,255,0.1)]"
+                  "text-neon-cyan border-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_var(--neon-cyan)]"
                 )}
               >
                 <MapPin className="w-3 h-3 md:w-4 md:h-4" />
@@ -166,7 +166,7 @@ export function JobsFilter() {
                 className={cn(
                   "bg-card/50 border-border text-muted-foreground hover:text-neon-purple hover:border-neon-purple/50 hover:bg-neon-purple/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   type &&
-                  "text-neon-purple border-neon-purple bg-neon-purple/10 shadow-[0_0_10px_rgba(180,0,255,0.1)]"
+                  "text-neon-purple border-neon-purple bg-neon-purple/10 shadow-[0_0_10px_var(--neon-purple)]"
                 )}
               >
                 <Briefcase className="w-3 h-3 md:w-4 md:h-4" />
@@ -228,7 +228,7 @@ export function JobsFilter() {
                 className={cn(
                   "bg-card/50 border-border text-muted-foreground hover:text-neon-lime hover:border-neon-lime/50 hover:bg-neon-lime/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   (salaryMin || 0) > 0 &&
-                  "text-neon-lime border-neon-lime bg-neon-lime/10 shadow-[0_0_10px_rgba(0,255,0,0.1)]"
+                  "text-neon-lime border-neon-lime bg-neon-lime/10 shadow-[0_0_10px_var(--neon-lime)]"
                 )}
               >
                 <DollarSign className="w-3 h-3 md:w-4 md:h-4" />

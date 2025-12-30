@@ -18,7 +18,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
                 className={`
                     relative p-6 border-2 transition-all duration-300 cursor-pointer h-full backdrop-blur-sm flex flex-col justify-between group hover:-translate-y-1
                     ${isRare
-                        ? "bg-card/40 border-amber-500/50 hover:border-amber-500 hover:bg-amber-500/5 hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]"
+                        ? "bg-card/40 border-rank-gold/50 hover:border-rank-gold hover:bg-rank-gold/5 hover:shadow-[0_0_30px_var(--rank-gold)]"
                         : isActive
                             ? "bg-card/40 border-neon-cyan/50 hover:border-neon-cyan hover:bg-neon-cyan/5 hover:shadow-[0_0_30px_var(--neon-cyan)]"
                             : isCompleted
@@ -36,7 +36,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
                 {/* Rarity Badge */}
                 {isRare && (
                     <div
-                        className="absolute -top-3 left-12 px-2 py-0.5 font-mono text-xs bg-amber-500/20 text-amber-400 border border-amber-500/50"
+                        className="absolute -top-3 left-12 px-2 py-0.5 font-mono text-xs bg-rank-gold/20 text-rank-gold border border-rank-gold/50"
                         data-testid="rarity-badge"
                     >
                         🔥 RARE
@@ -45,7 +45,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
 
                 {/* Reward Badge */}
                 <div
-                    className={`absolute -top-3 -right-3 px-3 py-1 font-mono text-sm font-bold ${isCompleted ? "bg-green-500 text-black" : "bg-yellow-500 text-black"
+                    className={`absolute -top-3 -right-3 px-3 py-1 font-mono text-sm font-bold ${isCompleted ? "bg-neon-primary text-black" : "bg-rank-gold text-black"
                         }`}
                     data-testid="reward-badge"
                 >
@@ -69,11 +69,11 @@ export function BountyCard({ bounty }: BountyCardProps) {
                     {/* Winner Badge for completed bounties */}
                     {isCompleted && bounty.winner && (
                         <div
-                            className="flex items-center gap-2 bg-green-500/10 border border-green-500/30 px-3 py-2"
+                            className="flex items-center gap-2 bg-neon-primary/10 border border-neon-primary/30 px-3 py-2"
                             data-testid="winner-badge"
                         >
-                            <Trophy className="w-4 h-4 text-yellow-500" />
-                            <span className="text-green-400 font-mono text-sm">Winner:</span>
+                            <Trophy className="w-4 h-4 text-rank-gold" />
+                            <span className="text-neon-primary font-mono text-sm">Winner:</span>
                             <span className="text-foreground font-mono text-sm">
                                 {bounty.winner.xHandle ? `@${bounty.winner.xHandle}` : bounty.winner.name}
                             </span>

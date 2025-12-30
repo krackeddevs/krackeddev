@@ -35,15 +35,29 @@ export default async function LeaderboardPage() {
                                 <Users className="w-4 h-4" />
                                 <span className="font-mono text-sm">Members</span>
                             </Link>
-                            <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 border-2 border-amber-500 text-amber-600 dark:text-amber-400 rounded-lg">
+                            <div
+                                className="flex items-center gap-2 px-4 py-2 border-2 rounded-lg"
+                                style={{
+                                    borderColor: 'var(--rank-gold)',
+                                    backgroundColor: 'var(--rank-gold-bg)',
+                                    color: 'var(--rank-gold)'
+                                }}
+                            >
                                 <Trophy className="w-4 h-4" />
                                 <span className="font-mono text-sm">Leaderboard</span>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-amber-500/10 border-2 border-amber-500 flex items-center justify-center rounded-xl">
-                                <Trophy className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                            <div
+                                className="w-12 h-12 border-2 flex items-center justify-center rounded-xl"
+                                style={{
+                                    borderColor: 'var(--rank-gold)',
+                                    backgroundColor: 'var(--rank-gold-bg)',
+                                    color: 'var(--rank-gold)'
+                                }}
+                            >
+                                <Trophy className="w-6 h-6" />
                             </div>
                             <div>
                                 <h1 className="text-2xl font-bold font-mono text-foreground">

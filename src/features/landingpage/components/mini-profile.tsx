@@ -65,7 +65,7 @@ export function MiniProfile({ data, className }: MiniProfileProps) {
                 <div className="grid grid-cols-3 gap-2 border-t border-border pt-4 w-full">
                     {/* Level */}
                     <div className="flex flex-col items-center p-2 rounded transition-colors hover:bg-muted/10">
-                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-neon-cyan whitespace-nowrap">
                             <Globe className="h-3 w-3" />
                             <span>Lvl {data.level}</span>
                         </div>
@@ -74,7 +74,7 @@ export function MiniProfile({ data, className }: MiniProfileProps) {
 
                     {/* Wins */}
                     <div className="flex flex-col items-center p-2 rounded transition-colors hover:bg-muted/10">
-                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-yellow-600 dark:text-yellow-400 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-rank-gold whitespace-nowrap">
                             <Trophy className="h-3 w-3" />
                             <span>{data.bounties_won}</span>
                         </div>
@@ -83,8 +83,8 @@ export function MiniProfile({ data, className }: MiniProfileProps) {
 
                     {/* Streak */}
                     <div className="flex flex-col items-center p-2 rounded transition-colors hover:bg-muted/10">
-                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-orange-600 dark:text-orange-400 whitespace-nowrap">
-                            <Zap className="h-3 w-3 text-orange-600 dark:text-orange-400 fill-orange-600 dark:fill-orange-400" />
+                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-rank-bronze whitespace-nowrap">
+                            <Zap className="h-3 w-3 text-rank-bronze fill-rank-bronze" />
                             <span>{data.current_streak}</span>
                         </div>
                         <span className="text-[9px] text-muted-foreground uppercase tracking-wider whitespace-nowrap">Streak</span>

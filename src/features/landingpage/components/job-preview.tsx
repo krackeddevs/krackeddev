@@ -68,13 +68,13 @@ export function JobPreview() {
                     className={`px-2 py-1 text-xs font-mono border ${bounty.status === "open"
                       ? "border-neon-primary text-neon-primary bg-neon-primary/10"
                       : bounty.status === "completed"
-                        ? "border-blue-500 text-blue-400 bg-blue-900/20"
+                        ? "border-neon-cyan text-neon-cyan bg-neon-cyan/20"
                         : "border-muted text-muted-foreground"
                       }`}
                   >
                     {bounty.status.toUpperCase()}
                   </span>
-                  <span className="font-mono font-bold text-yellow-500">
+                  <span className="font-mono font-bold text-rank-gold">
                     RM{bounty.rewardAmount || (bounty as any).reward_amount}
                   </span>
                 </div>
