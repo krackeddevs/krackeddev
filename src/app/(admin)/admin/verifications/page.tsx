@@ -2,6 +2,8 @@ import { getAllVerificationRequests } from "@/features/companies/verification/ad
 import { AdminPageHeader } from "@/features/admin-dashboard/components/admin-page-header";
 import { VerificationsTableClient } from "@/features/companies/verification/components/verifications-table-client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminVerificationsPage() {
     const rawRequests = await getAllVerificationRequests();
 
