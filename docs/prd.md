@@ -314,13 +314,47 @@ Kracked Devs is a **Hybrid Web Application**:
 * **FR-LAND-04 (Brand CTA):** A prominent section inviting Companies to "Post a Rare Bounty" or "Hiring?" linking to the concierge form.
 * **FR-LAND-05 (Job Preview):** Display a dynamic list of the 3 most recent "Active" Job Openings (if any).
 
-### FR Area 1b: Community & Communication
+### FR Area 1b: Community Platform (Epic 11)
 
-* **FR-CHAT-01 (Realtime):** Implement `TownhallChat` component using Supabase Realtime subscription to a `messages` table.
-* **FR-QA-01 (Question CRUD):** Auth users can Create, Read, Update Questions.
-* **FR-QA-02 (Answer Logic):** Auth users can submit answers.
-* **FR-QA-03 (Acceptance):** Question Author can toggle `is_accepted` on one Answer.
-* **FR-QA-04 (Ranking):** Questions/Answers sorted by `upvotes` descending.
+**Townhall Chat (Synchronous Communication):**
+
+* **FR-CHAT-01 (Chat Overlay):** Implement floating chat overlay (bottom-right) that persists across all pages using Supabase Realtime.
+* **FR-CHAT-02 (Multi-Channel):** Support multiple chat channels: `#general`, `#bounty-hunting`, `#looking-for-group`.
+* **FR-CHAT-03 (Presence):** Display online user count using Supabase Presence tracking.
+* **FR-CHAT-04 (Message History):** Store and display last 50 messages per channel with pagination.
+* **FR-CHAT-05 (Rate Limiting):** Enforce 1 message per 2 seconds per user to prevent spam.
+
+**Community Q&A (Asynchronous Knowledge Base):**
+
+* **FR-QA-01 (Question CRUD):** Authenticated users can Create, Read, Update, and Delete their own questions with Title, Body (Markdown), and Tags.
+* **FR-QA-02 (Answer Logic):** Authenticated users can submit answers to any question with Markdown support.
+* **FR-QA-03 (Accepted Answer):** Question author can mark one answer as "Accepted" which moves it to the top and grants XP.
+* **FR-QA-04 (Voting System):** Users can upvote/downvote questions and answers (permissions based on XP level).
+* **FR-QA-05 (Tagging System):** Questions must include at least one tag from a predefined list (e.g., `react`, `nextjs`, `supabase`).
+* **FR-QA-06 (Search):** Full-text search across questions by title, body, and tags.
+* **FR-QA-07 (View Tracking):** Track and display view count for each question.
+
+**Gamification Integration:**
+
+* **FR-COMM-01 (XP Rewards):** Award XP for community actions:
+  * Ask Question: +10 XP (max 3/day)
+  * Post Answer: +20 XP (max 5/day)
+  * Answer Accepted: +100 XP (no limit)
+  * Accept an Answer: +20 XP (incentivize closing loops)
+  * Get Upvoted: +5 XP (no limit)
+* **FR-COMM-02 (Reputation Tiers):** Unlock features at XP milestones:
+  * Lvl 5: Access to `#bounty-hunting` chat
+  * Lvl 10: Can downvote content
+  * Lvl 20: Can flag messages for moderation ("Sheriff" badge)
+  * Lvl 50: Can edit others' tags
+
+**Moderation & Safety:**
+
+* **FR-MOD-01 (Report System):** Users can flag inappropriate messages/questions/answers with reason.
+* **FR-MOD-02 (Auto-hide):** Content with 3+ flags auto-hides pending admin review.
+* **FR-MOD-03 (Admin Queue):** Admins have moderation queue to review flagged content.
+* **FR-MOD-04 (User Actions):** Admins can Warn, Timeout (24h), or Perma-ban users from community features.
+* **FR-MOD-05 (Profanity Filter):** Auto-block common slurs/profanity in chat and Q&A content.
 
 ### FR Area 2: User Profiles (The "CV")
 
@@ -372,3 +406,12 @@ Kracked Devs is a **Hybrid Web Application**:
 
 * **Uptime:** 99.9% availability for the Public Job Board (Standard Cloud/Vercel SLA).
 * **Game Stability:** The embedded game must gracefully handle mobile browser resizing without crashing.
+
+### Community Platform
+
+* **NFR-COMM-01 (Realtime Latency):** Chat messages must appear to all users within 500ms of send.
+* **NFR-COMM-02 (Concurrent Connections):** Support minimum 500 concurrent realtime connections (Supabase Pro tier limit).
+* **NFR-COMM-03 (Message Retention):** Chat history retention of 7 days minimum for performance, with optional archival.
+* **NFR-COMM-04 (Search Performance):** Q&A full-text search must return results within 300ms for up to 10,000 questions.
+* **NFR-COMM-05 (Content Safety):** All user-generated content must be filtered for profanity and stored with moderation audit trail.
+* **NFR-COMM-06 (Rate Limit Enforcement):** Hard rate limits enforced server-side with appropriate error messages.
