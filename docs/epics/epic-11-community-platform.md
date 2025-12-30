@@ -18,6 +18,10 @@ Currently, KrackedDevs is a "single-player" experience (find job -> submit). Epi
 | **FR-MOD-01 to 05** | Trust & Safety (Moderation) | Story 11.5 |
 | **NFR-COMM-01 to 06** | Performance & Scale | Distributed across Stories |
 
+## Dependencies
+- **Epic 8 (Player XP & Leveling)**: Critical for Story 11.4 (Gamification). The `xp_events` table and level calculation logic MUST be in place.
+- **Epic 7 (Contribution Stats)**: Reused for profile stats.
+
 ## Story Breakdown
 
 ### STORY-11.0: Community Platform Foundation

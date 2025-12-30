@@ -5,7 +5,8 @@
 **So that** I am motivated to provide high-quality answers.
 
 ## Context
-Gamification is the engine of the "Guild". Users earn XP for valuable actions. The critical loop is Asking -> Answering -> Accepting. Accepted answers provide the most value to the knowledge base, so they are rewarded heavily.
+Gamification is the engine of the "Guild". Users earn XP for valuable actions. The critical loop is Asking -> Answering -> Accepting.
+**DEPENDENCY ALERT**: This story builds upon the XP Infrastructure defined in **Epic 8 (Player XP & Leveling)**. We must use the `xp_events` table and `award_xp` logic established there. Do NOT create a separate ledger.
 
 ## Acceptance Criteria
 
@@ -37,22 +38,20 @@ Gamification is the engine of the "Guild". Users earn XP for valuable actions. T
         - You receive an upvote (maybe batch these? "10 people upvoted...").
 
 ### Database Schema
-- [ ] **Update `profiles`**:
-    - Add `xp` (integer, default 0).
-    - Add `level` (integer, default 0).
-    - Add `reputation_tier` (text, computed).
-- [ ] **Create `xp_ledger`**:
-    - `id`, `user_id`, `amount`, `action_type`, `resource_id` (fk to question/answer), `created_at`.
+- [ ] **Extend `xp_events` (from Epic 8)**:
+    - Add new `event_types`: `ask_question`, `answer_question`, `answer_accepted`, `upvote_received`.
+    - Ensure `metadata` column can store `question_id` or `answer_id`.
+- [ ] **Profiles Table**:
+    - Ensure `xp` and `level` columns exist (should be done in Story 8.1).
 
 ---
 
 ## Tasks/Subtasks
 
-### Task 1: Database Logic
-- [ ] Create `xp_ledger` table.
-- [ ] Add columns to `profiles`.
-- [ ] Write PostgreSQL function `award_xp` to handle math + level calc safely.
-- [ ] Write Trigger for `is_accepted` updates -> call `award_xp`.
+### Task 1: XP Integration
+- [ ] Verify `xp_events` table exists (Epic 8.1).
+- [ ] Update `award_xp` function (or equivalent service) to handle new Community event types.
+- [ ] Implement database trigger (or service logic) for `is_accepted` -> `award_xp`.
 
 ### Task 2: Server Actions
 - [ ] `acceptAnswer(questionId, answerId)`:
