@@ -34,11 +34,11 @@ export default function JobsPage() {
   return (
     <main className="min-h-screen pt-32 pb-16">
       <div className="container mx-auto px-4 space-y-12">
-        <div className="space-y-4">
+        <div className="space-y-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold font-mono text-foreground tracking-tight">
             Job Board
           </h1>
-          <p className="text-muted-foreground font-mono text-lg max-w-2xl">
+          <p className="text-muted-foreground font-mono text-lg max-w-2xl mx-auto">
             Find your next role in the Malaysian tech ecosystem.
             <br className="hidden md:block" />
             Curated opportunities for developers, by developers.

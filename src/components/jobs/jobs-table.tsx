@@ -7,18 +7,21 @@ import {
 } from "@tanstack/react-table";
 import { useJobs } from "@/lib/hooks/jobs/use-jobs";
 import { columns } from "./columns";
-import { useInView } from "react-intersection-observer";
-import { useEffect, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryStates } from "nuqs";
 import { jobSearchParams } from "@/lib/search-params";
 import { differenceInHours } from "date-fns";
+import { Pagination } from "./pagination";
+
+const JOBS_PER_PAGE = 20;
 
 export function JobsTable() {
   const router = useRouter();
   const [filters] = useQueryStates(jobSearchParams);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  const { data, isLoading } =
     useJobs({
       search: filters.search || "",
       location: filters.location || "",
@@ -26,25 +29,28 @@ export function JobsTable() {
       salaryMin: filters.salaryMin || 0,
     });
 
-  const { ref, inView } = useInView();
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, fetchNextPage]);
-
-  // Flatten the pages into a single array of jobs
-  const flatData = useMemo(
+  // Flatten all pages
+  const allJobs = useMemo(
     () => data?.pages.flatMap((page) => page.data) ?? [],
     [data]
   );
 
+  // Calculate pagination
+  const totalPages = Math.ceil(allJobs.length / JOBS_PER_PAGE);
+  const startIndex = (currentPage - 1) * JOBS_PER_PAGE;
+  const endIndex = startIndex + JOBS_PER_PAGE;
+  const currentJobs = allJobs.slice(startIndex, endIndex);
+
   const table = useReactTable({
-    data: flatData,
+    data: currentJobs,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (isLoading) {
     return (
@@ -78,7 +84,6 @@ export function JobsTable() {
               ))}
             </thead>
             <tbody className="divide-y divide-border/50">
-              {/* TODO: Add empty state */}
               {table.getRowModel().rows.length === 0 && (
                 <tr>
                   <td
@@ -115,12 +120,12 @@ export function JobsTable() {
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
-        {flatData.length === 0 && !isLoading && (
+        {currentJobs.length === 0 && !isLoading && (
           <div className="text-center text-muted-foreground py-12 border border-dashed border-border rounded-sm font-mono text-sm">
             No signals detected.
           </div>
         )}
-        {flatData.map((job, i) => {
+        {currentJobs.map((job, i) => {
           const formatSalary = () => {
             const min = job.salaryMin;
             const max = job.salaryMax;
@@ -183,17 +188,15 @@ export function JobsTable() {
         })}
       </div>
 
-      {/* Infinite Scroll Trigger */}
-      <div
-        ref={ref}
-        className="py-4 text-center text-muted-foreground font-mono text-xs uppercase tracking-widest"
-      >
-        {isFetchingNextPage
-          ? "Loading more..."
-          : hasNextPage
-            ? "Scroll for more"
-            : "End of results"}
-      </div>
+      {/* Pagination Controls */}
+      {allJobs.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          isLoading={isLoading}
+        />
+      )}
     </div>
   );
 }

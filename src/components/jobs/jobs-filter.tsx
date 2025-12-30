@@ -51,9 +51,9 @@ export function JobsFilter() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-4xl mx-auto">
       {/* Search Bar */}
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-center">
         <div className="relative w-full max-w-sm group">
           <Input
             placeholder="Frontend Engineer..."
@@ -64,7 +64,8 @@ export function JobsFilter() {
                 handleSearch();
               }
             }}
-            className="bg-input border-border text-foreground placeholder:text-muted-foreground pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-neon-cyan transition-all group-hover:border-foreground/50"
+            className="bg-background/80 border-border text-foreground placeholder:text-muted-foreground pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-neon-cyan transition-all group-hover:border-foreground/50 [color-scheme:dark]"
+            style={{ color: 'hsl(var(--foreground))' }}
           />
           {localSearch && (
             <button
@@ -90,7 +91,7 @@ export function JobsFilter() {
       </div>
 
       {/* Filter Buttons */}
-      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 text-sm font-mono">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-3 md:gap-4 text-sm font-mono">
         <span className="text-muted-foreground uppercase tracking-wider text-xs">
           // Filter by
         </span>
