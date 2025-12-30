@@ -49,12 +49,8 @@ export default function CodePage() {
   };
 
   return (
-<<<<<<< HEAD
-    <main className="min-h-screen w-full bg-gray-900 relative">
-=======
     <main className="min-h-screen w-full relative">
       <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
->>>>>>> epic/9-jobs-platform-v2
       <CodeHubScene onBack={handleBack} onNavigate={handleNavigate} />
     </main>
   );

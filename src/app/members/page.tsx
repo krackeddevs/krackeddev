@@ -12,12 +12,8 @@ export default async function MembersPage() {
   const { data: members, error } = await fetchAllMembers(100);
 
   return (
-<<<<<<< HEAD
-    <main className="min-h-screen bg-gray-900">
-=======
     <main className="min-h-screen">
       <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
->>>>>>> epic/9-jobs-platform-v2
       <div className="relative z-10">
         {/* Header */}
         <div className="bg-card/50 border-b border-border">

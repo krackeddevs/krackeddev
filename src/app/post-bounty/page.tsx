@@ -37,18 +37,11 @@ export default function PostBountyPage() {
 
     if (submitted) {
         return (
-<<<<<<< HEAD
-            <main className="min-h-screen bg-black text-green-500 font-mono flex flex-col items-center justify-center p-4 relative overflow-hidden">
-                <div className="max-w-md w-full border border-green-500/50 p-8 bg-black/80 backdrop-blur relative z-10 text-center">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-green-500 shadow-[0_0_10px_#00ff00]" />
-                    <Terminal className="w-16 h-16 mx-auto mb-6 text-green-400" />
-=======
             <main className="min-h-screen bg-background text-neon-primary font-mono flex flex-col items-center justify-center p-4 relative overflow-hidden">
                 <div className="scanlines fixed inset-0 pointer-events-none z-50 opacity-50" />
                 <div className="max-w-md w-full border border-neon-primary/50 p-8 bg-background/80 backdrop-blur relative z-10 text-center">
                     <div className="absolute top-0 left-0 w-full h-1 bg-neon-primary shadow-[0_0_10px_var(--neon-primary)]" />
                     <Terminal className="w-16 h-16 mx-auto mb-6 text-neon-primary" />
->>>>>>> epic/9-jobs-platform-v2
                     <h1 className="text-2xl font-bold mb-4 tracking-wider">PROTOCOL INITIATED</h1>
                     <p className="text-sm mb-6 text-neon-primary/80">
                         Transmission received. Our agents will analyze your mission parameters and establish an encrypted uplink shortly.
@@ -65,14 +58,10 @@ export default function PostBountyPage() {
     }
 
     return (
-<<<<<<< HEAD
-        <main className="min-h-screen bg-black text-gray-300 font-mono relative overflow-hidden">
-=======
         <main className="min-h-screen bg-background text-muted-foreground font-mono relative overflow-hidden">
             {/* CRT Overlay */}
             <div className="scanlines fixed inset-0 pointer-events-none z-50 opacity-30 h-screen" />
 
->>>>>>> epic/9-jobs-platform-v2
             {/* Background Grid - Reduced Opacity */}
             <div className="fixed inset-0 pointer-events-none opacity-10"
                 style={{
