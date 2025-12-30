@@ -33,6 +33,7 @@ As the community grows, spam and toxicity are inevitable. We need a distributed 
     - `id`, `flagger_id`, `resource_id`, `resource_type` ('chat', 'question', 'answer'), `reason`, `status`.
 - [ ] **Update Content Tables**:
     - Add `moderation_status` column ('published', 'flagged', 'hidden', 'deleted') to `messages`, `questions`, `answers`.
+    - **RLS Policy**: Update `SELECT` policies for all content tables to exclude `status = 'hidden'` unless `auth.uid() = author_id` OR `auth.jwt() ->> 'role' = 'admin'`.
 
 ---
 

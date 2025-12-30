@@ -43,6 +43,9 @@ Gamification is the engine of the "Guild". Users earn XP for valuable actions. T
     - Ensure `metadata` column can store `question_id` or `answer_id`.
 - [ ] **Profiles Table**:
     - Ensure `xp` and `level` columns exist (should be done in Story 8.1).
+- [ ] **Data Integrity**:
+    - Create UNIQUE INDEX on `answers (question_id)` WHERE `is_accepted = true`.
+    - This creates a hard DB constraint preventing multiple accepted answers (race condition proof).
 
 ---
 

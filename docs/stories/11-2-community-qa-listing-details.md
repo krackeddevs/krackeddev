@@ -75,7 +75,9 @@ The core of the knowledge base is the "Stack Overflow-style" Q&A forum. This sto
 ---
 
 ## Architectural Constraints & Performance
-- **Search Strategy**: MVP uses ILIKE or `websearch_to_tsquery`. If `questions` table > 10k rows, migrate to dedicated Search Service or pre-computed `tsvector` column.
+- **Search Strategy**: MUST use Postgres `tsvector` and `tsquery`. Do NOT use `ILIKE` on body text as it cannot scale.
+    - Create a generated column `search_vector` on `questions`.
+    - Use `websearch_to_tsquery` for user-friendly query parsing.
 - **Caching**: Question Detail page is high-read. Ensure Next.js `ISR` (Incremental Static Regeneration) or aggressive caching headers `Cache-Control: public, max-age=60` are utilized.
 
 ## UX & UI Refinements

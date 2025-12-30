@@ -33,7 +33,12 @@ Central to the "Guild" vision is a sense of presence. The Townhall Chat is a per
     - Broadcaster presence tracking (online users count).
 - [ ] **Optimistic UI**:
     - Append message immediately to local state on send.
+    - Append message immediately to local state on send.
     - Show error/retry option if send fails.
+- [ ] **Connection State Handling**:
+    - Show visual indicator if disconnected (e.g., "Generic 'Offline' badge").
+    - Auto-reconnect logic (Surprise Realtime handles this, but UI must reflect state).
+    - Handle "Replay" of missed messages on reconnect.
 
 ### Database Schema
 - [ ] **Create `messages` table**:
