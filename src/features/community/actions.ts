@@ -49,7 +49,15 @@ export async function getQuestions({
 
     let query = (supabase.from("questions") as any)
         .select(`
-            *,
+            id,
+            title,
+            slug,
+            body,
+            tags,
+            upvotes,
+            view_count,
+            accepted_answer_id,
+            created_at,
             author:author_id(username, avatar_url),
             answers:answers!answers_question_id_fkey(count)
         `, { count: "exact" });
