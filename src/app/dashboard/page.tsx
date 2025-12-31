@@ -42,8 +42,8 @@ export default async function DashboardPage() {
                         <User className="h-4 w-4 text-neon-primary group-hover:text-foreground transition-colors" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-foreground">Level 1</div>
-                        <p className="text-xs text-muted-foreground mt-1">Junior Developer</p>
+                        <div className="text-2xl font-bold text-foreground">Level {profile?.level || 1}</div>
+                        <p className="text-xs text-muted-foreground mt-1">{profile?.developer_role || "Junior Developer"}</p>
                         <Button asChild className="w-full mt-4 bg-muted/50 hover:bg-neon-primary/20 text-foreground border border-border">
                             <Link href="/dashboard/profile">
                                 View Profile <ArrowRight className="ml-2 h-4 w-4" />

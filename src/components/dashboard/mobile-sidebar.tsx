@@ -97,18 +97,20 @@ export function MobileSidebar({ user, company, profile }: MobileSidebarProps) {
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[300px] border-r border-border bg-background/95 backdrop-blur-xl p-0">
-                <SheetHeader className="h-16 flex items-center justify-between px-6 border-b border-border">
-                    <SheetTitle>
+                <SheetHeader className="h-16 flex flex-row items-center justify-between pl-4 pr-16 border-b border-border space-y-0">
+                    <SheetTitle className="flex-1 min-w-0">
                         <Link href="/" className="flex flex-col gap-0.5" onClick={() => setOpen(false)}>
-                            <span className="font-bold text-lg tracking-tighter text-foreground whitespace-nowrap text-left">
+                            <span className="font-bold text-base tracking-tighter text-foreground whitespace-nowrap text-left">
                                 &lt;Kracked Devs /&gt;
                             </span>
-                            <span className="text-[10px] bg-neon-secondary/20 text-neon-secondary px-1.5 py-0.5 rounded border border-neon-secondary/30 w-fit">
+                            <span className="text-[9px] bg-neon-secondary/20 text-neon-secondary px-1.5 py-0.5 rounded border border-neon-secondary/30 w-fit">
                                 DASHBOARD
                             </span>
                         </Link>
                     </SheetTitle>
-                    <ModeToggle />
+                    <div className="flex items-center">
+                        <ModeToggle />
+                    </div>
                 </SheetHeader>
 
                 <div className="flex-1 overflow-y-auto py-6 px-3 space-y-8 h-[calc(100vh-8rem)]">
