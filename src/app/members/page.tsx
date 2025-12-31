@@ -9,8 +9,18 @@ export const metadata = {
   description: "Browse all registered developers in the Kracked Devs community.",
 };
 
-export default async function MembersPage() {
-  const { data: members, error } = await fetchAllMembers(100);
+const MEMBERS_PER_PAGE = 30;
+
+export default async function MembersPage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
+  const currentPage = Number(searchParams.page) || 1;
+  const offset = (currentPage - 1) * MEMBERS_PER_PAGE;
+
+  const { data: members, total, error } = await fetchAllMembers(MEMBERS_PER_PAGE, offset);
+  const totalPages = Math.ceil(total / MEMBERS_PER_PAGE);
 
   return (
     <main
@@ -37,7 +47,7 @@ export default async function MembersPage() {
               ACTIVE OPERATIVES
             </h1>
             <p className="text-muted-foreground font-mono text-sm md:text-base tracking-widest uppercase">
-              {members.length} registered developers in network
+              {total} registered developers in network
             </p>
           </div>
         </div>
@@ -50,7 +60,12 @@ export default async function MembersPage() {
             {error}
           </div>
         ) : (
-          <MembersList members={members} />
+          <MembersList
+            members={members}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            total={total}
+          />
         )}
       </div>
     </main>

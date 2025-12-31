@@ -314,23 +314,39 @@ export type Member = {
 /**
  * Fetch all active members for the members page (FR6)
  */
-export async function fetchAllMembers(limit: number = 50): Promise<{ data: Member[]; error?: string }> {
+export async function fetchAllMembers(
+    limit: number = 50,
+    offset: number = 0
+): Promise<{ data: Member[]; total: number; error?: string }> {
     const supabase = await createClient();
 
+    // Get total count
+    const { count, error: countError } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "active")
+        .eq("onboarding_completed", true);
+
+    if (countError) {
+        console.error("Error fetching members count:", countError);
+        return { data: [], total: 0, error: "Failed to fetch members count" };
+    }
+
+    // Get paginated data
     const { data, error } = await supabase
         .from("profiles")
         .select("id, username, full_name, avatar_url, developer_role, location, created_at, status, level, xp")
         .eq("status", "active")
         .eq("onboarding_completed", true)
         .order("created_at", { ascending: false })
-        .limit(limit);
+        .range(offset, offset + limit - 1);
 
     if (error) {
         console.error("Error fetching members:", error);
-        return { data: [], error: "Failed to fetch members" };
+        return { data: [], total: 0, error: "Failed to fetch members" };
     }
 
-    return { data: (data || []) as Member[] };
+    return { data: (data || []) as Member[], total: count || 0 };
 }
 
 /**
@@ -680,7 +696,7 @@ export const fetchLeaderboard = unstable_cache(
     async (
         timeframe: 'week' | 'all-time' = 'all-time',
         skill?: string,
-        limit: number = 100
+        limit: number = 30
     ): Promise<{ data: LeaderboardEntry[]; error?: string }> => {
         const supabase = createPublicClient();
 

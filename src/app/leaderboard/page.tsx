@@ -22,10 +22,10 @@ export default async function LeaderboardPage() {
         { data: activeContributors },
         userRank
     ] = await Promise.all([
-        fetchLeaderboard('all-time', undefined, 100),
-        fetchLeaderboard('week', undefined, 100),
-        fetchTopHunters(100),
-        fetchActiveContributors(100),
+        fetchLeaderboard('all-time', undefined, 30),
+        fetchLeaderboard('week', undefined, 30),
+        fetchTopHunters(30),
+        fetchActiveContributors(30),
         user ? getUserRank(user.id) : null
     ]);
 

@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { profiles } from '@/lib/db/schema';
-import { isNotNull } from 'drizzle-orm';
+import { isNotNull, eq, and } from 'drizzle-orm';
 
 export async function GET() {
   try {
     const data = await db
       .select({ location: profiles.location })
       .from(profiles)
-      .where(isNotNull(profiles.location));
+      .where(
+        and(
+          isNotNull(profiles.location),
+          eq(profiles.status, 'active'),
+          eq(profiles.onboardingCompleted, true)
+        )
+      );
 
     const locationMap = new Map<string, number>();
 

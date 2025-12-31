@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MapPin, User, Calendar, Search } from "lucide-react";
+import { MapPin, User, Calendar, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Member } from "../actions";
 
 interface MembersListProps {
     members: Member[];
+    currentPage: number;
+    totalPages: number;
+    total: number;
 }
 
-export function MembersList({ members }: MembersListProps) {
+export function MembersList({ members, currentPage, totalPages, total }: MembersListProps) {
     const [searchQuery, setSearchQuery] = useState("");
 
     // Filter members based on search
@@ -27,6 +30,36 @@ export function MembersList({ members }: MembersListProps) {
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
         return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    };
+
+    // Generate page numbers to display
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = [];
+        const maxVisible = 5;
+
+        if (totalPages <= maxVisible) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            if (currentPage <= 3) {
+                for (let i = 1; i <= 4; i++) pages.push(i);
+                pages.push('...');
+                pages.push(totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                pages.push(1);
+                pages.push('...');
+                for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
+            } else {
+                pages.push(1);
+                pages.push('...');
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
+                pages.push('...');
+                pages.push(totalPages);
+            }
+        }
+
+        return pages;
     };
 
     return (
@@ -121,6 +154,59 @@ export function MembersList({ members }: MembersListProps) {
                             </div>
                         </Link>
                     ))}
+                </div>
+            )}
+
+            {/* Pagination Controls */}
+            {!searchQuery && totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-8">
+                    {/* Previous Button */}
+                    <Link
+                        href={currentPage > 1 ? `/members?page=${currentPage - 1}` : '#'}
+                        className={`flex items-center gap-1 px-4 py-2 font-mono text-sm border transition-all rounded ${currentPage > 1
+                                ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
+                                : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
+                            }`}
+                        onClick={(e) => currentPage <= 1 && e.preventDefault()}
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                        <span className="hidden sm:inline">Prev</span>
+                    </Link>
+
+                    {/* Page Numbers */}
+                    <div className="flex items-center gap-1">
+                        {getPageNumbers().map((page, idx) =>
+                            typeof page === 'number' ? (
+                                <Link
+                                    key={idx}
+                                    href={`/members?page=${page}`}
+                                    className={`px-3 py-2 font-mono text-sm border transition-all rounded min-w-[2.5rem] text-center ${currentPage === page
+                                            ? 'border-primary dark:border-neon-primary bg-primary/10 dark:bg-neon-primary/10 text-primary dark:text-neon-primary font-bold'
+                                            : 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
+                                        }`}
+                                >
+                                    {page}
+                                </Link>
+                            ) : (
+                                <span key={idx} className="px-2 text-muted-foreground">
+                                    ...
+                                </span>
+                            )
+                        )}
+                    </div>
+
+                    {/* Next Button */}
+                    <Link
+                        href={currentPage < totalPages ? `/members?page=${currentPage + 1}` : '#'}
+                        className={`flex items-center gap-1 px-4 py-2 font-mono text-sm border transition-all rounded ${currentPage < totalPages
+                                ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
+                                : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
+                            }`}
+                        onClick={(e) => currentPage >= totalPages && e.preventDefault()}
+                    >
+                        <span className="hidden sm:inline">Next</span>
+                        <ChevronRight className="w-4 h-4" />
+                    </Link>
                 </div>
             )}
         </div>
