@@ -63,11 +63,11 @@ export function QuestionCard({ question }: QuestionCardProps) {
                             </FlagModal>
                         </div>
                         <Avatar className="h-5 w-5">
-                            <AvatarImage src={question.author.avatar_url || ""} />
-                            <AvatarFallback>{question.author.username?.[0] || "?"}</AvatarFallback>
+                            <AvatarImage src={question.author?.avatar_url || ""} />
+                            <AvatarFallback>{question.author?.username?.[0] || "?"}</AvatarFallback>
                         </Avatar>
                         <span>
-                            <span className="font-medium text-foreground">{question.author.username || "Anonymous"}</span>
+                            <span className="font-medium text-foreground">{question.author?.username || "Anonymous"}</span>
                             {" • "}
                             {formatDistanceToNow(new Date(question.created_at), { addSuffix: true })}
                         </span>
