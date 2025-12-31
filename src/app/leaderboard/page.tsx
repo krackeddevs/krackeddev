@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
-import { fetchLeaderboard, getUserRank, fetchTopHunters, fetchActiveContributors } from "@/features/profiles/actions";
+import { fetchLeaderboard, getUserRank } from "@/features/profiles/actions";
 import { LeaderboardTabs } from "@/features/profiles/components/leaderboard-tabs";
 import { Trophy } from "lucide-react";
-import { YourRankWidget } from "@/features/profiles/components/your-rank-widget";
 
 import { CommunitySubNav } from "@/features/community/components/shared/community-sub-nav";
 
@@ -14,18 +13,13 @@ export default async function LeaderboardPage() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    // Fetch all leaderboard data in parallel
+    // Phase 4 Optimization: Only fetch priority data for initial render
+    // Other tabs will load progressively when user clicks on them
     const [
         { data: allTimeData },
-        { data: weeklyData },
-        { data: topHunters },
-        { data: activeContributors },
         userRank
     ] = await Promise.all([
-        fetchLeaderboard('all-time', undefined, 30),
-        fetchLeaderboard('week', undefined, 30),
-        fetchTopHunters(30),
-        fetchActiveContributors(30),
+        fetchLeaderboard('all-time', undefined, 30), // Most commonly viewed
         user ? getUserRank(user.id) : null
     ]);
 
@@ -71,13 +65,10 @@ export default async function LeaderboardPage() {
                     </div>
                 )}
 
-                {/* Leaderboard Tabs - Centered */}
+                {/* Leaderboard Tabs - Progressive Loading */}
                 <div className="max-w-5xl mx-auto">
                     <LeaderboardTabs
-                        allTimeData={allTimeData || []}
-                        weeklyData={weeklyData || []}
-                        topHunters={topHunters || []}
-                        activeContributors={activeContributors || []}
+                        initialAllTimeData={allTimeData || []}
                         currentUserId={user?.id}
                     />
                 </div>
