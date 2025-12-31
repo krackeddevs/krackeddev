@@ -200,7 +200,7 @@ export async function incrementViewCount(questionId: string, slug: string) {
 // ----------------------------------------------------------------------
 
 import { z } from "zod";
-import DOMPurify from "isomorphic-dompurify";
+// import DOMPurify from "isomorphic-dompurify";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -256,7 +256,7 @@ export async function createQuestion(prevState: any, formData: FormData) {
     const { title, body, tags } = validated.data;
 
     // Sanitize Body
-    const sanitizedBody = DOMPurify.sanitize(body);
+    const sanitizedBody = body.trim();
 
     // Slug generation
     let slug = slugify(title);
@@ -305,7 +305,7 @@ export async function createAnswer(prevState: any, formData: FormData) {
     }
 
     const { body, question_id } = validated.data;
-    const sanitizedBody = DOMPurify.sanitize(body);
+    const sanitizedBody = body.trim();
 
     const { error } = await (supabase.from("answers") as any).insert({
         body: sanitizedBody,
@@ -344,7 +344,7 @@ export async function createComment(prevState: any, formData: FormData) {
 
     const { body, answer_id } = validated.data;
     // Comments are usually simpler text, maybe no huge markdown needed, but safe to sanitize anyway
-    const sanitizedBody = DOMPurify.sanitize(body); // or simpler escape
+    const sanitizedBody = body.trim(); // or simpler escape
 
     const { error } = await (supabase.from("comments") as any).insert({
         body: sanitizedBody,
