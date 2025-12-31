@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Briefcase, Building2, Users, Scroll, ChevronLeft, ChevronRight, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DiscordIcon } from "@/components/icons/discord-icon";
 
 interface FloatingNavProps {
     onOpenManifesto: () => void;
@@ -69,6 +70,19 @@ export function FloatingNav({ onOpenManifesto }: FloatingNavProps) {
                                 <Users className="w-5 h-5 text-neon-primary shrink-0" />
                                 <span className="text-neon-primary whitespace-nowrap hidden sm:inline">Community</span>
                             </Link>
+                        </motion.div>
+
+                        {/* Discord Button */}
+                        <motion.div variants={itemVariants}>
+                            <a
+                                href="https://discord.gg/9p24zggp"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 p-2.5 sm:px-4 sm:py-3 bg-background/90 hover:bg-muted border-2 border-neon-primary/50 hover:border-neon-primary rounded-lg shadow-lg transition-all duration-300 hover:shadow-[0_0_20px_var(--neon-primary)] font-mono text-sm w-full"
+                            >
+                                <DiscordIcon className="w-5 h-5 text-neon-primary shrink-0" />
+                                <span className="text-neon-primary whitespace-nowrap hidden sm:inline">Discord</span>
+                            </a>
                         </motion.div>
 
                         {/* Manifesto Button */}
