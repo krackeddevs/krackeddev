@@ -14,9 +14,10 @@ const MEMBERS_PER_PAGE = 30;
 export default async function MembersPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const currentPage = Number(searchParams.page) || 1;
+  const params = await searchParams;
+  const currentPage = Number(params.page) || 1;
   const offset = (currentPage - 1) * MEMBERS_PER_PAGE;
 
   const { data: members, total, error } = await fetchAllMembers(MEMBERS_PER_PAGE, offset);
