@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient, createPublicClient } from "@/lib/supabase/server";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { LeaderboardEntry } from "./types";
 
 export type ProfileData = {
@@ -108,8 +108,12 @@ export async function updateProfile(data: Partial<ProfileData>) {
         return { error: error.message };
     }
 
+    // Phase 5: Cache invalidation on profile updates
     revalidatePath("/profile/view");
     revalidatePath("/profile");
+    revalidatePath("/leaderboard");
+    revalidatePath("/members");
+
     return { success: true };
 }
 import { GithubStats, GithubLanguage } from "./types";
