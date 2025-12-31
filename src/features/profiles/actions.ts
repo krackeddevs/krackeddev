@@ -913,5 +913,5 @@ export const fetchActiveContributors = unstable_cache(
         }
     },
     ['active-contributors-data'],
-    { revalidate: 3600, tags: ['active-contributors'] } // 1 hour cache
+    { revalidate: 300, tags: ['active-contributors'] } // 5 minutes cache
 );
