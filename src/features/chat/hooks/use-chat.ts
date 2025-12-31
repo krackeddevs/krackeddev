@@ -19,7 +19,7 @@ export interface ChatMessage {
     } | null;
 }
 
-export function useChat(channelId: string) {
+export function useChat(channelId: string, options: { paused?: boolean } = {}) {
     const { supabase, profile } = useSupabase();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -31,8 +31,12 @@ export function useChat(channelId: string) {
         latestMessagesRef.current = messages;
     }, [messages]);
 
-    // Initial Fetch
+    // Initial Fetch - only if not paused (or maybe we still fetch initially? Let's fetch initially regardless, or only if not paused)
+    // Actually, if we are idle when we mount (unlikely), we might skip.
+    // But usually we mount active.
     useEffect(() => {
+        if (options.paused) return;
+
         let isMounted = true;
         const fetchMessages = async () => {
             setIsLoading(true);
@@ -48,10 +52,12 @@ export function useChat(channelId: string) {
         return () => {
             isMounted = false;
         };
-    }, [channelId]);
+    }, [channelId, options.paused]);
 
     // Subscription
     useEffect(() => {
+        if (options.paused) return;
+
         const channel = supabase
             .channel(`chat:${channelId}`)
             .on(
@@ -101,7 +107,7 @@ export function useChat(channelId: string) {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [supabase, channelId]);
+    }, [supabase, channelId, options.paused]);
 
     const sendMessage = async (content: string) => {
         if (!content.trim() || isSending) return;

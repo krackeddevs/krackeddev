@@ -7,13 +7,13 @@ export interface OnlineUser {
     avatar_url: string | null;
 }
 
-export function usePresence(channelId: string) {
+export function usePresence(channelId: string, options: { paused?: boolean } = {}) {
     const { supabase, user, profile } = useSupabase();
     const [onlineCount, setOnlineCount] = useState(0);
     const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
 
     useEffect(() => {
-        if (!user) return;
+        if (!user || options.paused) return;
 
         const channel = supabase.channel(`presence:${channelId}`, {
             config: {
@@ -53,7 +53,7 @@ export function usePresence(channelId: string) {
         return () => {
             channel.unsubscribe();
         };
-    }, [supabase, user, profile, channelId]);
+    }, [supabase, user, profile, channelId, options.paused]);
 
     return { onlineCount, onlineUsers };
 }
