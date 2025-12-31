@@ -46,8 +46,8 @@ export async function getQuestions({
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    let query = supabase
-        .from("questions")
+
+    let query = (supabase.from("questions") as any)
         .select(`
             *,
             author:author_id(username, avatar_url),
@@ -103,8 +103,8 @@ export async function getQuestionBySlug(slug: string): Promise<QuestionDetail | 
     const supabase = await createClient();
 
     // First fetch question
-    const { data: question, error } = await supabase
-        .from("questions")
+
+    const { data: question, error } = await (supabase.from("questions") as any)
         .select(`
             *,
             author:author_id(username, avatar_url)
@@ -122,8 +122,8 @@ export async function getQuestionBySlug(slug: string): Promise<QuestionDetail | 
     }
 
     // Fetch answers separately to order them: Accepted -> Upvotes -> Newest
-    const { data: answers, error: answerError } = await supabase
-        .from("answers")
+
+    const { data: answers, error: answerError } = await (supabase.from("answers") as any)
         .select(`
             *,
             author:author_id(username, avatar_url)
@@ -140,9 +140,9 @@ export async function getQuestionBySlug(slug: string): Promise<QuestionDetail | 
     // Fetch comments for these answers
     let answersWithComments = [];
     if (answers && answers.length > 0) {
-        const answerIds = answers.map(a => a.id);
-        const { data: comments, error: commentsError } = await supabase
-            .from("comments")
+        const answerIds = answers.map((a: any) => a.id);
+
+        const { data: comments, error: commentsError } = await (supabase.from("comments") as any)
             .select(`
                 *,
                 author:author_id(username, avatar_url)
@@ -154,9 +154,9 @@ export async function getQuestionBySlug(slug: string): Promise<QuestionDetail | 
             console.error("Error fetching comments:", commentsError);
         }
 
-        answersWithComments = answers.map(answer => ({
+        answersWithComments = answers.map((answer: any) => ({
             ...answer,
-            comments: comments?.filter(c => c.answer_id === answer.id) || []
+            comments: comments?.filter((c: any) => c.answer_id === answer.id) || []
         }));
     } else {
         answersWithComments = [];
@@ -178,7 +178,8 @@ export async function getQuestionBySlug(slug: string): Promise<QuestionDetail | 
 
 export async function incrementViewCount(questionId: string, slug: string) {
     const supabase = await createClient();
-    const { error } = await supabase.rpc("increment_question_view", { question_id: questionId });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.rpc as any)("increment_question_view", { question_id: questionId });
     if (error) {
         console.error("Error incrementing view count:", error);
     }
@@ -252,13 +253,13 @@ export async function createQuestion(prevState: any, formData: FormData) {
     // Slug generation
     let slug = slugify(title);
     const suffix = Math.floor(Math.random() * 10000); // Simple collision avoider
-    const { data: existing } = await supabase.from("questions").select("slug").eq("slug", slug).single();
+    const { data: existing } = await (supabase.from("questions") as any).select("slug").eq("slug", slug).single();
     if (existing) {
         slug = `${slug}-${suffix}`;
     }
 
     // Insert
-    const { error } = await supabase.from("questions").insert({
+    const { error } = await (supabase.from("questions") as any).insert({
         title,
         slug,
         body: sanitizedBody,
@@ -298,7 +299,7 @@ export async function createAnswer(prevState: any, formData: FormData) {
     const { body, question_id } = validated.data;
     const sanitizedBody = DOMPurify.sanitize(body);
 
-    const { error } = await supabase.from("answers").insert({
+    const { error } = await (supabase.from("answers") as any).insert({
         body: sanitizedBody,
         question_id,
         author_id: user.id,
@@ -337,7 +338,7 @@ export async function createComment(prevState: any, formData: FormData) {
     // Comments are usually simpler text, maybe no huge markdown needed, but safe to sanitize anyway
     const sanitizedBody = DOMPurify.sanitize(body); // or simpler escape
 
-    const { error } = await supabase.from("comments").insert({
+    const { error } = await (supabase.from("comments") as any).insert({
         body: sanitizedBody,
         answer_id,
         author_id: user.id,

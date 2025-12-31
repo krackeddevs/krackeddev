@@ -13,6 +13,9 @@ import { GithubGraph } from "./github-graph";
 import { TopLanguages } from "./top-languages";
 import { BountyStats } from "./bounty-stats";
 import { MySubmissions } from "./my-submissions";
+import { XPProgressBar } from "./xp-progress-bar";
+import { XPHistory } from "./xp-history";
+import { TrophyIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 interface ProfileDetailsProps {
@@ -91,12 +94,33 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
 
             {/* Contribution Stats Section */}
             <div>
-                <ContributionStatsCard stats={contributionStats || null} isOwnProfile={true} />
+                <ContributionStatsCard
+                    stats={contributionStats || null}
+                    isOwnProfile={true}
+                    xp={profile.xp}
+                    level={profile.level}
+                />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Main Info Column */}
                 <div className="col-span-1 md:col-span-2 space-y-6">
+
+                    {/* XP Progress & History Section */}
+                    <Card className="bg-card/40 border-border backdrop-blur-md overflow-hidden">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
+                                <TrophyIcon className="w-4 h-4" />
+                                Level Progress
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <XPProgressBar showDetails={true} />
+                            <div className="pt-4 border-t border-border">
+                                <XPHistory />
+                            </div>
+                        </CardContent>
+                    </Card>
 
                     {/* Dev Pulse Visualization - Main Column */}
                     {pulseData && (

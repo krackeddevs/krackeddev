@@ -1,6 +1,6 @@
 # Story 8.1: XP Tracking Infrastructure
 
-Status: backlog
+Status: done
 priority: must-have
 assignee: antique_gravity
 epic: 8
@@ -24,13 +24,13 @@ So that all XP events are recorded immutably and users' progress is accurately m
 
 ## Tasks/Subtasks
 
-- [ ] Create migration `021_add_xp_tracking.sql` <!-- id: 1 -->
-- [ ] Add `xp_events` table with all required columns <!-- id: 2 -->
-- [ ] Add `last_login_at` and `last_xp_grant_date` to profiles <!-- id: 3 -->
-- [ ] Create indexes on `xp_events(user_id, created_at)` <!-- id: 4 -->
-- [ ] Add RLS policies for xp_events table <!-- id: 5 -->
-- [ ] Test migration locally with supabase <!-- id: 6 -->
-- [ ] Verify no breaking changes to existing queries <!-- id: 7 -->
+- [x] Create migration `021_add_xp_tracking.sql` <!-- id: 1 -->
+- [x] Add `xp_events` table with all required columns <!-- id: 2 -->
+- [x] Add `last_login_at` and `last_xp_grant_date` to profiles <!-- id: 3 -->
+- [x] Create indexes on `xp_events(user_id, created_at)` <!-- id: 4 -->
+- [x] Add RLS policies for xp_events table <!-- id: 5 -->
+- [x] Test migration locally with supabase <!-- id: 6 -->
+- [x] Verify no breaking changes to existing queries <!-- id: 7 -->
 
 ## Technical Requirements
 

@@ -1,6 +1,6 @@
 # Story 8.2: XP Earning Events & Logic
 
-Status: backlog
+Status: done
 priority: must-have
 assignee: antique_gravity
 epic: 8
@@ -31,17 +31,17 @@ So that I'm rewarded for consistent engagement and platform participation.
 
 ## Tasks/Subtasks
 
-- [ ] Create `src/features/profiles/xp-system.ts` module <!-- id: 1 -->
-- [ ] Implement `grantXP()` core function <!-- id: 2 -->
-- [ ] Implement `checkAndGrantDailyLoginXP()` <!-- id: 3 -->
-- [ ] Implement `checkAndGrantStreakBonuses()` <!-- id: 4 -->
-- [ ] Implement `checkAndGrantContributionXP()` for GitHub contributions <!-- id: 5 -->
-- [ ] Integrate into `fetchContributionStats()` for automatic sync <!-- id: 6 -->
-- [ ] Integrate XP into `getProfile()` action for daily login <!-- id: 7 -->
-- [ ] Integrate XP into bounty submission action <!-- id: 8 -->
-- [ ] Integrate XP into bounty approval action <!-- id: 9 -->
-- [ ] Add unit tests for all XP granting functions <!-- id: 10 -->
-- [ ] Add integration tests for duplicate prevention <!-- id: 11 -->
+- [x] Create `src/features/profiles/xp-system.ts` module <!-- id: 1 -->
+- [x] Implement `grantXP()` core function <!-- id: 2 -->
+- [x] Implement `checkAndGrantDailyLoginXP()` <!-- id: 3 -->
+- [x] Implement `checkAndGrantStreakBonuses()` <!-- id: 4 -->
+- [x] Implement `checkAndGrantContributionXP()` for GitHub contributions <!-- id: 5 -->
+- [x] Integrate into `fetchContributionStats()` for automatic sync <!-- id: 6 -->
+- [x] Integrate XP into `getProfile()` action for daily login <!-- id: 7 -->
+- [x] Integrate XP into bounty submission action <!-- id: 8 -->
+- [x] Integrate XP into bounty approval action <!-- id: 9 -->
+- [x] Add unit tests for all XP granting functions <!-- id: 10 -->
+- [x] Add integration tests for duplicate prevention <!-- id: 11 -->
 
 ## Technical Requirements
 

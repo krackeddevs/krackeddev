@@ -285,6 +285,9 @@ export async function fetchUniqueTags(): Promise<{
 // Import validators from separate file (sync functions can't be exported from "use server" file)
 import { validateGitHubPrUrl } from "./validators";
 
+// Import XP system
+import { grantXP, XP_RATES, calculateBountyWinXP } from "@/features/profiles/xp-system";
+
 /**
  * Submit a bounty solution (GitHub PR URL)
  * Enforces MVP constraint: 1 submission per user per bounty
@@ -331,6 +334,19 @@ export async function submitBountySolution(
             }
             console.error("Error submitting solution:", error);
             return { data: null, error: error.message };
+        }
+
+        // Grant XP for submission
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const submissionData = data as any;
+            await grantXP(userId, 'bounty_submission', XP_RATES.BOUNTY_SUBMISSION, {
+                bounty_slug: bountySlug,
+                submission_id: submissionData.id
+            });
+        } catch (xpError) {
+            console.error("Failed to grant submission XP:", xpError);
+            // Don't block submission success
         }
 
         // Map to BountySubmission type
@@ -457,6 +473,19 @@ export async function reviewSubmission(
             return { success: false, error: "Database connection unavailable" };
         }
 
+        // Fetch submission first to get user_id and bounty_reward for XP
+        // Only needed if we are approving
+        let submissionData: any = null;
+        if (status === 'approved') {
+            const { data, error: fetchError } = await supabase
+                .from('bounty_submissions')
+                .select('user_id, bounty_reward, bounty_slug')
+                .eq('id', submissionId)
+                .single();
+
+            if (!fetchError) submissionData = data;
+        }
+
         const { error } = await (supabase
             .from("bounty_submissions") as any)
             .update({
@@ -470,6 +499,25 @@ export async function reviewSubmission(
         if (error) {
             console.error("Error reviewing submission:", error);
             return { success: false, error: error.message };
+        }
+
+        // Grant XP if approved
+        if (status === 'approved' && submissionData) {
+            try {
+                const xpAmount = calculateBountyWinXP(submissionData.bounty_reward || 0);
+                await grantXP(
+                    submissionData.user_id,
+                    'bounty_win',
+                    xpAmount,
+                    {
+                        submission_id: submissionId,
+                        bounty_slug: submissionData.bounty_slug,
+                        bounty_value: submissionData.bounty_reward
+                    }
+                );
+            } catch (xpError) {
+                console.error("Failed to grant bounty win XP:", xpError);
+            }
         }
 
         return { success: true, error: null };

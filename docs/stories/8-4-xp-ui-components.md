@@ -1,8 +1,8 @@
 # Story 8.4: XP UI Components
 
-Status: backlog
-priority: must-have
-assignee: antique_gravity
+- **Status**: Complete
+- **Priority**: High
+- **Estimation**: 3 days
 epic: 8
 
 ## Story
@@ -26,15 +26,15 @@ So that I feel motivated to continue earning XP and leveling up.
 
 ## Tasks/Subtasks
 
-- [ ] Create `<XPProgressBar />` component <!-- id: 1 -->
-- [ ] Create `<LevelBadge />` component <!-- id: 2 -->
-- [ ] Create `<XPHistory />` component <!-- id: 3 -->
-- [ ] Create `<LevelUpToast />` component <!-- id: 4 -->
-- [ ] Add XP event icons and styling <!-- id: 5 -->
-- [ ] Integrate progress bar into ProfileDetails <!-- id: 6 -->
-- [ ] Integrate into MiniProfile on landing page <!-- id: 7 -->
-- [ ] Add responsive design for mobile <!-- id: 8 -->
-- [ ] Test across browsers and devices <!-- id: 9 -->
+- [x] Create `<XPProgressBar />` component <!-- id: 1 -->
+- [x] Create `<LevelBadge />` component <!-- id: 2 -->
+- [x] Create `<XPHistory />` component <!-- id: 3 -->
+- [x] Create `<LevelUpToast />` component <!-- id: 4 -->
+- [x] Add XP event icons and styling <!-- id: 5 -->
+- [x] Integrate progress bar into ProfileDetails <!-- id: 6 -->
+- [x] Integrate into MiniProfile on landing page <!-- id: 7 -->
+- [x] Add responsive design for mobile <!-- id: 8 -->
+- [x] Test across browsers and devices <!-- id: 9 -->
 
 ## Technical Requirements
 

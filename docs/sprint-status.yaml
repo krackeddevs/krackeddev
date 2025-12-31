@@ -70,7 +70,19 @@ development_status:
   5-2-game-authentication-bridge: backlog
   5-3-syncing-game-progress: backlog
   epic-5-retrospective: optional
+  epic-5-retrospective: optional
 
+  epic-8: backlog
+  8-1-xp-tracking-infrastructure: review
+  8-2-xp-earning-events-logic: review
+  8-3-level-progression-system: done
+  8-4-xp-ui-components: done
+  8-5-leaderboards-rankings: done
+  8-6-level-visual-rewards: drafted
+  8-7-social-feed-notifications: drafted
+  8-8-engagement-reports: drafted
+  epic-8-retrospective: optional
+  
   epic-9: in-progress
   9-1-companies-schema-migration: done
   9-2-company-registration-dashboard: done

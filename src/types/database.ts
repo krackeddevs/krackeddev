@@ -15,11 +15,14 @@ export interface Profile {
   bio: string | null;
   level: number;
   xp: number;
+  last_login_at?: string | null;
+  last_xp_grant_date?: string | null;
   role: UserRole;
   developer_role: string | null;
   stack: string[] | null;
   location: string | null;
   onboarding_completed: boolean;
+  is_banned?: boolean;
   status: 'active' | 'banned';
   created_at: string;
   updated_at: string;
@@ -250,6 +253,15 @@ export interface Comment {
   updated_at: string;
 }
 
+export interface XPEvent {
+  id: string;
+  user_id: string;
+  event_type: string;
+  xp_amount: number;
+  metadata: Record<string, any>;
+  created_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -425,6 +437,20 @@ export interface Database {
             columns: ["answer_id"];
             isOneToOne: false;
             referencedRelation: "answers";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      xp_events: {
+        Row: XPEvent;
+        Insert: Partial<XPEvent>;
+        Update: Partial<XPEvent>;
+        Relationships: [
+          {
+            foreignKeyName: "xp_events_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
             referencedColumns: ["id"];
           }
         ];

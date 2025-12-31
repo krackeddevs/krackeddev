@@ -87,9 +87,64 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                 </div>
             </div>
 
+            {/* XP and Level Section */}
+            <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md overflow-hidden relative group">
+                {/* Glow effect */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-neon-primary/5 rounded-full blur-[100px] -z-10 group-hover:bg-neon-primary/10 transition-all duration-500" />
+
+                <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row items-center gap-6">
+                        {/* Level Badge */}
+                        <div className="flex-shrink-0">
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-neon-primary blur-md opacity-20 animate-pulse" />
+                                <div className="relative z-10 w-20 h-20 rounded-full bg-card border-2 border-neon-primary flex flex-col items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                                    <span className="text-[10px] uppercase tracking-widest text-neon-primary font-mono mb-1">Level</span>
+                                    <span className="text-3xl font-bold font-mono text-foreground leading-none">{profile.level}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Progress Info */}
+                        <div className="flex-1 w-full space-y-3">
+                            <div className="flex justify-between items-end">
+                                <div>
+                                    <h3 className="text-sm font-mono text-muted-foreground uppercase tracking-widest mb-1">Experience</h3>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-2xl font-bold font-mono text-foreground">{profile.xp}</span>
+                                        <span className="text-xs font-mono text-neon-primary">XP</span>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Next Level</div>
+                                    <div className="text-sm font-mono text-muted-foreground">
+                                        Progressing
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Simple Progress Bar Visual */}
+                            <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden border border-border/50">
+                                <div
+                                    className="h-full bg-gradient-to-r from-neon-primary to-neon-secondary relative"
+                                    style={{ width: `${Math.min(100, ((profile.xp || 0) % 100))}%` }}
+                                >
+                                    <div className="absolute inset-0 bg-white/20 animate-shimmer" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
             {/* Contribution Stats */}
             <div>
-                <ContributionStatsCard stats={contributionStats || null} isOwnProfile={false} />
+                <ContributionStatsCard
+                    stats={contributionStats || null}
+                    isOwnProfile={false}
+                // Don't pass XP/Level here to avoid incorrect internal display if needed, 
+                // though duplicate simple display might be fine.
+                />
             </div>
 
             {/* Dev Pulse moved to main column */}
@@ -99,7 +154,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                 <div className="col-span-1 md:col-span-2 space-y-6">
                     {/* Bio */}
                     {profile.bio && (
-                        <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                                     <Terminal className="w-4 h-4" />
@@ -107,7 +162,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-zinc-300 leading-relaxed font-mono text-sm">
+                                <p className="text-muted-foreground leading-relaxed font-mono text-sm">
                                     {profile.bio}
                                 </p>
                             </CardContent>
@@ -116,17 +171,17 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
 
                     {/* Bounty Stats */}
                     {bountyStats && (bountyStats.totalWins > 0 || bountyStats.totalEarnings > 0) && (
-                        <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
                             <CardContent className="pt-6">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="text-center p-4 bg-white/5 border border-white/10">
+                                    <div className="text-center p-4 bg-muted/40 border border-border/50 rounded-lg">
                                         <Trophy className="w-6 h-6 text-rank-gold mx-auto mb-2" />
-                                        <p className="text-2xl font-bold font-mono text-white">{bountyStats.totalWins}</p>
+                                        <p className="text-2xl font-bold font-mono text-foreground">{bountyStats.totalWins}</p>
                                         <p className="text-xs text-muted-foreground font-mono uppercase">Bounties Won</p>
                                     </div>
-                                    <div className="text-center p-4 bg-white/5 border border-white/10">
+                                    <div className="text-center p-4 bg-muted/40 border border-border/50 rounded-lg">
                                         <Coins className="w-6 h-6 text-neon-cyan mx-auto mb-2" />
-                                        <p className="text-2xl font-bold font-mono text-white">RM {bountyStats.totalEarnings}</p>
+                                        <p className="text-2xl font-bold font-mono text-foreground">RM {bountyStats.totalEarnings}</p>
                                         <p className="text-xs text-muted-foreground font-mono uppercase">Total Earnings</p>
                                     </div>
                                 </div>
@@ -136,7 +191,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
 
                     {/* Dev Pulse Visualization - Main Column */}
                     {pulseData && (
-                        <div className="border border-white/10 rounded-xl p-6 bg-black/40 backdrop-blur-md shadow-[0_0_30px_var(--neon-primary)]">
+                        <div className="border border-neon-primary/30 rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_var(--neon-primary)]">
                             <DevPulse data={pulseData} />
                         </div>
                     )}
@@ -154,7 +209,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                 <div className="col-span-1 space-y-6">
                     {/* Location */}
                     {profile.location && (
-                        <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                                     <MapPin className="w-4 h-4" />
@@ -162,14 +217,14 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-zinc-300 font-mono text-sm">{profile.location}</p>
+                                <p className="text-muted-foreground font-mono text-sm">{profile.location}</p>
                             </CardContent>
                         </Card>
                     )}
 
                     {/* Tech Stack */}
                     {profile.stack && profile.stack.length > 0 && (
-                        <Card className="bg-black/40 border-white/10 backdrop-blur-md">
+                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
                                     <Code2 className="w-4 h-4" />
@@ -182,7 +237,7 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                                         <Badge
                                             key={tech}
                                             variant="outline"
-                                            className="bg-white/5 text-zinc-300 border-white/20 font-mono text-xs"
+                                            className="bg-muted/40 text-muted-foreground border-border/50 font-mono text-xs"
                                         >
                                             {tech}
                                         </Badge>

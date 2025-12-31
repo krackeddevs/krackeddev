@@ -43,8 +43,8 @@ export async function sendMessage(channelId: string, content: string) {
 
     // Basic rate limit check could go here (using limits on client for now)
 
-    const { data, error } = await supabase
-        .from("messages")
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase.from("messages") as any)
         .insert({
             channel_id: channelId,
             user_id: user.id,
