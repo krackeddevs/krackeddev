@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 import { getQuestionBySlug, QuestionDetail } from "@/features/community/actions";
 import { MarkdownViewer } from "@/components/markdown-viewer";
 import { VotingControl } from "@/features/community/components/voting-control";
@@ -9,9 +10,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow, format } from "date-fns";
-import { CheckCircle2 } from "lucide-react";
 import { AnswerForm } from "@/features/community/components/answer-form";
-import { CommentList } from "@/features/community/components/comment-list";
+import { AnswerItem } from "@/features/community/components/questions/answer-item";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -29,6 +29,11 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function QuestionDetailPage({ params }: PageProps) {
     const { slug } = await params;
+
+    // Get User for Auth checks
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
     const question = await getQuestionBySlug(slug);
 
     if (!question) {
@@ -60,7 +65,13 @@ export default async function QuestionDetailPage({ params }: PageProps) {
                         {/* Question Body */}
                         <div className="flex gap-6">
                             <div className="hidden sm:block">
-                                <VotingControl upvotes={question.upvotes} />
+                                <VotingControl
+                                    upvotes={question.upvotes}
+                                    resourceType="question"
+                                    resourceId={question.id}
+                                // TODO: Fetch initial vote state if possible (requires extra query or field in getQuestionBySlug)
+                                // For now optimistic works from 0 state or assumes no vote if new visit
+                                />
                             </div>
                             <div className="flex-1 min-w-0">
                                 <MarkdownViewer content={question.body} className="min-h-[100px]" />
@@ -86,40 +97,13 @@ export default async function QuestionDetailPage({ params }: PageProps) {
 
                             <div className="space-y-8">
                                 {question.answers.map((answer) => (
-                                    <div key={answer.id} className="relative flex gap-6 p-6 rounded-xl border bg-card/80 backdrop-blur-sm shadow-sm transition-all hover:bg-card/90 group">
-                                        {answer.is_accepted && (
-                                            <div className="absolute top-0 right-0 p-2 text-green-500" title="Accepted Answer">
-                                                <CheckCircle2 className="h-6 w-6" />
-                                            </div>
-                                        )}
-
-                                        <div className="hidden sm:block pt-12">
-                                            <VotingControl upvotes={answer.upvotes} />
-                                        </div>
-
-                                        <div className="flex-1 min-w-0">
-                                            {/* Answer Body & User Card Side-by-Side */}
-                                            <div className="flex gap-4 sm:gap-8 flex-col sm:flex-row">
-                                                <div className="flex-1 min-w-0 space-y-4">
-                                                    <MarkdownViewer content={answer.body} />
-
-                                                    {/* Mobile Only User Card */}
-                                                    <div className="sm:hidden flex justify-end pt-2 border-t border-border/50">
-                                                        <UserCard user={answer.author} date={answer.created_at} label="answered" />
-                                                    </div>
-                                                </div>
-
-                                                {/* Desktop User Side Column */}
-                                                <div className="hidden sm:block shrink-0 pt-2">
-                                                    <UserCard user={answer.author} date={answer.created_at} label="answered" align="right" />
-                                                </div>
-                                            </div>
-
-                                            <div className="mt-4">
-                                                <CommentList comments={answer.comments || []} answerId={answer.id} />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <AnswerItem
+                                        key={answer.id}
+                                        answer={answer}
+                                        questionId={question.id}
+                                        questionAuthorId={question.author_id}
+                                        currentUserId={user?.id}
+                                    />
                                 ))}
                             </div>
                         </div>

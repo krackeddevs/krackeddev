@@ -10,28 +10,54 @@ import {
     FlameIcon,
     CheckCircleIcon,
     SettingsIcon,
-    FileTextIcon
+    FileTextIcon,
+    MessageCircleIcon,
+    MessageSquareIcon,
+    ThumbsUpIcon,
+    ZapIcon
 } from "lucide-react";
 
 // Lucide icons map
-const EVENT_ICONS = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const EVENT_ICONS: Record<string, any> = {
     daily_login: <CalendarIcon className="w-5 h-5 text-blue-400" />,
     github_contribution: <GithubIcon className="w-5 h-5 text-purple-400" />,
     bounty_submission: <FileTextIcon className="w-5 h-5 text-yellow-400" />,
     bounty_win: <TrophyIcon className="w-5 h-5 text-yellow-500" />,
     streak_milestone: <FlameIcon className="w-5 h-5 text-orange-500" />,
     profile_completion: <CheckCircleIcon className="w-5 h-5 text-green-400" />,
-    manual_adjustment: <SettingsIcon className="w-5 h-5 text-gray-400" />
+    manual_adjustment: <SettingsIcon className="w-5 h-5 text-gray-400" />,
+    // Community Gamification Events
+    ask_question: <MessageCircleIcon className="w-5 h-5 text-indigo-400" />,
+    answer_question: <MessageSquareIcon className="w-5 h-5 text-cyan-400" />,
+    answer_accepted: <CheckCircleIcon className="w-5 h-5 text-green-500" />,
+    upvote_received: <ThumbsUpIcon className="w-5 h-5 text-blue-500" />
 };
 
-const EVENT_LABELS = {
+const EVENT_LABELS: Record<string, string> = {
     daily_login: "Daily Login",
     github_contribution: "GitHub Contribution",
     bounty_submission: "Bounty Submitted",
     bounty_win: "Bounty Won",
     streak_milestone: "Streak Milestone",
     profile_completion: "Profile Completed",
-    manual_adjustment: "Manual Adjustment"
+    manual_adjustment: "Manual Adjustment",
+    // Community Gamification Events
+    ask_question: "Asked Question",
+    answer_question: "Answered Question",
+    answer_accepted: "Answer Accepted",
+    upvote_received: "Upvote Received"
+};
+
+// Helper to handle dynamic labels based on metadata
+const getEventLabel = (event: XPEvent) => {
+    if (event.eventType === 'answer_accepted') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const role = (event.metadata as any)?.role;
+        if (role === 'asker') return "Accepted an Answer";
+        return "Answer Accepted";
+    }
+    return EVENT_LABELS[event.eventType] || "XP Gained";
 };
 
 export function XPHistory() {
@@ -70,11 +96,11 @@ export function XPHistory() {
                     >
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-cyan-950/30 rounded-md border border-cyan-900/30">
-                                {EVENT_ICONS[event.eventType] || <SettingsIcon className="w-5 h-5 text-gray-400" />}
+                                {EVENT_ICONS[event.eventType] || <ZapIcon className="w-5 h-5 text-gray-400" />}
                             </div>
                             <div>
                                 <div className="text-sm font-bold text-foreground tracking-wide">
-                                    {EVENT_LABELS[event.eventType]}
+                                    {getEventLabel(event)}
                                 </div>
                                 <div className="text-xs text-muted-foreground font-mono">
                                     {new Date(event.createdAt).toLocaleDateString()}

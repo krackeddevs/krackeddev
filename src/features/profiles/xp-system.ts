@@ -186,7 +186,8 @@ export async function grantXP(
         });
 
     if (eventError) {
-        console.error('Failed to create xp_event:', eventError);
+        console.error('Failed to create xp_event:', JSON.stringify(eventError, null, 2));
+        console.error('Event details:', { userId, eventType, amount, metadata });
         // CRITICAL: Do NOT update user profile if event logging failed (likely unique constraint violation)
         return {
             success: false,

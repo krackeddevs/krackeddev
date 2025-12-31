@@ -352,3 +352,57 @@ export async function createComment(prevState: any, formData: FormData) {
     revalidatePath("/community");
     return { success: true };
 }
+
+export async function acceptAnswer(questionId: string, answerId: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "Unauthorized" };
+    }
+
+    // Call the secure RPC
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.rpc as any)("toggle_accepted_answer", {
+        p_question_id: questionId,
+        p_answer_id: answerId
+    });
+
+    if (error) {
+        console.error("Error accepting answer:", error);
+        return { error: error.message || "Failed to accept answer" };
+    }
+
+    revalidatePath(`/community/question`); // Revalidate generally or specific path if we had the slug
+    // Since we don't have slug here easily without fetching, we might rely on client refresh or simpler revalidate
+    // Ideally we pass the path or slug to this action if needed, but revalidating the layout might be enough.
+    revalidatePath("/community");
+    return { success: true };
+}
+
+export async function vote(
+    resourceType: "question" | "answer",
+    resourceId: string,
+    direction: "up" | "down"
+) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) return { error: "Unauthorized" };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.rpc as any)("handle_vote", {
+        p_user_id: user.id,
+        p_resource_id: resourceId,
+        p_resource_type: resourceType,
+        p_direction: direction
+    });
+
+    if (error) {
+        console.error("Error voting:", error);
+        return { error: error.message || "Failed to vote" };
+    }
+
+    revalidatePath("/community");
+    return { success: true };
+}

@@ -1,5 +1,7 @@
 # Story 11.4: Accepted Answer Logic & Gamification
 
+Status: done
+
 **As a** User
 **I want to** receive XP rewards for my contributions
 **So that** I am motivated to provide high-quality answers.
@@ -11,39 +13,39 @@ Gamification is the engine of the "Guild". Users earn XP for valuable actions. T
 ## Acceptance Criteria
 
 ### Interaction Logic
-- [ ] **Accept Answer**:
+- [x] **Accept Answer**:
     - Only visible to the Question's Author.
     - Cannot accept own answer.
     - Toggle behavior (can un-accept if needed, but rarely).
     - Visual feedback: Green checkmark + "Accepted Answer" badge.
     - Pin accepted answer to top of list.
-- [ ] **Voting**:
+- [x] **Voting**:
     - Upvote/Downvote buttons on Questions and Answers.
     - Prevent duplicate voting (toggle).
     - Optimistic UI update.
 
 ### Gamification Engine (XP)
-- [ ] **XP Triggers**:
+- [x] **XP Triggers**:
     - `Ask Question`: +10 XP (Limit 3/day).
     - `Answer Question`: +20 XP (Limit 5/day).
     - `Upvote Received`: +5 XP.
     - `Answer Accepted`: +100 XP (Author), +20 XP (Asker - for closing loop).
-- [ ] **XP System**:
+- [x] **XP System**:
     - Centralized `award_xp(user_id, amount, reason)` database function.
     - Updates `profiles.xp` and `profiles.level` (if threshold crossed).
     - Logs transaction to `xp_history` table.
-- [ ] **Notifications**:
+- [x] **Notifications**:
     - Send notification when:
         - Your answer is accepted.
         - You receive an upvote (maybe batch these? "10 people upvoted...").
 
 ### Database Schema
-- [ ] **Extend `xp_events` (from Epic 8)**:
+- [x] **Extend `xp_events` (from Epic 8)**:
     - Add new `event_types`: `ask_question`, `answer_question`, `answer_accepted`, `upvote_received`.
     - Ensure `metadata` column can store `question_id` or `answer_id`.
-- [ ] **Profiles Table**:
+- [x] **Profiles Table**:
     - Ensure `xp` and `level` columns exist (should be done in Story 8.1).
-- [ ] **Data Integrity**:
+- [x] **Data Integrity**:
     - Create UNIQUE INDEX on `answers (question_id)` WHERE `is_accepted = true`.
     - This creates a hard DB constraint preventing multiple accepted answers (race condition proof).
 
