@@ -20,6 +20,7 @@ const mockSupabase = {
 
 vi.mock('@/lib/supabase/server', () => ({
     createClient: vi.fn(() => Promise.resolve(mockSupabase)),
+    createPublicClient: vi.fn(() => mockSupabase), // Added for leaderboard actions
 }));
 
 vi.mock('next/cache', () => ({

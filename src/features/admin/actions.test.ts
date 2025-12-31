@@ -90,7 +90,7 @@ describe('Admin Actions', () => {
             mockSingle.mockResolvedValueOnce({ data: { role: 'user' } });
 
             const result = await resolveFlag('r-1', 'chat', 'keep');
-            expect(result).toHaveProperty('error', 'Unauthorized');
+            expect(result).toHaveProperty('error', 'Unauthorized: Not an Admin');
         });
 
         it('should resolve flags on keep', async () => {
