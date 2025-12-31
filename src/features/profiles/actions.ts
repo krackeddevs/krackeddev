@@ -912,6 +912,6 @@ export const fetchActiveContributors = unstable_cache(
             return { data: [], error: "Unexpected error" };
         }
     },
-    ['active-contributors-data'],
+    ['active-contributors-v2'], // Changed key to force cache regeneration
     { revalidate: 300, tags: ['active-contributors'] } // 5 minutes cache
 );
