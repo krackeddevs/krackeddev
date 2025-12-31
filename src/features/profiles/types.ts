@@ -14,6 +14,17 @@ export interface GithubLanguage {
     color: string;
     percentage: number;
 }
+
+export interface TopHunter {
+    id: string;
+    username: string;
+    full_name: string | null;
+    avatar_url: string | null;
+    developer_role: string | null;
+    location: string | null;
+    totalWins: number;
+    totalEarnings: number;
+}
 // Adding the container type for consistency
 export interface GithubContributionCalendar {
     totalContributions: number;
@@ -63,3 +74,25 @@ export type DevPulseData = {
     monthly: DevPulseDataPoint[];
     yearly: DevPulseDataPoint[];
 };
+
+export interface XPEvent {
+    id: string;
+    userId: string;
+    eventType: 'daily_login' | 'github_contribution' | 'bounty_submission' | 'bounty_win' | 'streak_milestone' | 'profile_completion' | 'manual_adjustment' | 'ask_question' | 'answer_question' | 'answer_accepted' | 'upvote_received';
+    xpAmount: number;
+    metadata: Record<string, any>;
+    createdAt: string;
+}
+
+export interface LeaderboardEntry {
+    id: string;
+    username: string;
+    avatar_url: string | null;
+    level: number;
+    xp: number;
+    rank: number;
+    developer_role: string | null;
+    stack?: string[] | null;
+}
+
+export type LeaderboardTimeframe = 'all-time' | 'week';

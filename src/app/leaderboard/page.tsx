@@ -1,87 +1,73 @@
-import { fetchTopHunters } from "@/features/profiles/actions";
-import { TopHuntersList } from "@/features/profiles/components/top-hunters-list";
-import { Trophy, ArrowLeft, Users } from "lucide-react";
-import Link from "next/link";
+import { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
+import { fetchLeaderboard, getUserRank, fetchTopHunters } from "@/features/profiles/actions";
+import { LeaderboardTabs } from "@/features/profiles/components/leaderboard-tabs";
+import { YourRankWidget } from "@/features/profiles/components/your-rank-widget";
 
-export const metadata = {
-    title: "Leaderboard | Kracked Devs",
-    description: "See the top bounty hunters in the Kracked Devs community ranked by wins and earnings.",
-};
+import { CommunitySubNav } from "@/features/community/components/shared/community-sub-nav";
+
+// Cache for 1 hour to balance freshness and performance
+export const revalidate = 3600;
 
 export default async function LeaderboardPage() {
-    const { data: hunters, error } = await fetchTopHunters(50);
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Fetch all leaderboard data in parallel
+    const [
+        { data: allTimeData },
+        { data: weeklyData },
+        { data: topHunters },
+        userRank
+    ] = await Promise.all([
+        fetchLeaderboard('all-time', undefined, 100),
+        fetchLeaderboard('week', undefined, 100),
+        fetchTopHunters(100),
+        user ? getUserRank(user.id) : null
+    ]);
 
     return (
-        <main className="min-h-screen">
-            <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
-            <div className="relative z-10">
+        <div className="min-h-screen bg-background text-foreground">
+            <CommunitySubNav />
+            <main className="container mx-auto px-4 py-8 space-y-8">
                 {/* Header */}
-                <div className="bg-card/50 border-b border-border">
-                    <div className="container mx-auto px-4 py-6 max-w-5xl">
-                        <Link
-                            href="/"
-                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-mono text-sm mb-4"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            Back to Home
-                        </Link>
+                <div className="text-center space-y-4 mb-12">
+                    <h1
+                        className="text-4xl md:text-6xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary via-foreground to-secondary animate-pulse-slow glitch-text dark:from-neon-primary dark:via-white dark:to-neon-secondary"
+                        data-text="GLOBAL RANKINGS"
+                    >
+                        GLOBAL RANKINGS
+                    </h1>
+                    <p className="text-muted-foreground max-w-2xl mx-auto font-mono text-sm md:text-base">
+                        Competing for glory, bounties, and infinite recursive loops.
+                    </p>
+                </div>
 
-                        {/* Tab Navigation */}
-                        <div className="flex items-center gap-4 mb-4">
-                            <Link
-                                href="/members"
-                                className="flex items-center gap-2 px-4 py-2 border-2 border-muted-foreground/30 hover:border-neon-primary text-muted-foreground hover:text-neon-primary transition-colors rounded-lg"
-                            >
-                                <Users className="w-4 h-4" />
-                                <span className="font-mono text-sm">Members</span>
-                            </Link>
-                            <div
-                                className="flex items-center gap-2 px-4 py-2 border-2 rounded-lg"
-                                style={{
-                                    borderColor: 'var(--rank-gold)',
-                                    backgroundColor: 'var(--rank-gold-bg)',
-                                    color: 'var(--rank-gold)'
-                                }}
-                            >
-                                <Trophy className="w-4 h-4" />
-                                <span className="font-mono text-sm">Leaderboard</span>
-                            </div>
-                        </div>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    {/* Main Leaderboard - Takes 3 cols */}
+                    <div className="lg:col-span-3">
+                        <LeaderboardTabs
+                            allTimeData={allTimeData || []}
+                            weeklyData={weeklyData || []}
+                            topHunters={topHunters || []}
+                            currentUserId={user?.id}
+                        />
+                    </div>
 
-                        <div className="flex items-center gap-3">
-                            <div
-                                className="w-12 h-12 border-2 flex items-center justify-center rounded-xl"
-                                style={{
-                                    borderColor: 'var(--rank-gold)',
-                                    backgroundColor: 'var(--rank-gold-bg)',
-                                    color: 'var(--rank-gold)'
-                                }}
-                            >
-                                <Trophy className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h1 className="text-2xl font-bold font-mono text-foreground">
-                                    LEADERBOARD
-                                </h1>
-                                <p className="text-muted-foreground font-mono text-sm">
-                                    Top developers ranked by bounty wins
-                                </p>
-                            </div>
-                        </div>
+                    {/* Sidebar - Takes 1 col */}
+                    <div className="space-y-6">
+                        {/* Your Rank Widget */}
+                        <YourRankWidget
+                            rank={userRank?.global_rank}
+                            totalUsers={userRank?.total_users}
+                            isAuthenticated={!!user}
+                            showButton={false}
+                        />
+
+                        {/* Additional widgets could go here */}
                     </div>
                 </div>
-
-                {/* Leaderboard */}
-                <div className="container mx-auto px-4 py-8 max-w-5xl">
-                    {error ? (
-                        <div className="text-center py-12 text-red-400 font-mono">
-                            {error}
-                        </div>
-                    ) : (
-                        <TopHuntersList hunters={hunters} />
-                    )}
-                </div>
-            </div>
-        </main>
+            </main>
+        </div>
     );
 }

@@ -1,6 +1,6 @@
 # Story 8.5: Leaderboards & Rankings
 
-Status: backlog
+Status: done
 priority: must-have
 assignee: antique_gravity
 epic: 8
@@ -29,16 +29,16 @@ So that I'm motivated to level up and compete with peers.
 
 ## Tasks/Subtasks
 
-- [ ] Create `/leaderboard` page route <!-- id: 1 -->
-- [ ] Create server action `fetchLeaderboard(timeframe, skill?)` <!-- id: 2 -->
-- [ ] Build `LeaderboardTable` component <!-- id: 3 -->
-- [ ] Build `LeaderboardTabs` component (Week/All-Time/Skills) <!-- id: 4 -->
-- [ ] Create `YourRankWidget` component for profile <!-- id: 5 -->
-- [ ] Add database indexes for leaderboard queries <!-- id: 6 -->
-- [ ] Implement caching strategy (15-min cache) <!-- id: 7 -->
-- [ ] Add pagination for leaderboards (top 100 per page) <!-- id: 8 -->
-- [ ] Style with cyberpunk theme <!-- id: 9 -->
-- [ ] Add unit tests for ranking logic <!-- id: 10 -->
+- [x] Create `/leaderboard` page route <!-- id: 1 -->
+- [x] Create server action `fetchLeaderboard(timeframe, skill?)` <!-- id: 2 -->
+- [x] Build `LeaderboardTable` component <!-- id: 3 -->
+- [x] Build `LeaderboardTabs` component (Week/All-Time/Skills) <!-- id: 4 -->
+- [x] Create `YourRankWidget` component for profile <!-- id: 5 -->
+- [x] Add database indexes for leaderboard queries <!-- id: 6 -->
+- [x] Implement caching strategy (15-min cache) <!-- id: 7 -->
+- [x] Add pagination for leaderboards (top 100 per page) <!-- id: 8 -->
+- [x] Style with cyberpunk theme <!-- id: 9 -->
+- [x] Add unit tests for ranking logic <!-- id: 10 -->
 
 ## Technical Requirements
 

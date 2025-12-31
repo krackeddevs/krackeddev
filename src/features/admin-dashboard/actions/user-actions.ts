@@ -5,9 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 export async function banUser(userId: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
-        .from("profiles")
-        // @ts-expect-error - is_banned column not yet in generated types (pending migration)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.from("profiles") as any)
         .update({ is_banned: true })
         .eq("id", userId);
 
@@ -21,9 +20,8 @@ export async function banUser(userId: string) {
 export async function unbanUser(userId: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
-        .from("profiles")
-        // @ts-expect-error - is_banned column not yet in generated types (pending migration)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.from("profiles") as any)
         .update({ is_banned: false })
         .eq("id", userId);
 
@@ -37,9 +35,8 @@ export async function unbanUser(userId: string) {
 export async function updateUserRole(userId: string, role: string) {
     const supabase = await createClient();
 
-    const { error } = await supabase
-        .from("profiles")
-        // @ts-expect-error - Supabase types restrictive for updates
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.from("profiles") as any)
         .update({ role })
         .eq("id", userId);
 

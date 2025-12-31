@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck } from 'lucide-react';
+import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck, ShieldAlert } from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
 
 interface SidebarContentProps {
@@ -54,6 +54,14 @@ export function AdminSidebarContent({ className, onLinkClick }: SidebarContentPr
                 >
                     <BadgeCheck className="w-4 h-4" />
                     Verifications
+                </Link>
+                <Link
+                    href="/admin/moderation"
+                    onClick={onLinkClick}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
+                >
+                    <ShieldAlert className="w-4 h-4" />
+                    Moderation
                 </Link>
             </nav>
 

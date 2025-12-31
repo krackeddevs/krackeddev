@@ -15,11 +15,14 @@ export interface Profile {
   bio: string | null;
   level: number;
   xp: number;
+  last_login_at?: string | null;
+  last_xp_grant_date?: string | null;
   role: UserRole;
   developer_role: string | null;
   stack: string[] | null;
   location: string | null;
   onboarding_completed: boolean;
+  is_banned?: boolean;
   status: 'active' | 'banned';
   created_at: string;
   updated_at: string;
@@ -190,6 +193,20 @@ export interface CompanyMember {
   created_at: string;
 }
 
+export interface Message {
+  id: string;
+  channel_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  is_deleted: boolean;
+  // Drizzle
+  channelId?: string;
+  userId?: string;
+  createdAt?: string;
+  isDeleted?: boolean;
+}
+
 export interface JobApplication {
   id: string;
   job_id: string;
@@ -199,6 +216,50 @@ export interface JobApplication {
   status: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface Question {
+  id: string;
+  title: string;
+  slug: string;
+  body: string;
+  author_id: string;
+  tags: string[];
+  upvotes: number;
+  view_count: number;
+  accepted_answer_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Answer {
+  id: string;
+  question_id: string;
+  body: string;
+  author_id: string;
+  is_accepted: boolean;
+  upvotes: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Comment {
+  id: string;
+  body: string;
+  author_id: string;
+  question_id: string | null;
+  answer_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface XPEvent {
+  id: string;
+  user_id: string;
+  event_type: string;
+  xp_amount: number;
+  metadata: Record<string, any>;
+  created_at: string;
 }
 
 export interface Database {
@@ -296,6 +357,104 @@ export interface Database {
           }
         ];
       };
+      messages: {
+        Row: Message;
+        Insert: Partial<Message>;
+        Update: Partial<Message>;
+        Relationships: [
+          {
+            foreignKeyName: "messages_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      questions: {
+        Row: Question;
+        Insert: Partial<Question>;
+        Update: Partial<Question>;
+        Relationships: [
+          {
+            foreignKeyName: "questions_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "fk_accepted_answer";
+            columns: ["accepted_answer_id"];
+            isOneToOne: false;
+            referencedRelation: "answers";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      answers: {
+        Row: Answer;
+        Insert: Partial<Answer>;
+        Update: Partial<Answer>;
+        Relationships: [
+          {
+            foreignKeyName: "answers_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "answers_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      comments: {
+        Row: Comment;
+        Insert: Partial<Comment>;
+        Update: Partial<Comment>;
+        Relationships: [
+          {
+            foreignKeyName: "comments_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "comments_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "comments_answer_id_fkey";
+            columns: ["answer_id"];
+            isOneToOne: false;
+            referencedRelation: "answers";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      xp_events: {
+        Row: XPEvent;
+        Insert: Partial<XPEvent>;
+        Update: Partial<XPEvent>;
+        Relationships: [
+          {
+            foreignKeyName: "xp_events_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -309,6 +468,12 @@ export interface Database {
           p_website_url?: string | null;
         };
         Returns: string;
+      };
+      increment_question_view: {
+        Args: {
+          question_id: string;
+        };
+        Returns: void;
       };
     };
     Enums: {

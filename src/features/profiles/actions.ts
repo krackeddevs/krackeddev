@@ -1,7 +1,8 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { createClient, createPublicClient } from "@/lib/supabase/server";
+import { revalidatePath, unstable_cache } from "next/cache";
+import { LeaderboardEntry } from "./types";
 
 export type ProfileData = {
     id: string;
@@ -27,6 +28,16 @@ export async function getProfile(): Promise<{ data?: ProfileData; error?: string
 
     if (!user) {
         return { error: "Not authenticated" };
+    }
+
+    // Check and grant daily login XP (fire and forget to not block UI)
+    // We await it here to ensure consistency, but in high-scale could be backgrounded.
+    // Using try-catch to not block profile load on XP error.
+    try {
+        const { checkAndGrantDailyLoginXP } = await import("./xp-system");
+        await checkAndGrantDailyLoginXP(user.id);
+    } catch (err) {
+        console.error("Failed to grant daily login XP:", err);
     }
 
     const { data, error } = await supabase
@@ -296,6 +307,8 @@ export type Member = {
     developer_role: string | null;
     location: string | null;
     created_at: string;
+    level: number;
+    xp: number;
 };
 
 /**
@@ -306,7 +319,7 @@ export async function fetchAllMembers(limit: number = 50): Promise<{ data: Membe
 
     const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, full_name, avatar_url, developer_role, location, created_at, status")
+        .select("id, username, full_name, avatar_url, developer_role, location, created_at, status, level, xp")
         .eq("status", "active")
         .eq("onboarding_completed", true)
         .order("created_at", { ascending: false })
@@ -481,6 +494,15 @@ export async function fetchContributionStats(username: string): Promise<{ data?:
                     .eq("id", user.id);
 
                 statsData = newStats;
+
+                // Grant XP for contributions
+                try {
+                    const { checkAndGrantContributionXP } = await import("./xp-system");
+                    await checkAndGrantContributionXP(user.id, statsData);
+                } catch (err) {
+                    console.error("Failed to grant contribution XP:", err);
+                }
+
             } else if (liveError) {
                 console.error("Failed to sync GitHub stats:", liveError);
                 // If sync failed and data is STALE (older than 24 hours), force return null
@@ -495,6 +517,16 @@ export async function fetchContributionStats(username: string): Promise<{ data?:
 
     // 3. Calculate Streaks
     const contributionStats = calculateContributionStats(statsData);
+
+    // Grant Streak Bonuses if own profile
+    if (contributionStats && user && user.id === profile.id) {
+        try {
+            const { checkAndGrantStreakBonuses } = await import("./xp-system");
+            await checkAndGrantStreakBonuses(user.id, contributionStats.currentStreak);
+        } catch (err) {
+            console.error("Failed to grant streak bonuses:", err);
+        }
+    }
 
     // Attach Level/XP if available (mainly for public view where we fetch them)
     if (contributionStats && profile) {
@@ -560,5 +592,198 @@ export async function fetchMiniProfileData(userId: string): Promise<MiniProfileD
         current_streak: currentStreak,
         level: profile.level || 1,
         xp: profile.xp || 0
+    };
+}
+
+import { calculateXPProgress, XPProgress } from "./xp-system";
+
+/**
+ * Fetch detailed XP progress for the current user.
+ * Used for the profile progress bar and level display.
+ */
+export async function getXPProgress(): Promise<{ data?: XPProgress; error?: string }> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "Not authenticated" };
+    }
+
+    const { data: profileData, error } = await supabase
+        .from('profiles')
+        .select('xp, level')
+        .eq('id', user.id)
+        .single();
+
+    if (error || !profileData) {
+        return { error: "Failed to fetch XP data" };
+    }
+
+    // Explicit cast to avoid type errors
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const profile = profileData as any;
+
+    const progress = calculateXPProgress(profile.xp || 0);
+
+    return { data: progress };
+}
+
+import { XPEvent } from './types';
+
+export async function fetchUserXPHistory(
+    limit: number = 20
+): Promise<{ data?: XPEvent[]; error?: string }> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { error: "Not authenticated" };
+    }
+
+    const { data, error } = await supabase
+        .from('xp_events')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+    if (error) {
+        return { error: error.message };
+    }
+
+    // Cast snake_case DB fields to camelCase if necessary, or ensure frontend handles it.
+    // Our XPEvent type likely expects DB shape if generated, but let's map it cleanly if we defined a frontend Type.
+    // Checking previous usage, we likely used raw DB types or need to map.
+    // Let's assume raw DB shape for now as per Supabase patterns, but we need to check the Type definition.
+    // Based on Story 8.4 code snippet, the frontend expects camelCase (eventType, xpAmount).
+    // Let's check 'src/features/profiles/types.ts' first to be safe, but for now implementing mapping.
+
+    // Actually, let's just return the raw data and let the component handle it or map it here.
+    // The plan showed camelCase usage in components. Let's map it to match the plan.
+
+    const events: XPEvent[] = (data || []).map((event: any) => ({
+        id: event.id,
+        userId: event.user_id,
+        eventType: event.event_type,
+        xpAmount: event.xp_amount,
+        metadata: event.metadata,
+        createdAt: event.created_at
+    }));
+
+    return { data: events };
+}
+
+/**
+ * Fetch global leaderboard data with caching (15 minutes)
+ */
+export const fetchLeaderboard = unstable_cache(
+    async (
+        timeframe: 'week' | 'all-time' = 'all-time',
+        skill?: string,
+        limit: number = 100
+    ): Promise<{ data: LeaderboardEntry[]; error?: string }> => {
+        const supabase = createPublicClient();
+
+        try {
+            if (timeframe === 'week') {
+                // Weekly leaderboard using the DB function
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const { data, error } = await (supabase.rpc as any)('get_weekly_leaderboard', { limit_count: limit });
+
+                if (error) {
+                    console.error("Error fetching weekly leaderboard:", error);
+                    return { data: [], error: "Failed to fetch leaderboard" };
+                }
+
+                // Map RPC result to LeaderboardEntry
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const entries: LeaderboardEntry[] = (data || []).map((row: any) => ({
+                    id: row.id,
+                    username: row.username || 'Anonymous',
+                    avatar_url: row.avatar_url,
+                    level: row.level,
+                    xp: row.weekly_xp, // For weekly view, show weekly XP
+                    rank: row.rank,
+                    developer_role: row.developer_role,
+                    stack: row.stack
+                }));
+
+                return { data: entries };
+            } else {
+                // All-time leaderboard directly from profiles
+                let query = supabase
+                    .from('profiles')
+                    .select('id, username, avatar_url, level, xp, developer_role, stack')
+                    .order('xp', { ascending: false })
+                    .limit(limit);
+
+                if (skill) {
+                    query = query.contains('stack', [skill]);
+                }
+
+                const { data, error } = await query;
+
+                if (error) {
+                    console.error("Error fetching leaderboard:", error);
+                    return { data: [], error: "Failed to fetch leaderboard" };
+                }
+
+                // Add rank numbers
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const rankedData: LeaderboardEntry[] = (data || []).map((entry: any, index: number) => ({
+                    id: entry.id,
+                    username: entry.username || 'Anonymous',
+                    avatar_url: entry.avatar_url,
+                    level: entry.level,
+                    xp: entry.xp,
+                    rank: index + 1,
+                    developer_role: entry.developer_role,
+                    stack: entry.stack
+                }));
+
+                return { data: rankedData };
+            }
+        } catch (err) {
+            console.error("Unexpected error in fetchLeaderboard:", err);
+            return { data: [], error: "Unexpected error" };
+        }
+    },
+    ['leaderboard-data'],
+    { revalidate: 900, tags: ['leaderboard'] } // 15 minutes cache
+);
+
+export async function getUserRank(userId: string): Promise<{ global_rank: number; total_users: number } | null> {
+    const supabase = await createClient();
+
+    // Get total count
+    const { count: totalCount, error: countError } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+
+    if (countError) return null;
+
+    // Get user's XP
+    const { data: userProfileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('xp')
+        .eq('id', userId)
+        .single();
+
+    if (profileError || !userProfileData) return null;
+
+    // Explicit cast
+    const userProfile = userProfileData as { xp: number };
+
+    // Count how many users have more XP efficiently
+    const { count: rankCount, error: rankError } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .gt('xp', userProfile.xp);
+
+    if (rankError) return null;
+
+    return {
+        global_rank: (rankCount || 0) + 1,
+        total_users: totalCount || 0
     };
 }

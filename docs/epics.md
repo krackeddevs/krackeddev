@@ -68,9 +68,10 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 | **EPIC-3** | Bounty Marketplace & Submissions | FR8, FR9, FR10, FR11, FR12 | NFR1, NFR5 |
 | **EPIC-4** | Admin Dashboard & Operations | FR13, FR14, FR15, FR16, FR-ADM-01 | NFR4 |
 | **EPIC-5** | Santan Island Game Integration | FR17, FR18 | NFR2 |
-| **EPIC-6** | Chat & Community Platform | FR-CHAT-01, FR-QA-01, FR-QA-02, FR-QA-03, FR-QA-04 | NFR1, NFR5 |
+| **EPIC-6** | Chat & Community Platform (Legacy) | - | - |
 | **EPIC-7** | Profile Enhancement & Landing Page Polish | FR5, FR7, FR-LAND-01 | NFR1 |
 | **EPIC-10** | Multi-Theme System | - | NFR1 (Accessibility) |
+| **EPIC-11** | Community Platform & Townhall | FR-CHAT-01, FR-QA-01, FR-QA-02, FR-QA-03, FR-QA-04 | NFR1, NFR5 |
 
 ## Epic List
 
@@ -599,6 +600,32 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 - **Value:** Improves accessibility, user choice, and visual comfort for different viewing preferences and environments.
 - **Complexity:** Medium-High (Extensive refactoring of hardcoded colors, theme-aware component updates).
 
+### EPIC-11: Community Platform
+
+**Goal:** Transform the platform into a "Guild" with realtime chat, Q&A forums, and a reputation system.
+
+- **Scope:** Townhall Chat, Q&A Forum, XP System, Moderation.
+- **Value:** Retention, SEO, and community building.
+- **Complexity:** High (Realtime, Gamification, Content Safety).
+
+#### STORY-11.0: Community Platform Foundation
+- **Goal:** Shared layout and navigation infrastructure.
+
+#### STORY-11.1: Townhall Chat UI & Realtime
+- **Goal:** Persistent floating chat overlay.
+
+#### STORY-11.2: Community Q&A Listing & Details
+- **Goal:** Question browsing and reading experience.
+
+#### STORY-11.3: Asking & Answering (Markdown + Code)
+- **Goal:** Rich text editor for technical content.
+
+#### STORY-11.4: Accepted Answer Logic & Gamification
+- **Goal:** XP rewards and reputation engine.
+
+#### STORY-11.5: Moderation System
+- **Goal:** Flagging and admin moderation tools.
+
 #### STORY-10.1: Theme Infrastructure & Provider Setup
 
 **As a** Developer
@@ -654,3 +681,94 @@ NFR5: Reliability - 99.9% uptime for Public Job Board.
 - [ ] All themes pass WCAG AA contrast requirements.
 - [ ] User testing confirms each theme is visually comfortable.
 
+
+### EPIC-11: Community Platform & Townhall
+
+**Goal:** Create synchronous and asynchronous spaces for developer interaction, transforming the marketplace into a "Digital Guild" with gamified social features.
+
+- **Scope:** Real-time Townhall Chat, Community Q&A Forum, XP & Reputation/Gamification Engine, Moderation & Safety Tools.
+- **Value:** Increases retention by 30% (target), builds a permanent knowledge base for SEO, and solves the "Empty State" problem.
+- **Complexity:** High (Real-time sockets, Rich Text Editor, Recursive data models, multi-level gamification).
+
+#### STORY-11.0: Foundation & Theme Standardization
+
+**As a** Developer
+**I want to** establish the foundational layout and theme structure for the Community Platform
+**So that** all subsequent features (Chat, Q&A) have a consistent look and feel that matches the existing application.
+
+**Acceptance Criteria:**
+
+- [ ] **Community Layout:** Create `src/app/community/layout.tsx` wrapping all routes.
+- [ ] **Unified Hub:** Repoint "Community" nav link to `/community`.
+- [ ] **Sub-Navigation:** Implement tabs for Townhall, Q&A, Members, and Leaderboard.
+- [ ] **Theme Support:** Ensure strict adherence to Light, Dark, and Monochrome themes.
+- [ ] **Responsive:** fully responsive layout structure.
+
+#### STORY-11.1: Townhall Chat UI & Realtime
+
+**As a** User
+**I want to** communicate with other developers in a real-time floating chat
+**So that** I feel connected to the active community ("Santan Island Vibe").
+
+**Acceptance Criteria:**
+
+- [ ] **Floating Overlay:** Collapsible chat widget fixed to bottom-right.
+- [ ] **Channels:** Tabs for `#general`, `#bounty-hunting`, `#looking-for-group`.
+- [ ] **Real-time:** Use Supabase Realtime to broadcast messages instantly.
+- [ ] **Presence:** Show "X Online" count in the header.
+- [ ] **Rate Limiting:** Prevent sending more than 1 message per 2 seconds.
+- [ ] **Mobile:** Full-screen modal behavior on mobile devices.
+
+#### STORY-11.2: Community Q&A Listing & Details
+
+**As a** Developer
+**I want to** browse questions and view detailed discussions
+**So that** I can find answers to my technical problems or help others.
+
+**Acceptance Criteria:**
+
+- [ ] **Route:** `/community` (List) and `/community/question/[slug]` (Detail).
+- [ ] **List View:** Sortable by "Newest", "Top Voted", "Unanswered".
+- [ ] **Search:** Keyword search logic (client-side filter or DB text search).
+- [ ] **Detail View:** Shows Question body (Markdown), Tags, Author, and List of Answers.
+- [ ] **SEO:** Server-side rendered meta tags for Question Title/Description.
+
+#### STORY-11.3: Asking & Answering (Markdown + Code)
+
+**As a** Developer
+**I want to** post questions and answers using rich text and code blocks
+**So that** I can communicate technical concepts clearly.
+
+**Acceptance Criteria:**
+
+- [ ] **Rich Editor:** Implement Markdown editor (bold, italic, links, lists).
+- [ ] **Code Blocks:** Syntax highlighting support for code snippets.
+- [ ] **Validation:** Title > 15 chars, Body > 30 chars.
+- [ ] **Tagging:** Multi-select for tags (e.g., `react`, `supabase`).
+- [ ] **Preview:** Toggle to preview parsed Markdown before posting.
+
+#### STORY-11.4: Accepted Answer Logic & Gamification
+
+**As a** User
+**I want to** receive XP rewards for my contributions
+**So that** I am motivated to provide high-quality answers.
+
+**Acceptance Criteria:**
+
+- [ ] **Accept Answer:** Only Question Author can mark an answer as "Accepted".
+- [ ] **XP Trigger:** "Accepted" status grants **+100 XP** to Answerer, **+20 XP** to Asker.
+- [ ] **Listing:** Accepted answer pinned to top of list below question.
+- [ ] **Daily Limits:** Max 3 paid questions/day, 5 paid answers/day (XP capping to prevent farming).
+
+#### STORY-11.5: Moderation System (Report & Flags)
+
+**As a** Trusted User (Lvl 20+)
+**I want to** flag inappropriate content
+**So that** the community remains safe and professional.
+
+**Acceptance Criteria:**
+
+- [ ] **Flag Action:** UI button to "Report" a message, question, or answer.
+- [ ] **Trust Weight:** Reports from Lvl 20+ users count as 3x flags.
+- [ ] **Auto-Hide:** Content with >3 unique flags is automatically hidden pending review.
+- [ ] **Admin Connection:** Flags populate a `moderation_queue` table (backend only for now).

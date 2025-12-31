@@ -80,7 +80,7 @@ describe("Submission URL Validation", () => {
         it("returns error for invalid URL format", () => {
             const result = validateSubmissionUrl("not-a-url");
             expect(result.valid).toBe(false);
-            expect(result.error).toContain("valid URL");
+            expect(result.error).toContain("must use HTTPS");
         });
 
         it("trims whitespace and validates", () => {

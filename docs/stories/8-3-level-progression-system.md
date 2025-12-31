@@ -26,13 +26,13 @@ So that my progress is visible and I feel a sense of achievement.
 
 ## Tasks/Subtasks
 
-- [ ] Implement `calculateLevelFromXP()` function <!-- id: 1 -->
-- [ ] Implement `calculateXPForNextLevel()` function <!-- id: 2 -->
-- [ ] Implement `getXPProgress()` server action <!-- id: 3 -->
-- [ ] Add level progression constants/config <!-- id: 4 -->
-- [ ] Handle max level cap (if defined) <!-- id: 5 -->
-- [ ] Add unit tests for level calculations <!-- id: 6 -->
-- [ ] Test edge cases (0 XP, max level, large numbers) <!-- id: 7 -->
+- [x] Implement `calculateLevelFromXP()` function <!-- id: 1 -->
+- [x] Implement `calculateXPForNextLevel()` function <!-- id: 2 -->
+- [x] Implement `getXPProgress()` server action <!-- id: 3 -->
+- [x] Add level progression constants/config <!-- id: 4 -->
+- [x] Handle max level cap (if defined) <!-- id: 5 -->
+- [x] Add unit tests for level calculations <!-- id: 6 -->
+- [x] Test edge cases (0 XP, max level, large numbers) <!-- id: 7 -->
 
 ## Technical Requirements
 

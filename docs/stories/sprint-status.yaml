@@ -97,4 +97,14 @@ development_status:
       9-6-jobs-page-ux-refinement: completed
       9-7-company-verification-flow: review
   epic-9-retrospective: optional
-```
+
+  epic-11-community-platform:
+    status: backlog
+    stories:
+      11-0-community-foundation: backlog
+      11-1-townhall-chat-ui-realtime: backlog
+      11-2-community-qa-listing-details: backlog
+      11-3-asking-answering-markdown-code: backlog
+      11-4-accepted-answer-logic-gamification: backlog
+      11-5-moderation-system-report-flags: backlog
+  epic-11-retrospective: optional

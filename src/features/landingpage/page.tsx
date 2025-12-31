@@ -2,7 +2,6 @@
 
 import "@/styles/jobs.css";
 import { ParallaxIntro } from "./components/parallax-intro";
-import { TownhallV2 } from "./components/townhall";
 import { useLandingSequence } from "./hooks/use-landing-sequence";
 
 import { BrandCTA } from "./components/brand-cta";
@@ -13,7 +12,7 @@ import { FloatingNav } from "./components/floating-nav";
 import { CommunityMap } from "./components/community-map";
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
-import { Users, ChevronDown, Building2, ScrollText, Briefcase } from "lucide-react";
+import { Users, Building2, ScrollText, Briefcase } from "lucide-react";
 import { useState, useEffect } from "react";
 
 

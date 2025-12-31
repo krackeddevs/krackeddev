@@ -9,6 +9,15 @@ To transition from a "Marketplace" to a "Guild", Kracked Devs needs permanent sp
 1.  **Townhall Chat (Synchronous):** A live, "in-game" chat overlay for casual banter, "GM" (Good Morning) rituals, and real-time hype.
 2.  **Community Q&A (Asynchronous):** A structured, specialized forum (Stack Overflow style) for technical help, building the "Knowledge Base" of the Malaysian tech ecosystem.
 
+### 1.1 Navigation Strategy (Unified Hub)
+To avoid fragmentation, all social features will be grouped under a single `/community` hub.
+- **Entry Point:** The "Community" button on the Navbar/Landing Page points to `/community`.
+- **Sub-Navigation:** A tabbed interface connects the pillars:
+  - **Townhall:** (`/community`) - The real-time feed/lobby.
+  - **Q&A:** (`/community/questions`) - The knowledge base.
+  - **Members:** (`/members`) - The existing directory.
+  - **Leaderboard:** (`/leaderboard`) - The existing ranking page.
+
 ## 2. Feature 1: Townhall Chat (The "Vibe")
 > "The heartbeat of Santan Island."
 
@@ -156,5 +165,76 @@ create table public.answers (
 *   **Danger:** If every user uploads a new avatar daily, we hit this.
 *   **Mitigation:** Do NOT use `next/image` optimization for user uploads. Use Supabase Storage transformation (faster/cheaper) or Cloudinary.
 
-### 7.4 Verdict on "Vercel Tax"
 While Vercel is more expensive than a raw VPS ($5/mo), the **DevOps savings** justify the cost. Managing WebSocket servers, Redis, and Postgres backups manually would cost >5 hours of engineering time/month ($500+ value). The $46/mo infrastructure cost is efficient for a platform of this scale.
+
+## 8. Success Metrics & KPIs
+> "If you can't measure it, you can't improve it."
+
+### 8.1 Primary Metrics (North Star)
+*   **Platform Retention:** % of users who return to Townhall/Q&A within 7 days.
+*   **Knowledge Velocity:** Average time from "Question Asked" to "Accepted Answer".
+*   **Community Health:** Ratio of Active Contributors (Answerers) to Passive Consumers (Viewers) — Target > 1:10.
+
+### 8.2 Operational Metrics
+*   **Engagement:** Daily Active Users (DAU) in Townhall vs. Total DAU.
+*   **Content Volume:** Questions asked / week.
+*   **Resolution Rate:** % of questions with at least one answer; % of questions with an Accepted Answer.
+*   **Vibe Check:** Avg. messages per active Townhall user per session.
+
+## 9. Gamification Economics (The "Engine")
+> Connecting the "Vibe" to the "Systems". This economy must be balanced to prevent inflation.
+
+### 9.1 XP Table (Proposed)
+| Action | Actor | XP Reward | Limit |
+| :--- | :--- | :--- | :--- |
+| **Ask Question** | Asker | +10 XP | Max 3/day (Prevent spam) |
+| **Post Answer** | Answerer | +20 XP | Max 5/day |
+| **Get Upvoted** | Answerer/Asker | +5 XP | No limit |
+| **Answer Accepted** | Answerer | +100 XP | No limit (High value) |
+| **Accept an Answer** | Asker | +20 XP | Incentivize closing loops |
+
+### 9.2 Reputation Tiers & Privileges
+XP is not just vanity; it unlocks moderation powers to scale the community without more staff.
+
+*   **Lvl 0 (Newbie):** Can Ask, Answer, Chat in #general.
+*   **Lvl 5 (Regular):** Can Chat in #bounty-hunting.
+*   **Lvl 10 (Trusted):** Can Downvote (content quality control).
+*   **Lvl 20 (Sheriff):** Can Flag messages for review; "Trusted" badge in chat.
+*   **Lvl 50 (Elder):** Can edit others' tags (taxonomy cleanup).
+
+## 10. Moderation & Safety Strategy
+> "Safety is a feature, not an afterthought."
+
+### 10.1 Automated Defenses
+*   **Profanity Filter:** Block list for common slurs in English/Malay using simple regex or 3rd party lib (`bad-words`).
+*   **Rate Limiting:**
+    *   *Chat:* 1 msg / 2 seconds burst catch.
+    *   *Forum:* 1 question / 5 mins for new accounts.
+*   **Shadowban:** If a user is flagged by system, their messages are only visible to them.
+
+### 10.2 Community Moderation
+*   **Report System:** "Flag" button on every message/question. 3 Flags = Auto-hide logic (pending Admin review).
+*   **Trusted Users:** Lvl 20+ users' reports carry 3x weight.
+
+### 10.3 Admin Tools
+*   **Admin Panel:** New tab "Moderation Queue" to see flagged items.
+*   **Actions:** Warn, Timeout (24h ban), Perma-Ban.
+*   **Audit Log:** Record all mod actions for accountability.
+
+## 11. Launch & Rollout Strategy
+> "Start small, scale fast."
+
+### 11.1 Phase A: Alpha (The "Founding 50")
+*   **Access:** Invite-only for top 50 existing leaderboard users.
+*   **Goal:** Seed the Q&A with high-quality content. The "Empty Restaurant" problem must be solved *before* public doors open.
+*   **Incentive:** "Founding Member" badge for Alpha participants.
+
+### 11.2 Phase B: Soft Launch (Beta)
+*   **Access:** Open to all logged-in users.
+*   **Promotion:** In-app toast notification only. No external blast.
+*   **Goal:** Stress test Supabase Realtime limits and moderation flow.
+
+### 11.3 Phase C: Public Launch
+*   **Event:** "Townhall Grand Opening" event (Synchronous time, e.g., Friday 8 PM).
+*   **Promotion:** Email blast (Brevo), Social Media.
+*   **Feature:** Global leaderboard reset or "Season 1" start to hype the new XP sources.

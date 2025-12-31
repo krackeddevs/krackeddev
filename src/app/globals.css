@@ -382,7 +382,7 @@ summary,
   pointer-events: none;
 }
 
-/* Glitch Effect */
+/* Glitch Effect - Subtler Version */
 .glitch-text {
   position: relative;
   color: var(--foreground);
@@ -396,46 +396,47 @@ summary,
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--background);
+  background: transparent;
 }
 
+/* Red/Cyan chromatic aberration without clipping */
 .glitch-text::before {
   left: 2px;
   text-shadow: -1px 0 var(--neon-secondary);
-  clip: rect(24px, 550px, 90px, 0);
-  animation: glitch-anim 3s infinite linear alternate-reverse;
+  animation: glitch-anim-subtle 3s infinite linear alternate-reverse;
+  opacity: 0.7;
 }
 
 .glitch-text::after {
   left: -2px;
   text-shadow: -1px 0 var(--neon-primary);
-  clip: rect(85px, 550px, 140px, 0);
-  animation: glitch-anim 2s infinite linear alternate-reverse;
+  animation: glitch-anim-subtle 2s infinite linear alternate-reverse;
+  opacity: 0.7;
 }
 
-@keyframes glitch-anim {
+@keyframes glitch-anim-subtle {
   0% {
-    clip: rect(10px, 9999px, 30px, 0);
+    transform: translate(0);
   }
 
   20% {
-    clip: rect(50px, 9999px, 60px, 0);
+    transform: translate(-1px, 1px);
   }
 
   40% {
-    clip: rect(20px, 9999px, 80px, 0);
+    transform: translate(-1px, -1px);
   }
 
   60% {
-    clip: rect(70px, 9999px, 90px, 0);
+    transform: translate(1px, 1px);
   }
 
   80% {
-    clip: rect(10px, 9999px, 40px, 0);
+    transform: translate(1px, -1px);
   }
 
   100% {
-    clip: rect(30px, 9999px, 50px, 0);
+    transform: translate(0);
   }
 }
 
@@ -810,12 +811,10 @@ input:-webkit-autofill:active {
   bottom: 0;
   right: 0;
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-    linear-gradient(
-      90deg,
+    linear-gradient(90deg,
       rgba(255, 0, 0, 0.06),
       rgba(0, 255, 0, 0.02),
-      rgba(0, 0, 255, 0.06)
-    );
+      rgba(0, 0, 255, 0.06));
   z-index: 50;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
@@ -855,4 +854,32 @@ img {
     background-position: 40% center !important;
     /* Adjust this % to keep the character in frame */
   }
+}
+
+/* Highlight.js Light Mode Override (Invert Dark Theme) */
+:root:not(.dark) .hljs {
+  filter: invert(0.93) hue-rotate(180deg);
+  background-color: #0d1117 !important;
+  /* Force original dark to invert correctly */
+  border-radius: 0.5rem;
+}
+
+/* Ensure code blocks have nice structure */
+.prose pre {
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+:root:not(.dark) .prose pre {
+  border: 1px solid #e2e8f0;
+  /* Add border in light mode for definition */
+}
+
+/* Specific styling for the Question Detail card layout */
+.prose {
+  max-width: none !important;
 }

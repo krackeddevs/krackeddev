@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { MiniProfileData } from "@/features/profiles/actions";
+import { LevelBadge } from "@/features/profiles/components/level-badge";
 import { Trophy, Zap, Code2, Globe } from "lucide-react";
 
 interface MiniProfileProps {
@@ -64,30 +65,28 @@ export function MiniProfile({ data, className }: MiniProfileProps) {
                 {/* Bottom: Stats */}
                 <div className="grid grid-cols-3 gap-2 border-t border-border pt-4 w-full">
                     {/* Level */}
+                    {/* Level */}
                     <div className="flex flex-col items-center p-2 rounded transition-colors hover:bg-muted/10">
-                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-neon-cyan whitespace-nowrap">
-                            <Globe className="h-3 w-3" />
-                            <span>Lvl {data.level}</span>
-                        </div>
-                        <span className="text-[9px] text-muted-foreground uppercase tracking-wider whitespace-nowrap">{data.xp} XP</span>
+                        <LevelBadge level={data.level} size="xs" showLabel={false} />
+                        <span className="text-[9px] text-muted-foreground uppercase tracking-wider whitespace-nowrap mt-1">{data.xp} XP</span>
                     </div>
 
                     {/* Wins */}
                     <div className="flex flex-col items-center p-2 rounded transition-colors hover:bg-muted/10">
-                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-rank-gold whitespace-nowrap">
-                            <Trophy className="h-3 w-3" />
+                        <div className="flex items-center gap-1.5 text-base font-mono font-bold text-rank-gold whitespace-nowrap">
+                            <Trophy className="h-5 w-5" />
                             <span>{data.bounties_won}</span>
                         </div>
-                        <span className="text-[9px] text-muted-foreground uppercase tracking-wider whitespace-nowrap">Wins</span>
+                        <span className="text-[9px] text-muted-foreground uppercase tracking-wider whitespace-nowrap mt-1">Wins</span>
                     </div>
 
                     {/* Streak */}
                     <div className="flex flex-col items-center p-2 rounded transition-colors hover:bg-muted/10">
-                        <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-rank-bronze whitespace-nowrap">
-                            <Zap className="h-3 w-3 text-rank-bronze fill-rank-bronze" />
+                        <div className="flex items-center gap-1.5 text-base font-mono font-bold text-rank-bronze whitespace-nowrap">
+                            <Zap className="h-5 w-5 text-rank-bronze fill-rank-bronze" />
                             <span>{data.current_streak}</span>
                         </div>
-                        <span className="text-[9px] text-muted-foreground uppercase tracking-wider whitespace-nowrap">Streak</span>
+                        <span className="text-[9px] text-muted-foreground uppercase tracking-wider whitespace-nowrap mt-1">Streak</span>
                     </div>
                 </div>
             </div>

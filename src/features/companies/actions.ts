@@ -104,44 +104,34 @@ export const getUserCompany = cache(async (): Promise<Company | null> => {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-        console.log("[getUserCompany] No user found");
-        return null;
+        return null; // Return null if not authenticated
     }
 
-    console.log("[getUserCompany] Fetching for user:", user.id);
-
-    // Get company_member record
-    const { data: memberData, error: memberError } = await (supabase.from("company_members") as any)
+    // Step 1: Check if user is a company member
+    const { data: memberData, error: memberError } = await supabase
+        .from("company_members")
         .select("company_id")
         .eq("user_id", user.id)
-        .eq("role", "owner")
-        .limit(1)
-        .maybeSingle();
+        .single();
 
-    console.log("[getUserCompany] Member data:", memberData);
-
-    if (memberError) {
+    if (memberError && memberError.code !== "PGRST116") {
         console.error("getUserCompany memberError:", JSON.stringify(memberError, null, 2));
-        return null;
     }
 
     if (!memberData) {
         return null;
     }
 
-    // Get company
+    // Step 2: Fetch company details
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: companyData, error: companyError } = await supabase
         .from("companies")
         .select("*")
-        .eq("id", memberData.company_id)
+        .eq("id", (memberData as any).company_id)
         .single();
-
-    console.log("[getUserCompany] Company data:", companyData);
-    console.log("[getUserCompany] Company error:", companyError);
 
     if (companyError) {
         console.error("getUserCompany companyError:", JSON.stringify(companyError, null, 2));
-        return null;
     }
 
     return companyData;
