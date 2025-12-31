@@ -67,11 +67,11 @@ export function BountyList({ bounties, filters, onClearFilters }: BountyListProp
 
             {/* No Active Bounties Notice */}
             {activeBounties.length === 0 && filters.status === "all" && (
-                <div className="mb-12 bg-gray-800/30 border border-gray-700 p-8 text-center">
-                    <div className="text-gray-400 font-mono mb-2">
+                <div className="mb-12 bg-card/50 border border-border p-8 text-center">
+                    <div className="text-muted-foreground font-mono mb-2">
                         No active bounties at the moment
                     </div>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-muted-foreground/80 text-sm">
                         Follow{" "}
                         <a
                             href="https://x.com/KrackedDevs"
