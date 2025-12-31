@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
-import { fetchLeaderboard, getUserRank, fetchTopHunters } from "@/features/profiles/actions";
+import { fetchLeaderboard, getUserRank, fetchTopHunters, fetchActiveContributors } from "@/features/profiles/actions";
 import { LeaderboardTabs } from "@/features/profiles/components/leaderboard-tabs";
+import { Trophy } from "lucide-react";
 import { YourRankWidget } from "@/features/profiles/components/your-rank-widget";
 
 import { CommunitySubNav } from "@/features/community/components/shared/community-sub-nav";
@@ -18,16 +19,24 @@ export default async function LeaderboardPage() {
         { data: allTimeData },
         { data: weeklyData },
         { data: topHunters },
+        { data: activeContributors },
         userRank
     ] = await Promise.all([
         fetchLeaderboard('all-time', undefined, 100),
         fetchLeaderboard('week', undefined, 100),
         fetchTopHunters(100),
+        fetchActiveContributors(100),
         user ? getUserRank(user.id) : null
     ]);
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div
+            className="min-h-screen bg-background text-foreground"
+            style={{
+                backgroundImage: 'var(--grid-background)',
+                backgroundSize: '20px 20px'
+            }}
+        >
             <CommunitySubNav />
             <main className="container mx-auto px-4 py-8 space-y-8">
                 {/* Header */}
@@ -43,29 +52,34 @@ export default async function LeaderboardPage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    {/* Main Leaderboard - Takes 3 cols */}
-                    <div className="lg:col-span-3">
-                        <LeaderboardTabs
-                            allTimeData={allTimeData || []}
-                            weeklyData={weeklyData || []}
-                            topHunters={topHunters || []}
-                            currentUserId={user?.id}
-                        />
+                {/* Your Rank - Compact inline display */}
+                {user && userRank?.global_rank && (
+                    <div className="flex justify-center mb-6">
+                        <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-neon-primary/10 via-neon-primary/5 to-neon-primary/10 border-2 border-neon-primary/30 rounded-full shadow-lg shadow-neon-primary/20">
+                            <div className="flex items-center gap-2">
+                                <Trophy className="w-5 h-5 text-yellow-400" />
+                                <span className="text-sm font-mono text-muted-foreground uppercase tracking-wider">Global Rank</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <span className="text-3xl font-black text-neon-primary font-mono">#{userRank.global_rank}</span>
+                                <span className="text-sm text-muted-foreground font-mono">/ {userRank.total_users}</span>
+                            </div>
+                            <div className="text-xs text-muted-foreground font-mono">
+                                Top {Math.round((userRank.global_rank / userRank.total_users) * 100)}%
+                            </div>
+                        </div>
                     </div>
+                )}
 
-                    {/* Sidebar - Takes 1 col */}
-                    <div className="space-y-6">
-                        {/* Your Rank Widget */}
-                        <YourRankWidget
-                            rank={userRank?.global_rank}
-                            totalUsers={userRank?.total_users}
-                            isAuthenticated={!!user}
-                            showButton={false}
-                        />
-
-                        {/* Additional widgets could go here */}
-                    </div>
+                {/* Leaderboard Tabs - Centered */}
+                <div className="max-w-5xl mx-auto">
+                    <LeaderboardTabs
+                        allTimeData={allTimeData || []}
+                        weeklyData={weeklyData || []}
+                        topHunters={topHunters || []}
+                        activeContributors={activeContributors || []}
+                        currentUserId={user?.id}
+                    />
                 </div>
             </main>
         </div>

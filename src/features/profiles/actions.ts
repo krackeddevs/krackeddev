@@ -787,3 +787,131 @@ export async function getUserRank(userId: string): Promise<{ global_rank: number
         total_users: totalCount || 0
     };
 }
+
+export const fetchActiveContributors = unstable_cache(
+    async (limit: number = 100): Promise<{ data: import('./types').ActiveContributor[]; error?: string }> => {
+        const supabase = createPublicClient();
+
+        try {
+            // Calculate date 30 days ago
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const dateThreshold = thirtyDaysAgo.toISOString();
+
+            // Fetch profiles with contribution stats
+            const { data: profiles, error: profilesError } = await supabase
+                .from('profiles')
+                .select('id, username, avatar_url, level, developer_role, contribution_stats')
+                .limit(limit * 2); // Fetch more to filter later
+
+            if (profilesError) {
+                console.error("Error fetching profiles:", profilesError);
+                return { data: [], error: "Failed to fetch profiles" };
+            }
+
+            // Calculate activity scores for each user
+            const contributorsWithScores = await Promise.all(
+                (profiles || []).map(async (profile: any) => {
+                    // GitHub Score: Sum commits from last 30 days from contribution_stats
+                    const contributionStats = profile.contribution_stats as any;
+                    let githubCommits30d = 0;
+
+                    if (contributionStats?.weeks) {
+                        // Calculate commits in last 30 days from the weeks array
+                        contributionStats.weeks.forEach((week: any) => {
+                            week.contributionDays?.forEach((day: any) => {
+                                const dayDate = new Date(day.date);
+                                const thirtyDaysAgoDate = new Date(dateThreshold);
+                                if (dayDate >= thirtyDaysAgoDate) {
+                                    githubCommits30d += day.contributionCount || 0;
+                                }
+                            });
+                        });
+                    }
+
+                    const streakDays = contributionStats?.currentStreak || 0;
+
+                    // Community Score: Questions + Answers + Votes + Comments
+                    const [questionsResult, answersResult, upvotesResult, commentsResult] = await Promise.all([
+                        // Questions posted (2 points each)
+                        supabase
+                            .from('questions')
+                            .select('id', { count: 'exact', head: true })
+                            .eq('author_id', profile.id)
+                            .gte('created_at', dateThreshold),
+
+                        // Answers provided (3 points each) + accepted answers (5 points extra)
+                        supabase
+                            .from('answers')
+                            .select('id, is_accepted')
+                            .eq('author_id', profile.id)
+                            .gte('created_at', dateThreshold),
+
+                        // Helpful upvotes received on answers
+                        supabase
+                            .from('votes')
+                            .select('id', { count: 'exact', head: true })
+                            .eq('user_id', profile.id)
+                            .eq('vote_type', 'upvote')
+                            .gte('created_at', dateThreshold),
+
+                        // Comments (1 point each)
+                        supabase
+                            .from('comments')
+                            .select('id', { count: 'exact', head: true })
+                            .eq('author_id', profile.id)
+                            .gte('created_at', dateThreshold),
+                    ]);
+
+                    const questionsCount = questionsResult.count || 0;
+                    const answersData = answersResult.data || [];
+                    const answersCount = answersData.length;
+                    const acceptedAnswersCount = answersData.filter((a: any) => a.is_accepted).length;
+                    const upvotesCount = upvotesResult.count || 0;
+                    const commentsCount = commentsResult.count || 0;
+
+                    // Calculate community score
+                    const communityScore =
+                        (questionsCount * 2) +
+                        (answersCount * 3) +
+                        (acceptedAnswersCount * 5) +
+                        (upvotesCount * 1) +
+                        (commentsCount * 1);
+
+                    // Calculate total activity score: 60% GitHub + 40% Community
+                    const activityScore = (githubCommits30d * 0.6) + (communityScore * 0.4);
+
+                    return {
+                        id: profile.id,
+                        username: profile.username || 'Anonymous',
+                        avatar_url: profile.avatar_url,
+                        activity_score: Math.round(activityScore * 10) / 10, // Round to 1 decimal
+                        github_commits_30d: githubCommits30d,
+                        community_score: communityScore,
+                        streak_days: streakDays,
+                        level: profile.level || 1,
+                        rank: 0, // Will be set after sorting
+                        developer_role: profile.developer_role,
+                    };
+                })
+            );
+
+            // Filter out users with zero activity and sort by activity score
+            const activeContributors = contributorsWithScores
+                .filter(c => c.activity_score > 0)
+                .sort((a, b) => b.activity_score - a.activity_score)
+                .slice(0, limit)
+                .map((contributor, index) => ({
+                    ...contributor,
+                    rank: index + 1,
+                }));
+
+            return { data: activeContributors };
+        } catch (err) {
+            console.error("Unexpected error in fetchActiveContributors:", err);
+            return { data: [], error: "Unexpected error" };
+        }
+    },
+    ['active-contributors-data'],
+    { revalidate: 3600, tags: ['active-contributors'] } // 1 hour cache
+);

@@ -96,3 +96,16 @@ export interface LeaderboardEntry {
 }
 
 export type LeaderboardTimeframe = 'all-time' | 'week';
+
+export interface ActiveContributor {
+    id: string;
+    username: string;
+    avatar_url: string | null;
+    activity_score: number;
+    github_commits_30d: number;
+    community_score: number;
+    streak_days: number;
+    level: number;
+    rank: number;
+    developer_role: string | null;
+}
