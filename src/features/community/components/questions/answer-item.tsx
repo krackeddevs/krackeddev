@@ -12,6 +12,9 @@ import { VotingControl } from "@/features/community/components/voting-control";
 import { CommentList } from "@/features/community/components/comment-list";
 import { acceptAnswer } from "@/features/community/actions";
 import { toast } from "@/lib/toast";
+import { FlagModal } from "@/features/moderation/components/flag-modal";
+import { Flag } from "lucide-react";
+
 // Note: We'll need to define types or import them. For now using basic shapes matching the page.
 
 interface AnswerItemProps {
@@ -112,13 +115,13 @@ export function AnswerItem({
 
                         {/* Mobile User Card */}
                         <div className="sm:hidden flex justify-end pt-2 border-t border-border/50">
-                            <UserCard user={answer.author} date={answer.created_at} label="answered" />
+                            <UserCard user={answer.author} date={answer.created_at} label="answered" resourceId={answer.id} showFlag={!isSelfAnswer} />
                         </div>
                     </div>
 
                     {/* Desktop User Side Column */}
                     <div className="hidden sm:block shrink-0 pt-2">
-                        <UserCard user={answer.author} date={answer.created_at} label="answered" align="right" />
+                        <UserCard user={answer.author} date={answer.created_at} label="answered" align="right" resourceId={answer.id} showFlag={!isSelfAnswer} />
                     </div>
                 </div>
 
@@ -135,17 +138,31 @@ function UserCard({
     user,
     date,
     label,
-    align = "right"
+    align = "right",
+    // Prop drilling for flagging
+    resourceId,
+    showFlag
 }: {
     user: { username: string | null, avatar_url: string | null },
     date: string,
     label: string,
-    align?: "left" | "right"
+    align?: "left" | "right",
+    resourceId?: string,
+    showFlag?: boolean
 }) {
     const isLeft = align === "left";
 
     return (
         <div className={`flex items-center gap-3 ${isLeft ? "flex-row" : "flex-row-reverse"}`}>
+            {showFlag && resourceId && (
+                <div className={isLeft ? "mr-1" : "ml-1"}>
+                    <FlagModal resourceId={resourceId} resourceType="answer">
+                        <button className="text-muted-foreground hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100" title="Flag answer">
+                            <Flag className="h-3 w-3" />
+                        </button>
+                    </FlagModal>
+                </div>
+            )}
             <div className={`flex flex-col ${isLeft ? "items-start" : "items-end"} text-xs`}>
                 <span className="text-muted-foreground">{label} <span className="text-foreground/80">{formatDistanceToNow(new Date(date), { addSuffix: true })}</span></span>
                 <Link href={`/profile/${user.username}`} className="font-semibold text-primary hover:underline">

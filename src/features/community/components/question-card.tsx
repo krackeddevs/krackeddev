@@ -5,7 +5,8 @@ import { formatDistanceToNow } from "date-fns";
 import { QuestionWithAuthor } from "../actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Eye, ThumbsUp, CheckCircle2 } from "lucide-react";
+import { MessageSquare, Eye, ThumbsUp, CheckCircle2, Flag } from "lucide-react";
+import { FlagModal } from "@/features/moderation/components/flag-modal";
 
 interface QuestionCardProps {
     question: QuestionWithAuthor;
@@ -52,8 +53,15 @@ export function QuestionCard({ question }: QuestionCardProps) {
                         ))}
                     </div>
 
-                    {/* Author & Time */}
+                    {/* Author & Time & Actions */}
                     <div className="flex items-center gap-2 text-xs text-muted-foreground ml-auto">
+                        <div className="mr-2">
+                            <FlagModal resourceId={question.id} resourceType="question">
+                                <button className="text-muted-foreground hover:text-red-500 transition-colors" title="Flag as inappropriate">
+                                    <Flag className="h-3 w-3" />
+                                </button>
+                            </FlagModal>
+                        </div>
                         <Avatar className="h-5 w-5">
                             <AvatarImage src={question.author.avatar_url || ""} />
                             <AvatarFallback>{question.author.username?.[0] || "?"}</AvatarFallback>

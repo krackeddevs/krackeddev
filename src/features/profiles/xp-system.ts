@@ -20,7 +20,11 @@ export type XPEventType =
     | 'bounty_win'
     | 'streak_milestone'
     | 'profile_completion'
-    | 'manual_adjustment';
+    | 'manual_adjustment'
+    | 'ask_question'
+    | 'answer_question'
+    | 'answer_accepted'
+    | 'upvote_received';
 
 export interface XPGrantResult {
     success: boolean;

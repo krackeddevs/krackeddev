@@ -78,7 +78,7 @@ export type DevPulseData = {
 export interface XPEvent {
     id: string;
     userId: string;
-    eventType: 'daily_login' | 'github_contribution' | 'bounty_submission' | 'bounty_win' | 'streak_milestone' | 'profile_completion' | 'manual_adjustment';
+    eventType: 'daily_login' | 'github_contribution' | 'bounty_submission' | 'bounty_win' | 'streak_milestone' | 'profile_completion' | 'manual_adjustment' | 'ask_question' | 'answer_question' | 'answer_accepted' | 'upvote_received';
     xpAmount: number;
     metadata: Record<string, any>;
     createdAt: string;
