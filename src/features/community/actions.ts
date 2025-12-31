@@ -24,8 +24,16 @@ export interface QuestionDetail extends QuestionWithAuthor {
             username: string | null;
             avatar_url: string | null;
         };
+        comments: (import("@/types/database").Comment & {
+            author: {
+                username: string | null;
+                avatar_url: string | null
+            }
+        })[];
     })[];
 }
+
+
 
 export async function getQuestions({
     filter = "newest",
@@ -126,17 +134,220 @@ export async function getQuestionBySlug(slug: string): Promise<QuestionDetail | 
         .order("created_at", { ascending: false });
 
     if (answerError) {
-        console.error("Error fetching answers:", answerError);
+        console.error("Error fetching answers:", answerError.message, answerError.details, answerError.hint);
     }
+
+    // Fetch comments for these answers
+    let answersWithComments = [];
+    if (answers && answers.length > 0) {
+        const answerIds = answers.map(a => a.id);
+        const { data: comments, error: commentsError } = await supabase
+            .from("comments")
+            .select(`
+                *,
+                author:author_id(username, avatar_url)
+            `)
+            .in("answer_id", answerIds)
+            .order("created_at", { ascending: true });
+
+        if (commentsError) {
+            console.error("Error fetching comments:", commentsError);
+        }
+
+        answersWithComments = answers.map(answer => ({
+            ...answer,
+            comments: comments?.filter(c => c.answer_id === answer.id) || []
+        }));
+    } else {
+        answersWithComments = [];
+    }
+
+    // No need to sort comments again if we ordered by created_at in the query, 
+    // but filter preserves order usually.
 
     return {
         ...question,
-        answers_count: answers?.length || 0,
-        answers: answers || [],
+        answers_count: answersWithComments.length,
+        answers: answersWithComments,
     } as unknown as QuestionDetail;
+
+
 }
 
-export async function incrementViewCount(questionId: string) {
+
+
+export async function incrementViewCount(questionId: string, slug: string) {
     const supabase = await createClient();
-    await supabase.rpc("increment_question_view", { question_id: questionId });
+    const { error } = await supabase.rpc("increment_question_view", { question_id: questionId });
+    if (error) {
+        console.error("Error incrementing view count:", error);
+    }
+
+    revalidatePath(`/community/question/${slug}`);
+}
+
+// ----------------------------------------------------------------------
+// Mutations
+// ----------------------------------------------------------------------
+
+import { z } from "zod";
+import DOMPurify from "isomorphic-dompurify";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+const questionSchema = z.object({
+    title: z.string().min(15, "Title must be at least 15 characters").max(150, "Title must be less than 150 characters"),
+    body: z.string().min(30, "Body must be at least 30 characters"),
+    tags: z.array(z.string()).max(5, "Maximum 5 tags allowed"),
+});
+
+const answerSchema = z.object({
+    body: z.string().min(30, "Body must be at least 30 characters"),
+    question_id: z.string().uuid(),
+});
+
+const commentSchema = z.object({
+    body: z.string().min(5, "Comment must be at least 5 characters").max(500, "Comment too long"),
+    answer_id: z.string().uuid(),
+});
+
+function slugify(text: string): string {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+        .replace(/\-\-+/g, "-"); // Replace multiple - with single -
+}
+
+export async function createQuestion(prevState: any, formData: FormData) {
+    const supabase = await createClient();
+
+    // Auth Check
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        return { error: "You must be logged in to ask a question." };
+    }
+
+    // Parse Data
+    const rawData = {
+        title: formData.get("title") as string,
+        body: formData.get("body") as string,
+        tags: (formData.get("tags") as string)?.split(",").filter(Boolean) || [],
+    };
+
+    const validated = questionSchema.safeParse(rawData);
+
+    if (!validated.success) {
+        const errorMessage = validated.error.issues[0]?.message || "Invalid input";
+        return { error: errorMessage };
+    }
+
+    const { title, body, tags } = validated.data;
+
+    // Sanitize Body
+    const sanitizedBody = DOMPurify.sanitize(body);
+
+    // Slug generation
+    let slug = slugify(title);
+    const suffix = Math.floor(Math.random() * 10000); // Simple collision avoider
+    const { data: existing } = await supabase.from("questions").select("slug").eq("slug", slug).single();
+    if (existing) {
+        slug = `${slug}-${suffix}`;
+    }
+
+    // Insert
+    const { error } = await supabase.from("questions").insert({
+        title,
+        slug,
+        body: sanitizedBody,
+        tags,
+        author_id: user.id,
+    } as any);
+
+    if (error) {
+        console.error("Create question error:", error);
+        return { error: "Failed to create question." };
+    }
+
+    revalidatePath("/community");
+    redirect(`/community/question/${slug}`);
+}
+
+export async function createAnswer(prevState: any, formData: FormData) {
+    const supabase = await createClient();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        return { error: "You must be logged in to answer." };
+    }
+
+    const rawData = {
+        body: formData.get("body") as string,
+        question_id: formData.get("question_id") as string,
+    };
+
+    const validated = answerSchema.safeParse(rawData);
+
+    if (!validated.success) {
+        const errorMessage = validated.error.issues[0]?.message || "Invalid input";
+        return { error: errorMessage };
+    }
+
+    const { body, question_id } = validated.data;
+    const sanitizedBody = DOMPurify.sanitize(body);
+
+    const { error } = await supabase.from("answers").insert({
+        body: sanitizedBody,
+        question_id,
+        author_id: user.id,
+    } as any);
+
+    if (error) {
+        console.error("Create answer error:", error);
+        return { error: "Failed to post answer." };
+    }
+
+    revalidatePath("/community");
+    return { success: true };
+}
+
+export async function createComment(prevState: any, formData: FormData) {
+    const supabase = await createClient();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        return { error: "You must be logged in to comment." };
+    }
+
+    const rawData = {
+        body: formData.get("body") as string,
+        answer_id: formData.get("answer_id") as string,
+    };
+
+    const validated = commentSchema.safeParse(rawData);
+
+    if (!validated.success) {
+        const errorMessage = validated.error.issues[0]?.message || "Invalid input";
+        return { error: errorMessage };
+    }
+
+    const { body, answer_id } = validated.data;
+    // Comments are usually simpler text, maybe no huge markdown needed, but safe to sanitize anyway
+    const sanitizedBody = DOMPurify.sanitize(body); // or simpler escape
+
+    const { error } = await supabase.from("comments").insert({
+        body: sanitizedBody,
+        answer_id,
+        author_id: user.id,
+    } as any);
+
+    if (error) {
+        console.error("Create comment error:", error);
+        return { error: "Failed to post comment." };
+    }
+
+    revalidatePath("/community");
+    return { success: true };
 }

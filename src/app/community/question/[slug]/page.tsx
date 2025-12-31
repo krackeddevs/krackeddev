@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getQuestionBySlug, QuestionDetail } from "@/features/community/actions";
 import { MarkdownViewer } from "@/components/markdown-viewer";
 import { VotingControl } from "@/features/community/components/voting-control";
@@ -9,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow, format } from "date-fns";
 import { CheckCircle2 } from "lucide-react";
+import { AnswerForm } from "@/features/community/components/answer-form";
+import { CommentList } from "@/features/community/components/comment-list";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -38,36 +41,38 @@ export default async function QuestionDetailPage({ params }: PageProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50 pointer-events-none" />
 
             <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
-                <ViewTracker questionId={question.id} />
+                <ViewTracker questionId={question.id} slug={question.slug} />
 
                 {/* Main Content */}
                 <article className="lg:col-span-9 space-y-8">
-                    {/* Question Header */}
-                    <div className="space-y-4">
-                        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-                            {question.title}
-                        </h1>
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pb-4 border-b">
-                            <span>Asked <time dateTime={question.created_at}>{formatDistanceToNow(new Date(question.created_at), { addSuffix: true })}</time></span>
-                            <span>Viewed {question.view_count} times</span>
+                    <div className="p-6 md:p-8 rounded-xl border bg-card/80 backdrop-blur-sm shadow-sm space-y-8">
+                        {/* Question Header */}
+                        <div className="space-y-4">
+                            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+                                {question.title}
+                            </h1>
+                            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pb-4 border-b">
+                                <span>Asked <time dateTime={question.created_at}>{formatDistanceToNow(new Date(question.created_at), { addSuffix: true })}</time></span>
+                                <span>Viewed {question.view_count} times</span>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Question Body */}
-                    <div className="flex gap-6">
-                        <div className="hidden sm:block">
-                            <VotingControl upvotes={question.upvotes} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <MarkdownViewer content={question.body} className="min-h-[100px]" />
+                        {/* Question Body */}
+                        <div className="flex gap-6">
+                            <div className="hidden sm:block">
+                                <VotingControl upvotes={question.upvotes} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <MarkdownViewer content={question.body} className="min-h-[100px]" />
 
-                            <div className="flex flex-wrap items-center justify-between gap-4 mt-8 pt-4 border-t">
-                                <div className="flex gap-2">
-                                    {question.tags?.map(tag => (
-                                        <Badge key={tag} variant="secondary" className="font-mono">{tag}</Badge>
-                                    ))}
+                                <div className="flex flex-wrap items-center justify-between gap-4 mt-8 pt-4 border-t">
+                                    <div className="flex gap-2">
+                                        {question.tags?.map(tag => (
+                                            <Badge key={tag} variant="secondary" className="font-mono">{tag}</Badge>
+                                        ))}
+                                    </div>
+                                    <UserCard user={question.author} date={question.created_at} label="asked" />
                                 </div>
-                                <UserCard user={question.author} date={question.created_at} label="asked" />
                             </div>
                         </div>
                     </div>
@@ -81,22 +86,37 @@ export default async function QuestionDetailPage({ params }: PageProps) {
 
                             <div className="space-y-8">
                                 {question.answers.map((answer) => (
-                                    <div key={answer.id} className="relative flex gap-6 p-6 rounded-lg border bg-card/50">
+                                    <div key={answer.id} className="relative flex gap-6 p-6 rounded-xl border bg-card/80 backdrop-blur-sm shadow-sm transition-all hover:bg-card/90 group">
                                         {answer.is_accepted && (
                                             <div className="absolute top-0 right-0 p-2 text-green-500" title="Accepted Answer">
                                                 <CheckCircle2 className="h-6 w-6" />
                                             </div>
                                         )}
 
-                                        <div className="hidden sm:block">
+                                        <div className="hidden sm:block pt-12">
                                             <VotingControl upvotes={answer.upvotes} />
                                         </div>
 
-                                        <div className="flex-1 min-w-0 space-y-4">
-                                            <MarkdownViewer content={answer.body} />
+                                        <div className="flex-1 min-w-0">
+                                            {/* Answer Body & User Card Side-by-Side */}
+                                            <div className="flex gap-4 sm:gap-8 flex-col sm:flex-row">
+                                                <div className="flex-1 min-w-0 space-y-4">
+                                                    <MarkdownViewer content={answer.body} />
 
-                                            <div className="flex justify-end pt-4 mt-4 border-t border-border/50">
-                                                <UserCard user={answer.author} date={answer.created_at} label="answered" />
+                                                    {/* Mobile Only User Card */}
+                                                    <div className="sm:hidden flex justify-end pt-2 border-t border-border/50">
+                                                        <UserCard user={answer.author} date={answer.created_at} label="answered" />
+                                                    </div>
+                                                </div>
+
+                                                {/* Desktop User Side Column */}
+                                                <div className="hidden sm:block shrink-0 pt-2">
+                                                    <UserCard user={answer.author} date={answer.created_at} label="answered" align="right" />
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-4">
+                                                <CommentList comments={answer.comments || []} answerId={answer.id} />
                                             </div>
                                         </div>
                                     </div>
@@ -107,10 +127,17 @@ export default async function QuestionDetailPage({ params }: PageProps) {
 
                 </article>
 
+                {/* Answer Form */}
+                <div className="lg:col-span-9">
+                    <div className="p-6 md:p-8 rounded-xl border bg-card/80 backdrop-blur-sm shadow-sm">
+                        <AnswerForm questionId={question.id} />
+                    </div>
+                </div>
+
                 {/* Right Sidebar */}
                 <aside className="lg:col-span-3 space-y-6">
                     {/* Could handle "Related Questions" or "Job Ads" here */}
-                    <div className="p-4 border rounded-lg bg-muted/20">
+                    <div className="p-4 border rounded-xl bg-card/80 backdrop-blur-sm shadow-sm">
                         <h3 className="font-bold mb-2">How to answer</h3>
                         <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
                             <li>Be specific and kind</li>
@@ -124,17 +151,31 @@ export default async function QuestionDetailPage({ params }: PageProps) {
     );
 }
 
-function UserCard({ user, date, label }: { user: { username: string | null, avatar_url: string | null }, date: string, label: string }) {
+function UserCard({
+    user,
+    date,
+    label,
+    align = "right"
+}: {
+    user: { username: string | null, avatar_url: string | null },
+    date: string,
+    label: string,
+    align?: "left" | "right"
+}) {
+    const isLeft = align === "left";
+
     return (
-        <div className="flex items-center gap-2 p-2 rounded bg-muted/30 min-w-[150px]">
-            <Avatar className="h-8 w-8">
-                <AvatarImage src={user.avatar_url || ""} />
-                <AvatarFallback>{user.username?.[0] || "?"}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col text-xs">
-                <span className="text-muted-foreground">{label} {formatDistanceToNow(new Date(date), { addSuffix: true })}</span>
-                <span className="font-semibold text-foreground">{user.username || "Anonymous"}</span>
+        <div className={`flex items-center gap-3 ${isLeft ? "flex-row" : "flex-row-reverse"}`}>
+            <div className={`flex flex-col ${isLeft ? "items-start" : "items-end"} text-xs`}>
+                <span className="text-muted-foreground">{label} <span className="text-foreground/80">{formatDistanceToNow(new Date(date), { addSuffix: true })}</span></span>
+                <Link href={`/profile/${user.username}`} className="font-semibold text-primary hover:underline">
+                    {user.username || "Anonymous"}
+                </Link>
             </div>
+            <Avatar className="h-10 w-10 border border-border/50 shadow-sm">
+                <AvatarImage src={user.avatar_url || ""} />
+                <AvatarFallback className="bg-primary/5 text-primary">{user.username?.[0] || "?"}</AvatarFallback>
+            </Avatar>
         </div>
     );
 }

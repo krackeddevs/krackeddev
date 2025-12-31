@@ -12,11 +12,14 @@ const NAV_ITEMS = [
         icon: MessageSquare,
         exact: true,
     },
+    // Q&A Removed as it is merged with Townhall or redundant
+    /*
     {
         label: "Q&A",
         href: "/community/questions",
         icon: MessagesSquare,
     },
+    */
     {
         label: "Members",
         href: "/members",

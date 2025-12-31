@@ -3,15 +3,15 @@
 import { useEffect, useRef } from "react";
 import { incrementViewCount } from "../actions";
 
-export function ViewTracker({ questionId }: { questionId: string }) {
+export function ViewTracker({ questionId, slug }: { questionId: string, slug: string }) {
     const hasTracked = useRef(false);
 
     useEffect(() => {
         if (!hasTracked.current) {
-            incrementViewCount(questionId);
+            incrementViewCount(questionId, slug);
             hasTracked.current = true;
         }
-    }, [questionId]);
+    }, [questionId, slug]);
 
     return null;
 }

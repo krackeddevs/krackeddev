@@ -835,3 +835,29 @@ img {
     /* Adjust this % to keep the character in frame */
   }
 }
+
+/* Highlight.js Light Mode Override (Invert Dark Theme) */
+:root:not(.dark) .hljs {
+  filter: invert(0.93) hue-rotate(180deg);
+  background-color: #0d1117 !important; /* Force original dark to invert correctly */
+  border-radius: 0.5rem;
+}
+
+/* Ensure code blocks have nice structure */
+.prose pre {
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+:root:not(.dark) .prose pre {
+    border: 1px solid #e2e8f0; /* Add border in light mode for definition */
+}
+
+/* Specific styling for the Question Detail card layout */
+.prose {
+    max-width: none !important;
+}

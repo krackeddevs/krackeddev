@@ -240,6 +240,16 @@ export interface Answer {
   updated_at: string;
 }
 
+export interface Comment {
+  id: string;
+  body: string;
+  author_id: string;
+  question_id: string | null;
+  answer_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -387,6 +397,34 @@ export interface Database {
             columns: ["question_id"];
             isOneToOne: false;
             referencedRelation: "questions";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      comments: {
+        Row: Comment;
+        Insert: Partial<Comment>;
+        Update: Partial<Comment>;
+        Relationships: [
+          {
+            foreignKeyName: "comments_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "comments_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "comments_answer_id_fkey";
+            columns: ["answer_id"];
+            isOneToOne: false;
+            referencedRelation: "answers";
             referencedColumns: ["id"];
           }
         ];
