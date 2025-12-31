@@ -814,11 +814,13 @@ export const fetchActiveContributors = unstable_cache(
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
             const dateThreshold = thirtyDaysAgo.toISOString();
 
-            // Fetch profiles with contribution stats
+            // Fetch ALL profiles that have contribution stats to ensure we don't miss anyone
+            // Filter to only those with contribution_stats to reduce dataset
             const { data: profiles, error: profilesError } = await supabase
                 .from('profiles')
                 .select('id, username, avatar_url, level, developer_role, contribution_stats')
-                .limit(limit * 2); // Fetch more to filter later
+                .not('contribution_stats', 'is', null)
+                .order('created_at', { ascending: false }); // Recent users first
 
             if (profilesError) {
                 console.error("Error fetching profiles:", profilesError);
