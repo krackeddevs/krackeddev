@@ -61,7 +61,7 @@ export function LeaderboardTable({ data, currentUserId, showSkills = false }: Le
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                                 <Link
-                                    href={`/u/${entry.username}`}
+                                    href={`/profile/${entry.username}`}
                                     className={cn(
                                         "font-bold font-mono text-lg truncate hover:underline underline-offset-4 decoration-2 decoration-neon-primary/50",
                                         isCurrentUser ? "text-neon-primary" : "text-foreground"
