@@ -622,8 +622,6 @@ input:-webkit-autofill:active {
   text-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary);
 }
 
-
-
 .dark {
   /* Standardized Background: Pure Black */
   --background: #000000;
@@ -790,7 +788,6 @@ input:-webkit-autofill:active {
   --neon-purple: #a3a3a3;
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -798,6 +795,12 @@ input:-webkit-autofill:active {
 
   body {
     @apply bg-background text-foreground;
+  }
+  .maplibregl-popup-content {
+    @apply bg-transparent! shadow-none! p-0! rounded-none!;
+  }
+  .maplibregl-popup-tip {
+    @apply hidden!;
   }
 }
 
