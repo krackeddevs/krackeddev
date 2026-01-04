@@ -91,6 +91,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preload critical map data */}
+        <link rel="preload" href="/geo/malaysia-states-simple.json" as="fetch" crossOrigin="anonymous" />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-mono antialiased flex flex-col"

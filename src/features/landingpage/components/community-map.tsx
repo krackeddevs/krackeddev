@@ -1,21 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { Users } from "lucide-react";
 import { useCommunityLocations } from "@/lib/hooks/use-landing-data";
-
-// Lazy load the map components to reduce initial bundle size
-const CommunityMapClient = dynamic(
-  () => import("./community-map-client").then((mod) => mod.CommunityMapClient),
-  {
-    loading: () => (
-      <div className="flex items-center justify-center h-[400px]">
-        <div className="text-neon-primary font-mono animate-pulse">Loading community map...</div>
-      </div>
-    ),
-    ssr: false, // Map requires browser APIs
-  }
-);
+import { CommunityMapClient } from "./community-map-client";
 
 export function CommunityMap() {
   const { data = [], isLoading } = useCommunityLocations();
