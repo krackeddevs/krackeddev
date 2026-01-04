@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import maplibregl from "maplibre-gl";
 
 // Constants
-const GEOJSON_URL = "/geo/malaysia-states.json";
+const GEOJSON_URL = "/geo/malaysia-states-simple.json";
 
 export function MalaysiaMapLayers({
     data,
