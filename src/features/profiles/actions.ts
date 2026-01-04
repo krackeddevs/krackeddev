@@ -329,7 +329,8 @@ export async function fetchAllMembers(
         .from("profiles")
         .select("*", { count: "exact", head: true })
         .eq("status", "active")
-        .eq("onboarding_completed", true);
+        .eq("onboarding_completed", true)
+        .eq("is_discoverable", true);
 
     if (countError) {
         console.error("Error fetching members count:", countError);
@@ -342,6 +343,7 @@ export async function fetchAllMembers(
         .select("id, username, full_name, avatar_url, developer_role, location, created_at, status, level, xp")
         .eq("status", "active")
         .eq("onboarding_completed", true)
+        .eq("is_discoverable", true)
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);
 

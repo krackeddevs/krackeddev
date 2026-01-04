@@ -9,6 +9,8 @@ export const metadata = {
   description: "Browse all registered developers in the Kracked Devs community.",
 };
 
+export const dynamic = 'force-dynamic'; // Always fetch fresh data
+
 const MEMBERS_PER_PAGE = 30;
 
 export default async function MembersPage({
