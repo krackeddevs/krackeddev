@@ -28,21 +28,10 @@ export function MalaysiaMapLayers({
     }, []);
 
     // State name aliases for common variations
-    // Federal Territories are mapped to their parent states since they don't exist separately in GeoJSON
     const STATE_ALIASES: Record<string, string> = {
-        // Common name variations
         "malacca": "melaka",
         "penang": "pulau pinang",
         "pinang": "pulau pinang",
-
-        // Federal Territories → Parent States
-        "wilayah persekutuan kuala lumpur": "selangor",
-        "kuala lumpur": "selangor",
-        "kl": "selangor",
-        "wilayah persekutuan putrajaya": "selangor",
-        "putrajaya": "selangor",
-        "wilayah persekutuan labuan": "sabah",
-        "labuan": "sabah",
     };
 
     // Merge external data into GeoJSON properties when data or geoJson changes
