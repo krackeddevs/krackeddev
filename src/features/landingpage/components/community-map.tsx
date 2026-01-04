@@ -45,11 +45,8 @@ export function CommunityMap() {
 
       <div className="relative w-full h-[300px] md:h-[500px] bg-card border border-border overflow-hidden rounded-lg z-20">
         <Map
-          initialViewState={{
-            longitude: 109.5,
-            latitude: 4.0,
-            zoom: 4.5,
-          }}
+          center={[109.5, 4.0]}
+          zoom={4.5}
           scrollZoom={false}
           attributionControl={false}
         >

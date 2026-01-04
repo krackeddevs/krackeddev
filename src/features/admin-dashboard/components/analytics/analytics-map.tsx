@@ -27,11 +27,8 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
 
             <div className="w-full h-full relative z-10 rounded overflow-hidden">
                 <Map
-                    initialViewState={{
-                        longitude: 109.5,
-                        latitude: 4.0,
-                        zoom: 4.5,
-                    }}
+                    center={[109.5, 4.0]}
+                    zoom={4.5}
                     scrollZoom={false}
                     attributionControl={false}
                 >
