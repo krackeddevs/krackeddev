@@ -27,11 +27,23 @@ export function MalaysiaMapLayers({
             .catch((err) => console.error("Failed to load map data:", err));
     }, []);
 
-    // State name aliases for common variations
+    // State name aliases handles: User Input (keys) -> GeoJSON Shape Name (values)
     const STATE_ALIASES: Record<string, string> = {
-        "malacca": "melaka",
-        "penang": "pulau pinang",
-        "pinang": "pulau pinang",
+        // Map Malay names to GeoJSON English names
+        "melaka": "malacca",
+        "pulau pinang": "penang",
+        "pinang": "penang",
+
+        // Map Federal Territories (long names) to GeoJSON (short names)
+        "wilayah persekutuan kuala lumpur": "kuala lumpur",
+        "kuala lumpur": "kuala lumpur",
+        "kl": "kuala lumpur",
+
+        "wilayah persekutuan putrajaya": "putrajaya",
+        "putrajaya": "putrajaya",
+
+        "wilayah persekutuan labuan": "labuan",
+        "labuan": "labuan",
     };
 
     // Merge external data into GeoJSON properties when data or geoJson changes
