@@ -77,11 +77,11 @@ export function CommunityMap() {
         {/* Legend */}
         <div className="absolute bottom-4 left-4 z-20 flex items-center gap-4 text-xs font-mono text-muted-foreground p-2 bg-card/80 backdrop-blur-sm border border-border rounded">
           <div className="flex items-center">
-            <span className="w-3 h-3 bg-neon-primary inline-block mr-1 rounded-sm"></span>
+            <span className="w-3 h-3 inline-block mr-1 rounded-sm bg-[#27272a] dark:bg-[#2dd4bf]"></span>
             <span>Active</span>
           </div>
           <div className="flex items-center">
-            <span className="w-3 h-3 bg-muted inline-block mr-1 border border-border rounded-sm"></span>
+            <span className="w-3 h-3 inline-block mr-1 border border-border rounded-sm bg-[#f4f4f5] dark:bg-muted"></span>
             <span>No devs yet</span>
           </div>
         </div>

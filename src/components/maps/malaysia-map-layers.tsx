@@ -100,11 +100,18 @@ export function MalaysiaMapLayers({
                             ["linear"],
                             ["get", "userCount"],
                             0,
-                            resolvedTheme === "dark" ? "#18181b" : "#f4f4f5",
+                            // Monochrome mode: high contrast grayscale, otherwise: teal theme
+                            resolvedTheme === "blackwhite"
+                                ? "#f4f4f5"  // zinc-100 (very light for empty states)
+                                : (resolvedTheme === "dark" ? "#1e293b" : "#e2e8f0"), // slate (colored)
                             1,
-                            resolvedTheme === "dark" ? "#3f3f46" : "#d4d4d8",
+                            resolvedTheme === "blackwhite"
+                                ? "#71717a"  // zinc-500 (medium gray for low count)
+                                : (resolvedTheme === "dark" ? "#0f766e" : "#5eead4"), // teal (colored)
                             50,
-                            resolvedTheme === "dark" ? "#71717a" : "#52525b",
+                            resolvedTheme === "blackwhite"
+                                ? "#27272a"  // zinc-800 (very dark for high count)
+                                : (resolvedTheme === "dark" ? "#2dd4bf" : "#0d9488"), // teal (colored)
                         ],
                         "fill-opacity": 0.8,
                     },
@@ -147,7 +154,9 @@ export function MalaysiaMapLayers({
                     type: "line",
                     source: sourceId,
                     paint: {
-                        "line-color": resolvedTheme === "dark" ? "#52525b" : "#a1a1aa",
+                        "line-color": resolvedTheme === "blackwhite"
+                            ? "#52525b"  // zinc-600 (monochrome)
+                            : (resolvedTheme === "dark" ? "#2dd4bf" : "#0f766e"), // teal (colored)
                         "line-width": 1,
                         "line-opacity": 0.5,
                     },
@@ -206,15 +215,25 @@ export function MalaysiaMapLayers({
                 ["linear"],
                 ["get", "userCount"],
                 0,
-                resolvedTheme === "dark" ? "#18181b" : "#f4f4f5",
+                resolvedTheme === "blackwhite"
+                    ? "#f4f4f5"  // zinc-100 (very light for empty states)
+                    : (resolvedTheme === "dark" ? "#1e293b" : "#e2e8f0"),
                 1,
-                resolvedTheme === "dark" ? "#3f3f46" : "#d4d4d8",
+                resolvedTheme === "blackwhite"
+                    ? "#71717a"  // zinc-500 (medium gray for low count)
+                    : (resolvedTheme === "dark" ? "#0f766e" : "#5eead4"),
                 50,
-                resolvedTheme === "dark" ? "#71717a" : "#52525b",
+                resolvedTheme === "blackwhite"
+                    ? "#27272a"  // zinc-800 (very dark for high count)
+                    : (resolvedTheme === "dark" ? "#2dd4bf" : "#0d9488"),
             ]);
         }
         if (map.getLayer(lineLayerId)) {
-            map.setPaintProperty(lineLayerId, "line-color", resolvedTheme === "dark" ? "#52525b" : "#a1a1aa");
+            map.setPaintProperty(lineLayerId, "line-color",
+                resolvedTheme === "blackwhite"
+                    ? "#52525b"
+                    : (resolvedTheme === "dark" ? "#2dd4bf" : "#0f766e")
+            );
         }
     }, [resolvedTheme, isLoaded, map]);
 

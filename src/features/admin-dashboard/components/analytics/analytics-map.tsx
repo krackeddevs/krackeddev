@@ -60,11 +60,11 @@ export function AnalyticsMap({ data }: AnalyticsMapProps) {
             {/* Legend/Info */}
             <div className="absolute bottom-4 left-4 flex flex-wrap items-center gap-2 text-[10px] md:text-xs text-muted-foreground p-1 md:p-2 bg-background/80 rounded border z-20 backdrop-blur-sm">
                 <div className="flex items-center">
-                    <span className="w-2 h-2 md:w-3 md:h-3 bg-neon-primary rounded-full inline-block mr-1"></span>
+                    <span className="w-2 h-2 md:w-3 md:h-3 rounded-full inline-block mr-1 bg-[#27272a] dark:bg-[#2dd4bf]"></span>
                     <span>Active</span>
                 </div>
                 <div className="flex items-center ml-2">
-                    <span className="w-2 h-2 md:w-3 md:h-3 bg-muted rounded-full inline-block mr-1 border border-border"></span>
+                    <span className="w-2 h-2 md:w-3 md:h-3 rounded-full inline-block mr-1 border border-border bg-[#f4f4f5] dark:bg-muted"></span>
                     <span>No Users</span>
                 </div>
             </div>
