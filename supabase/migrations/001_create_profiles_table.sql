@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   x_url TEXT,
   linkedin_url TEXT,
   website_url TEXT,
-  is_discoverable BOOLEAN DEFAULT false,
+  is_discoverable BOOLEAN DEFAULT true,
   is_open_to_work BOOLEAN DEFAULT false,
   is_hiring BOOLEAN DEFAULT false,
   github_username TEXT,

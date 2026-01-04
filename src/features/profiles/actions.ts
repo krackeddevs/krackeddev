@@ -320,17 +320,37 @@ export type Member = {
  */
 export async function fetchAllMembers(
     limit: number = 50,
-    offset: number = 0
+    offset: number = 0,
+    searchQuery?: string
 ): Promise<{ data: Member[]; total: number; error?: string }> {
     const supabase = await createClient();
 
-    // Get total count
-    const { count, error: countError } = await supabase
+    // Build base query
+    let countQuery = supabase
         .from("profiles")
         .select("*", { count: "exact", head: true })
         .eq("status", "active")
         .eq("onboarding_completed", true)
         .eq("is_discoverable", true);
+
+    let dataQuery = supabase
+        .from("profiles")
+        .select("id, username, full_name, avatar_url, developer_role, location, created_at, status, level, xp")
+        .eq("status", "active")
+        .eq("onboarding_completed", true)
+        .eq("is_discoverable", true);
+
+    // Add search filters if query provided
+    if (searchQuery && searchQuery.trim()) {
+        const search = `%${searchQuery.trim()}%`;
+
+        // Apply OR filters for search across multiple fields
+        countQuery = countQuery.or(`username.ilike.${search},full_name.ilike.${search},developer_role.ilike.${search},location.ilike.${search}`);
+        dataQuery = dataQuery.or(`username.ilike.${search},full_name.ilike.${search},developer_role.ilike.${search},location.ilike.${search}`);
+    }
+
+    // Get total count
+    const { count, error: countError } = await countQuery;
 
     if (countError) {
         console.error("Error fetching members count:", countError);
@@ -338,12 +358,7 @@ export async function fetchAllMembers(
     }
 
     // Get paginated data
-    const { data, error } = await supabase
-        .from("profiles")
-        .select("id, username, full_name, avatar_url, developer_role, location, created_at, status, level, xp")
-        .eq("status", "active")
-        .eq("onboarding_completed", true)
-        .eq("is_discoverable", true)
+    const { data, error } = await dataQuery
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);
 

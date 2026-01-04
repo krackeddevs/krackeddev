@@ -16,13 +16,14 @@ const MEMBERS_PER_PAGE = 30;
 export default async function MembersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
 }) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
+  const searchQuery = params.q || '';
   const offset = (currentPage - 1) * MEMBERS_PER_PAGE;
 
-  const { data: members, total, error } = await fetchAllMembers(MEMBERS_PER_PAGE, offset);
+  const { data: members, total, error } = await fetchAllMembers(MEMBERS_PER_PAGE, offset, searchQuery);
   const totalPages = Math.ceil(total / MEMBERS_PER_PAGE);
 
   return (
@@ -68,6 +69,7 @@ export default async function MembersPage({
             currentPage={currentPage}
             totalPages={totalPages}
             total={total}
+            searchQuery={searchQuery}
           />
         )}
       </div>

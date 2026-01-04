@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MapPin, User, Calendar, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Member } from "../actions";
@@ -10,21 +11,31 @@ interface MembersListProps {
     currentPage: number;
     totalPages: number;
     total: number;
+    searchQuery?: string;
 }
 
-export function MembersList({ members, currentPage, totalPages, total }: MembersListProps) {
-    const [searchQuery, setSearchQuery] = useState("");
+export function MembersList({ members, currentPage, totalPages, total, searchQuery: initialQuery = "" }: MembersListProps) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const [searchInput, setSearchInput] = useState(initialQuery);
 
-    // Filter members based on search
-    const filteredMembers = members.filter((member) => {
-        const query = searchQuery.toLowerCase();
-        return (
-            member.username?.toLowerCase().includes(query) ||
-            member.full_name?.toLowerCase().includes(query) ||
-            member.developer_role?.toLowerCase().includes(query) ||
-            member.location?.toLowerCase().includes(query)
-        );
-    });
+    const handleSearch = (value: string) => {
+        setSearchInput(value);
+
+        // Debounce search - update URL after user stops typing
+        const params = new URLSearchParams(searchParams.toString());
+        if (value.trim()) {
+            params.set('q', value.trim());
+            params.delete('page'); // Reset to page 1 on new search
+        } else {
+            params.delete('q');
+        }
+
+        // Use setTimeout for debouncing
+        setTimeout(() => {
+            router.push(`/members?${params.toString()}`);
+        }, 500);
+    };
 
     // Format date helper
     const formatDate = (dateStr: string) => {
@@ -72,31 +83,31 @@ export function MembersList({ members, currentPage, totalPages, total }: Members
                     <input
                         type="text"
                         placeholder="Search by name, role, or location..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        value={searchInput}
+                        onChange={(e) => handleSearch(e.target.value)}
                         className="w-full pl-10 pr-4 py-3 bg-card/80 dark:bg-black/40 backdrop-blur-md border border-border dark:border-neon-primary/30 focus:border-primary dark:focus:border-neon-primary outline-none font-mono text-sm text-foreground placeholder:text-muted-foreground/70 transition-all rounded-lg shadow-sm dark:shadow-[0_0_10px_rgba(34,211,238,0.05)] focus:shadow-md dark:focus:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
                     />
                 </div>
             </div>
 
             {/* Results count */}
-            {searchQuery && (
+            {searchInput && (
                 <p className="text-primary dark:text-neon-primary font-mono text-sm tracking-widest uppercase">
-                    Detecting signatures: {filteredMembers.length}
+                    Detecting signatures: {members.length} of {total}
                 </p>
             )}
 
             {/* Members Grid */}
-            {filteredMembers.length === 0 ? (
+            {members.length === 0 ? (
                 <div className="text-center py-20 border border-dashed border-border/50 rounded-xl bg-muted/20 dark:bg-card/10">
                     <User className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
                     <p className="text-muted-foreground font-mono">
-                        {searchQuery ? "No signatures match query protocols." : "No members found."}
+                        {searchInput ? "No signatures match query protocols." : "No members found."}
                     </p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredMembers.map((member) => (
+                    {members.map((member) => (
                         <Link
                             key={member.id}
                             href={`/profile/${member.username}`}
@@ -158,14 +169,14 @@ export function MembersList({ members, currentPage, totalPages, total }: Members
             )}
 
             {/* Pagination Controls */}
-            {!searchQuery && totalPages > 1 && (
+            {!searchInput && totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2 mt-8">
                     {/* Previous Button */}
                     <Link
                         href={currentPage > 1 ? `/members?page=${currentPage - 1}` : '#'}
                         className={`flex items-center gap-1 px-4 py-2 font-mono text-sm border transition-all rounded ${currentPage > 1
-                                ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
-                                : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
+                            ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
+                            : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
                             }`}
                         onClick={(e) => currentPage <= 1 && e.preventDefault()}
                     >
@@ -181,8 +192,8 @@ export function MembersList({ members, currentPage, totalPages, total }: Members
                                     key={idx}
                                     href={`/members?page=${page}`}
                                     className={`px-3 py-2 font-mono text-sm border transition-all rounded min-w-[2.5rem] text-center ${currentPage === page
-                                            ? 'border-primary dark:border-neon-primary bg-primary/10 dark:bg-neon-primary/10 text-primary dark:text-neon-primary font-bold'
-                                            : 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
+                                        ? 'border-primary dark:border-neon-primary bg-primary/10 dark:bg-neon-primary/10 text-primary dark:text-neon-primary font-bold'
+                                        : 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
                                         }`}
                                 >
                                     {page}
@@ -199,8 +210,8 @@ export function MembersList({ members, currentPage, totalPages, total }: Members
                     <Link
                         href={currentPage < totalPages ? `/members?page=${currentPage + 1}` : '#'}
                         className={`flex items-center gap-1 px-4 py-2 font-mono text-sm border transition-all rounded ${currentPage < totalPages
-                                ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
-                                : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
+                            ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
+                            : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
                             }`}
                         onClick={(e) => currentPage >= totalPages && e.preventDefault()}
                     >
