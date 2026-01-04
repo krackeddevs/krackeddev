@@ -27,6 +27,13 @@ export function MalaysiaMapLayers({
             .catch((err) => console.error("Failed to load map data:", err));
     }, []);
 
+    // State name aliases for common variations
+    const STATE_ALIASES: Record<string, string> = {
+        "malacca": "melaka",
+        "penang": "pulau pinang",
+        "pinang": "pulau pinang",
+    };
+
     // Merge external data into GeoJSON properties when data or geoJson changes
     const enrichedGeoJson = useMemo(() => {
         if (!geoJson) return null;
@@ -46,10 +53,24 @@ export function MalaysiaMapLayers({
             const lowerName = stateName.toLowerCase();
 
             // Attempt to find matching data entry
-            const matchedEntry = data.find(d =>
-                d.name.toLowerCase().includes(lowerName) ||
-                lowerName.includes(d.name.toLowerCase())
-            );
+            const matchedEntry = data.find(d => {
+                const dataLower = d.name.toLowerCase();
+
+                // Check if data name has an alias that matches the state
+                const dataAlias = STATE_ALIASES[dataLower];
+                if (dataAlias && lowerName.includes(dataAlias)) {
+                    return true;
+                }
+
+                // Check if state name has an alias that matches the data
+                const stateAlias = STATE_ALIASES[lowerName];
+                if (stateAlias && dataLower.includes(stateAlias)) {
+                    return true;
+                }
+
+                // Fallback to fuzzy matching
+                return dataLower.includes(lowerName) || lowerName.includes(dataLower);
+            });
 
             if (matchedEntry) {
                 count = matchedEntry.value;
