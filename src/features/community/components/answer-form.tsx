@@ -42,7 +42,14 @@ export function AnswerForm({ questionId }: AnswerFormProps) {
                     <div className="space-y-2">
                         <MarkdownEditor
                             value={body}
-                            onChange={setBody}
+                            onChange={(newValue) => {
+                                console.log('=== Form onChange Called ===');
+                                console.log('New value:', newValue);
+                                console.log('New value length:', newValue.length);
+                                setBody(newValue);
+                                console.log('setBody called');
+                                console.log('===========================');
+                            }}
                             placeholder="Write your answer here..."
                             minHeight="min-h-[200px]"
                         />
@@ -50,7 +57,18 @@ export function AnswerForm({ questionId }: AnswerFormProps) {
                     </div>
 
                     <div className="flex justify-start">
-                        <Button type="submit" disabled={isPending || !body}>
+                        <Button
+                            type="submit"
+                            disabled={isPending || !body}
+                            onClick={() => {
+                                console.log('=== Submit Button Clicked ===');
+                                console.log('Body length:', body.length);
+                                console.log('Body content:', body);
+                                console.log('isPending:', isPending);
+                                console.log('Button disabled:', isPending || !body);
+                                console.log('===========================');
+                            }}
+                        >
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Post Answer
                         </Button>

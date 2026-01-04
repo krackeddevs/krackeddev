@@ -318,7 +318,8 @@ export async function createAnswer(prevState: any, formData: FormData) {
         return { error: "Failed to post answer." };
     }
 
-    revalidatePath("/community");
+    // Revalidate all community pages including the specific question page
+    revalidatePath("/community", "layout");
     return { success: true };
 }
 
