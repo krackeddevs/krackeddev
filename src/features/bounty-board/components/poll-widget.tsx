@@ -320,14 +320,16 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                             </div>
                             <AlertDialogTitle className="text-xl">Confirm Your Vote</AlertDialogTitle>
                         </div>
-                        <AlertDialogDescription className="space-y-3 pt-2">
-                            <p className="text-base text-foreground">
-                                You are about to vote for:
-                            </p>
+                        <div className="space-y-3 pt-2">
+                            <AlertDialogDescription asChild>
+                                <div className="text-base text-foreground">
+                                    You are about to vote for:
+                                </div>
+                            </AlertDialogDescription>
                             {selectedBounty && (
                                 <div className="p-4 rounded-lg bg-neon-cyan/5 border border-neon-cyan/20">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <h4 className="font-bold text-lg">{selectedBounty.label}</h4>
+                                        <span className="font-bold text-lg">{selectedBounty.label}</span>
                                         {selectedBounty.difficulty && (
                                             <Badge className={cn("text-xs uppercase", difficultyColors[selectedBounty.difficulty as keyof typeof difficultyColors])}>
                                                 {selectedBounty.difficulty}
@@ -342,10 +344,10 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                                     )}
                                 </div>
                             )}
-                            <p className="text-sm text-amber-500 font-medium">
+                            <div className="text-sm text-amber-500 font-medium">
                                 ⚠️ Your vote is final and cannot be changed once submitted.
-                            </p>
-                        </AlertDialogDescription>
+                            </div>
+                        </div>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel className="border-border hover:bg-muted">
