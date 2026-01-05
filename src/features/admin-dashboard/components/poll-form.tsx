@@ -413,17 +413,32 @@ export function PollForm({ onSuccess }: { onSuccess?: () => void }) {
                                                 <FormItem>
                                                     <FormLabel className="text-xs uppercase tracking-wider">Estimated Reward (RM) - Optional</FormLabel>
                                                     <FormControl>
-                                                        <Input
-                                                            type="number"
-                                                            placeholder="e.g., 150"
-                                                            className="bg-background/80 border-border focus:border-neon-primary"
-                                                            {...field}
-                                                            value={field.value || ""}
-                                                            onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                                                        />
+                                                        <div className="relative">
+                                                            <Input
+                                                                type="number"
+                                                                placeholder="e.g., 150"
+                                                                min="0"
+                                                                step="10"
+                                                                className="bg-background/80 border-border focus:border-neon-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-auto [&::-webkit-inner-spin-button]:appearance-auto"
+                                                                onWheel={(e) => {
+                                                                    // Allow scroll to change value when focused
+                                                                    const target = e.target as HTMLInputElement;
+                                                                    if (document.activeElement === target) {
+                                                                        e.preventDefault();
+                                                                        const currentValue = Number(target.value) || 0;
+                                                                        const delta = e.deltaY > 0 ? -10 : 10;
+                                                                        const newValue = Math.max(0, currentValue + delta);
+                                                                        field.onChange(newValue || undefined);
+                                                                    }
+                                                                }}
+                                                                {...field}
+                                                                value={field.value || ""}
+                                                                onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                                                            />
+                                                        </div>
                                                     </FormControl>
                                                     <FormDescription className="text-xs">
-                                                        Leave empty if reward is TBD
+                                                        Leave empty if reward is TBD. Use scroll wheel or arrows to adjust.
                                                     </FormDescription>
                                                     <FormMessage />
                                                 </FormItem>
