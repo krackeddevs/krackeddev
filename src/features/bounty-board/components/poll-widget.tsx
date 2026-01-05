@@ -2,11 +2,21 @@
 
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Loader2, CheckCircle2, ChevronDown, ChevronUp, DollarSign } from "lucide-react";
+import { Loader2, CheckCircle2, ChevronDown, ChevronUp, DollarSign, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { votePoll } from "@/features/admin/poll-actions";
 import { cn } from "@/lib/utils";
@@ -41,6 +51,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [expandedOptions, setExpandedOptions] = useState<string[]>([]);
+    const [showConfirmation, setShowConfirmation] = useState(false);
 
     if (!poll) return null;
 
@@ -49,6 +60,8 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
     const showResults = hasVoted || isExpired;
 
     const totalVotes = Object.values(poll.results).reduce((a, b) => a + b, 0);
+
+    const selectedBounty = poll.options.find(opt => opt.id === selectedOption);
 
     const toggleExpanded = (optionId: string) => {
         setExpandedOptions(prev =>
@@ -72,7 +85,16 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
             return;
         }
 
+        // Show confirmation dialog
+        setShowConfirmation(true);
+    }
+
+    async function confirmVote() {
+        if (!selectedOption) return;
+
         setIsSubmitting(true);
+        setShowConfirmation(false);
+
         const result = await votePoll(poll!.id, selectedOption);
 
         if (result.error) {
@@ -283,6 +305,57 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                     </div>
                 )}
             </div>
+
+            {/* Confirmation Dialog */}
+            <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+                <AlertDialogContent className="border-neon-cyan/30 bg-card/95 backdrop-blur">
+                    <AlertDialogHeader>
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                                <AlertTriangle className="w-5 h-5 text-amber-500" />
+                            </div>
+                            <AlertDialogTitle className="text-xl">Confirm Your Vote</AlertDialogTitle>
+                        </div>
+                        <AlertDialogDescription className="space-y-3 pt-2">
+                            <p className="text-base text-foreground">
+                                You are about to vote for:
+                            </p>
+                            {selectedBounty && (
+                                <div className="p-4 rounded-lg bg-neon-cyan/5 border border-neon-cyan/20">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <h4 className="font-bold text-lg">{selectedBounty.label}</h4>
+                                        {selectedBounty.difficulty && (
+                                            <Badge className={cn("text-xs uppercase", difficultyColors[selectedBounty.difficulty as keyof typeof difficultyColors])}>
+                                                {selectedBounty.difficulty}
+                                            </Badge>
+                                        )}
+                                    </div>
+                                    {selectedBounty.estimated_reward && (
+                                        <div className="flex items-center gap-1 text-sm text-rank-gold">
+                                            <DollarSign className="w-4 h-4" />
+                                            <span className="font-mono font-bold">RM {selectedBounty.estimated_reward}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            <p className="text-sm text-amber-500 font-medium">
+                                ⚠️ Your vote is final and cannot be changed once submitted.
+                            </p>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="border-border hover:bg-muted">
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={confirmVote}
+                            className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold"
+                        >
+                            Confirm Vote
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
