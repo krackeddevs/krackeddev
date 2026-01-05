@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { profiles } from '@/lib/db/schema';
-import { isNotNull, eq, and } from 'drizzle-orm';
+import { createPublicClient } from "@/lib/supabase/server";
 
 export async function GET() {
   try {
-    const data = await db
-      .select({ location: profiles.location })
-      .from(profiles)
-      .where(eq(profiles.status, 'active'));
+    const supabase = createPublicClient();
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('location')
+      .eq('status', 'active');
+
+    if (error) {
+      console.error('Supabase error in community locations API:', error);
+      return NextResponse.json({ error: 'Database Error' }, { status: 500 });
+    }
 
     const locationMap = new Map<string, number>();
 
@@ -81,9 +85,9 @@ export async function GET() {
       .sort((a, b) => b.value - a.value);
 
     return NextResponse.json(locationData, {
-      /* headers: {
+      headers: {
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=3600',
-      }, */
+      },
     });
   } catch (error) {
     console.error('Unexpected error in community locations API:', error);
