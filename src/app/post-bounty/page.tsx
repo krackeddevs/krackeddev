@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { submitBountyInquiry } from "@/features/landingpage/actions/submit-bounty-inquiry";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { CompanyMember, Company } from "@/types/database";
 
 export default function PostBountyPage() {
     const router = useRouter();
@@ -49,19 +50,23 @@ export default function PostBountyPage() {
             setFormData(prev => ({ ...prev, email: user.email || "" }));
 
             // Check if user is a member of any company
-            const { data: member } = await supabase
+            const { data: memberData } = await supabase
                 .from('company_members')
                 .select('company_id')
                 .eq('user_id', user.id)
                 .limit(1)
                 .maybeSingle();
 
+            const member = memberData as CompanyMember | null;
+
             if (member?.company_id) {
-                const { data: company } = await supabase
+                const { data: companyData } = await supabase
                     .from('companies')
                     .select('name')
                     .eq('id', member.company_id)
                     .single();
+
+                const company = companyData as Company | null;
 
                 if (company) {
                     setSubmitterType('company');

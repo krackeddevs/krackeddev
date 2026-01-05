@@ -38,8 +38,9 @@ export { validateGitHubPrUrl, GITHUB_PR_URL_REGEX } from "./validators";
 // List Page Components
 export { BountyCard } from "./components/bounty-card";
 export { BountyFilters as BountyFiltersPanel } from "./components/bounty-filters";
-export { BountyStatsBar } from "./components/bounty-stats-bar";
-export { BountyList } from "./components/bounty-list";
+export * from "./components/bounty-stats-bar";
+export * from "./components/bounty-list";
+export * from "./components/poll-widget";
 
 // Detail Page Components
 export { BountyDetail } from "./components/bounty-detail";

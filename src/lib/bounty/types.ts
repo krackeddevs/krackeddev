@@ -21,6 +21,7 @@ export interface Bounty {
   reward: number; // in RM
   difficulty: BountyDifficulty;
   status: BountyStatus;
+  type: 'official' | 'community';
   tags: string[];
   requirements: string[];
   repositoryUrl: string;

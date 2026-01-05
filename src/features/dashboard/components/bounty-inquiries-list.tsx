@@ -5,6 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Terminal, Calendar, DollarSign, Building2, User } from "lucide-react";
+import { BountyInquiry } from "@/types/database";
 
 interface BountyInquiriesListProps {
     type: 'individual' | 'company';
@@ -29,7 +30,8 @@ export async function BountyInquiriesList({ type, limit }: BountyInquiriesListPr
         query = query.limit(limit);
     }
 
-    const { data: inquiries, error } = await query;
+    const { data, error } = await query;
+    const inquiries = (data as BountyInquiry[] | null) || [];
 
     // Handle errors gracefully - often RLS or connection issues
     if (error) {
@@ -96,12 +98,7 @@ export async function BountyInquiriesList({ type, limit }: BountyInquiriesListPr
                                         <Calendar className="w-3 h-3" />
                                         {formatDistanceToNow(new Date(inquiry.created_at), { addSuffix: true })}
                                     </div>
-                                    {inquiry.project_type && (
-                                        <Badge variant="secondary" className="text-[10px] h-4 px-1 uppercase tracking-wider">{inquiry.project_type}</Badge>
-                                    )}
                                 </div>
-                            </div>
-                            <div className="flex flex-col items-end gap-2">
                                 <Badge variant="outline" className={`
                                     capitalize border-opacity-50
                                     ${inquiry.status === 'new' ? 'text-blue-400 border-blue-400 bg-blue-400/10' : ''}

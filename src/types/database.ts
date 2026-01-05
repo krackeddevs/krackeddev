@@ -97,6 +97,8 @@ export interface Bounty {
   type: string;
   skills: string[] | null;
   company_name: string | null;
+  user_id?: string;
+  inquiry_id?: string | null;
   created_at: string;
   updated_at: string;
   // New fields
@@ -131,6 +133,8 @@ export interface Bounty {
 
 export interface BountyInquiry {
   id: string;
+  user_id: string;
+  title: string;
   company_name: string;
   email: string;
   budget_range: string;
@@ -140,6 +144,11 @@ export interface BountyInquiry {
   repository_url?: string | null;
   requirements?: string[] | null;
   long_description?: string | null;
+  submitter_type?: string | null;
+  estimated_budget?: number | string | null;
+  skills?: string[] | null;
+  difficulty?: string | null;
+  deadline?: string | null;
   // Drizzle
   companyName?: string;
   budgetRange?: string;
@@ -265,6 +274,42 @@ export interface XPEvent {
   xp_amount: number;
   metadata: Record<string, any>;
   created_at: string;
+}
+
+export interface Poll {
+  id: string;
+  question: string;
+  description?: string | null;
+  end_at: string;
+  status: string;
+  created_by?: string | null;
+  created_at: string;
+}
+
+export interface PollOption {
+  id: string;
+  poll_id: string;
+  label: string;
+  difficulty?: string | null;
+  description?: string | null;
+  requirements?: string[] | null;
+  estimated_reward?: number | null;
+  created_at: string;
+}
+
+export interface PollVote {
+  id: string;
+  poll_id: string;
+  option_id: string;
+  user_id: string;
+  created_at: string;
+}
+
+export interface PollResult {
+  poll_id: string;
+  option_id: string;
+  label: string;
+  vote_count: number;
 }
 
 export interface Database {
@@ -460,32 +505,91 @@ export interface Database {
           }
         ];
       };
+      polls: {
+        Row: Poll;
+        Insert: Partial<Poll>;
+        Update: Partial<Poll>;
+        Relationships: [
+          {
+            foreignKeyName: "polls_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      poll_options: {
+        Row: PollOption;
+        Insert: Partial<PollOption>;
+        Update: Partial<PollOption>;
+        Relationships: [
+          {
+            foreignKeyName: "poll_options_poll_id_fkey";
+            columns: ["poll_id"];
+            isOneToOne: false;
+            referencedRelation: "polls";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      poll_votes: {
+        Row: PollVote;
+        Insert: Partial<PollVote>;
+        Update: Partial<PollVote>;
+        Relationships: [
+          {
+            foreignKeyName: "poll_votes_poll_id_fkey";
+            columns: ["poll_id"];
+            isOneToOne: false;
+            referencedRelation: "polls";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "poll_votes_option_id_fkey";
+            columns: ["option_id"];
+            isOneToOne: false;
+            referencedRelation: "poll_options";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "poll_votes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      register_new_company: {
-        Args: {
-          p_name: string;
-          p_slug: string;
-          p_size: string;
-          p_website_url?: string | null;
-        };
-        Returns: string;
+      poll_results: {
+        Row: PollResult;
+        Relationships: [];
       };
-      increment_question_view: {
-        Args: {
-          question_id: string;
+      Functions: {
+        register_new_company: {
+          Args: {
+            p_name: string;
+            p_slug: string;
+            p_size: string;
+            p_website_url?: string | null;
+          };
+          Returns: string;
         };
-        Returns: void;
+        increment_question_view: {
+          Args: {
+            question_id: string;
+          };
+          Returns: void;
+        };
+      };
+      Enums: {
+        user_role: UserRole;
+      };
+      CompositeTypes: {
+        [_ in never]: never;
       };
     };
-    Enums: {
-      user_role: UserRole;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
+  }
 }

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { InquiryDetailsView } from "@/features/dashboard/components/inquiry-details/inquiry-details-view";
 import { notFound } from "next/navigation";
+import { BountyInquiry, Bounty, BountySubmissionRow } from "@/types/database";
 
 export default async function InquiryDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -10,26 +11,30 @@ export default async function InquiryDetailsPage({ params }: { params: Promise<{
     if (!user) return notFound();
 
     // 1. Fetch Inquiry
-    const { data: inquiry, error } = await supabase
+    const { data, error } = await supabase
         .from("bounty_inquiries")
         .select("*")
         .eq("id", id)
         .eq("user_id", user.id) // Strict ownership
         .single();
 
+    const inquiry = data as BountyInquiry | null;
+
     if (error || !inquiry) {
         return notFound();
     }
 
     // 2. Fetch Active Bounty
-    const { data: activeBounty } = await supabase
+    const { data: activeBountyData } = await supabase
         .from("bounties")
         .select("*")
         .eq("inquiry_id", inquiry.id)
         .single();
 
+    const activeBounty = activeBountyData as Bounty | null;
+
     // 3. Fetch Submissions
-    let submissions = [];
+    let submissions: BountySubmissionRow[] = [];
     if (activeBounty?.slug) {
         const { data: subs } = await supabase
             .from("bounty_submissions")

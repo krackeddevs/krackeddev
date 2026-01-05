@@ -27,7 +27,6 @@ export function EditBountyForm({ inquiry, activeBounty, isReadOnly = false }: Ed
         deadline: activeBounty?.deadline || inquiry.deadline || "",
         reward_amount: activeBounty?.reward_amount || Number(inquiry.estimated_budget) || 0,
         difficulty: activeBounty?.difficulty || inquiry.difficulty || "intermediate",
-        difficulty: activeBounty?.difficulty || inquiry.difficulty || "intermediate",
         skills: activeBounty?.skills?.map(String) || inquiry.skills?.map(String) || [],
         repository_url: activeBounty?.repository_url || inquiry.repository_url || "",
         requirements: activeBounty?.requirements || inquiry.requirements || [],

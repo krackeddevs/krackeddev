@@ -14,14 +14,18 @@ import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { User, Building2 } from "lucide-react";
 
+import { BountyInquiry } from "@/types/database";
+
 export default async function AdminInquiriesPage() {
     const supabase = await createClient();
 
     // Fetch ALL inquiries
-    const { data: inquiries, error } = await supabase
+    const { data, error } = await supabase
         .from("bounty_inquiries")
         .select("*, profiles(email, full_name, username)")
         .order("created_at", { ascending: false });
+
+    const inquiries = data as (BountyInquiry & { profiles: any })[] | null;
 
     if (error) {
         console.error("Error fetching inquiries:", error);

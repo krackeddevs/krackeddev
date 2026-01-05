@@ -7,10 +7,13 @@ import {
   BountyFiltersPanel,
   BountyStatsBar,
   BountyList,
+  PollWidget,
   fetchActiveBounties,
   fetchBountyStats,
   fetchUniqueTags,
 } from "@/features/bounty-board";
+import { getActivePoll } from "@/features/admin/poll-actions";
+import { createClient } from "@/lib/supabase/client";
 import type { Bounty, BountyFilters as BountyFiltersType, BountyStats } from "@/features/bounty-board";
 import "@/styles/bounty.css";
 
@@ -31,6 +34,8 @@ function XIcon({ className }: { className?: string }) {
 export default function BountyListPage() {
   const [allBounties, setAllBounties] = useState<Bounty[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pollData, setPollData] = useState<any>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | undefined>(undefined);
 
   const [filters, setFilters] = useState<BountyFiltersType>({
     search: "",
@@ -52,14 +57,20 @@ export default function BountyListPage() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      const [bountiesResult, statsResult, tagsResult] = await Promise.all([
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      setCurrentUserId(user?.id);
+
+      const [bountiesResult, statsResult, tagsResult, pollResult] = await Promise.all([
         fetchActiveBounties(), // Use server action instead of static data
         fetchBountyStats(),
         fetchUniqueTags(),
+        getActivePoll(user?.id) // Pass user ID to check vote status
       ]);
       if (bountiesResult.data) setAllBounties(bountiesResult.data);
       if (statsResult.data) setStats(statsResult.data);
       if (tagsResult.data) setAvailableTags(tagsResult.data);
+      if (pollResult.data) setPollData(pollResult.data);
       setLoading(false);
     };
     loadData();
@@ -130,6 +141,13 @@ export default function BountyListPage() {
 
         {/* Stats Bar */}
         <BountyStatsBar stats={stats} />
+
+        {/* Poll Widget - Only show if data exists and not loading */}
+        {!loading && pollData && (
+          <div className="mt-8">
+            <PollWidget poll={pollData} userId={currentUserId} />
+          </div>
+        )}
 
         {/* Loading State */}
         {loading && (

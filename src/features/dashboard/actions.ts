@@ -24,19 +24,17 @@ export async function updateSubmissionStatus(submissionId: string, status: 'appr
     }
 
     try {
-        // 1. Get submission to find the bounty_slug
-        const { data: submission, error: fetchError } = await supabase
-            .from("bounty_submissions")
-            .select("bounty_slug")
+        // 1. Fetch submission to check existence
+        const { data: submission, error: submissionError } = await (supabase.from("bounty_submissions" as any) as any)
+            .select("id, bounty_slug")
             .eq("id", submissionId)
             .single();
 
-        if (fetchError || !submission) return { success: false, error: "Submission not found" };
+        if (submissionError || !submission) return { success: false, error: "Submission not found" };
 
         // 2. Verify Ownership via Bounty
         // We check if the current user matches the owner of the bounty with this slug
-        const { data: bounty, error: bountyError } = await supabase
-            .from("bounties")
+        const { data: bounty, error: bountyError } = await (supabase.from("bounties" as any) as any)
             .select("id, user_id")
             .eq("slug", submission.bounty_slug)
             .single();
@@ -51,8 +49,7 @@ export async function updateSubmissionStatus(submissionId: string, status: 'appr
         }
 
         // 3. Update Status
-        const { error: updateError } = await supabase
-            .from("bounty_submissions")
+        const { error: updateError } = await (supabase.from("bounty_submissions" as any) as any)
             .update({
                 status,
                 reviewed_at: new Date().toISOString(),
@@ -87,8 +84,7 @@ export async function updateBounty(bountyId: string, data: UpdateBountyPayload) 
     try {
         // 1. Update the Active Bounty
         // RLS policy "Owners can update own bounties" will enforce ownership.
-        const { data: updatedBounty, error: updateError } = await supabase
-            .from("bounties")
+        const { data: updatedBounty, error: updateError } = await (supabase.from("bounties" as any) as any)
             .update({
                 title: data.title,
                 description: data.description,
@@ -112,8 +108,7 @@ export async function updateBounty(bountyId: string, data: UpdateBountyPayload) 
 
         // 2. Sync with Inquiry (if it exists)
         if (updatedBounty?.inquiry_id) {
-            const { error: inquiryError } = await supabase
-                .from("bounty_inquiries")
+            const { error: inquiryError } = await (supabase.from("bounty_inquiries" as any) as any)
                 .update({
                     title: data.title,
                     description: data.description,
