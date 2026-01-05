@@ -16,7 +16,7 @@ interface FloatingNavProps {
 
 const SOCIAL_LINKS = [
     { name: "Discord", href: "https://discord.gg/9p24zggp", icon: DiscordIcon },
-    { name: "Instagram", href: "https://instagram.com/kddevs", icon: InstagramIcon },
+    { name: "Instagram", href: "https://www.instagram.com/kddevs000/", icon: InstagramIcon },
     { name: "X (Twitter)", href: "https://twitter.com/krackeddevs", icon: TwitterIcon },
     { name: "TikTok", href: "https://www.tiktok.com/@krackeddevs", icon: TikTokIcon },
     { name: "Threads", href: "https://threads.net/@kddevs", icon: ThreadsIcon },

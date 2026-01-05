@@ -468,7 +468,7 @@ export default function InternshipPage() {
                         </h2>
                         <div className="flex flex-wrap justify-center gap-4 mb-6">
                             <a
-                                href="https://instagram.com/kddevs"
+                                href="https://www.instagram.com/kddevs000/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2 bg-card/50 border border-border px-4 py-2 font-mono text-sm text-muted-foreground hover:text-foreground hover:border-neon-primary transition-colors"
