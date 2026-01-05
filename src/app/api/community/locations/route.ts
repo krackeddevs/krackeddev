@@ -14,6 +14,9 @@ export async function GET() {
       return NextResponse.json({ error: 'Database Error' }, { status: 500 });
     }
 
+    // Type assertion for the profiles data
+    const profiles = (data || []) as Array<{ location: string | null }>;
+
     const locationMap = new Map<string, number>();
 
     const STATES = [
@@ -33,7 +36,7 @@ export async function GET() {
       "malacca": "Melaka"
     };
 
-    data.forEach((profile) => {
+    profiles.forEach((profile) => {
       const lowerLoc = profile.location?.toLowerCase() || '';
       let matchedState: string | null = null;
 
