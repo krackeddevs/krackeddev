@@ -80,14 +80,8 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
             });
             return;
         }
-        if (!userId) {
-            toast.error("Login Required", {
-                description: "You need to be logged in to vote.",
-            });
-            return;
-        }
 
-        // Show confirmation dialog
+        // Show confirmation dialog (will check userId inside)
         setShowConfirmation(true);
     }
 
@@ -292,7 +286,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                         </p>
                         <Button
                             onClick={handleVote}
-                            disabled={!selectedOption || isSubmitting || !userId}
+                            disabled={!selectedOption || isSubmitting}
                             className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold uppercase tracking-wider"
                         >
                             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -320,53 +314,93 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
             {/* Confirmation Dialog */}
             <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
                 <AlertDialogContent className="border-neon-cyan/30 bg-card/95 backdrop-blur">
-                    <AlertDialogHeader>
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                                <AlertTriangle className="w-5 h-5 text-amber-500" />
-                            </div>
-                            <AlertDialogTitle className="text-xl">Confirm Your Vote</AlertDialogTitle>
-                        </div>
-                        <div className="space-y-3 pt-2">
-                            <AlertDialogDescription asChild>
-                                <div className="text-base text-foreground">
-                                    You are about to vote for:
-                                </div>
-                            </AlertDialogDescription>
-                            {selectedBounty && (
-                                <div className="p-4 rounded-lg bg-neon-cyan/5 border border-neon-cyan/20">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="font-bold text-lg">{selectedBounty.label}</span>
-                                        {selectedBounty.difficulty && (
-                                            <Badge className={cn("text-xs uppercase", difficultyColors[selectedBounty.difficulty as keyof typeof difficultyColors])}>
-                                                {selectedBounty.difficulty}
-                                            </Badge>
-                                        )}
+                    {!userId ? (
+                        // Login required prompt
+                        <>
+                            <AlertDialogHeader>
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-10 h-10 rounded-full bg-neon-cyan/20 flex items-center justify-center">
+                                        <AlertTriangle className="w-5 h-5 text-neon-cyan" />
                                     </div>
-                                    {selectedBounty.estimated_reward && (
-                                        <div className="flex items-center gap-1 text-sm text-rank-gold">
-                                            <DollarSign className="w-4 h-4" />
-                                            <span className="font-mono font-bold">RM {selectedBounty.estimated_reward}</span>
+                                    <AlertDialogTitle className="text-xl">Login Required</AlertDialogTitle>
+                                </div>
+                                <div className="space-y-3 pt-2">
+                                    <AlertDialogDescription asChild>
+                                        <div className="text-base text-foreground">
+                                            You need to be logged in to vote on bounty proposals.
+                                        </div>
+                                    </AlertDialogDescription>
+                                    <div className="text-sm text-muted-foreground">
+                                        Join the community to help decide what bounties we should create next!
+                                    </div>
+                                </div>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="border-border hover:bg-muted">
+                                    Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={() => {
+                                        window.location.href = "/auth/login?redirect=/code/bounty";
+                                    }}
+                                    className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold"
+                                >
+                                    Sign In
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </>
+                    ) : (
+                        // Vote confirmation for logged-in users
+                        <>
+                            <AlertDialogHeader>
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                                        <AlertTriangle className="w-5 h-5 text-amber-500" />
+                                    </div>
+                                    <AlertDialogTitle className="text-xl">Confirm Your Vote</AlertDialogTitle>
+                                </div>
+                                <div className="space-y-3 pt-2">
+                                    <AlertDialogDescription asChild>
+                                        <div className="text-base text-foreground">
+                                            You are about to vote for:
+                                        </div>
+                                    </AlertDialogDescription>
+                                    {selectedBounty && (
+                                        <div className="p-4 rounded-lg bg-neon-cyan/5 border border-neon-cyan/20">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="font-bold text-lg">{selectedBounty.label}</span>
+                                                {selectedBounty.difficulty && (
+                                                    <Badge className={cn("text-xs uppercase", difficultyColors[selectedBounty.difficulty as keyof typeof difficultyColors])}>
+                                                        {selectedBounty.difficulty}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            {selectedBounty.estimated_reward && (
+                                                <div className="flex items-center gap-1 text-sm text-rank-gold">
+                                                    <DollarSign className="w-4 h-4" />
+                                                    <span className="font-mono font-bold">RM {selectedBounty.estimated_reward}</span>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
+                                    <div className="text-sm text-amber-500 font-medium">
+                                        ⚠️ Your vote is final and cannot be changed once submitted.
+                                    </div>
                                 </div>
-                            )}
-                            <div className="text-sm text-amber-500 font-medium">
-                                ⚠️ Your vote is final and cannot be changed once submitted.
-                            </div>
-                        </div>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel className="border-border hover:bg-muted">
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={confirmVote}
-                            className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold"
-                        >
-                            Confirm Vote
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="border-border hover:bg-muted">
+                                    Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={confirmVote}
+                                    className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold"
+                                >
+                                    Confirm Vote
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </>
+                    )}
                 </AlertDialogContent>
             </AlertDialog>
         </div>
