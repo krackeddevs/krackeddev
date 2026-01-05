@@ -140,12 +140,9 @@ export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const closeLoginModal = useCallback(() => {
-    // Allow closing if user is authenticated OR if modal was opened as closeable
-    if (user || isLoginModalCloseable) {
-      setIsLoginModalOpen(false);
-      setIsLoginModalCloseable(false);
-    }
-  }, [user, isLoginModalCloseable]);
+    setIsLoginModalOpen(false);
+    setIsLoginModalCloseable(false);
+  }, []);
 
   const signInWithOAuth = async (provider: Provider) => {
     const currentOrigin =

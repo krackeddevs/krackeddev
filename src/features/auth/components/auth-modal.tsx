@@ -16,14 +16,14 @@ interface AuthModalProps {
 export function AuthModal({ isOpen, onClose, user, isAuthenticated }: AuthModalProps) {
     const supabase = createClient();
 
-    // Handle escape key to close modal (only when authenticated)
+    // Handle escape key to close modal
     const handleKeyDown = useCallback(
         (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && isAuthenticated) {
+            if (e.key === 'Escape') {
                 onClose();
             }
         },
-        [onClose, isAuthenticated]
+        [onClose]
     );
 
     useEffect(() => {
@@ -68,7 +68,7 @@ export function AuthModal({ isOpen, onClose, user, isAuthenticated }: AuthModalP
             {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                onClick={isAuthenticated ? onClose : undefined}
+                onClick={onClose}
                 aria-hidden="true"
             />
 
@@ -83,15 +83,13 @@ export function AuthModal({ isOpen, onClose, user, isAuthenticated }: AuthModalP
                         >
                             {isAuthenticated ? 'Your Profile' : 'Connect Account'}
                         </h2>
-                        {isAuthenticated && (
-                            <button
-                                onClick={onClose}
-                                className="p-1 text-muted-foreground hover:text-foreground transition-colors"
-                                aria-label="Close modal"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
-                        )}
+                        <button
+                            onClick={onClose}
+                            className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                            aria-label="Close modal"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
 
                     {/* Body */}
