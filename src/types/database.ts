@@ -137,10 +137,15 @@ export interface BountyInquiry {
   description: string;
   status: string;
   created_at: string;
+  repository_url?: string | null;
+  requirements?: string[] | null;
+  long_description?: string | null;
   // Drizzle
   companyName?: string;
   budgetRange?: string;
   createdAt?: string;
+  repositoryUrl?: string | null;
+  longDescription?: string | null;
 }
 
 export interface Job {

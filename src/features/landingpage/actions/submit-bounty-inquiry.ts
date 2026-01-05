@@ -12,6 +12,9 @@ export interface BountyInquiryData {
     skills: string;
     description: string;
     submitter_type: 'individual' | 'company';
+    repository_url?: string;
+    requirements?: string[];
+    long_description?: string;
 }
 
 export interface ActionResult<T> {
@@ -46,7 +49,10 @@ export async function submitBountyInquiry(data: BountyInquiryData): Promise<Acti
             deadline: data.deadline || null,
             status: "new",
             user_id: user.id,
-            submitter_type: data.submitter_type
+            submitter_type: data.submitter_type,
+            repository_url: data.repository_url,
+            requirements: data.requirements,
+            long_description: data.long_description
         });
 
         if (error) {

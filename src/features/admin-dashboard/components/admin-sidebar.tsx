@@ -1,3 +1,5 @@
+"use client";
+
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck, ShieldAlert, Terminal } from 'lucide-react';

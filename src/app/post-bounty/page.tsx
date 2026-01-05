@@ -25,6 +25,9 @@ export default function PostBountyPage() {
         deadline: "",
         skills: "",
         description: "",
+        repository_url: "",
+        requirements: "", // string for textarea, split on submit
+        long_description: "",
     });
 
     // Check Auth & Fetch Profile
@@ -84,7 +87,10 @@ export default function PostBountyPage() {
             const result = await submitBountyInquiry({
                 ...formData,
                 company: submitterType === 'company' ? formData.company : 'Individual', // Logic: If individual, maybe clear or set generic
-                submitter_type: submitterType
+                submitter_type: submitterType,
+                repository_url: formData.repository_url,
+                long_description: formData.long_description,
+                requirements: formData.requirements.split('\n').filter(line => line.trim() !== '')
             });
 
             if (result.data) {
@@ -316,15 +322,50 @@ export default function PostBountyPage() {
 
                     </div>
 
+
+
+                    {/* Repository URL */}
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-widest text-neon-primary font-bold">Repository URL (Optional)</label>
+                        <input
+                            type="url"
+                            placeholder="https://github.com/..."
+                            className="w-full bg-background/80 border border-border focus:border-neon-primary text-foreground px-4 py-3 outline-none transition-all placeholder:text-muted-foreground focus:shadow-[0_0_15px_rgba(34,197,94,0.1)] rounded-sm"
+                            onChange={(e) => setFormData({ ...formData, repository_url: e.target.value })}
+                        />
+                    </div>
+
                     {/* Description */}
                     <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-widest text-neon-primary font-bold">Mission Parameters</label>
+                        <label className="text-xs uppercase tracking-widest text-neon-primary font-bold">Mission Summary</label>
                         <textarea
                             required
-                            rows={6}
-                            placeholder="Describe the objective, technical requirements, and acceptance criteria..."
+                            rows={4}
+                            placeholder="Brief executive summary of the mission..."
                             className="w-full bg-background/80 border border-border focus:border-neon-primary text-foreground p-4 outline-none transition-all placeholder:text-muted-foreground resize-none focus:shadow-[0_0_15px_rgba(34,197,94,0.1)] rounded-sm"
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        />
+                    </div>
+
+                    {/* Long Description */}
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-widest text-neon-primary font-bold">Detailed Guide (Markdown Supported)</label>
+                        <textarea
+                            rows={8}
+                            placeholder="Full mission details, setup logs, technical constraints..."
+                            className="w-full bg-background/80 border border-border focus:border-neon-primary text-foreground p-4 outline-none transition-all placeholder:text-muted-foreground resize-none focus:shadow-[0_0_15px_rgba(34,197,94,0.1)] font-mono text-sm rounded-sm"
+                            onChange={(e) => setFormData({ ...formData, long_description: e.target.value })}
+                        />
+                    </div>
+
+                    {/* Requirements */}
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-widest text-neon-primary font-bold">Requirements (One per line)</label>
+                        <textarea
+                            rows={6}
+                            placeholder="- Valid Email Validation&#10;- Responsive Design"
+                            className="w-full bg-background/80 border border-border focus:border-neon-primary text-foreground p-4 outline-none transition-all placeholder:text-muted-foreground resize-none focus:shadow-[0_0_15px_rgba(34,197,94,0.1)] font-mono text-sm rounded-sm"
+                            onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
                         />
                     </div>
 
@@ -341,7 +382,7 @@ export default function PostBountyPage() {
                 <p className="text-center mt-8 text-xs text-gray-600">
                     Encrypted via SSL. Agents are standing by.
                 </p>
-            </div>
-        </main>
+            </div >
+        </main >
     );
 }

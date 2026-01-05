@@ -8,21 +8,28 @@ import { Terminal, Calendar, DollarSign, Building2, User } from "lucide-react";
 
 interface BountyInquiriesListProps {
     type: 'individual' | 'company';
+    limit?: number;
 }
 
-export async function BountyInquiriesList({ type }: BountyInquiriesListProps) {
+export async function BountyInquiriesList({ type, limit }: BountyInquiriesListProps) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) return null;
 
     // Fetch inquiries filtered by user and type
-    const { data: inquiries, error } = await supabase
+    let query = supabase
         .from("bounty_inquiries")
         .select("*")
         .eq("user_id", user.id)
         .eq("submitter_type", type)
         .order("created_at", { ascending: false });
+
+    if (limit) {
+        query = query.limit(limit);
+    }
+
+    const { data: inquiries, error } = await query;
 
     // Handle errors gracefully - often RLS or connection issues
     if (error) {
@@ -62,25 +69,27 @@ export async function BountyInquiriesList({ type }: BountyInquiriesListProps) {
                     <CardHeader className="border-b border-border/50 bg-muted/20 pb-4">
                         <div className="flex justify-between items-start gap-4">
                             <div>
-                                <CardTitle className="text-lg font-mono text-foreground mb-1 flex items-center gap-2 group-hover:text-neon-primary transition-colors">
-                                    {/* Prefer Title if available, fallback to legacy display */}
-                                    {inquiry.title ? (
-                                        <span>{inquiry.title}</span>
-                                    ) : (
-                                        <>
-                                            {type === 'company' ? (
-                                                <>
-                                                    <Building2 className="w-4 h-4" />
-                                                    {inquiry.company_name}
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <User className="w-4 h-4" />
-                                                    Individual Bounty
-                                                </>
-                                            )}
-                                        </>
-                                    )}
+                                <CardTitle className="text-lg font-mono text-foreground mb-1">
+                                    <Link href={`/dashboard/${type === 'company' ? 'company' : 'personal'}/inquiries/${inquiry.id}`} className="hover:underline flex items-center gap-2 group-hover:text-neon-primary transition-colors">
+                                        {/* Prefer Title if available, fallback to legacy display */}
+                                        {inquiry.title ? (
+                                            <span>{inquiry.title}</span>
+                                        ) : (
+                                            <>
+                                                {type === 'company' ? (
+                                                    <>
+                                                        <Building2 className="w-4 h-4" />
+                                                        {inquiry.company_name}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <User className="w-4 h-4" />
+                                                        Individual Bounty
+                                                    </>
+                                                )}
+                                            </>
+                                        )}
+                                    </Link>
                                 </CardTitle>
                                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                     <div className="flex items-center gap-1">
@@ -158,7 +167,8 @@ export async function BountyInquiriesList({ type }: BountyInquiriesListProps) {
                         </div>
                     </CardContent>
                 </Card>
-            ))}
-        </div>
+            ))
+            }
+        </div >
     );
 }

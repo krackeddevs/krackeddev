@@ -10,6 +10,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { User, Building2 } from "lucide-react";
 
@@ -118,11 +119,16 @@ export default async function AdminInquiriesPage() {
 
                                     {/* Actions */}
                                     <TableCell className="text-right align-top py-4">
-                                        <InquiryActionButtons
-                                            inquiryId={inquiry.id}
-                                            currentStatus={inquiry.status}
-                                            hasTitle={!!inquiry.title}
-                                        />
+                                        <div className="flex items-center gap-2 justify-end">
+                                            <Button size="sm" variant="outline" asChild>
+                                                <a href={`/admin/inquiries/${inquiry.id}`}>View</a>
+                                            </Button>
+                                            <InquiryActionButtons
+                                                inquiryId={inquiry.id}
+                                                currentStatus={inquiry.status}
+                                                hasTitle={!!inquiry.title}
+                                            />
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))

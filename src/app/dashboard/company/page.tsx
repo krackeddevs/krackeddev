@@ -1,4 +1,5 @@
 import { getUserCompany, getCompanyStats } from "@/features/companies/actions";
+import { BountyInquiriesList } from "@/features/dashboard/components/bounty-inquiries-list";
 import { getVerificationRequest } from "@/features/companies/verification/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -92,6 +93,16 @@ export default async function CompanyDashboardPage() {
                     </AlertDescription>
                 </Alert>
             )}
+
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold tracking-tight">Recent Inquiries</h2>
+                    <Link href="/dashboard/company/inquiries" className="text-sm text-muted-foreground hover:text-primary">
+                        View all
+                    </Link>
+                </div>
+                <BountyInquiriesList type="company" limit={3} />
+            </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>

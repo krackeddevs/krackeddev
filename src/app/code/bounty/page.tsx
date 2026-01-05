@@ -165,6 +165,7 @@ export default function BountyListPage() {
                 bounties={filteredBounties.filter(b => b.status === "active" && b.type === "official")}
                 filters={filters}
                 onClearFilters={clearFilters}
+                hideHeaders={true}
               />
             </div>
 
@@ -183,6 +184,7 @@ export default function BountyListPage() {
                 bounties={filteredBounties.filter(b => b.status === "active" && b.type === "community")}
                 filters={filters}
                 onClearFilters={clearFilters}
+                hideHeaders={true}
               />
             </div>
 
@@ -194,13 +196,14 @@ export default function BountyListPage() {
                   Mission Archive
                 </h2>
                 <span className="text-xs text-muted-foreground ml-auto font-mono">
-                  COMPLETED
+                  ARCHIVE
                 </span>
               </div>
               <BountyList
-                bounties={filteredBounties.filter(b => b.status === "completed" || b.status === "claimed")}
+                bounties={filteredBounties.filter(b => b.status === "completed" || b.status === "claimed" || b.status === "expired")}
                 filters={filters}
                 onClearFilters={clearFilters}
+                hideHeaders={true}
               />
             </div>
           </>

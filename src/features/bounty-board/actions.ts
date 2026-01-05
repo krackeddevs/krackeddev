@@ -39,7 +39,9 @@ export async function fetchActiveBounties(
                     longDescription: row.long_description || row.description || "",
                     reward: row.reward_amount,
                     difficulty: row.difficulty || "intermediate",
-                    status: row.status === "open" ? "active" : row.status,
+                    status: (row.status === "open" && new Date(row.deadline) < new Date())
+                        ? "expired"
+                        : (row.status === "open" ? "active" : row.status),
                     rarity: row.rarity || "normal",
                     // Map company/type info
                     companyName: row.company_name,

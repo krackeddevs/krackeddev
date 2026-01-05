@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getUserCompany } from "@/features/companies/actions";
+
 import { getProfile } from "@/features/profiles/actions";
+import { BountyInquiriesList } from "@/features/dashboard/components/bounty-inquiries-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -32,6 +34,16 @@ export default async function DashboardPage() {
                 <p className="text-muted-foreground mt-2">
                     Your command center for managing applications and profile.
                 </p>
+            </div>
+
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold tracking-tight">Recent Inquiries</h2>
+                    <Link href="/dashboard/personal/inquiries" className="text-sm text-muted-foreground hover:text-primary">
+                        View all
+                    </Link>
+                </div>
+                <BountyInquiriesList type="individual" limit={3} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

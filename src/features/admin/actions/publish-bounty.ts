@@ -41,7 +41,12 @@ export async function publishBounty(inquiryId: string) {
                 type: "bounty", // DB type column (bounty/project/gig)
                 skills: inquiry.skills,
                 company_name: inquiry.company_name, // This triggers 'Community' type in UI
-                deadline: inquiry.deadline
+                deadline: inquiry.deadline,
+                user_id: inquiry.user_id,         // Link to owner
+                inquiry_id: inquiry.id,            // Link to original inquiry
+                repository_url: inquiry.repository_url,
+                requirements: inquiry.requirements,
+                long_description: inquiry.long_description
             });
 
         if (insertError) {
