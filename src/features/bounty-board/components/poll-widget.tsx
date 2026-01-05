@@ -162,6 +162,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                         const isExpanded = expandedOptions.includes(option.id);
                         const voteCount = poll.results[option.id] || 0;
                         const votePercentage = totalVotes > 0 ? (voteCount / totalVotes) * 100 : 0;
+                        const hasDetails = option.description || (option.requirements && option.requirements.length > 0);
 
                         return (
                             <Card
