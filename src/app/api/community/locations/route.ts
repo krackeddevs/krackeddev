@@ -81,9 +81,9 @@ export async function GET() {
       .sort((a, b) => b.value - a.value);
 
     return NextResponse.json(locationData, {
-      headers: {
+      /* headers: {
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=3600',
-      },
+      }, */
     });
   } catch (error) {
     console.error('Unexpected error in community locations API:', error);
