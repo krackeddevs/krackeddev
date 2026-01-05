@@ -123,13 +123,13 @@ const Navbar = () => {
 
           <ModeToggle />
 
-          {/* Our Company Button */}
+          {/* For Company Button */}
           <Button
             variant="ghost"
             asChild
             className="hidden md:flex py-2 h-auto w-auto px-2 sm:px-4 text-muted-foreground hover:text-foreground"
           >
-            <Link href="/our-company">Our Company</Link>
+            <Link href="/for-company">For Company</Link>
           </Button>
 
           {/* Hiring Button */}
@@ -334,11 +334,11 @@ const Navbar = () => {
           >
             <div className="container mx-auto px-4 py-6 space-y-4 flex flex-col">
               <Link
-                href="/our-company"
+                href="/for-company"
                 className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Our Company
+                For Company
               </Link>
               <Link
                 href="/hire/register"

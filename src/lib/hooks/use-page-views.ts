@@ -7,7 +7,7 @@ export function usePageViews(pathname: string) {
     queryKey: ["track-view", pathname],
     queryFn: async () => {
       if (typeof window === "undefined") return null;
-      
+
       const visitorIdKey = "visitor_id";
       const existing = localStorage.getItem(visitorIdKey);
       const visitorId = existing ?? (crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()));
@@ -35,8 +35,9 @@ export function usePageViews(pathname: string) {
     queryFn: async () => {
       const res = await fetch("/api/page-views");
       const data = await res.json();
-      return data.count as number;
+      return (data.count as number) || 0;
     },
     staleTime: 1000 * 60, // Consider data fresh for 1 minute
+    initialData: 0, // Prevent undefined error
   });
 }
