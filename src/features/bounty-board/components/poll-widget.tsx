@@ -97,19 +97,26 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
         setIsSubmitting(true);
         setShowConfirmation(false);
 
-        const result = await votePoll(poll!.id, selectedOption);
+        try {
+            const result = await votePoll(poll!.id, selectedOption);
 
-        if (result.error) {
+            if (result.error) {
+                toast.error("Error", {
+                    description: result.error,
+                });
+                setIsSubmitting(false);
+            } else {
+                toast.success("Vote Recorded!", {
+                    description: "Thanks for helping decide the next community bounty!",
+                });
+                // Force page refresh to show updated results
+                window.location.reload();
+            }
+        } catch (error) {
             toast.error("Error", {
-                description: result.error,
+                description: "Failed to submit vote. Please try again.",
             });
             setIsSubmitting(false);
-        } else {
-            toast.success("Vote Recorded!", {
-                description: "Thanks for helping decide the next community bounty!",
-            });
-            // Refresh to show updated results
-            router.refresh();
         }
     }
 
