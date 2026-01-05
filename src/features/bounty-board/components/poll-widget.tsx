@@ -157,68 +157,90 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                 {/* Bounty Options */}
                 <div className="grid gap-4">
                     {poll.options.map((option) => {
-                        const votes = poll.results[option.id] || 0;
-                        const percentage = totalVotes > 0 ? (votes / totalVotes) * 100 : 0;
                         const isSelected = selectedOption === option.id;
                         const isUserVote = poll.userVoteId === option.id;
                         const isExpanded = expandedOptions.includes(option.id);
-                        const hasDetails = option.description || (option.requirements && option.requirements.length > 0);
+                        const voteCount = poll.results[option.id] || 0;
+                        const votePercentage = totalVotes > 0 ? (voteCount / totalVotes) * 100 : 0;
 
                         return (
                             <Card
                                 key={option.id}
                                 className={cn(
-                                    "border transition-all group/card",
+                                    "border transition-all group/card relative overflow-hidden",
                                     showResults
                                         ? "border-border/50 bg-card/40"
                                         : isSelected
-                                            ? "border-neon-cyan bg-neon-cyan/5 shadow-lg shadow-neon-cyan/20"
-                                            : "border-border/50 bg-card/40 hover:border-neon-cyan/50 hover:bg-card/60"
+                                            ? "border-neon-cyan bg-neon-cyan/5 shadow-lg shadow-neon-cyan/20 cursor-pointer"
+                                            : "border-border/50 bg-card/40 hover:border-neon-cyan/50 hover:bg-card/60 cursor-pointer"
                                 )}
+                                onClick={() => {
+                                    if (!showResults) {
+                                        setSelectedOption(option.id);
+                                    }
+                                }}
                             >
                                 <CardHeader className="pb-3">
                                     <div className="flex items-start justify-between gap-3">
-                                        <div
-                                            className="flex-1 space-y-2 cursor-pointer"
-                                            onClick={() => !showResults && setSelectedOption(option.id)}
-                                        >
-                                            <div className="flex items-center gap-2 flex-wrap">
-                                                <h4 className="font-bold text-lg leading-tight">{option.label}</h4>
-                                                {option.difficulty && (
-                                                    <Badge className={cn("text-xs uppercase", difficultyColors[option.difficulty as keyof typeof difficultyColors])}>
-                                                        {option.difficulty}
-                                                    </Badge>
+                                        <div className="flex-1 space-y-2">
+                                            <div className="flex items-center gap-3">
+                                                {/* Selection Radio Button */}
+                                                {!showResults && (
+                                                    <div className="flex-shrink-0">
+                                                        <div
+                                                            className={cn(
+                                                                "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
+                                                                isSelected
+                                                                    ? "border-neon-cyan bg-neon-cyan"
+                                                                    : "border-muted-foreground/50 group-hover/card:border-neon-cyan/70"
+                                                            )}
+                                                        >
+                                                            {isSelected && (
+                                                                <div className="w-2 h-2 rounded-full bg-black" />
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 )}
-                                                {isUserVote && (
-                                                    <Badge className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50">
-                                                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                                                        Your Vote
-                                                    </Badge>
-                                                )}
+
+                                                <div className="flex items-center gap-2 flex-1">
+                                                    <h3 className="font-bold text-lg leading-tight">{option.label}</h3>
+                                                    {option.difficulty && (
+                                                        <Badge className={cn("text-xs uppercase flex-shrink-0", difficultyColors[option.difficulty as keyof typeof difficultyColors])}>
+                                                            {option.difficulty}
+                                                        </Badge>
+                                                    )}
+                                                    {isUserVote && (
+                                                        <Badge className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50">
+                                                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                                                            Your Vote
+                                                        </Badge>
+                                                    )}
+                                                </div>
                                             </div>
 
                                             {option.estimated_reward && (
-                                                <div className="flex items-center gap-1 text-sm text-rank-gold">
+                                                <div className="flex items-center gap-1 text-sm text-rank-gold pl-8">
                                                     <DollarSign className="w-4 h-4" />
                                                     <span className="font-mono font-bold">RM {option.estimated_reward}</span>
                                                 </div>
                                             )}
                                         </div>
 
-                                        {hasDetails && (
+                                        {/* Expand/Collapse Button */}
+                                        {(option.description || (option.requirements && option.requirements.length > 0)) && (
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
+                                                className="flex-shrink-0 h-8 w-8 p-0"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     toggleExpanded(option.id);
                                                 }}
-                                                className="text-muted-foreground hover:text-foreground shrink-0"
                                             >
                                                 {isExpanded ? (
-                                                    <ChevronUp className="w-4 h-4" />
+                                                    <ChevronUp className="h-4 w-4" />
                                                 ) : (
-                                                    <ChevronDown className="w-4 h-4" />
+                                                    <ChevronDown className="h-4 w-4" />
                                                 )}
                                             </Button>
                                         )}
