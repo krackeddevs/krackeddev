@@ -280,17 +280,17 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                                         <div className="space-y-2">
                                             <div className="flex items-center justify-between text-xs font-mono">
                                                 <span className="text-muted-foreground">
-                                                    {votes} vote{votes !== 1 ? 's' : ''}
+                                                    {voteCount} vote{voteCount !== 1 ? 's' : ''}
                                                 </span>
                                                 <span className={cn(
                                                     "font-bold",
-                                                    percentage > 50 ? "text-neon-primary" : "text-muted-foreground"
+                                                    isUserVote ? "text-neon-cyan" : "text-foreground"
                                                 )}>
-                                                    {percentage.toFixed(1)}%
+                                                    {votePercentage.toFixed(1)}%
                                                 </span>
                                             </div>
                                             <Progress
-                                                value={percentage}
+                                                value={votePercentage}
                                                 className="h-2 bg-muted/50"
                                             />
                                         </div>
