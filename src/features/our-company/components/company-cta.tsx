@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Rocket } from "lucide-react";
 
-export function BrandCTA() {
+export function CompanyCTA() {
     return (
-        <section className="py-24 relative overflow-hidden bg-background">
+        <section className="py-24 relative overflow-hidden">
             {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-background to-neon-primary/5" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background to-neon-primary/10" />
 
             <div className="container px-4 mx-auto text-center relative z-10">
                 <motion.div
@@ -22,11 +22,11 @@ export function BrandCTA() {
                         <Rocket className="w-10 h-10 text-neon-primary" />
                     </div>
 
-                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold font-mono text-foreground mb-6 uppercase tracking-tight">
-                        Start Hiring <span className="text-neon-primary text-glow">Today</span>
+                    <h2 className="text-4xl md:text-6xl font-bold font-mono text-foreground mb-6 uppercase tracking-tight">
+                        Start Hiring <span className="text-neon-primary">Today</span>
                     </h2>
 
-                    <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-mono leading-relaxed">
+                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-mono">
                         Post your first project. See how fast you can find quality talent.
                     </p>
 

@@ -50,6 +50,7 @@ Submit mockups, code, links, or previews in the comments of the bounty post. The
       xHandle: "zafranudin_z",
       xUrl: "https://x.com/zafranudin_z",
     },
+    type: "official",
     submissions: [],
   },
   {
@@ -107,6 +108,7 @@ https://github.com/solahidris/krackeddev`,
       xUrl: "https://x.com/iffathaikal1",
       submissionUrl: "https://x.com/iffathaikal1/status/1995088727497158927",
     },
+    type: "official",
     submissions: [],
   },
   {
@@ -166,6 +168,7 @@ Reply to the bounty post with:
       xHandle: "4kmal4lif",
       xUrl: "https://x.com/4kmal4lif",
     },
+    type: "official",
     submissions: [],
   },
   {
@@ -241,6 +244,7 @@ Each place should display:
     bountyPostUrl: "https://x.com/KrackedDevs",
     createdAt: "2025-12-12T10:00:00+08:00",
     deadline: "2025-12-17T23:59:00+08:00",
+    type: "official",
     submissions: [],
   },
 ];

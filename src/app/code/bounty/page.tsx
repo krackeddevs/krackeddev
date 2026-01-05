@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Terminal, Building2 } from "lucide-react";
 import {
   BountyFiltersPanel,
   BountyStatsBar,
@@ -148,12 +148,61 @@ export default function BountyListPage() {
               availableTags={availableTags}
             />
 
-            {/* Bounty List */}
-            <BountyList
-              bounties={filteredBounties}
-              filters={filters}
-              onClearFilters={clearFilters}
-            />
+            {/* Bounty List Sections */}
+
+            {/* 1. Official Bounties (Active Operations) */}
+            <div className="mb-12">
+              <div className="flex items-center gap-2 mb-6 border-b border-neon-primary/20 pb-2">
+                <Terminal className="w-5 h-5 text-neon-primary" />
+                <h2 className="text-xl font-bold font-mono text-neon-primary uppercase tracking-widest">
+                  Active Operations
+                </h2>
+                <span className="text-xs text-muted-foreground ml-auto font-mono">
+                  OFFICIAL PROTOCOLS
+                </span>
+              </div>
+              <BountyList
+                bounties={filteredBounties.filter(b => b.status === "active" && b.type === "official")}
+                filters={filters}
+                onClearFilters={clearFilters}
+              />
+            </div>
+
+            {/* 2. Community Bounties (Open Contracts) */}
+            <div className="mb-12">
+              <div className="flex items-center gap-2 mb-6 border-b border-neon-cyan/20 pb-2">
+                <Building2 className="w-5 h-5 text-neon-cyan" />
+                <h2 className="text-xl font-bold font-mono text-neon-cyan uppercase tracking-widest">
+                  Open Contracts
+                </h2>
+                <span className="text-xs text-muted-foreground ml-auto font-mono">
+                  COMMUNITY & PARTNERS
+                </span>
+              </div>
+              <BountyList
+                bounties={filteredBounties.filter(b => b.status === "active" && b.type === "community")}
+                filters={filters}
+                onClearFilters={clearFilters}
+              />
+            </div>
+
+            {/* 3. Completed (Mission Archive) */}
+            <div className="mb-12 opacity-80">
+              <div className="flex items-center gap-2 mb-6 border-b border-muted/20 pb-2">
+                <div className="w-2 h-2 rounded-full bg-muted-foreground"></div>
+                <h2 className="text-xl font-bold font-mono text-muted-foreground uppercase tracking-widest">
+                  Mission Archive
+                </h2>
+                <span className="text-xs text-muted-foreground ml-auto font-mono">
+                  COMPLETED
+                </span>
+              </div>
+              <BountyList
+                bounties={filteredBounties.filter(b => b.status === "completed" || b.status === "claimed")}
+                filters={filters}
+                onClearFilters={clearFilters}
+              />
+            </div>
           </>
         )}
 

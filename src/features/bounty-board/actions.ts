@@ -15,8 +15,8 @@ export async function fetchActiveBounties(
     filters?: Partial<BountyFilters>
 ): Promise<{ data: Bounty[]; error: string | null }> {
     try {
-        // Start with static data
-        let bounties: Bounty[] = [...staticBounties];
+        // Start with empty array (DB only mode)
+        let bounties: Bounty[] = []; // [...staticBounties];
 
         // Try to fetch from Supabase as well
         const supabase = await createClient();
@@ -41,6 +41,10 @@ export async function fetchActiveBounties(
                     difficulty: row.difficulty || "intermediate",
                     status: row.status === "open" ? "active" : row.status,
                     rarity: row.rarity || "normal",
+                    // Map company/type info
+                    companyName: row.company_name,
+                    type: row.company_name ? 'community' : 'official',
+
                     tags: row.skills || [],
                     requirements: row.requirements || [],
                     repositoryUrl: row.repository_url || "",
@@ -137,6 +141,10 @@ export async function fetchBountyBySlug(
                     difficulty: row.difficulty || "intermediate",
                     status: row.status === "open" ? "active" : row.status,
                     rarity: row.rarity || "normal",
+                    // Map company/type info
+                    companyName: row.company_name,
+                    type: row.company_name ? 'community' : 'official',
+
                     tags: row.skills || [],
                     requirements: row.requirements || [],
                     repositoryUrl: row.repository_url || "",

@@ -11,6 +11,7 @@ import {
     Settings,
     FileText,
     LogOut,
+    Terminal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
@@ -51,6 +52,11 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
             href: "/dashboard/applications",
             icon: FileText,
         },
+        {
+            title: "Bounty Inquiries",
+            href: "/dashboard/personal/inquiries",
+            icon: Terminal,
+        },
     ];
 
     const companyItems = [
@@ -73,6 +79,11 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
             title: "Applicants",
             href: "/dashboard/company/applicants",
             icon: User, // Or a different icon
+        },
+        {
+            title: "Bounty Inquiries",
+            href: "/dashboard/company/inquiries",
+            icon: Terminal,
         },
     ];
 

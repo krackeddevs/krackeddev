@@ -22,6 +22,8 @@ export interface Bounty {
     reward: number; // in RM
     difficulty: BountyDifficulty;
     status: BountyStatus;
+    type: 'official' | 'community';
+    companyName?: string;
     rarity?: BountyRarity; // Optional for backwards compatibility
     tags: string[];
     requirements: string[];

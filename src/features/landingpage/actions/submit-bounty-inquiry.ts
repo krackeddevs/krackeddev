@@ -6,7 +6,12 @@ export interface BountyInquiryData {
     company: string;
     email: string;
     budget: string;
+    title: string;
+    difficulty: string;
+    deadline?: string;
+    skills: string;
     description: string;
+    submitter_type: 'individual' | 'company';
 }
 
 export interface ActionResult<T> {
@@ -18,13 +23,30 @@ export async function submitBountyInquiry(data: BountyInquiryData): Promise<Acti
     try {
         const supabase = await createClient();
 
-        // Explicit casting to `any` because TS is failing to infer the table schema despite correct types
+        // Get current user
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            return { data: null, error: "Authentication required to submit a bounty inquiry." };
+        }
+
+        // Parse skills
+        const skillsArray = data.skills ? data.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+        // Explicit casting to `any` because TS might fail to infer the table schema
         const { error } = await (supabase.from("bounty_inquiries" as any) as any).insert({
+            title: data.title,
             company_name: data.company,
             email: data.email,
-            budget_range: data.budget,
+            estimated_budget: parseFloat(data.budget) || 0,
+            budget_range: `RM ${data.budget}`, // Legacy/Fallback
             description: data.description,
+            difficulty: data.difficulty,
+            skills: skillsArray,
+            deadline: data.deadline || null,
             status: "new",
+            user_id: user.id,
+            submitter_type: data.submitter_type
         });
 
         if (error) {
