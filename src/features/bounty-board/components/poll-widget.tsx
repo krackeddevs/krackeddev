@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { Loader2, CheckCircle2, ChevronDown, ChevronUp, DollarSign, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,7 @@ const difficultyColors = {
 };
 
 export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: string }) {
+    const router = useRouter();
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [expandedOptions, setExpandedOptions] = useState<string[]>([]);
@@ -106,6 +108,8 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
             toast.success("Vote Recorded!", {
                 description: "Thanks for helping decide the next community bounty!",
             });
+            // Refresh to show updated results
+            router.refresh();
         }
     }
 
