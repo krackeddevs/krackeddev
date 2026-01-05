@@ -41,6 +41,7 @@ export { BountyFilters as BountyFiltersPanel } from "./components/bounty-filters
 export * from "./components/bounty-stats-bar";
 export * from "./components/bounty-list";
 export * from "./components/poll-widget";
+export { PollWidgetSkeleton } from "./components/poll-widget-skeleton";
 
 // Detail Page Components
 export { BountyDetail } from "./components/bounty-detail";

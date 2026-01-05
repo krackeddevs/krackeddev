@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft, Terminal, Building2 } from "lucide-react";
 import {
@@ -8,6 +8,7 @@ import {
   BountyStatsBar,
   BountyList,
   PollWidget,
+  PollWidgetSkeleton,
   fetchActiveBounties,
   fetchBountyStats,
   fetchUniqueTags,
@@ -143,9 +144,12 @@ export default function BountyListPage() {
         <BountyStatsBar stats={stats} />
 
         {/* Poll Widget - Only show if data exists and not loading */}
-        {!loading && pollData && (
+        {!loading && (
           <div className="mt-8">
-            <PollWidget poll={pollData} userId={currentUserId} />
+            {/* Poll Widget */}
+            <Suspense fallback={<PollWidgetSkeleton />}>
+              {pollData && <PollWidget poll={pollData} userId={currentUserId} />}
+            </Suspense>
           </div>
         )}
 
