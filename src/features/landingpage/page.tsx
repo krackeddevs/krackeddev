@@ -9,6 +9,7 @@ import { LiveStats } from "./components/live-stats";
 import { JobPreview } from "./components/job-preview";
 import { NavigationHub } from "./components/navigation-hub";
 import { FloatingNav } from "./components/floating-nav";
+import { BottomSocialNav } from "./components/bottom-social-nav";
 import { CommunityMap } from "./components/community-map";
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
@@ -115,8 +116,11 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                         <JobPreview />
                     </section>
 
-                    {/* Collapsible Floating Navigation */}
+                    {/* Collapsible Floating Navigation - Desktop Only */}
                     <FloatingNav onOpenManifesto={() => setManifestoOpen(true)} />
+
+                    {/* Bottom Social Navigation - Mobile/Tablet Only */}
+                    <BottomSocialNav onOpenManifesto={() => setManifestoOpen(true)} />
                 </>
             )}
         </main>

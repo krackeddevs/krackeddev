@@ -39,7 +39,7 @@ export function FloatingNav({ onOpenManifesto }: FloatingNavProps) {
     };
 
     return (
-        <div className="fixed bottom-6 left-6 z-40 flex flex-col gap-3 items-start">
+        <div className="hidden lg:flex fixed bottom-6 left-6 z-40 flex-col gap-3 items-start">
             <AnimatePresence mode="popLayout">
                 {isExpanded && (
                     <motion.div
