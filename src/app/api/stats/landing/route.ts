@@ -6,8 +6,10 @@ import { bounties as staticBounties } from '@/lib/bounty/data';
 
 export async function GET() {
   try {
-    // 1. Get Travelers count (Profiles)
-    const travelersCountResult = await db.select({ value: count() }).from(profiles);
+    const travelersCountResult = await db
+      .select({ value: count() })
+      .from(profiles)
+      .where(eq(profiles.status, 'active'));
     const travelersCount = travelersCountResult[0]?.value || 0;
 
     // 2. Calculate Payout Volume
@@ -35,7 +37,7 @@ export async function GET() {
       .select({ value: count() })
       .from(bounties)
       .where(eq(bounties.status, 'open'));
-    
+
     const dbActiveBounties = dbActiveBountiesResult[0]?.value || 0;
 
     const allDbBounties = await db.select({ slug: bounties.slug }).from(bounties);
@@ -51,6 +53,10 @@ export async function GET() {
       payoutVolume: totalPayout,
       activeBounties: activeBounties,
       travelers: travelersCount,
+    }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=3600',
+      },
     });
   } catch (error) {
     console.error('Unexpected error in landing stats API:', error);

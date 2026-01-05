@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLandingStats } from "@/lib/hooks/use-landing-data";
 
 function Counter({ end, duration = 2000 }: { end: number; duration?: number }) {
   const [count, setCount] = useState(0);
@@ -28,8 +27,12 @@ function Counter({ end, duration = 2000 }: { end: number; duration?: number }) {
   return <>{count.toLocaleString()}</>;
 }
 
-export function LiveStats() {
-  const { data: stats } = useLandingStats();
+import { useLandingStats, LandingStats } from "@/lib/hooks/use-landing-data";
+
+// ... (Counter component stays the same) ...
+
+export function LiveStats({ initialData }: { initialData?: LandingStats | null }) {
+  const { data: stats } = useLandingStats(initialData);
 
   if (!stats) return null; // Or a loading skeleton
 

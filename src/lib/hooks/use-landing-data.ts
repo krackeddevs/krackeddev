@@ -12,7 +12,7 @@ export interface LocationData {
   value: number;
 }
 
-export function useLandingStats() {
+export function useLandingStats(initialData?: LandingStats | null) {
   return useQuery<LandingStats>({
     queryKey: ['landing-stats'],
     queryFn: async () => {
@@ -20,6 +20,7 @@ export function useLandingStats() {
       if (!res.ok) throw new Error('Failed to fetch landing stats');
       return res.json();
     },
+    initialData: initialData ?? undefined,
   });
 }
 
@@ -34,7 +35,7 @@ export function useRecentBounties() {
   });
 }
 
-export function useCommunityLocations() {
+export function useCommunityLocations(initialData?: LocationData[]) {
   return useQuery<LocationData[]>({
     queryKey: ['community-locations'],
     queryFn: async () => {
@@ -42,5 +43,6 @@ export function useCommunityLocations() {
       if (!res.ok) throw new Error('Failed to fetch community locations');
       return res.json();
     },
+    initialData: initialData,
   });
 }

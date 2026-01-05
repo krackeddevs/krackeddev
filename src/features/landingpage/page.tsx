@@ -1,16 +1,18 @@
 "use client";
 
 import "@/styles/jobs.css";
+import dynamic from "next/dynamic";
 import { ParallaxIntro } from "./components/parallax-intro";
 import { useLandingSequence } from "./hooks/use-landing-sequence";
 
 import { BrandCTA } from "./components/brand-cta";
 import { LiveStats } from "./components/live-stats";
-import { JobPreview } from "./components/job-preview";
-import { NavigationHub } from "./components/navigation-hub";
-import { FloatingNav } from "./components/floating-nav";
-import { BottomSocialNav } from "./components/bottom-social-nav";
 import { CommunityMap } from "./components/community-map";
+
+const JobPreview = dynamic(() => import("./components/job-preview").then(mod => mod.JobPreview), { ssr: false });
+const NavigationHub = dynamic(() => import("./components/navigation-hub").then(mod => mod.NavigationHub), { ssr: false });
+const BottomSocialNav = dynamic(() => import("./components/bottom-social-nav").then(mod => mod.BottomSocialNav), { ssr: false });
+const FloatingNav = dynamic(() => import("./components/floating-nav").then(mod => mod.FloatingNav), { ssr: false });
 import { ManifestoModal } from "@/components/ManifestoModal";
 import Link from "next/link";
 import { Users, Building2, ScrollText, Briefcase } from "lucide-react";
@@ -20,12 +22,21 @@ import { useState, useEffect } from "react";
 import { MiniProfile } from "./components/mini-profile";
 import { MiniProfileData } from "@/features/profiles/actions";
 
+import { LandingStats, LocationData } from "@/lib/hooks/use-landing-data";
+
 interface LandingPageProps {
     isLoggedIn: boolean;
     miniProfileData?: MiniProfileData | null;
+    initialStats?: LandingStats | null;
+    initialLocations?: LocationData[];
 }
 
-export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
+export function LandingPage({
+    isLoggedIn,
+    miniProfileData,
+    initialStats,
+    initialLocations
+}: LandingPageProps) {
     const { showAnimation, animationDone, handleAnimationComplete } = useLandingSequence();
     const [manifestoOpen, setManifestoOpen] = useState(false);
 
@@ -85,9 +96,8 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
                     {/* Mobile: flex-col-reverse (Game Top, Map Bottom) */}
                     {/* Desktop: flex-col (Map Top, Game Bottom) */}
                     <div className="flex flex-col-reverse md:flex-col w-full">
-                        {/* Community Map Section */}
                         <section className="relative w-full border-t border-green-900/50">
-                            <CommunityMap />
+                            <CommunityMap initialData={initialLocations} />
                         </section>
 
                         {/* Game Section (Hidden for now) */}
@@ -103,7 +113,7 @@ export function LandingPage({ isLoggedIn, miniProfileData }: LandingPageProps) {
 
                     {/* Live Stats Section */}
                     <section className="relative w-full border-t border-green-900/50">
-                        <LiveStats />
+                        <LiveStats initialData={initialStats} />
                     </section>
 
                     {/* Navigation Hub */}
