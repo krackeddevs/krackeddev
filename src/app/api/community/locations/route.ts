@@ -1,21 +1,14 @@
 import { NextResponse } from 'next/server';
-import { createPublicClient } from "@/lib/supabase/server";
+import { db } from '@/lib/db';
+import { profiles } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    const supabase = createPublicClient();
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('location')
-      .eq('status', 'active');
-
-    if (error) {
-      console.error('Supabase error in community locations API:', error);
-      return NextResponse.json({ error: 'Database Error' }, { status: 500 });
-    }
-
-    // Type assertion for the profiles data
-    const profiles = (data || []) as Array<{ location: string | null }>;
+    const data = await db
+      .select({ location: profiles.location })
+      .from(profiles)
+      .where(eq(profiles.status, 'active'));
 
     const locationMap = new Map<string, number>();
 
@@ -36,7 +29,7 @@ export async function GET() {
       "malacca": "Melaka"
     };
 
-    profiles.forEach((profile) => {
+    data.forEach((profile) => {
       const lowerLoc = profile.location?.toLowerCase() || '';
       let matchedState: string | null = null;
 
