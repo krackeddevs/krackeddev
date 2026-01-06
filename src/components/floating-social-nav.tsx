@@ -51,61 +51,58 @@ export function FloatingSocialNav() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <>
-            {/* Desktop Only - Hidden on mobile to avoid clutter */}
-            <div className="hidden md:block fixed bottom-6 left-6 z-40">
-                <div className="relative">
-                    {/* Social Links - Expand Upward */}
-                    <div
-                        className={cn(
-                            "absolute bottom-16 left-0 flex flex-col gap-2 transition-all duration-300",
-                            isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
-                        )}
-                    >
-                        {socialLinks.map((link, index) => (
-                            <a
-                                key={link.name}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={cn(
-                                    "group flex items-center gap-3 bg-background border border-border rounded-none p-3 transition-all duration-200",
-                                    "hover:border-[var(--neon-primary)] hover:shadow-[0_0_10px_rgba(var(--neon-primary-rgb),0.3)]",
-                                    link.color
-                                )}
-                                style={{
-                                    transitionDelay: isOpen ? `${index * 50}ms` : "0ms",
-                                }}
-                                title={link.name}
-                            >
-                                <div className="text-foreground/60 group-hover:text-current transition-colors">
-                                    {link.icon}
-                                </div>
-                                <span className="text-[10px] font-mono uppercase tracking-widest text-foreground/60 group-hover:text-current transition-colors whitespace-nowrap">
-                                    {link.name}
-                                </span>
-                            </a>
-                        ))}
-                    </div>
-
-                    {/* Main Toggle Button */}
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className={cn(
-                            "w-12 h-12 rounded-none bg-background border-2 border-border flex items-center justify-center transition-all duration-300",
-                            "hover:border-[var(--neon-primary)] hover:shadow-[0_0_15px_rgba(var(--neon-primary-rgb),0.3)]",
-                            isOpen && "border-[var(--neon-primary)] shadow-[0_0_15px_rgba(var(--neon-primary-rgb),0.3)]"
-                        )}
-                        aria-label={isOpen ? "Close social links" : "Open social links"}
-                    >
-                        {isOpen ? (
-                            <X className="w-5 h-5 text-[var(--neon-primary)]" />
-                        ) : (
-                            <Share2 className="w-5 h-5 text-foreground/60 group-hover:text-[var(--neon-primary)]" />
-                        )}
-                    </button>
+        <div className="fixed bottom-6 left-6 z-40">
+            <div className="relative">
+                {/* Social Links - Expand Upward */}
+                <div
+                    className={cn(
+                        "absolute bottom-16 left-0 flex flex-col gap-2 transition-all duration-300",
+                        isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+                    )}
+                >
+                    {socialLinks.map((link, index) => (
+                        <a
+                            key={link.name}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cn(
+                                "group flex items-center gap-3 bg-background border border-border rounded-none p-3 transition-all duration-200",
+                                "hover:border-[var(--neon-primary)] hover:shadow-[0_0_10px_rgba(var(--neon-primary-rgb),0.3)]",
+                                link.color
+                            )}
+                            style={{
+                                transitionDelay: isOpen ? `${index * 50}ms` : "0ms",
+                            }}
+                            title={link.name}
+                        >
+                            <div className="text-foreground/60 group-hover:text-current transition-colors">
+                                {link.icon}
+                            </div>
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-foreground/60 group-hover:text-current transition-colors whitespace-nowrap">
+                                {link.name}
+                            </span>
+                        </a>
+                    ))}
                 </div>
+
+                {/* Main Toggle Button */}
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={cn(
+                        "w-12 h-12 rounded-none bg-background border-2 border-border flex items-center justify-center transition-all duration-300",
+                        "hover:border-[var(--neon-primary)] hover:shadow-[0_0_15px_rgba(var(--neon-primary-rgb),0.3)]",
+                        isOpen && "border-[var(--neon-primary)] shadow-[0_0_15px_rgba(var(--neon-primary-rgb),0.3)]"
+                    )}
+                    aria-label={isOpen ? "Close social links" : "Open social links"}
+                >
+                    {isOpen ? (
+                        <X className="w-5 h-5 text-[var(--neon-primary)]" />
+                    ) : (
+                        <Share2 className="w-5 h-5 text-foreground/60 group-hover:text-[var(--neon-primary)]" />
+                    )}
+                </button>
             </div>
-        </>
+        </div>
     );
 }
