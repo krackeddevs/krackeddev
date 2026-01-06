@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck, ShieldAlert, Terminal, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck, ShieldAlert, Terminal, BarChart3, Building2 } from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
 
 interface SidebarContentProps {
@@ -40,6 +40,14 @@ export function AdminSidebarContent({ className, onLinkClick }: SidebarContentPr
                 >
                     <Terminal className="w-4 h-4" />
                     Inquiries
+                </Link>
+                <Link
+                    href="/admin/government-inquiries"
+                    onClick={onLinkClick}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-cyan/10 hover:text-neon-cyan hover:border-l-2 hover:border-neon-cyan rounded-r-md transition-all duration-200 uppercase"
+                >
+                    <Building2 className="w-4 h-4" />
+                    Gov Inquiries
                 </Link>
                 <Link
                     href="/admin/submissions"
