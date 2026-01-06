@@ -1,79 +1,175 @@
 "use client";
 
 import React from "react";
+import { format, parseISO, startOfMonth, subMonths, isSameMonth } from "date-fns";
 import { GithubContributionWeek } from "../types";
 import { cn } from "@/lib/utils";
 import { Grid } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface GithubGraphProps {
     data: GithubContributionWeek[];
     totalContributions: number;
-    className?: string; // Allow external styling overrides
+    className?: string;
 }
 
 export function GithubGraph({ data, totalContributions, className }: GithubGraphProps) {
+    const [mounted, setMounted] = React.useState(false);
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Show exactly 12 distinct months (Current month + previous 11)
+    // This prevents "Jan" appearing at both the start and end.
+    const weeks = React.useMemo(() => {
+        if (!data || data.length === 0) return [];
+
+        const now = new Date();
+        const startOf12MonthsAgo = startOfMonth(subMonths(now, 11));
+
+        // Find the index of the week that contains or follows twelveMonthsAgo
+        const startIndex = data.findIndex(week =>
+            week.contributionDays.length > 0 &&
+            parseISO(week.contributionDays[0].date) >= startOf12MonthsAgo
+        );
+
+        return startIndex === -1 ? data.slice(-52) : data.slice(startIndex);
+    }, [data]);
+
     if (!data || data.length === 0) return null;
 
-    // We show more history for the matrix to look impressive, 
-    // but typically keep it to ~20-25 weeks for mobile/desktop balance or full year if space permits.
-    // The previous implementation used 20. Let's keep 20 but make it look denser.
-    const recentWeeks = data.slice(-24);
+    // Standardize week widths for different screens
+    const weekWidthMobile = 6;
+    const weekWidthDesktop = 14;
+
+    // Calculate month labels
+    const monthLabels = React.useMemo(() => {
+        const labels: { label: string; index: number }[] = [];
+        weeks.forEach((week, index) => {
+            if (week.contributionDays.length > 0) {
+                const date = parseISO(week.contributionDays[0].date);
+                // We show a month label if it's the first week of that month in our data
+                const label = format(date, "MMM");
+
+                if (labels.length === 0 || (labels[labels.length - 1].label !== label && index - labels[labels.length - 1].index > 2)) {
+                    labels.push({ label, index });
+                }
+            }
+        });
+        return labels;
+    }, [weeks]);
 
     return (
-        <div className={cn("w-full bg-card/40 border border-border rounded-xl overflow-hidden backdrop-blur-md shadow-sm", className)}>
-            {/* Header matching DevPulse */}
-            <div className="flex flex-col md:flex-row items-center justify-between p-6 border-b border-border gap-4">
-                <div className="flex items-center gap-2">
-                    <Grid className="w-5 h-5 text-neon-primary" />
-                    <span className="font-mono font-bold text-foreground tracking-tight uppercase text-sm">Contribution Matrix</span>
+        <Card className={cn("bg-card/40 border-border backdrop-blur-md overflow-hidden shadow-sm", className)}>
+            <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                        <Grid className="w-4 h-4 sm:w-5 sm:h-5 text-neon-primary" />
+                        <span className="font-mono font-bold text-foreground tracking-tight uppercase text-xs sm:text-sm">Contribution Matrix</span>
+                    </div>
+                    <Badge variant="outline" className="font-mono text-[9px] sm:text-[10px] border-neon-primary/30 text-neon-primary">
+                        {totalContributions} CYCLES
+                    </Badge>
                 </div>
 
-                <div className="flex bg-muted/20 p-1 rounded-lg">
-                    <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                        <span className="text-neon-primary font-bold">{totalContributions}</span> CYCLES
+                <div className="relative w-full flex justify-center sm:justify-start">
+                    <div className="relative flex flex-col items-start w-fit pr-4">
+                        <div className="relative pb-2 scrollbar-hide">
+                            <div className="flex flex-col items-center sm:items-start">
+                                {/* Month labels row */}
+                                <div className="flex ml-7 sm:ml-8 mb-1 sm:mb-2 h-4 relative w-full">
+                                    {monthLabels.map((ml, i) => (
+                                        <span
+                                            key={i}
+                                            className="absolute text-[8px] sm:text-[10px] text-muted-foreground font-mono transition-all duration-300 whitespace-nowrap"
+                                            style={{
+                                                left: mounted && window.innerWidth < 640
+                                                    ? `${ml.index * weekWidthMobile}px`
+                                                    : `${ml.index * weekWidthDesktop}px`
+                                            }}
+                                        >
+                                            {ml.label}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                <div className="flex gap-1 sm:gap-2">
+                                    {/* Day labels column */}
+                                    <div className="flex flex-col justify-between text-[8px] sm:text-[10px] text-muted-foreground font-mono py-[1px] h-[50px] sm:h-[105px] w-6 shrink-0 text-right pr-1 sm:pr-2">
+                                        <span></span>
+                                        <span>Mon</span>
+                                        <span></span>
+                                        <span>Wed</span>
+                                        <span></span>
+                                        <span>Fri</span>
+                                        <span></span>
+                                    </div>
+
+                                    {/* The Grid */}
+                                    <div className="flex gap-[1px] sm:gap-1">
+                                        {weeks.map((week, wIndex) => (
+                                            <div key={wIndex} className="flex flex-col gap-[1px] sm:gap-1">
+                                                {week.contributionDays.map((day, dIndex) => {
+                                                    const hasContribution = day.contributionCount > 0;
+
+                                                    let bgColor = "rgba(255, 255, 255, 0.05)";
+                                                    if (hasContribution) {
+                                                        const count = day.contributionCount;
+                                                        if (count <= 2) bgColor = "rgba(0, 255, 65, 0.2)";
+                                                        else if (count <= 5) bgColor = "rgba(0, 255, 65, 0.45)";
+                                                        else if (count <= 10) bgColor = "rgba(0, 255, 65, 0.75)";
+                                                        else bgColor = "rgba(0, 255, 65, 1)";
+                                                    }
+
+                                                    return (
+                                                        <div
+                                                            key={`${wIndex}-${dIndex}`}
+                                                            className={cn(
+                                                                "w-[5px] h-[5px] sm:w-[10px] sm:h-[10px] rounded-[1px] sm:rounded-[2px] transition-all duration-200",
+                                                                hasContribution && "hover:scale-125 hover:z-20 cursor-pointer"
+                                                            )}
+                                                            style={{
+                                                                backgroundColor: bgColor,
+                                                                boxShadow: hasContribution && day.contributionCount > 8 ? `0 0 4px ${bgColor}` : 'none'
+                                                            }}
+                                                            title={`${day.contributionCount} contributions on ${day.date}`}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer with Legend */}
+                <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <a
+                        href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[9px] sm:text-[10px] text-muted-foreground hover:text-neon-primary transition-colors font-mono text-center sm:text-left underline decoration-muted-foreground/30 underline-offset-2"
+                    >
+                        Learn how we count contributions
+                    </a>
+
+                    <div className="flex items-center gap-2 text-[9px] sm:text-[10px] text-muted-foreground font-mono">
+                        <span>Less</span>
+                        <div className="flex gap-1">
+                            <div className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] rounded-[1px] bg-white/5" />
+                            <div className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] rounded-[1px] bg-[rgba(0,255,65,0.2)]" />
+                            <div className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] rounded-[1px] bg-[rgba(0,255,65,0.45)]" />
+                            <div className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] rounded-[1px] bg-[rgba(0,255,65,0.75)]" />
+                            <div className="w-[8px] h-[8px] sm:w-[10px] sm:h-[10px] rounded-[1px] bg-[rgba(0,255,65,1)]" />
+                        </div>
+                        <span>More</span>
                     </div>
                 </div>
             </div>
-
-            {/* Body */}
-            <div className="p-6 relative bg-card/20 flex justify-center items-center min-h-[160px]">
-                {/* Grid Background Effect - Updated for B&W/Light Mode */}
-                <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: "var(--grid-background)", backgroundSize: "20px 20px" }} />
-
-                <div className="flex gap-1.5 justify-end overflow-hidden z-10">
-                    {recentWeeks.map((week, wIndex) => (
-                        <div key={wIndex} className="flex flex-col gap-1.5">
-                            {week.contributionDays.map((day, dIndex) => {
-                                const hasContribution = day.contributionCount > 0;
-                                // Calculate intensity for opacity: 0 -> 0.1, Max -> 1.0
-                                // Cap at 1.0. Assume ~5-10 commits is "high" day.
-                                const intensity = hasContribution
-                                    ? Math.min(0.3 + (day.contributionCount * 0.15), 1)
-                                    : 0.1; // Increased base opacity for visibility in light mode
-
-                                return (
-                                    <div
-                                        key={`${wIndex}-${dIndex}`}
-                                        className={cn(
-                                            "w-3.5 h-3.5 rounded-[2px] transition-all duration-300",
-                                            hasContribution
-                                                ? "bg-neon-primary shadow-[0_0_4px_var(--neon-primary)] hover:shadow-[0_0_8px_var(--neon-primary)] hover:scale-110"
-                                                : "bg-muted-foreground/10 hover:bg-muted-foreground/20"
-                                        )}
-                                        style={{
-                                            opacity: hasContribution ? intensity : 1 // Logic adjustment: Use alpha color for empty cells instead of opacity
-                                        }}
-                                        title={`${day.contributionCount} contributions on ${day.date}`}
-                                    />
-                                );
-                            })}
-                        </div>
-                    ))}
-                </div>
-
-                {/* Vignette - Disabled for cleaner look in light mode, or keep subtle */}
-                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_50%,var(--background)_150%)] opacity-50" />
-            </div>
-        </div>
+        </Card>
     );
 }
