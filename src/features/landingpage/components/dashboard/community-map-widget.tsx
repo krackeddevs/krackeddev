@@ -74,20 +74,31 @@ export function CommunityMapWidget({ initialLocations }: MapWidgetProps) {
             }}
         >
             {/* Tooltip Overlay */}
-            {hoveredIdx !== null && getStateValue(hoveredIdx) > 0 && (
-                <div
-                    className="absolute z-50 pointer-events-none bg-background border border-[var(--neon-primary)] px-3 py-2 font-mono text-[10px] text-foreground rounded-sm shadow-[0_0_15px_rgba(34,197,94,0.3)] backdrop-blur-md"
-                    style={{ left: tooltipPos.x + 15, top: tooltipPos.y + 15 }}
-                >
-                    <div className="text-[var(--neon-primary)] font-bold uppercase tracking-wider mb-0.5">
-                        {STATE_NAMES[hoveredIdx]}
+            {hoveredIdx !== null && (() => {
+                const userCount = getStateValue(hoveredIdx);
+                const stateName = STATE_NAMES[hoveredIdx];
+
+                return (
+                    <div
+                        className="absolute z-50 pointer-events-none bg-background border border-[var(--neon-primary)] px-3 py-2 font-mono text-[10px] text-foreground rounded-sm shadow-[0_0_15px_rgba(34,197,94,0.3)] backdrop-blur-md"
+                        style={{ left: tooltipPos.x + 15, top: tooltipPos.y + 15 }}
+                    >
+                        <div className="text-[var(--neon-primary)] font-bold uppercase tracking-wider mb-0.5">
+                            {stateName}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {userCount > 0 ? (
+                                <>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--neon-primary)] animate-pulse" />
+                                    <span className="text-foreground/80">{userCount} OPERATIVE{userCount !== 1 ? 'S' : ''}</span>
+                                </>
+                            ) : (
+                                <span className="text-foreground/50 text-[9px]">No operatives yet</span>
+                            )}
+                        </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--neon-primary)] animate-pulse" />
-                        <span className="text-foreground/80">{getStateValue(hoveredIdx)} OPERATIVES</span>
-                    </div>
-                </div>
-            )}
+                );
+            })()}
 
             {/* Header Overlay */}
             <div className="z-10 flex justify-between items-start w-full">
@@ -116,24 +127,37 @@ export function CommunityMapWidget({ initialLocations }: MapWidgetProps) {
                         const isHovered = hoveredIdx === index;
 
                         // Landmass Style
-                        const baseFill = isActive ? "var(--neon-primary)" : "var(--map-landmass)";
-                        const currentOpacity = isActive ? opacityScale(val) : 0.4;
+                        let baseFill = isActive ? "var(--neon-primary)" : "var(--map-landmass)";
+                        let opacity = isActive ? opacityScale(val) : 0.4;
+                        let filter = "none";
+
+                        // Hover overrides
+                        if (isHovered) {
+                            if (isActive) {
+                                // Active state hover: Maintain bright neon
+                                opacity = 1;
+                                filter = "drop-shadow(0 0 8px var(--neon-primary))";
+                            } else {
+                                // Inactive state hover: Light up slightly
+                                baseFill = "var(--muted-foreground)";
+                                opacity = 0.5;
+                                filter = "drop-shadow(0 0 5px var(--muted-foreground))";
+                            }
+                        }
 
                         return (
                             <path
                                 key={index}
                                 d={path}
                                 fill={baseFill}
-                                fillOpacity={isActive ? currentOpacity : 0.4}
+                                fillOpacity={opacity}
                                 stroke="var(--map-border, var(--border))"
-                                strokeOpacity={isHovered && isActive ? 1 : 0.5}
-                                strokeWidth={isHovered && isActive ? "1.2" : "0.5"}
+                                strokeOpacity={isHovered ? 1 : 0.5}
+                                strokeWidth={isHovered ? "1.2" : "0.5"}
                                 onMouseEnter={() => setHoveredIdx(index)}
                                 onMouseLeave={() => setHoveredIdx(null)}
-                                className={`transition-all duration-300 ${isActive ? 'cursor-pointer' : 'cursor-default'}`}
-                                style={{
-                                    filter: isHovered && isActive ? 'drop-shadow(0 0 8px var(--neon-primary))' : 'none'
-                                }}
+                                className="transition-all duration-300 cursor-pointer"
+                                style={{ filter }}
                             />
                         );
                     })}

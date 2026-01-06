@@ -141,8 +141,8 @@ export function CommunityMap({ initialData }: { initialData?: LocationData[] }) 
             const isHovered = hoveredStateIndex === index;
 
             // Use opacity for intensity to support CSS variables (and B&W mode)
-            let fill = "var(--muted)";
-            let fillOpacity = 1;
+            let fill = "var(--muted-foreground)";
+            let fillOpacity = 0.2; // Low opacity for states with 0 users
 
             if (isActive) {
               fill = "var(--neon-primary)";
@@ -167,7 +167,19 @@ export function CommunityMap({ initialData }: { initialData?: LocationData[] }) 
                 strokeWidth={isHovered ? "2" : "1.5"}
                 fillOpacity={fillOpacity}
                 className="transition-all duration-200 cursor-pointer"
-                onMouseEnter={() => setHoveredStateIndex(index)}
+                onMouseEnter={(e) => {
+                  setHoveredStateIndex(index);
+                  const rect = e.currentTarget.ownerSVGElement?.getBoundingClientRect();
+                  if (rect) {
+                    setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+                  }
+                }}
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.ownerSVGElement?.getBoundingClientRect();
+                  if (rect) {
+                    setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+                  }
+                }}
                 onMouseLeave={() => setHoveredStateIndex(null)}
               />
             );
