@@ -44,8 +44,9 @@ export async function fetchActiveBounties(
                         : (row.status === "open" ? "active" : row.status),
                     rarity: row.rarity || "normal",
                     // Map company/type info
+                    // Bounties with no company or "Kracked Devs" are official
                     companyName: row.company_name,
-                    type: row.company_name ? 'community' : 'official',
+                    type: (!row.company_name || row.company_name === 'Kracked Devs') ? 'official' : 'community',
 
                     tags: row.skills || [],
                     requirements: row.requirements || [],
@@ -144,8 +145,9 @@ export async function fetchBountyBySlug(
                     status: row.status === "open" ? "active" : row.status,
                     rarity: row.rarity || "normal",
                     // Map company/type info
+                    // Bounties with no company or "Kracked Devs" are official
                     companyName: row.company_name,
-                    type: row.company_name ? 'community' : 'official',
+                    type: (!row.company_name || row.company_name === 'Kracked Devs') ? 'official' : 'community',
 
                     tags: row.skills || [],
                     requirements: row.requirements || [],
