@@ -109,16 +109,25 @@ export function CommunityMap({ initialData }: { initialData?: LocationData[] }) 
         }}
       >
         {/* Tooltip */}
-        {hoveredStateIndex !== null && (
-          <div
-            className="absolute z-20 pointer-events-none bg-popover/95 text-neon-primary px-3 py-2 font-mono text-sm border border-neon-primary/50 rounded shadow-[0_0_15px_rgba(34,197,94,0.3)] backdrop-blur-md"
-            style={{ left: tooltipPos.x + 10, top: tooltipPos.y + 10 }}
-          >
-            <span className="font-bold text-popover-foreground">{GUESSED_STATE_NAMES[hoveredStateIndex] || "Unknown"}</span>
-            <br />
-            {getStateValue(hoveredStateIndex)} devs
-          </div>
-        )}
+        {hoveredStateIndex !== null && (() => {
+          const userCount = getStateValue(hoveredStateIndex);
+          const stateName = GUESSED_STATE_NAMES[hoveredStateIndex] || "Unknown";
+
+          return (
+            <div
+              className="absolute z-20 pointer-events-none bg-popover/95 text-neon-primary px-3 py-2 font-mono text-sm border border-neon-primary/50 rounded shadow-[0_0_15px_rgba(34,197,94,0.3)] backdrop-blur-md"
+              style={{ left: tooltipPos.x + 10, top: tooltipPos.y + 10 }}
+            >
+              <span className="font-bold text-popover-foreground">{stateName}</span>
+              <br />
+              {userCount === 0 ? (
+                <span className="text-muted-foreground text-xs">No operatives yet</span>
+              ) : (
+                <span>{userCount} operative{userCount !== 1 ? 's' : ''}</span>
+              )}
+            </div>
+          );
+        })()}
 
         {/* SVG Map */}
         <svg
