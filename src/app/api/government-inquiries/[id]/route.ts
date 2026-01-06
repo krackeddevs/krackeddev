@@ -3,8 +3,9 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
         const supabase = await createClient();
 
@@ -44,7 +45,7 @@ export async function PATCH(
         const { data, error } = await supabase
             .from("government_inquiries")
             .update(updateData)
-            .eq("id", params.id)
+            .eq("id", id)
             .select()
             .single();
 
@@ -68,8 +69,9 @@ export async function PATCH(
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
         const supabase = await createClient();
 
@@ -99,7 +101,7 @@ export async function GET(
         const { data, error } = await supabase
             .from("government_inquiries")
             .select("*")
-            .eq("id", params.id)
+            .eq("id", id)
             .single();
 
         if (error) {
