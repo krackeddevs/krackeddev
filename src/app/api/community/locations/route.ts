@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { profiles } from '@/lib/db/schema';
-import { isNotNull, eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 export async function GET() {
   try {

@@ -1,3 +1,4 @@
+/** Triggering redeploy for staging environment variables update */
 "use server";
 
 import { createClient, createPublicClient } from "@/lib/supabase/server";
