@@ -12,6 +12,7 @@ import QueryProvider from "@/components/providers/query-provider";
 import { ParallaxProvider } from "@/components/providers/parallax-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ChatOverlay } from "@/features/chat/components/chat-overlay";
+import { FloatingSocialNav } from "@/components/floating-social-nav";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -118,6 +119,7 @@ export default function RootLayout({
                     <Toaster theme="dark" position="top-center" offset={16} />
                     <LoginModal />
                     <ChatOverlay />
+                    <FloatingSocialNav />
                     <Analytics />
                     <SpeedInsights />
                   </NuqsAdapter>
