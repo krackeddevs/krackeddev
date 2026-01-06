@@ -38,6 +38,5 @@ export function usePageViews(pathname: string) {
       return (data.count as number) || 0;
     },
     staleTime: 1000 * 60, // Consider data fresh for 1 minute
-    initialData: 0, // Prevent undefined error
   });
 }
