@@ -193,13 +193,13 @@ export const LoginModal = () => {
       />
 
       {/* Modal Content */}
-      <div className="relative z-10 w-full max-w-md mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
-        <div className="bg-card border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)]">
+      <div className="relative z-10 w-full max-w-md mx-4 animate-in fade-in-0 zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+        <div className="bg-card border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)] flex flex-col max-h-full">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-neon-primary/30">
+          <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-neon-primary/30 shrink-0">
             <h2
               id="login-modal-title"
-              className="text-lg font-bold text-green-400 uppercase tracking-wider"
+              className="text-base md:text-lg font-bold text-green-400 uppercase tracking-wider"
             >
               {isAuthenticated
                 ? "Your Profile"
@@ -224,7 +224,7 @@ export const LoginModal = () => {
           </div>
 
           {/* Body */}
-          <div className="p-6">
+          <div className="p-4 md:p-6 overflow-y-auto">
             {isAuthenticated && user ? (
               // Logged in state
               <div className="space-y-6">
@@ -373,13 +373,13 @@ export const LoginModal = () => {
                     <Image
                       src="/logo/logo-old.png"
                       alt="Kracked Devs Logo"
-                      width={96}
-                      height={96}
-                      className="w-24 h-24 object-cover p-0.5 bg-green-400"
+                      width={80}
+                      height={80}
+                      className="w-20 h-20 md:w-24 md:h-24 object-cover p-0.5 bg-green-400"
                     />
                   </div>
                   <p className="text-sm text-white">Welcome to Kracked Devs!</p>
-                  <p className="text-white/50">
+                  <p className="text-white/50 text-xs md:text-sm">
                     A community of cracked developers who want to level up
                     together.
                   </p>
@@ -390,7 +390,7 @@ export const LoginModal = () => {
                   <div className="relative">
                     <button
                       onClick={handleGithubLogin}
-                      className="bg-white text-black border border-black flex items-center justify-center gap-3 w-full px-4 py-4 font-bold uppercase tracking-wider text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
+                      className="bg-white text-black border border-black flex items-center justify-center gap-3 w-full px-4 py-3 md:py-4 font-bold uppercase tracking-wider text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
                     >
                       <svg
                         viewBox="0 0 24 24"
@@ -412,7 +412,7 @@ export const LoginModal = () => {
                   <div className="relative">
                     <button
                       onClick={handleGoogleLogin}
-                      className="bg-white text-black border border-black flex items-center justify-center gap-3 w-full px-4 py-4 font-bold uppercase tracking-wider text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
+                      className="bg-white text-black border border-black flex items-center justify-center gap-3 w-full px-4 py-3 md:py-4 font-bold uppercase tracking-wider text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
                     >
                       <svg
                         viewBox="0 0 24 24"
