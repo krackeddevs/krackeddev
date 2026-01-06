@@ -66,7 +66,7 @@ export function JobsTable() {
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-6 py-4 font-semibold text-neon-cyan/80 text-xs uppercase tracking-wider border-r border-border last:border-r-0"
+                      className="px-6 py-4 font-semibold text-[var(--neon-cyan)] text-xs uppercase tracking-wider border-r border-border last:border-r-0"
                     >
                       {header.isPlaceholder
                         ? null
@@ -94,7 +94,7 @@ export function JobsTable() {
                 <tr
                   key={row.id}
                   onClick={() => router.push(`/jobs/${row.original.id}`)}
-                  className="group hover:bg-neon-cyan/5 transition-all cursor-pointer border-l-2 border-transparent hover:border-neon-cyan"
+                  className="group hover:bg-[var(--neon-cyan)]/5 transition-all cursor-pointer border-l-2 border-transparent hover:border-[var(--neon-cyan)]"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
@@ -141,14 +141,14 @@ export function JobsTable() {
             <div
               key={job.id || i}
               onClick={() => router.push(`/jobs/${job.id}`)}
-              className="group border border-border p-5 space-y-4 bg-card/40 backdrop-blur-sm cursor-pointer hover:border-neon-cyan/50 hover:bg-neon-cyan/5 transition-all relative overflow-hidden"
+              className="group border border-border p-5 space-y-4 bg-card/40 backdrop-blur-sm cursor-pointer hover:border-[var(--neon-cyan)]/50 hover:bg-[var(--neon-cyan)]/5 transition-all relative overflow-hidden"
             >
               {/* Active Glitch Border (Pseudo-element alternative) */}
-              <div className="absolute top-0 left-0 w-1 h-full bg-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute top-0 left-0 w-1 h-full bg-[var(--neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="flex justify-between items-start gap-4">
                 <div>
-                  <h3 className="text-foreground font-semibold text-lg leading-tight mb-1 group-hover:text-neon-cyan transition-colors">
+                  <h3 className="text-foreground font-semibold text-lg leading-tight mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">
                     {job.title}
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
@@ -161,10 +161,10 @@ export function JobsTable() {
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   {isNew && (
-                    <span className="text-[10px] px-1.5 py-0.5 border border-neon-lime text-neon-lime bg-neon-lime/10">NEW</span>
+                    <span className="text-[10px] px-1.5 py-0.5 border border-[var(--neon-lime)] text-[var(--neon-lime)] bg-[var(--neon-lime)]/10">NEW</span>
                   )}
                   {job.isRemote && (
-                    <span className="text-[10px] px-1.5 py-0.5 border border-neon-purple text-neon-purple bg-neon-purple/10">REMOTE</span>
+                    <span className="text-[10px] px-1.5 py-0.5 border border-[var(--neon-purple)] text-[var(--neon-purple)] bg-[var(--neon-purple)]/10">REMOTE</span>
                   )}
                 </div>
               </div>
@@ -172,7 +172,7 @@ export function JobsTable() {
               <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border">
                 <div className="flex flex-col gap-1 text-xs font-mono">
                   <span className="text-muted-foreground">Salary (MYR)</span>
-                  <span className="text-neon-lime">{formatSalary()}</span>
+                  <span className="text-[var(--neon-lime)]">{formatSalary()}</span>
                 </div>
                 <div className="flex flex-col gap-1 text-xs font-mono">
                   <span className="text-muted-foreground">Location</span>

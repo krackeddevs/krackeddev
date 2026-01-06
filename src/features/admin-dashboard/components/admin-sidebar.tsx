@@ -1,9 +1,9 @@
 "use client";
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck, ShieldAlert, Terminal, BarChart3, Building2 } from 'lucide-react';
-import { ModeToggle } from '@/components/mode-toggle';
+import { LayoutDashboard, Target, Users, GitPullRequest, BadgeCheck, ShieldAlert, Terminal, BarChart3, Building2, Code } from 'lucide-react';
 
 interface SidebarContentProps {
     className?: string;
@@ -11,90 +11,67 @@ interface SidebarContentProps {
 }
 
 export function AdminSidebarContent({ className, onLinkClick }: SidebarContentProps) {
+    const pathname = usePathname();
+
+    const navItems = [
+        { href: "/admin/dashboard", label: "Overview", icon: LayoutDashboard },
+        { href: "/admin/bounties", label: "Bounties", icon: Target },
+        { href: "/admin/inquiries", label: "Inquiries", icon: Terminal },
+        { href: "/admin/government-inquiries", label: "Gov Inquiries", icon: Building2 },
+        { href: "/admin/submissions", label: "Submissions", icon: GitPullRequest },
+        { href: "/admin/polls", label: "Polls", icon: BarChart3 },
+        { href: "/admin/users", label: "Users", icon: Users },
+        { href: "/admin/verifications", label: "Verifications", icon: BadgeCheck },
+        { href: "/admin/moderation", label: "Moderation", icon: ShieldAlert },
+    ];
+
     return (
         <div className={cn("flex flex-col h-full", className)}>
-            <div className="font-bold mb-6 px-4 text-xl tracking-tight font-mono text-neon-primary uppercase border-l-4 border-neon-primary pl-4">
-                ADMIN PANEL
+            <div className="px-3 mb-8">
+                <div className="font-mono text-[var(--neon-primary)] font-bold tracking-[0.2em] text-[10px] uppercase">
+                    MANAGEMENT CONSOLE
+                </div>
             </div>
-            <nav className="space-y-1 flex-1">
-                <Link
-                    href="/admin/dashboard"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <LayoutDashboard className="w-4 h-4" />
-                    Dashboard
-                </Link>
-                <Link
-                    href="/admin/bounties"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <Target className="w-4 h-4" />
-                    Bounties
-                </Link>
-                <Link
-                    href="/admin/inquiries"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <Terminal className="w-4 h-4" />
-                    Inquiries
-                </Link>
-                <Link
-                    href="/admin/government-inquiries"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-cyan/10 hover:text-neon-cyan hover:border-l-2 hover:border-neon-cyan rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <Building2 className="w-4 h-4" />
-                    Gov Inquiries
-                </Link>
-                <Link
-                    href="/admin/submissions"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <GitPullRequest className="w-4 h-4" />
-                    Submissions
-                </Link>
-                <Link
-                    href="/admin/polls"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <BarChart3 className="w-4 h-4" />
-                    Polls
-                </Link>
-                <Link
-                    href="/admin/users"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <Users className="w-4 h-4" />
-                    Users
-                </Link>
-                <Link
-                    href="/admin/verifications"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <BadgeCheck className="w-4 h-4" />
-                    Verifications
-                </Link>
-                <Link
-                    href="/admin/moderation"
-                    onClick={onLinkClick}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium font-mono hover:bg-neon-primary/10 hover:text-neon-primary hover:border-l-2 hover:border-neon-primary rounded-r-md transition-all duration-200 uppercase"
-                >
-                    <ShieldAlert className="w-4 h-4" />
-                    Moderation
-                </Link>
+
+            <nav className="space-y-1.5 flex-1 font-mono">
+                {navItems.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={onLinkClick}
+                            className={cn(
+                                "flex items-center gap-3 px-4 py-3 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 group relative overflow-hidden",
+                                isActive
+                                    ? "text-[var(--neon-primary)] bg-[var(--neon-primary)]/5 border border-[var(--neon-primary)]/20 shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.05)]"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
+                            )}
+                        >
+                            <item.icon
+                                className={cn(
+                                    "w-4 h-4 transition-colors",
+                                    isActive ? "text-[var(--neon-primary)]" : "text-muted-foreground/50 group-hover:text-[var(--neon-primary)]"
+                                )}
+                            />
+                            {item.label}
+                            {isActive && (
+                                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--neon-primary)] shadow-[0_0_10px_var(--neon-primary)]" />
+                            )}
+                        </Link>
+                    )
+                })}
             </nav>
 
-            <div className="mt-auto px-4 py-4 border-t border-border">
-                <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground font-mono">Theme</span>
-                    <ModeToggle />
+            <div className="mt-auto pt-8 border-t border-border/30">
+                <div className="flex items-center gap-3 mb-6 px-3">
+                    <div className="w-10 h-10 bg-[var(--neon-primary)]/10 border border-[var(--neon-primary)]/30 flex items-center justify-center">
+                        <ShieldAlert className="w-5 h-5 text-[var(--neon-primary)]" />
+                    </div>
+                    <div>
+                        <div className="text-[10px] font-mono text-foreground/40 tracking-wider">SECURE LINK</div>
+                        <div className="text-xs font-mono text-[var(--neon-primary)] font-bold tracking-widest">ADMIN PRIVILEGE</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,7 +80,7 @@ export function AdminSidebarContent({ className, onLinkClick }: SidebarContentPr
 
 export function AdminSidebar() {
     return (
-        <aside className="hidden md:flex md:w-64 md:flex-col border-r border-border bg-card/60 backdrop-blur">
+        <aside className="hidden md:flex md:w-64 md:flex-col border-r border-border/50 bg-background/60 backdrop-blur-xl h-[calc(100vh-84px)] sticky top-[84px] transition-colors duration-300 z-20">
             <AdminSidebarContent className="p-6" />
         </aside>
     );

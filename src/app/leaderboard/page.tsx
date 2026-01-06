@@ -24,42 +24,45 @@ export default async function LeaderboardPage() {
     ]);
 
     return (
-        <div
-            className="min-h-screen bg-background text-foreground"
-            style={{
-                backgroundImage: 'var(--grid-background)',
-                backgroundSize: '20px 20px'
-            }}
-        >
+        <div className="min-h-screen pb-12 relative transition-colors duration-300">
             <CommunitySubNav />
-            <main className="container mx-auto px-4 py-8 space-y-8">
+            <main className="container mx-auto px-4 py-8 space-y-12">
                 {/* Header */}
-                <div className="text-center space-y-4 mb-12">
-                    <h1
-                        className="text-4xl md:text-6xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary via-foreground to-secondary animate-pulse-slow glitch-text dark:from-neon-primary dark:via-white dark:to-neon-secondary"
-                        data-text="GLOBAL RANKINGS"
-                    >
-                        GLOBAL RANKINGS
+                <div className="text-center space-y-6 mb-16">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--neon-primary)]/10 border border-[var(--neon-primary)]/20 rounded-none mb-2">
+                        <Trophy className="w-3 h-3 text-[var(--neon-primary)]" />
+                        <span className="text-[10px] font-bold font-mono text-[var(--neon-primary)] tracking-[0.2em] uppercase">ELITE OPERATIVES</span>
+                    </div>
+
+                    <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-foreground font-mono uppercase leading-none">
+                        GLOBAL <br className="sm:hidden" /> RANKINGS
                     </h1>
-                    <p className="text-muted-foreground max-w-2xl mx-auto font-mono text-sm md:text-base">
-                        Competing for glory, bounties, and infinite recursive loops.
+                    <p className="text-foreground/40 font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase max-w-2xl mx-auto leading-relaxed">
+                        Competing for glory, bounties, and infinite recursive loops in the Kracked network.
                     </p>
                 </div>
 
-                {/* Your Rank - Compact inline display */}
+                {/* Your Rank - Refined Industrial Display */}
                 {user && userRank?.global_rank && (
-                    <div className="flex justify-center mb-6">
-                        <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-neon-primary/10 via-neon-primary/5 to-neon-primary/10 border-2 border-neon-primary/30 rounded-full shadow-lg shadow-neon-primary/20">
-                            <div className="flex items-center gap-2">
-                                <Trophy className="w-5 h-5 text-yellow-400" />
-                                <span className="text-sm font-mono text-muted-foreground uppercase tracking-wider">Global Rank</span>
+                    <div className="flex justify-center mb-12">
+                        <div className="inline-flex items-center gap-6 px-8 py-4 bg-card/40 border border-border/50 backdrop-blur-md relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--neon-primary)] shadow-[0_0_15px_var(--neon-primary)]" />
+
+                            <div className="flex flex-col items-start gap-0.5">
+                                <span className="text-[9px] font-mono text-foreground/40 uppercase tracking-widest">Global Rank</span>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-4xl font-black text-foreground font-mono tracking-tighter">#{userRank.global_rank}</span>
+                                    <span className="text-[10px] text-foreground/20 font-mono">/ {userRank.total_users}</span>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-1">
-                                <span className="text-3xl font-black text-neon-primary font-mono">#{userRank.global_rank}</span>
-                                <span className="text-sm text-muted-foreground font-mono">/ {userRank.total_users}</span>
-                            </div>
-                            <div className="text-xs text-muted-foreground font-mono">
-                                Top {Math.round((userRank.global_rank / userRank.total_users) * 100)}%
+
+                            <div className="h-10 w-px bg-border/20 mx-2" />
+
+                            <div className="flex flex-col items-start gap-1">
+                                <span className="text-[9px] font-mono text-foreground/40 uppercase tracking-widest">Percentile</span>
+                                <div className="text-xs font-bold text-[var(--neon-primary)] font-mono uppercase tracking-widest bg-[var(--neon-primary)]/10 px-2 py-0.5">
+                                    TOP {Math.round((userRank.global_rank / userRank.total_users) * 100)}%
+                                </div>
                             </div>
                         </div>
                     </div>

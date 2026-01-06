@@ -66,17 +66,17 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                         <div className="flex items-center gap-3 pt-2">
                             {/* ... existing social links code ... */}
                             {profile.x_url && (
-                                <a href={profile.x_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
+                                <a href={profile.x_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[var(--neon-primary)] transition-colors">
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                                 </a>
                             )}
                             {profile.linkedin_url && (
-                                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
+                                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[var(--neon-primary)] transition-colors">
                                     <Linkedin className="w-4 h-4" />
                                 </a>
                             )}
                             {profile.website_url && (
-                                <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
+                                <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[var(--neon-primary)] transition-colors">
                                     <ExternalLink className="w-4 h-4" />
                                 </a>
                             )}
@@ -109,7 +109,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                     {/* XP Progress & History Section */}
                     <Card className="bg-card/40 border-border backdrop-blur-md overflow-hidden">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
+                            <CardTitle className="flex items-center gap-2 text-[var(--neon-primary)] font-mono text-sm uppercase tracking-widest">
                                 <TrophyIcon className="w-4 h-4" />
                                 Level Progress
                             </CardTitle>
@@ -124,7 +124,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
 
                     {/* Dev Pulse Visualization - Main Column */}
                     {pulseData && (
-                        <div className="border border-border rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_var(--neon-primary)]">
+                        <div className="border border-border rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_rgba(var(--neon-primary-rgb),0.1)]">
                             <DevPulse data={pulseData} />
                         </div>
                     )}
@@ -138,7 +138,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
 
                     <Card className="bg-card/40 border-border backdrop-blur-md">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
+                            <CardTitle className="flex items-center gap-2 text-[var(--neon-primary)] font-mono text-sm uppercase tracking-widest">
                                 <Terminal className="w-4 h-4" />
                                 Bio / Lore
                             </CardTitle>
@@ -164,7 +164,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                     {/* Location */}
                     <Card className="bg-card/40 border-border backdrop-blur-md">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-neon-secondary font-mono text-sm uppercase tracking-widest">
+                            <CardTitle className="flex items-center gap-2 text-[var(--neon-secondary)] font-mono text-sm uppercase tracking-widest">
                                 <MapPin className="w-4 h-4" />
                                 Location
                             </CardTitle>
@@ -181,7 +181,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                     {/* Tech Stack */}
                     <Card className="bg-card/40 border-border backdrop-blur-md">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-neon-cyan font-mono text-sm uppercase tracking-widest">
+                            <CardTitle className="flex items-center gap-2 text-[var(--neon-cyan)] font-mono text-sm uppercase tracking-widest">
                                 <Code2 className="w-4 h-4" />
                                 Tech Arsenal
                             </CardTitle>
@@ -193,7 +193,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                                         <Badge
                                             key={tech}
                                             variant="outline"
-                                            className="border-border text-muted-foreground font-mono text-xs hover:border-neon-cyan hover:text-neon-cyan transition-colors"
+                                            className="border-border text-muted-foreground font-mono text-xs hover:border-[var(--neon-cyan)] hover:text-[var(--neon-cyan)] transition-colors"
                                         >
                                             {tech}
                                         </Badge>

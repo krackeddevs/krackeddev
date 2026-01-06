@@ -41,7 +41,7 @@ export function CompanyHowItWorks() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-sm font-mono text-neon-primary tracking-widest uppercase mb-4">Process</h2>
+                        <h2 className="text-sm font-mono text-[var(--neon-primary)] tracking-widest uppercase mb-4">Process</h2>
                         <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
                             How It Works
                         </h3>
@@ -63,16 +63,16 @@ export function CompanyHowItWorks() {
                                 className="flex flex-col items-center text-center group"
                             >
                                 <div className="relative mb-8">
-                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-background border-2 border-border group-hover:border-neon-primary transition-colors flex items-center justify-center shadow-lg relative z-10 group-hover:shadow-[0_0_20px_var(--neon-primary)] duration-300">
-                                        <step.icon className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground group-hover:text-neon-primary transition-colors" />
+                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-none bg-background border-2 border-border group-hover:border-[var(--neon-primary)] transition-colors flex items-center justify-center shadow-lg relative z-10 group-hover:shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.3)] duration-300">
+                                        <step.icon className="w-8 h-8 md:w-10 md:h-10 text-muted-foreground group-hover:text-[var(--neon-primary)] transition-colors" />
                                     </div>
-                                    <div className="absolute -top-4 -right-4 bg-background border border-border px-2 py-1 rounded text-xs font-mono font-bold text-muted-foreground group-hover:text-neon-primary group-hover:border-neon-primary transition-colors">
+                                    <div className="absolute -top-4 -right-4 bg-background border border-border px-2 py-1 rounded-none text-xs font-mono font-bold text-muted-foreground group-hover:text-[var(--neon-primary)] group-hover:border-[var(--neon-primary)] transition-colors">
                                         {step.step}
                                     </div>
                                 </div>
 
-                                <h4 className="text-xl font-bold font-mono text-foreground mb-3">{step.title}</h4>
-                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase tracking-tighter">{step.title}</h4>
+                                <p className="text-sm text-muted-foreground leading-relaxed font-mono uppercase tracking-tighter">
                                     {step.description}
                                 </p>
                             </motion.div>

@@ -36,9 +36,9 @@ const alternatives = [
 
 export function DevelopersProblem() {
     return (
-        <section className="py-24 bg-muted/30 relative overflow-hidden">
+        <section className="py-24 bg-muted/10 relative overflow-hidden font-mono">
             {/* Background Pattern */}
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
 
             <div className="container px-4 mx-auto relative z-10">
                 <motion.div
@@ -48,10 +48,10 @@ export function DevelopersProblem() {
                     transition={{ duration: 0.5 }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-sm font-mono text-neon-primary tracking-widest uppercase mb-4">The Problem You Face</h2>
-                    <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
+                    <h2 className="text-sm font-mono text-[var(--neon-primary)] tracking-widest uppercase mb-4">The Problem You Face</h2>
+                    <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase tracking-tighter">
                         You Can Code. <br />
-                        <span className="text-neon-primary">But Where Do You Go From Here?</span>
+                        <span className="text-[var(--neon-primary)]">But Where Do You Go From Here?</span>
                     </h3>
                 </motion.div>
 
@@ -65,15 +65,15 @@ export function DevelopersProblem() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
-                            <Card className="h-full bg-card/40 backdrop-blur-md border-border hover:border-neon-primary/50 transition-all duration-300">
+                            <Card className="h-full bg-card border-border hover:border-[var(--neon-primary)]/50 transition-all duration-300 rounded-none group">
                                 <CardContent className="p-6">
-                                    <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 w-fit mb-4">
+                                    <div className="p-3 rounded-none bg-destructive/10 border border-destructive/30 w-fit mb-4 group-hover:bg-destructive/20 transition-colors">
                                         <struggle.icon className="w-6 h-6 text-destructive" />
                                     </div>
                                     <h4 className="text-lg font-bold font-mono text-foreground mb-2 uppercase">
                                         {struggle.title}
                                     </h4>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                    <p className="text-xs text-muted-foreground leading-relaxed uppercase">
                                         {struggle.description}
                                     </p>
                                 </CardContent>
@@ -90,24 +90,24 @@ export function DevelopersProblem() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="max-w-4xl mx-auto"
                 >
-                    <div className="bg-card/60 backdrop-blur-md border border-border rounded-xl p-8">
+                    <div className="bg-card border border-border rounded-none p-8 shadow-xl">
                         <div className="flex items-start gap-4 mb-6">
-                            <div className="p-2 rounded-lg bg-destructive/10 border border-destructive/30">
+                            <div className="p-2 rounded-none bg-destructive/10 border border-destructive/30">
                                 <AlertCircle className="w-6 h-6 text-destructive" />
                             </div>
                             <div>
-                                <h4 className="text-xl font-bold font-mono text-foreground mb-2 uppercase">
+                                <h4 className="text-xl font-bold font-mono text-foreground mb-2 uppercase tracking-tight">
                                     The Alternatives Don't Work
                                 </h4>
-                                <p className="text-muted-foreground text-sm">
+                                <p className="text-muted-foreground text-xs uppercase">
                                     You've probably tried these. Here's why they fail:
                                 </p>
                             </div>
                         </div>
                         <ul className="space-y-3">
                             {alternatives.map((alt, index) => (
-                                <li key={index} className="flex items-start gap-3 text-sm">
-                                    <span className="text-destructive mt-1">✗</span>
+                                <li key={index} className="flex items-start gap-3 text-xs uppercase">
+                                    <span className="text-destructive font-bold">[X]</span>
                                     <span className="text-muted-foreground">{alt}</span>
                                 </li>
                             ))}
@@ -134,9 +134,9 @@ export function DevelopersProblem() {
                             "Mentorship from developers who've been there",
                             "A platform that opens doors, not just lists jobs"
                         ].map((need, index) => (
-                            <div key={index} className="flex items-start gap-3">
-                                <span className="text-neon-primary mt-1">✓</span>
-                                <span className="text-muted-foreground text-sm">{need}</span>
+                            <div key={index} className="flex items-start gap-3 uppercase text-xs">
+                                <span className="text-[var(--neon-primary)] font-bold">[✓]</span>
+                                <span className="text-muted-foreground">{need}</span>
                             </div>
                         ))}
                     </div>

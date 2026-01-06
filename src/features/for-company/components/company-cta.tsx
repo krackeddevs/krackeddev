@@ -9,7 +9,7 @@ export function CompanyCTA() {
     return (
         <section className="py-24 relative overflow-hidden">
             {/* Background Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-background to-neon-primary/10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background to-[var(--neon-primary)]/5" />
 
             <div className="container px-4 mx-auto text-center relative z-10">
                 <motion.div
@@ -18,22 +18,22 @@ export function CompanyCTA() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
                 >
-                    <div className="w-20 h-20 bg-neon-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse-neon">
-                        <Rocket className="w-10 h-10 text-neon-primary" />
+                    <div className="w-20 h-20 bg-[var(--neon-primary)]/10 rounded-none flex items-center justify-center mx-auto mb-8 animate-pulse-neon border border-[var(--neon-primary)]/20">
+                        <Rocket className="w-10 h-10 text-[var(--neon-primary)]" />
                     </div>
 
                     <h2 className="text-4xl md:text-6xl font-bold font-mono text-foreground mb-6 uppercase tracking-tight">
-                        Start Hiring <span className="text-neon-primary">Today</span>
+                        Start Hiring <span className="text-[var(--neon-primary)]">Today</span>
                     </h2>
 
-                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-mono">
+                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 font-mono uppercase">
                         Post your first project. See how fast you can find quality talent.
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Button
                             size="lg"
-                            className="bg-neon-primary text-primary-foreground hover:bg-neon-secondary font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(21,128,61,0.5)] hover:shadow-[0_0_30px_rgba(21,128,61,0.7)] transition-all duration-300 group min-w-[200px]"
+                            className="bg-[var(--neon-primary)] text-background hover:bg-[var(--neon-secondary)] font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--neon-primary-rgb),0.5)] transition-all duration-300 group min-w-[200px] rounded-none"
                             asChild
                         >
                             <Link href="/post-bounty">
@@ -43,7 +43,7 @@ export function CompanyCTA() {
                         <Button
                             variant="outline"
                             size="lg"
-                            className="border-neon-primary/50 text-neon-primary hover:bg-neon-primary/10 font-bold text-lg px-8 py-6 h-auto transition-all duration-300 group min-w-[200px]"
+                            className="border-[var(--neon-primary)]/50 text-[var(--neon-primary)] hover:bg-[var(--neon-primary)]/10 font-bold text-lg px-8 py-6 h-auto transition-all duration-300 group min-w-[200px] rounded-none"
                             asChild
                         >
                             <Link href="/hire/register">

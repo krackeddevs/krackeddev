@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Menu, User, X, Shield, Home } from "lucide-react";
+import { Menu, User, Sun, Moon, Zap, Ghost, LogOut, Shield, Volume2, VolumeX } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -17,429 +16,235 @@ import {
 import { useSupabase } from "@/context/SupabaseContext";
 import { usePageViews } from "@/lib/hooks/use-page-views";
 import { usePrayerTimes } from "@/lib/hooks/use-prayer-times";
-import { ModeToggle } from "./mode-toggle";
+import { useTheme } from "next-themes";
 
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+// Audio Toggle Button Component
+const AudioToggleButton = () => {
+  const [isMuted, setIsMuted] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const muted = localStorage.getItem("soundMuted") === "true";
+    setIsMuted(muted);
+
+    const handleSoundToggle = (e: CustomEvent) => {
+      setIsMuted(e.detail.muted);
+    };
+
+    window.addEventListener("soundToggle", handleSoundToggle as EventListener);
+    return () => window.removeEventListener("soundToggle", handleSoundToggle as EventListener);
+  }, []);
+
+  const toggleSound = () => {
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+    localStorage.setItem("soundMuted", newMuted.toString());
+    window.dispatchEvent(new CustomEvent("soundToggle", { detail: { muted: newMuted } }));
+  };
+
+  if (!mounted) return null;
+
+  return (
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        toggleSound();
+      }}
+      className="w-6 h-6 rounded-sm border border-border/30 bg-background hover:bg-muted/50 flex items-center justify-center transition-all group"
+      aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+      title={isMuted ? "Unmute audio" : "Mute audio"}
+    >
+      {isMuted ? (
+        <VolumeX className="w-3 h-3 text-foreground/50 group-hover:text-destructive transition-colors" />
+      ) : (
+        <Volume2 className="w-3 h-3 text-foreground/50 group-hover:text-[var(--neon-primary)] transition-colors" />
+      )}
+    </button>
+  );
+};
+
+interface NavbarProps {
+  onMenuClick?: () => void;
+}
+
+const Navbar = ({ onMenuClick }: NavbarProps) => {
   const pathname = usePathname();
-  const isHomepage = pathname === "/";
   const { isAuthenticated, signOut, openLoginModal, profile } = useSupabase();
   const { data: pageViews } = usePageViews(pathname || "/");
   const { data: nextPrayer } = usePrayerTimes();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  // Hide navigation links (middle section) on game pages and job detail pages, but keep header visible
-  const gamePages = [
-    "/blog",
-    "/new-jobs",
-    "/code",
-    "/profile",
-    "/whitepaper",
-    "/members",
-    "/onboarding",
-  ];
-  const isJobDetailPage = pathname?.startsWith("/jobs/");
-  const isDashboardPage = pathname?.startsWith("/dashboard");
-  const shouldHideNavLinks =
-    isHomepage || gamePages.includes(pathname) || isJobDetailPage;
+  // Avoid hydration mismatch
+  useEffect(() => setMounted(true), []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  if (!mounted) return null;
 
-  // Completely hide navbar on dashboard (after all hooks)
-  if (isDashboardPage) return null;
+  const cycleTheme = () => {
+    if (theme === "dark") setTheme("light");
+    else if (theme === "light") setTheme("monochrome-dark");
+    else if (theme === "monochrome-dark") setTheme("monochrome-light");
+    else setTheme("dark");
+  };
+
+  const getThemeIcon = () => {
+    if (theme === "dark") return <Moon className="w-4 h-4 text-[#22c55e]" />;
+    if (theme === "light") return <Sun className="w-4 h-4 text-[#15803d]" />;
+    if (theme === "monochrome-dark") return <Zap className="w-4 h-4 text-white" />;
+    if (theme === "monochrome-light") return <Ghost className="w-4 h-4 text-black" />;
+    return <Moon className="w-4 h-4" />;
+  };
+
+  const getThemeLabel = () => {
+    if (theme === "dark") return "DARK NEON";
+    if (theme === "light") return "LIGHT NEON";
+    if (theme === "monochrome-dark") return "DARK NOIR";
+    if (theme === "monochrome-light") return "LIGHT NOIR";
+    return "THEME";
+  };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={cn(
-        "relative top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
-        isScrolled || isMobileMenuOpen
-          ? "bg-background/70 backdrop-blur-md border-primary/20 shadow-[0_0_20px_rgba(21,128,61,0.1)]"
-          : "bg-background/20 backdrop-blur-sm border-transparent",
-      )}
-    >
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="group relative flex items-center gap-2"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          <div className="absolute -inset-2 bg-neon-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <span className="relative font-mono text-xl font-bold tracking-tighter text-foreground group-hover:text-neon-primary transition-colors duration-300">
-            &lt;Kracked Devs /&gt;
-          </span>
-          <span
-            className="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider animate-flicker shadow-[0_0_10px_rgba(234,179,8,0.8)]"
-            style={{
-              backgroundColor: 'var(--rank-gold)',
-              color: 'var(--background)'
-            }}
-          >
-            Beta
-          </span>
-        </Link>
-
-        {/* Right Side (Desktop) */}
-        <div className="flex items-center gap-2">
-          {/* Home Button - For admins when on admin pages */}
-          {isAuthenticated &&
-            profile?.role === "admin" &&
-            pathname?.startsWith("/admin") && (
-              <Button
-                variant="ghost"
-                asChild
-                className="py-2 h-auto w-auto px-2 sm:px-4 border border-border hover:border-primary hover:bg-primary/10"
-              >
-                <Link href="/">
-                  <Home className="min-h-4 min-w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Home</span>
-                </Link>
-              </Button>
-            )}
-          {/* Admin Dashboard Button - Only for admins when NOT on admin pages */}
-          {isAuthenticated &&
-            profile?.role === "admin" &&
-            !pathname?.startsWith("/admin") && (
-              <Button
-                variant="ghost"
-                asChild
-                className="py-2 h-auto w-auto px-2 sm:px-4 border border-rank-gold/50 hover:border-rank-gold hover:bg-rank-gold/10 text-rank-gold"
-              >
-                <Link href="/admin/dashboard">
-                  <Shield className="min-h-4 min-w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Admin</span>
-                </Link>
-              </Button>
-            )}
-
-          <ModeToggle />
-
-          {/* For Company Button */}
-          <Button
-            variant="ghost"
-            asChild
-            className="hidden md:flex py-2 h-auto w-auto px-2 sm:px-4 text-muted-foreground hover:text-foreground"
-          >
-            <Link href="/for-company">For Company</Link>
+    <div className="flex flex-col sticky top-0 z-50">
+      <header className="h-14 flex items-center justify-between px-4 border-b border-border/20 bg-background transition-colors duration-300">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={onMenuClick} className="text-[var(--neon-primary)] hover:bg-[var(--neon-primary)]/10 h-8 w-8">
+            <Menu className="w-5 h-5" />
           </Button>
 
-          {/* For Developers Button */}
-          <Button
-            variant="ghost"
-            asChild
-            className="hidden md:flex py-2 h-auto w-auto px-2 sm:px-4 text-muted-foreground hover:text-foreground"
-          >
-            <Link href="/for-developers">For Developers</Link>
-          </Button>
+          <Link href="/" className="flex items-center gap-2 group">
+            <span className="font-mono text-lg font-bold tracking-tighter text-foreground group-hover:text-[var(--neon-primary)] transition-colors duration-300">
+              &lt;Kracked Devs /&gt;
+            </span>
+            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider bg-[var(--beta-badge)] text-[var(--beta-badge-text)]">
+              BETA
+            </span>
+            {/* Audio Toggle Button */}
+            <AudioToggleButton />
+          </Link>
+        </div>
 
-          {/* For Government Button */}
-          <Button
-            variant="ghost"
-            asChild
-            className="hidden md:flex py-2 h-auto w-auto px-2 sm:px-4 text-muted-foreground hover:text-foreground"
-          >
-            <Link href="/for-government">For Government</Link>
-          </Button>
-
-          {/* Hiring Button */}
-          <Button
-            variant="ghost"
-            asChild
-            className="hidden md:flex py-2 h-auto w-auto px-2 sm:px-4 text-muted-foreground hover:text-foreground"
-          >
-            <Link href="/hire/register">Hiring?</Link>
-          </Button>
-
-          {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="py-2 h-auto w-auto px-2 sm:px-4 border border-primary/50 hover:border-primary hover:bg-primary/10"
-                  aria-label="Profile"
-                >
-                  <span className="hidden sm:inline mr-2">Profile</span>
-                  <User className="min-h-5 min-w-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={8}>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/profile"
-                    className="cursor-pointer w-full font-semibold"
-                  >
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => {
-                    signOut();
-                  }}
-                >
-                  <LogOut />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
+        <div className="flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2">
             <Button
               variant="ghost"
-              onClick={() => openLoginModal()}
-              className="py-2 h-auto w-auto px-2 sm:px-4 border border-primary/50 hover:border-primary hover:bg-primary/10"
+              asChild
+              className="text-foreground/60 hover:text-[var(--neon-primary)] font-mono text-[10px] uppercase tracking-widest h-8"
             >
-              <span className="hidden sm:inline mr-2">Login</span>
-              <User className="min-h-5 min-w-5" />
+              <Link href="/for-company">For Company</Link>
             </Button>
-          )}
-        </div>
 
-        {/* Mobile Menu Toggle */}
-        {
-          !shouldHideNavLinks && (
-            <div className="flex items-center gap-4 md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-foreground hover:text-neon-primary"
-              >
-                {isMobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
+            <Button
+              variant="ghost"
+              asChild
+              className="text-foreground/60 hover:text-[var(--neon-primary)] font-mono text-[10px] uppercase tracking-widest h-8"
+            >
+              <Link href="/for-developers">For Developers</Link>
+            </Button>
+
+            <Button
+              variant="ghost"
+              asChild
+              className="text-foreground/60 hover:text-[var(--neon-primary)] font-mono text-[10px] uppercase tracking-widest h-8"
+            >
+              <Link href="/for-government">For Government</Link>
+            </Button>
+
+            <Button
+              asChild
+              className="bg-transparent border border-[var(--neon-primary)]/50 text-[var(--neon-primary)] hover:bg-[var(--neon-primary)] hover:text-background font-mono text-[10px] uppercase tracking-widest h-8 px-4 rounded-sm transition-all ml-2"
+            >
+              <Link href="/hire/register">Hiring?</Link>
+            </Button>
+          </div>
+
+          <div className="flex items-center h-8 bg-background border border-border/20 rounded-sm ml-2 overflow-hidden shadow-sm">
+            <Button
+              variant="ghost"
+              className="h-full px-3 text-foreground/50 hover:text-[var(--neon-primary)] flex items-center gap-2 transition-colors border-none"
+              onClick={cycleTheme}
+              title={`Current Theme: ${getThemeLabel()}`}
+            >
+              {getThemeIcon()}
+              <span className="text-[9px] font-mono font-bold tracking-widest hidden sm:inline">{getThemeLabel()}</span>
+            </Button>
+
+            <div className="w-[1px] h-4 bg-border/20" />
+
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-full w-8 text-foreground/50 hover:text-[var(--neon-primary)] border-none">
+                    <User className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-background border-border/20">
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="cursor-pointer font-mono text-foreground hover:text-[var(--neon-primary)]">PROFILE</Link>
+                  </DropdownMenuItem>
+                  {profile?.role === 'admin' && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/dashboard" className="cursor-pointer font-mono text-[#fbbf24]">ADMIN</Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator className="bg-border/10" />
+                  <DropdownMenuItem
+                    className="text-red-500 font-mono"
+                    onClick={() => signOut()}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    LOGOUT
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button variant="ghost" size="icon" className="h-full w-8 text-foreground/50 hover:text-[var(--neon-primary)] border-none" onClick={() => openLoginModal()}>
+                <User className="w-4 h-4" />
               </Button>
-            </div>
-          )
-        }
-      </div >
-      <div className="border-t border-primary/20 bg-primary/5 backdrop-blur-md">
-        <div className="overflow-hidden">
-          <div className="marquee text-[10px] sm:text-xs font-mono text-foreground/80">
-            <div className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20">
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
-            <div
-              className="marquee__group px-4 py-1 flex items-center gap-4 lg:gap-20"
-              aria-hidden="true"
-            >
-              <span className="text-foreground/60">
-                Page visits:{" "}
-                {pageViews != null ? pageViews.toLocaleString() : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">
-                Next prayer (KL):{" "}
-                {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
-              </span>
-              <span className="text-foreground/30">•</span>
-              <span className="text-foreground/60">Stay kracked.</span>
-              <span className="text-foreground/30">•</span>
-            </div>
+            )}
           </div>
         </div>
-        <style jsx>{`
-          .marquee {
-            display: flex;
-            width: max-content;
-            will-change: transform;
-            animation: marquee 60s linear infinite;
-          }
-          .marquee__group {
-            display: inline-flex;
-            align-items: center;
-            white-space: nowrap;
-          }
-          @keyframes marquee {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-          @media (prefers-reduced-motion: reduce) {
-            .marquee {
-              animation: none;
-              transform: none;
-            }
-          }
-        `}</style>
-      </div>
+      </header>
 
-      {/* Mobile Menu Dropdown */}
-      <AnimatePresence>
-        {isMobileMenuOpen && !shouldHideNavLinks && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-primary/20 bg-background/95 backdrop-blur-xl overflow-hidden"
-          >
-            <div className="container mx-auto px-4 py-6 space-y-4 flex flex-col">
-              <Link
-                href="/for-company"
-                className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                For Company
-              </Link>
-              <Link
-                href="/for-developers"
-                className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                For Developers
-              </Link>
-              <Link
-                href="/for-government"
-                className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                For Government
-              </Link>
-              <Link
-                href="/hire/register"
-                className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Hiring?
-              </Link>
-
-              <div className="pt-4 border-t border-primary/20 flex items-center justify-between">
-                {isAuthenticated ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="border border-primary/20 hover:border-neon-primary/40 hover:bg-primary/5"
-                        aria-label="Profile"
-                      >
-                        <User className="h-5 w-5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" sideOffset={8}>
-                      <DropdownMenuItem asChild>
-                        <Link
-                          href="/profile"
-                          className="cursor-pointer w-full font-semibold"
-                        >
-                          Profile
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        variant="destructive"
-                        onClick={() => {
-                          signOut();
-                        }}
-                      >
-                        <LogOut />
-                        Logout
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    onClick={() => openLoginModal()}
-                    className="border border-primary/20 hover:border-neon-primary/40 hover:bg-primary/5"
-                  >
-                    <User className="h-5 w-5 mr-2" />
-                    Login
-                  </Button>
-                )}
+      {/* Ticker Bar Integration */}
+      <div className="h-7 border-b border-border/10 bg-background overflow-hidden flex items-center transition-colors">
+        <div className="flex whitespace-nowrap animate-marquee-ticker">
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="flex items-center">
+              <div className="flex items-center mx-10">
+                <span className="text-[9px] font-mono text-foreground/30 mr-2 uppercase tracking-wide">Next prayer (KL):</span>
+                <span className="text-[9px] font-mono text-[var(--neon-primary)] uppercase font-bold tracking-widest">
+                  {nextPrayer ? `${nextPrayer.name} ${nextPrayer.time}` : "---"}
+                </span>
+                <span className="ml-10 text-foreground/10">•</span>
+              </div>
+              <div className="flex items-center mx-10">
+                <span className="text-[9px] font-mono text-foreground/30 mr-2 uppercase tracking-wide">Page visits:</span>
+                <span className="text-[9px] font-mono text-[var(--neon-primary)] uppercase font-bold tracking-widest">
+                  {pageViews != null ? pageViews.toLocaleString() : "0"}
+                </span>
+                <span className="ml-10 text-foreground/10">•</span>
+              </div>
+              <div className="flex items-center mx-10">
+                <span className="text-[9px] font-mono text-foreground/30 mr-2 uppercase tracking-wide">Status:</span>
+                <span className="text-[9px] font-mono text-[var(--neon-primary)] uppercase font-bold tracking-widest">STAY KRACKED.</span>
+                <span className="ml-10 text-foreground/10">•</span>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          ))}
+        </div>
+      </div>
 
-      {/* Decorative Neon Line */}
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 h-px bg-linear-to-r from-transparent via-neon-primary to-transparent transition-all duration-500",
-          isScrolled || isMobileMenuOpen
-            ? "w-full opacity-50"
-            : "w-0 opacity-0",
-        )}
-      />
-    </motion.nav >
+      <style jsx global>{`
+                @keyframes marquee-ticker {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                .animate-marquee-ticker {
+                    animation: marquee-ticker 40s linear infinite;
+                }
+            `}</style>
+    </div>
   );
 };
 

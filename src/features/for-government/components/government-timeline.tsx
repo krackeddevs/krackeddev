@@ -44,8 +44,11 @@ const timeline = [
 
 export function GovernmentTimeline() {
     return (
-        <section className="py-24 bg-muted/5 relative overflow-hidden">
-            <div className="container px-4 mx-auto">
+        <section className="py-24 bg-muted/10 relative overflow-hidden font-mono">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
+
+            <div className="container px-4 mx-auto relative z-10">
                 <div className="text-center mb-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -53,9 +56,9 @@ export function GovernmentTimeline() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-sm font-mono text-neon-cyan tracking-widest uppercase mb-4">Timeline & Projections</h2>
-                        <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
-                            Path to <span className="text-neon-cyan">National Impact</span>
+                        <h2 className="text-sm font-mono text-[var(--neon-cyan)] tracking-widest uppercase mb-4 tracking-widest">Timeline & Projections</h2>
+                        <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase tracking-tighter">
+                            Path to <span className="text-[var(--neon-cyan)]">National Impact</span>
                         </h3>
                     </motion.div>
                 </div>
@@ -63,7 +66,7 @@ export function GovernmentTimeline() {
                 <div className="max-w-5xl mx-auto">
                     <div className="relative">
                         {/* Timeline Line */}
-                        <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-neon-cyan via-neon-primary to-neon-secondary" />
+                        <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-border/50" />
 
                         <div className="space-y-12">
                             {timeline.map((phase, index) => (
@@ -76,28 +79,28 @@ export function GovernmentTimeline() {
                                     className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                                 >
                                     {/* Content Card */}
-                                    <div className="w-full md:w-[calc(50%-2rem)] bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6 hover:border-neon-cyan/50 transition-all duration-300">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className={`p-2 rounded-lg bg-background border border-border ${phase.color}`}>
-                                                <phase.icon className="w-5 h-5" />
+                                    <div className="w-full md:w-[calc(50%-2rem)] bg-card border border-border rounded-none p-8 hover:border-[var(--neon-cyan)]/50 transition-all duration-300 shadow-xl group">
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className="p-3 rounded-none bg-muted/20 border border-border group-hover:border-[var(--neon-cyan)]/50 transition-colors">
+                                                <phase.icon className="w-6 h-6 text-foreground group-hover:text-[var(--neon-cyan)] transition-colors" />
                                             </div>
                                             <div>
-                                                <h4 className="text-sm font-mono text-neon-cyan uppercase">{phase.year}</h4>
-                                                <h5 className="text-xl font-bold font-mono text-foreground uppercase">{phase.title}</h5>
+                                                <h4 className="text-[10px] font-mono text-[var(--neon-cyan)] uppercase tracking-widest font-bold">{phase.year}</h4>
+                                                <h5 className="text-xl font-bold font-mono text-foreground uppercase tracking-tight">{phase.title}</h5>
                                             </div>
                                         </div>
-                                        <ul className="space-y-2">
+                                        <ul className="space-y-3">
                                             {phase.metrics.map((metric, i) => (
-                                                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                                                    <span className="text-neon-cyan mt-1">•</span>
-                                                    <span>{metric}</span>
+                                                <li key={i} className="flex items-start gap-2 text-[10px] text-muted-foreground uppercase">
+                                                    <span className="text-[var(--neon-cyan)] font-bold">[•]</span>
+                                                    <span className="opacity-80">{metric}</span>
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
 
                                     {/* Timeline Dot */}
-                                    <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-neon-cyan border-4 border-background shadow-[0_0_10px_rgba(6,182,212,0.5)]" />
+                                    <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-none bg-[var(--neon-cyan)] border-2 border-background shadow-[0_0_10px_rgba(var(--neon-cyan-rgb),0.5)] z-20" />
                                 </motion.div>
                             ))}
                         </div>
@@ -109,10 +112,11 @@ export function GovernmentTimeline() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: 0.6 }}
-                        className="mt-16 text-center bg-gradient-to-r from-neon-cyan/10 via-neon-primary/10 to-neon-secondary/10 border border-neon-cyan/30 rounded-xl p-8"
+                        className="mt-16 text-center bg-muted/20 border-2 border-border border-dashed rounded-none p-10 relative overflow-hidden"
                     >
-                        <p className="text-lg font-mono text-foreground leading-relaxed">
-                            By Year 3, Kracked Devs becomes a <span className="text-neon-cyan font-bold">self-sustaining national asset</span>, training thousands, employing hundreds, and closing the skills gap <span className="text-neon-cyan font-bold">without ongoing public funding</span>.
+                        <div className="absolute inset-0 bg-gradient-to-r from-[var(--neon-cyan)]/5 via-transparent to-[var(--neon-primary)]/5" />
+                        <p className="text-base md:text-xl font-mono text-foreground leading-relaxed uppercase tracking-tight relative z-10">
+                            By Year 3, Kracked Devs becomes a <span className="text-[var(--neon-cyan)] font-bold">self-sustaining national asset</span>, training thousands, employing hundreds, and closing the skills gap <span className="text-[var(--neon-cyan)] font-bold underline decoration-2 underline-offset-4">without ongoing public funding</span>.
                         </p>
                     </motion.div>
                 </div>

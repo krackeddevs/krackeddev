@@ -64,9 +64,9 @@ const features = [
 
 export function DevelopersSolution() {
     return (
-        <section className="py-24 bg-background relative overflow-hidden">
+        <section className="py-24 bg-background relative overflow-hidden font-mono">
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
 
             <div className="container px-4 mx-auto relative z-10">
                 <motion.div
@@ -76,10 +76,10 @@ export function DevelopersSolution() {
                     transition={{ duration: 0.5 }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-sm font-mono text-neon-primary tracking-widest uppercase mb-4">The Kracked Devs Difference</h2>
-                    <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
+                    <h2 className="text-sm font-mono text-[var(--neon-primary)] tracking-widest uppercase mb-4 tracking-widest">The Kracked Devs Difference</h2>
+                    <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase tracking-tighter">
                         We're Not Just Another Job Board. <br />
-                        <span className="text-neon-primary">We're Your Whole Ecosystem.</span>
+                        <span className="text-[var(--neon-primary)]">We're Your Whole Ecosystem.</span>
                     </h3>
                 </motion.div>
 
@@ -93,22 +93,22 @@ export function DevelopersSolution() {
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             className={index === 4 ? "md:col-span-2 lg:col-span-1" : ""}
                         >
-                            <Card className="h-full bg-card/40 backdrop-blur-md border-border hover:border-neon-primary/50 transition-all duration-300">
+                            <Card className="h-full bg-card border border-border hover:border-[var(--neon-primary)]/50 transition-all duration-300 rounded-none group">
                                 <CardContent className="p-6">
-                                    <div className="p-3 rounded-xl bg-neon-primary/10 border border-neon-primary/30 w-fit mb-4">
-                                        <feature.icon className="w-6 h-6 text-neon-primary" />
+                                    <div className="p-3 rounded-none bg-[var(--neon-primary)]/5 border border-[var(--neon-primary)]/20 w-fit mb-4 group-hover:bg-[var(--neon-primary)]/10 transition-colors">
+                                        <feature.icon className="w-6 h-6 text-[var(--neon-primary)]" />
                                     </div>
-                                    <h4 className="text-xl font-bold font-mono text-foreground mb-2 uppercase">
+                                    <h4 className="text-xl font-bold font-mono text-foreground mb-2 uppercase tracking-tight">
                                         {feature.title}
                                     </h4>
-                                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                                    <p className="text-xs text-muted-foreground mb-4 leading-relaxed uppercase">
                                         {feature.description}
                                     </p>
                                     <ul className="space-y-2">
                                         {feature.points.map((point, i) => (
-                                            <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                                                <span className="text-neon-primary mt-0.5">•</span>
-                                                <span>{point}</span>
+                                            <li key={i} className="flex items-start gap-2 text-[10px] text-muted-foreground uppercase">
+                                                <span className="text-[var(--neon-primary)] font-bold">[•]</span>
+                                                <span className="opacity-80">{point}</span>
                                             </li>
                                         ))}
                                     </ul>

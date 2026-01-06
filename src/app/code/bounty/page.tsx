@@ -118,23 +118,26 @@ export default function BountyListPage() {
   }, []);
 
   return (
-    <main className="min-h-screen relative">
+    <main className="min-h-screen relative bg-background font-mono">
       <div className="scanlines fixed inset-0 pointer-events-none z-50"></div>
+
+      {/* Background Pattern */}
+      <div className="absolute inset-0 grid-background opacity-[0.05]" />
 
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
         <div className="mb-8">
           <Link
             href="/code"
-            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors font-mono text-sm mb-4"
+            className="inline-flex items-center text-muted-foreground hover:text-[var(--neon-primary)] transition-colors font-mono text-[10px] mb-4 uppercase tracking-widest"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Code Hub
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold font-mono text-foreground mb-2">
+          <h1 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-4 uppercase tracking-tighter">
             BOUNTY BOARD
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-xs uppercase tracking-wide">
             Earn rewards by contributing to open-source projects. Complete
             bounties, get paid.
           </p>
@@ -156,7 +159,7 @@ export default function BountyListPage() {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-16">
-            <div className="w-12 h-12 border-4 border-neon-primary border-t-transparent animate-spin rounded-full"></div>
+            <div className="w-12 h-12 border-4 border-[var(--neon-primary)] border-t-transparent animate-spin rounded-none"></div>
           </div>
         )}
 
@@ -174,12 +177,12 @@ export default function BountyListPage() {
 
             {/* 1. Official Bounties (Active Operations) */}
             <div className="mb-12">
-              <div className="flex items-center gap-2 mb-6 border-b border-neon-primary/20 pb-2">
-                <Terminal className="w-5 h-5 text-neon-primary" />
-                <h2 className="text-xl font-bold font-mono text-neon-primary uppercase tracking-widest">
+              <div className="flex items-center gap-3 mb-6 border-b-2 border-[var(--neon-primary)]/30 pb-3">
+                <Terminal className="w-6 h-6 text-[var(--neon-primary)]" />
+                <h2 className="text-xl md:text-2xl font-bold font-mono text-[var(--neon-primary)] uppercase tracking-tighter">
                   Active Operations
                 </h2>
-                <span className="text-xs text-muted-foreground ml-auto font-mono">
+                <span className="text-[9px] text-muted-foreground ml-auto font-mono uppercase tracking-widest font-bold">
                   OFFICIAL PROTOCOLS
                 </span>
               </div>
@@ -193,12 +196,12 @@ export default function BountyListPage() {
 
             {/* 2. Community Bounties (Open Contracts) */}
             <div className="mb-12">
-              <div className="flex items-center gap-2 mb-6 border-b border-neon-cyan/20 pb-2">
-                <Building2 className="w-5 h-5 text-neon-cyan" />
-                <h2 className="text-xl font-bold font-mono text-neon-cyan uppercase tracking-widest">
+              <div className="flex items-center gap-3 mb-6 border-b-2 border-[var(--neon-cyan)]/30 pb-3">
+                <Building2 className="w-6 h-6 text-[var(--neon-cyan)]" />
+                <h2 className="text-xl md:text-2xl font-bold font-mono text-[var(--neon-cyan)] uppercase tracking-tighter">
                   Open Contracts
                 </h2>
-                <span className="text-xs text-muted-foreground ml-auto font-mono">
+                <span className="text-[9px] text-muted-foreground ml-auto font-mono uppercase tracking-widest font-bold">
                   COMMUNITY & PARTNERS
                 </span>
               </div>
@@ -211,13 +214,13 @@ export default function BountyListPage() {
             </div>
 
             {/* 3. Completed (Mission Archive) */}
-            <div className="mb-12 opacity-80">
-              <div className="flex items-center gap-2 mb-6 border-b border-muted/20 pb-2">
-                <div className="w-2 h-2 rounded-full bg-muted-foreground"></div>
-                <h2 className="text-xl font-bold font-mono text-muted-foreground uppercase tracking-widest">
+            <div className="mb-12 opacity-70">
+              <div className="flex items-center gap-3 mb-6 border-b-2 border-muted/20 pb-3">
+                <div className="w-3 h-3 rounded-none bg-muted-foreground border border-border"></div>
+                <h2 className="text-xl md:text-2xl font-bold font-mono text-muted-foreground uppercase tracking-tighter">
                   Mission Archive
                 </h2>
-                <span className="text-xs text-muted-foreground ml-auto font-mono">
+                <span className="text-[9px] text-muted-foreground ml-auto font-mono uppercase tracking-widest font-bold">
                   ARCHIVE
                 </span>
               </div>
@@ -232,19 +235,22 @@ export default function BountyListPage() {
         )}
 
         {/* Follow CTA */}
-        <div className="mt-12 bg-card/30 border border-border p-6 text-center">
-          <p className="text-muted-foreground mb-4">
-            Stay updated on new bounties and announcements
-          </p>
-          <a
-            href="https://x.com/KrackedDevs"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-foreground text-background px-6 py-3 font-mono font-bold hover:bg-muted-foreground transition-colors"
-          >
-            <XIcon className="w-5 h-5" />
-            Follow @KrackedDevs
-          </a>
+        <div className="mt-16 bg-muted/10 border-2 border-border border-dashed rounded-none p-10 text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--neon-primary)]/5 via-transparent to-[var(--neon-primary)]/5" />
+          <div className="relative z-10">
+            <p className="text-muted-foreground mb-6 text-xs uppercase tracking-widest">
+              Stay updated on new bounties and announcements
+            </p>
+            <a
+              href="https://x.com/KrackedDevs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 font-mono font-bold hover:bg-[var(--neon-primary)] hover:text-background transition-all rounded-none uppercase tracking-wider shadow-xl hover:shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.3)] group"
+            >
+              <XIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              Follow @KrackedDevs
+            </a>
+          </div>
         </div>
       </div>
     </main>

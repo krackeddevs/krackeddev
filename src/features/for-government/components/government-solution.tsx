@@ -45,10 +45,11 @@ const features = [
 
 export function GovernmentSolution() {
     return (
-        <section className="py-24 bg-background relative overflow-hidden">
+        <section className="py-24 bg-background relative overflow-hidden font-mono">
             {/* Background elements */}
-            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-neon-cyan/5 blur-[100px] rounded-full" />
-            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-neon-primary/5 blur-[100px] rounded-full" />
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
+            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[var(--neon-cyan)]/5 blur-[100px] rounded-full" />
+            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-[var(--neon-primary)]/5 blur-[100px] rounded-full" />
 
             <div className="container px-4 mx-auto relative z-10">
                 <div className="text-center mb-16">
@@ -58,12 +59,12 @@ export function GovernmentSolution() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-sm font-mono text-neon-cyan tracking-widest uppercase mb-4">The Kracked Devs Solution</h2>
-                        <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
+                        <h2 className="text-sm font-mono text-[var(--neon-cyan)] tracking-widest uppercase mb-4 tracking-widest">The Kracked Devs Solution</h2>
+                        <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase tracking-tighter">
                             A Self-Sustaining Ecosystem <br />
-                            <span className="text-neon-cyan">That Requires No Public Funding</span>
+                            <span className="text-[var(--neon-cyan)]">That Requires No Public Funding</span>
                         </h3>
-                        <p className="text-muted-foreground max-w-3xl mx-auto text-lg leading-relaxed">
+                        <p className="text-muted-foreground max-w-3xl mx-auto text-sm leading-relaxed uppercase">
                             We solve the talent gap through gamification, community, and real economic incentives—all without government subsidies.
                         </p>
                     </motion.div>
@@ -78,14 +79,14 @@ export function GovernmentSolution() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
-                            <Card className="h-full bg-card/40 backdrop-blur-md border-border hover:border-neon-cyan/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)]">
+                            <Card className="h-full bg-card border-border hover:border-[var(--neon-cyan)]/50 transition-all duration-300 rounded-none group hover:shadow-[0_0_20px_rgba(var(--neon-cyan-rgb),0.2)]">
                                 <CardContent className="p-6 flex flex-col items-start gap-4">
-                                    <div className={`p-3 rounded-xl bg-background border border-border ${feature.color} shadow-sm`}>
-                                        <feature.icon className="w-8 h-8" />
+                                    <div className="p-3 rounded-none bg-muted/20 border border-border group-hover:border-[var(--neon-cyan)]/50 transition-colors">
+                                        <feature.icon className="w-8 h-8 text-foreground group-hover:text-[var(--neon-cyan)] transition-colors" />
                                     </div>
                                     <div>
-                                        <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase">{feature.title}</h4>
-                                        <p className="text-muted-foreground leading-relaxed text-sm">
+                                        <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase tracking-tight">{feature.title}</h4>
+                                        <p className="text-muted-foreground leading-relaxed text-xs uppercase opacity-80">
                                             {feature.description}
                                         </p>
                                     </div>
@@ -103,7 +104,7 @@ export function GovernmentSolution() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h4 className="text-2xl font-bold font-mono text-center text-foreground mb-10 uppercase">How It Works</h4>
+                        <h4 className="text-2xl font-bold font-mono text-center text-foreground mb-12 uppercase tracking-tight">System Workflow</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {[
                                 "Developers join for free and complete onboarding in 1-2 days",
@@ -120,12 +121,12 @@ export function GovernmentSolution() {
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                                    className="flex items-start gap-4 bg-card/30 backdrop-blur-sm border border-border rounded-lg p-4"
+                                    className="flex items-start gap-4 bg-muted/10 border border-border rounded-none p-6 shadow-xl relative overflow-hidden group hover:border-[var(--neon-cyan)]/30 transition-colors"
                                 >
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-neon-cyan/20 border border-neon-cyan flex items-center justify-center">
-                                        <span className="text-neon-cyan font-bold text-sm">{index + 1}</span>
+                                    <div className="flex-shrink-0 w-10 h-10 rounded-none bg-[var(--neon-cyan)]/10 border border-[var(--neon-cyan)]/50 flex items-center justify-center group-hover:bg-[var(--neon-cyan)]/20 transition-colors">
+                                        <span className="text-[var(--neon-cyan)] font-bold text-sm font-mono">[{index + 1}]</span>
                                     </div>
-                                    <p className="text-muted-foreground text-sm leading-relaxed pt-1">{step}</p>
+                                    <p className="text-muted-foreground text-xs uppercase leading-relaxed pt-1 font-mono">{step}</p>
                                 </motion.div>
                             ))}
                         </div>

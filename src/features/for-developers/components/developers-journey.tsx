@@ -59,9 +59,9 @@ export function DevelopersJourney() {
     };
 
     return (
-        <section className="py-24 bg-muted/30 relative overflow-hidden">
+        <section className="py-24 bg-muted/10 relative overflow-hidden font-mono">
             {/* Background Pattern */}
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
 
             <div className="container px-4 mx-auto relative z-10">
                 <motion.div
@@ -71,10 +71,10 @@ export function DevelopersJourney() {
                     transition={{ duration: 0.5 }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-sm font-mono text-neon-primary tracking-widest uppercase mb-4">Get Started</h2>
-                    <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
+                    <h2 className="text-sm font-mono text-[var(--neon-primary)] tracking-widest uppercase mb-4 tracking-widest">Get Started</h2>
+                    <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase tracking-tighter">
                         Your Journey Starts <br />
-                        <span className="text-neon-primary">In 3 Simple Steps</span>
+                        <span className="text-[var(--neon-primary)]">In 3 Simple Steps</span>
                     </h3>
                 </motion.div>
 
@@ -87,24 +87,24 @@ export function DevelopersJourney() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
-                            <Card className="h-full bg-card/40 backdrop-blur-md border-border hover:border-neon-primary/50 transition-all duration-300 relative">
+                            <Card className="h-full bg-card border-border hover:border-[var(--neon-primary)]/50 transition-all duration-300 relative rounded-none group">
                                 <CardContent className="p-6 text-center">
-                                    <div className={`p-4 rounded-xl bg-${step.color}/10 border border-${step.color}/30 w-fit mx-auto mb-4`}>
-                                        <step.icon className={`w-8 h-8 text-${step.color}`} />
+                                    <div className="p-4 rounded-none bg-muted/20 border border-border w-fit mx-auto mb-4 group-hover:border-[var(--neon-primary)]/50 transition-colors">
+                                        <step.icon className="w-8 h-8 text-foreground group-hover:text-[var(--neon-primary)] transition-colors" />
                                     </div>
-                                    <div className="text-xs font-mono text-neon-primary mb-2 uppercase tracking-wider">
+                                    <div className="text-xs font-mono text-[var(--neon-primary)] mb-2 uppercase tracking-widest font-bold">
                                         {step.step}
                                     </div>
-                                    <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase">
+                                    <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase tracking-tight">
                                         {step.title}
                                     </h4>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                    <p className="text-xs text-muted-foreground leading-relaxed uppercase">
                                         {step.description}
                                     </p>
                                 </CardContent>
                                 {index < steps.length - 1 && (
                                     <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 z-10">
-                                        <ArrowRight className="w-8 h-8 text-neon-primary/30" />
+                                        <ArrowRight className="w-8 h-8 text-[var(--neon-primary)] opacity-20" />
                                     </div>
                                 )}
                             </Card>
@@ -120,32 +120,33 @@ export function DevelopersJourney() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="text-center max-w-3xl mx-auto"
                 >
-                    <div className="bg-gradient-to-r from-neon-primary/10 via-transparent to-neon-primary/10 border border-neon-primary/30 rounded-xl p-8">
-                        <h4 className="text-2xl font-bold font-mono text-foreground mb-4 uppercase">
-                            {isAuthenticated && profile?.onboarding_completed
-                                ? "Welcome Back, Developer"
-                                : `Join ${displayCount} Developers Today`}
-                        </h4>
-                        <p className="text-lg text-muted-foreground mb-6">
-                            Your next opportunity is waiting. The community is ready. <br />
-                            All you have to do is show up.
-                        </p>
-                        <Button
-                            size="lg"
-                            className="bg-neon-primary text-primary-foreground hover:bg-neon-primary/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(0,255,65,0.5)] hover:shadow-[0_0_30px_rgba(0,255,65,0.7)] transition-all duration-300"
-                            onClick={handleJoinClick}
-                        >
-                            {isAuthenticated && profile?.onboarding_completed
-                                ? "Enter Dashboard"
-                                : "Join Beta Now"}
-                            <ArrowRight className="w-5 h-5 ml-2" />
-                        </Button>
-                        <p className="text-sm text-muted-foreground mt-6 font-mono">
-                            Questions? Drop by our <a href="https://discord.gg/krackeddevs" className="text-neon-primary hover:underline">Discord</a> or email <a href="mailto:hello@krackeddevs.com" className="text-neon-primary hover:underline">hello@krackeddevs.com</a>
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-4 font-mono uppercase tracking-wider">
-                            Kracked Devs - Build. Learn. Earn. Together.
-                        </p>
+                    <div className="bg-card border border-border rounded-none p-10 shadow-2xl relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[var(--neon-primary)]/5 via-transparent to-[var(--neon-primary)]/5 opacity-50" />
+
+                        <div className="relative z-10">
+                            <h4 className="text-2xl md:text-3xl font-bold font-mono text-foreground mb-4 uppercase tracking-tighter">
+                                {isAuthenticated && profile?.onboarding_completed
+                                    ? "Welcome Back, Developer"
+                                    : `Join ${displayCount} Developers Today`}
+                            </h4>
+                            <p className="text-base md:text-lg text-muted-foreground mb-8 uppercase tracking-tight">
+                                Your next opportunity is waiting. The community is ready. <br />
+                                All you have to do is show up.
+                            </p>
+                            <Button
+                                size="lg"
+                                className="bg-[var(--neon-primary)] text-background hover:bg-[var(--neon-secondary)] font-bold text-lg px-10 py-8 h-auto shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--neon-primary-rgb),0.5)] transition-all duration-300 rounded-none uppercase group"
+                                onClick={handleJoinClick}
+                            >
+                                {isAuthenticated && profile?.onboarding_completed
+                                    ? "Enter Dashboard"
+                                    : "Join Beta Now"}
+                                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                            <p className="text-sm text-muted-foreground mt-10 font-mono uppercase tracking-widest">
+                                Questions? <a href="https://discord.gg/krackeddevs" className="text-[var(--neon-primary)] hover:underline">Discord</a> / <a href="mailto:hello@krackeddevs.com" className="text-[var(--neon-primary)] hover:underline font-bold">hello@krackeddevs.com</a>
+                            </p>
+                        </div>
                     </div>
                 </motion.div>
             </div>

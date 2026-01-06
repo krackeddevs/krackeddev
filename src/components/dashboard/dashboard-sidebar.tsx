@@ -92,30 +92,15 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
     const avatarText = (profile?.full_name?.[0] || profile?.username?.[0] || user?.email?.[0] || "U").toUpperCase();
 
     return (
-        <div className="w-64 h-screen flex-shrink-0 border-r border-border bg-card/40 backdrop-blur-xl fixed left-0 top-0 z-40 hidden md:flex flex-col">
-            {/* Header / Logo Area */}
-            <div className="h-16 flex items-center justify-between px-6 border-b border-border">
-                <Link href="/" className="flex flex-col gap-0.5">
-                    <span className="font-bold text-lg tracking-tighter text-foreground whitespace-nowrap">
-                        &lt;Kracked Devs /&gt;
-                    </span>
-                    <span className="text-[10px] bg-neon-secondary/20 text-neon-secondary px-1.5 py-0.5 rounded border border-neon-secondary/30 w-fit">
-                        DASHBOARD
-                    </span>
-                </Link>
-                <div className="flex items-center">
-                    <ModeToggle />
-                </div>
-            </div>
-
+        <div className="w-64 h-[calc(100vh-84px)] sticky top-[84px] flex-shrink-0 border-r border-border/50 bg-background/60 backdrop-blur-xl hidden md:flex flex-col transition-colors duration-300 z-20">
             {/* Navigation */}
-            <div className="flex-1 overflow-y-auto py-6 px-3 space-y-8">
+            <div className="flex-1 overflow-y-auto py-10 px-5 space-y-10">
                 {/* User Section */}
                 <div>
-                    <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                        Personal
+                    <h3 className="px-3 text-[10px] font-bold text-foreground/30 uppercase tracking-[0.25em] mb-6">
+                        COMMAND CENTER
                     </h3>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5 font-mono">
                         {navItems.map((item) => {
                             const isActive = pathname === item.href;
                             return (
@@ -123,21 +108,21 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
                                     key={item.href}
                                     href={item.href}
                                     className={cn(
-                                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-200 group relative overflow-hidden",
+                                        "flex items-center gap-3 px-4 py-3 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 group relative overflow-hidden",
                                         isActive
-                                            ? "text-neon-primary bg-neon-primary/5 border border-neon-primary/20"
-                                            : "text-muted-foreground hover:text-foreground hover:bg-muted/5"
+                                            ? "text-[var(--neon-primary)] bg-[var(--neon-primary)]/5 border border-[var(--neon-primary)]/20 shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.05)]"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
                                     )}
                                 >
                                     <item.icon
                                         className={cn(
                                             "w-4 h-4 transition-colors",
-                                            isActive ? "text-neon-primary" : "text-muted-foreground group-hover:text-foreground"
+                                            isActive ? "text-[var(--neon-primary)]" : "text-muted-foreground/50 group-hover:text-[var(--neon-primary)]"
                                         )}
                                     />
                                     {item.title}
                                     {isActive && (
-                                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-neon-primary shadow-[0_0_10px_var(--neon-primary)]" />
+                                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--neon-primary)] shadow-[0_0_10px_var(--neon-primary)]" />
                                     )}
                                 </Link>
                             );
@@ -148,10 +133,10 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
                 {/* Company Section */}
                 {company && (
                     <div>
-                        <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                            Company
+                        <h3 className="px-3 text-[10px] font-bold text-foreground/30 uppercase tracking-[0.25em] mb-6">
+                            RECRUITMENT HUB
                         </h3>
-                        <div className="space-y-1">
+                        <div className="space-y-1.5 font-mono">
                             {companyItems.map((item) => {
                                 const isActive = pathname === item.href;
                                 return (
@@ -159,21 +144,21 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
                                         key={item.href}
                                         href={item.href}
                                         className={cn(
-                                            "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-200 group relative overflow-hidden",
+                                            "flex items-center gap-3 px-4 py-3 rounded-sm text-[11px] font-bold uppercase tracking-wider transition-all duration-200 group relative overflow-hidden",
                                             isActive
-                                                ? "text-neon-secondary bg-neon-secondary/5 border border-neon-secondary/20"
-                                                : "text-muted-foreground hover:text-foreground hover:bg-muted/5"
+                                                ? "text-[var(--neon-secondary)] bg-[var(--neon-secondary)]/5 border border-[var(--neon-secondary)]/20 shadow-[0_0_20px_rgba(var(--neon-secondary-rgb),0.05)]"
+                                                : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.03]"
                                         )}
                                     >
                                         <item.icon
                                             className={cn(
                                                 "w-4 h-4 transition-colors",
-                                                isActive ? "text-neon-secondary" : "text-muted-foreground group-hover:text-foreground"
+                                                isActive ? "text-[var(--neon-secondary)]" : "text-muted-foreground/50 group-hover:text-[var(--neon-secondary)]"
                                             )}
                                         />
                                         {item.title}
                                         {isActive && (
-                                            <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-neon-secondary shadow-[0_0_10px_var(--neon-secondary)]" />
+                                            <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--neon-secondary)] shadow-[0_0_10px_var(--neon-secondary)]" />
                                         )}
                                     </Link>
                                 );
@@ -183,32 +168,32 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
                 )}
             </div>
 
-            {/* Footer / User User */}
-            <div className="p-4 border-t border-border bg-card/20">
-                <div className="flex items-center gap-3 mb-4 px-2">
-                    <div className="w-8 h-8 rounded bg-gradient-to-br from-card to-muted border border-border flex items-center justify-center text-xs font-mono text-muted-foreground">
+            {/* Footer / User */}
+            <div className="p-6 border-t border-border/30 bg-background/40">
+                <div className="flex items-center gap-3 mb-6 px-1">
+                    <div className="w-10 h-10 rounded-sm bg-background border border-border/50 flex items-center justify-center text-[10px] font-mono text-muted-foreground uppercase shadow-inner">
                         {profile?.avatar_url ? (
-                            <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover rounded" />
+                            <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover rounded-sm" />
                         ) : (
                             avatarText
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">
+                        <p className="text-[12px] font-black text-foreground font-mono uppercase tracking-tight truncate">
                             {displayName}
                         </p>
-                        <p className="text-xs text-muted-foreground truncate">
-                            Level {profile?.level || 1}
+                        <p className="text-[10px] text-foreground/40 font-mono uppercase tracking-[0.2em] truncate">
+                            LVL {profile?.level || 1} • {profile?.role || "USER"}
                         </p>
                     </div>
                 </div>
                 <Button
                     variant="ghost"
-                    className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                    className="w-full justify-start text-[10px] font-bold font-mono uppercase text-red-500/60 hover:text-red-500 hover:bg-red-500/10 transition-all rounded-sm h-10 tracking-widest"
                     onClick={handleSignOut}
                 >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
+                    DISCONNECT_
                 </Button>
             </div>
         </div>

@@ -56,10 +56,10 @@ export function GovernmentCTA() {
     const displayCount = userCount ? `${userCount}+` : '300+';
 
     return (
-        <section className="py-24 bg-background relative overflow-hidden">
+        <section className="py-24 bg-background relative overflow-hidden font-mono">
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon-cyan/10 rounded-full blur-[120px]" />
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--neon-cyan)]/5 rounded-full blur-[120px]" />
 
             <div className="container px-4 mx-auto relative z-10">
                 <div className="text-center mb-16">
@@ -69,10 +69,10 @@ export function GovernmentCTA() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-sm font-mono text-neon-cyan tracking-widest uppercase mb-4">Call to Action</h2>
-                        <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
+                        <h2 className="text-sm font-mono text-[var(--neon-cyan)] tracking-widest uppercase mb-4 tracking-widest">Call to Action</h2>
+                        <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase tracking-tighter">
                             Let's Build Malaysia's <br />
-                            <span className="text-neon-cyan">Tech Future Together</span>
+                            <span className="text-[var(--neon-cyan)]">Tech Future Together</span>
                         </h3>
                     </motion.div>
                 </div>
@@ -86,30 +86,30 @@ export function GovernmentCTA() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
-                            <Card className="h-full bg-card/40 backdrop-blur-md border-border hover:border-neon-cyan/50 transition-all duration-300 group">
+                            <Card className="h-full bg-card border border-border hover:border-[var(--neon-cyan)]/50 transition-all duration-300 rounded-none group shadow-xl">
                                 <CardContent className="p-6 flex flex-col h-full">
-                                    <div className={`p-3 rounded-xl bg-${cta.color}/10 border border-${cta.color}/30 w-fit mb-4`}>
-                                        <cta.icon className={`w-6 h-6 text-${cta.color}`} />
+                                    <div className="p-3 rounded-none bg-muted/20 border border-border group-hover:border-[var(--neon-cyan)]/50 transition-colors w-fit mb-4">
+                                        <cta.icon className="w-6 h-6 text-foreground group-hover:text-[var(--neon-cyan)] transition-colors" />
                                     </div>
-                                    <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase">
+                                    <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase tracking-tight">
                                         {cta.title}
                                     </h4>
-                                    <p className="text-muted-foreground text-sm leading-relaxed mb-6 flex-grow">
+                                    <p className="text-muted-foreground text-xs leading-relaxed mb-8 flex-grow uppercase opacity-80">
                                         {cta.description}
                                     </p>
                                     <Dialog open={openDialog === cta.inquiryType} onOpenChange={(open) => setOpenDialog(open ? cta.inquiryType : null)}>
                                         <DialogTrigger asChild>
                                             <Button
                                                 variant="outline"
-                                                className="w-full border-neon-cyan/50 text-neon-cyan hover:bg-neon-cyan/10 group-hover:border-neon-cyan transition-all duration-300"
+                                                className="w-full border-[var(--neon-cyan)]/50 text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)] hover:text-background transition-all duration-300 rounded-none uppercase font-bold"
                                             >
                                                 {cta.action}
                                                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                             </Button>
                                         </DialogTrigger>
-                                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-none border-2">
                                             <DialogHeader>
-                                                <DialogTitle className="text-2xl font-mono uppercase">
+                                                <DialogTitle className="text-2xl font-mono uppercase tracking-tighter">
                                                     {cta.title}
                                                 </DialogTitle>
                                             </DialogHeader>
@@ -134,26 +134,30 @@ export function GovernmentCTA() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="text-center max-w-3xl mx-auto"
                 >
-                    <div className="bg-gradient-to-r from-neon-cyan/10 via-transparent to-neon-cyan/10 border border-neon-cyan/30 rounded-xl p-8">
-                        <h4 className="text-2xl font-bold font-mono text-foreground mb-4 uppercase">
-                            Join {displayCount} Senior and Junior Developers
-                        </h4>
-                        <p className="text-lg text-muted-foreground mb-6">
-                            Already Building the Future
-                        </p>
-                        <Button
-                            size="lg"
-                            className="bg-neon-cyan text-primary-foreground hover:bg-neon-cyan/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:shadow-[0_0_30px_rgba(6,182,212,0.7)] transition-all duration-300"
-                            asChild
-                        >
-                            <a href="/">
-                                Explore Kracked Devs
-                                <ArrowRight className="w-5 h-5 ml-2" />
-                            </a>
-                        </Button>
-                        <p className="text-sm text-muted-foreground mt-4 font-mono">
-                            Build. Learn. Earn. Together.
-                        </p>
+                    <div className="bg-muted/10 border-2 border-border border-dashed rounded-none p-12 relative overflow-hidden group hover:border-[var(--neon-cyan)]/30 transition-colors">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[var(--neon-cyan)]/5 via-transparent to-[var(--neon-cyan)]/5 opacity-50" />
+
+                        <div className="relative z-10">
+                            <h4 className="text-2xl md:text-3xl font-bold font-mono text-foreground mb-4 uppercase tracking-tighter">
+                                Join {displayCount} Senior and Junior Developers
+                            </h4>
+                            <p className="text-base md:text-lg text-muted-foreground mb-8 uppercase tracking-widest">
+                                Already Building the Future
+                            </p>
+                            <Button
+                                size="lg"
+                                className="bg-[var(--neon-cyan)] text-background hover:bg-[var(--neon-cyan)]/90 font-bold text-lg px-10 py-8 h-auto shadow-[0_0_20px_rgba(var(--neon-cyan-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--neon-cyan-rgb),0.5)] transition-all duration-300 rounded-none uppercase group"
+                                asChild
+                            >
+                                <a href="/">
+                                    Explore Ecosystem
+                                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                                </a>
+                            </Button>
+                            <p className="text-sm text-muted-foreground mt-10 font-mono uppercase tracking-widest opacity-60">
+                                Build. Learn. Earn. Together.
+                            </p>
+                        </div>
                     </div>
                 </motion.div>
             </div>

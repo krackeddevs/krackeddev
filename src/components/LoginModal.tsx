@@ -15,7 +15,7 @@ type ViewState =
   | "forgot-password-success";
 
 const LastUsedBadge = () => (
-  <span className="absolute -top-2 -right-2 bg-neon-primary text-black text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-tighter shadow-[0_0_10px_rgba(21,128,61,0.5)] z-20">
+  <span className="absolute -top-2 -right-2 bg-neon-primary text-background text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-tighter shadow-[0_0_10px_rgba(21,128,61,0.5)] z-20">
     Last Used
   </span>
 );
@@ -253,7 +253,7 @@ export const LoginModal = () => {
                   <Link
                     href="/profile"
                     onClick={closeLoginModal}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-background font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
                   >
                     <User className="w-4 h-4" />
                     View Profile
@@ -349,7 +349,7 @@ export const LoginModal = () => {
                   <button
                     type="submit"
                     disabled={loading || !email}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-background font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
                   >
                     <Mail className="w-4 h-4" />
                     {loading ? "Sending..." : "Send Reset Link"}
@@ -481,7 +481,7 @@ export const LoginModal = () => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-background font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
                       >
                         <Mail className="w-4 h-4" />
                         {loading

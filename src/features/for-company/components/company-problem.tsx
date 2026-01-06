@@ -29,7 +29,7 @@ const problems = [
 
 export function CompanyProblem() {
     return (
-        <section className="py-24 bg-muted/5 relative overflow-hidden">
+        <section className="py-24 bg-muted/10 relative overflow-hidden">
             <div className="container px-4 mx-auto">
                 <div className="text-center mb-16">
                     <motion.div
@@ -38,11 +38,11 @@ export function CompanyProblem() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-sm font-mono text-neon-primary tracking-widest uppercase mb-4">The Problem You Face</h2>
+                        <h2 className="text-sm font-mono text-[var(--neon-primary)] tracking-widest uppercase mb-4">The Problem You Face</h2>
                         <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
                             Hiring Developers <span className="text-destructive line-through decoration-wavy decoration-2">Is Broken</span>
                         </h3>
-                        <p className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed">
+                        <p className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed font-mono uppercase">
                             Traditional hiring methods are failing modern companies. The struggle to find quality talent is real.
                         </p>
                     </motion.div>
@@ -57,9 +57,9 @@ export function CompanyProblem() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
-                            <Card className="h-full bg-card/50 backdrop-blur-sm border-border hover:border-destructive/50 transition-all duration-300 group">
+                            <Card className="h-full bg-card border-border hover:border-destructive/50 transition-all duration-300 group rounded-none">
                                 <CardHeader>
-                                    <div className="w-12 h-12 rounded-lg bg-destructive/10 flex items-center justify-center mb-4 group-hover:bg-destructive/20 transition-colors">
+                                    <div className="w-12 h-12 rounded-none bg-destructive/10 flex items-center justify-center mb-4 group-hover:bg-destructive/20 transition-colors border border-destructive/20">
                                         <problem.icon className="w-6 h-6 text-destructive" />
                                     </div>
                                     <CardTitle className="text-xl font-bold font-mono">{problem.title}</CardTitle>

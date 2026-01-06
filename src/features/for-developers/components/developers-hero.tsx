@@ -36,11 +36,10 @@ export function DevelopersHero() {
     return (
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-16">
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
-            <div className="absolute top-0 left-0 w-full h-full bg-background/80 backdrop-blur-[1px]" />
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
 
             {/* Spotlight Effect */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-neon-primary/20 rounded-full blur-[100px] opacity-30" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--neon-primary)] opacity-[0.03] dark:opacity-[0.1] rounded-full blur-[100px]" />
 
             <div className="container relative z-10 px-4 mx-auto text-center">
                 <motion.div
@@ -48,16 +47,16 @@ export function DevelopersHero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-neon-primary/30 bg-neon-primary/5 text-neon-primary text-xs font-mono uppercase tracking-wider">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-none border border-[var(--neon-primary)]/30 bg-[var(--neon-primary)]/5 text-[var(--neon-primary)] text-[10px] font-mono uppercase tracking-wider">
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-primary opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-neon-primary"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--neon-primary)] opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--neon-primary)]"></span>
                         </span>
                         For Developers
                     </div>
 
                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-mono tracking-tight mb-6 uppercase text-foreground">
-                        <span className="text-neon-primary text-glow">Build. Learn. Earn.</span> <br />
+                        <span className="text-[var(--neon-primary)] text-glow">Build. Learn. Earn.</span> <br />
                         Together.
                     </h1>
 
@@ -68,7 +67,7 @@ export function DevelopersHero() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Button
                             size="lg"
-                            className="bg-neon-primary text-primary-foreground hover:bg-neon-primary/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(0,255,65,0.5)] hover:shadow-[0_0_30px_rgba(0,255,65,0.7)] transition-all duration-300 group min-w-[200px]"
+                            className="bg-[var(--neon-primary)] text-background hover:bg-[var(--neon-primary)]/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--neon-primary-rgb),0.5)] transition-all duration-300 group min-w-[200px] rounded-none"
                             onClick={handleJoinClick}
                         >
                             {isAuthenticated && profile?.onboarding_completed

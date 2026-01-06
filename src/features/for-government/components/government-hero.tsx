@@ -9,11 +9,10 @@ export function GovernmentHero() {
     return (
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-16">
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
-            <div className="absolute top-0 left-0 w-full h-full bg-background/80 backdrop-blur-[1px]" />
+            <div className="absolute inset-0 grid-background opacity-[0.05]" />
 
             {/* Spotlight Effect */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-neon-cyan/20 rounded-full blur-[100px] opacity-30" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[var(--neon-cyan)] opacity-[0.03] dark:opacity-[0.1] rounded-full blur-[100px]" />
 
             <div className="container relative z-10 px-4 mx-auto text-center">
                 <motion.div
@@ -21,17 +20,17 @@ export function GovernmentHero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-neon-cyan/30 bg-neon-cyan/5 text-neon-cyan text-xs font-mono uppercase tracking-wider">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-none border border-[var(--neon-cyan)]/30 bg-[var(--neon-cyan)]/5 text-[var(--neon-cyan)] text-[10px] font-mono uppercase tracking-wider">
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-cyan opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-neon-cyan"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--neon-cyan)] opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--neon-cyan)]"></span>
                         </span>
                         For Government & Policy Makers
                     </div>
 
                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-mono tracking-tight mb-6 uppercase text-foreground">
                         Building Malaysia's <br />
-                        <span className="text-neon-cyan text-glow">Tech Talent Pipeline</span>
+                        <span className="text-[var(--neon-cyan)] text-glow">Tech Talent Pipeline</span>
                     </h1>
 
                     <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 font-mono leading-relaxed">
@@ -41,7 +40,7 @@ export function GovernmentHero() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Button
                             size="lg"
-                            className="bg-neon-cyan text-primary-foreground hover:bg-neon-cyan/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:shadow-[0_0_30px_rgba(6,182,212,0.7)] transition-all duration-300 group min-w-[200px]"
+                            className="bg-[var(--neon-cyan)] text-background hover:bg-[var(--neon-cyan)]/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(var(--neon-cyan-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--neon-cyan-rgb),0.5)] transition-all duration-300 group min-w-[200px] rounded-none"
                             onClick={() => {
                                 const ctaSection = document.getElementById('contact-forms');
                                 ctaSection?.scrollIntoView({ behavior: 'smooth' });
