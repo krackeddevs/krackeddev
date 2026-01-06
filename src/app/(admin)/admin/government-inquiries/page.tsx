@@ -30,15 +30,15 @@ export default async function GovernmentInquiriesPage() {
         .from("profiles")
         .select("role")
         .eq("id", user.id)
-        .single();
+        .single<{ role: string }>();
 
     if (!profile || profile.role !== 'admin') {
         return <div className="text-destructive p-8">Forbidden - Admin access required</div>;
     }
 
     // Fetch all government inquiries
-    const { data, error } = await supabase
-        .from("government_inquiries")
+    const { data, error } = await (supabase
+        .from("government_inquiries") as any)
         .select("*")
         .order("created_at", { ascending: false });
 

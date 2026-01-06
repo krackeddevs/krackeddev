@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
         const supabase = await createClient();
 
         // Insert inquiry
-        const { data, error } = await supabase
-            .from("government_inquiries")
+        const { data, error } = await (supabase
+            .from("government_inquiries") as any)
             .insert({
                 inquiry_type,
                 organization_name,
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
             .from("profiles")
             .select("role")
             .eq("id", user.id)
-            .single();
+            .single<{ role: string }>();
 
         if (!profile || profile.role !== 'admin') {
             return NextResponse.json(
@@ -116,8 +116,8 @@ export async function GET(request: NextRequest) {
         const status = searchParams.get('status');
         const type = searchParams.get('type');
 
-        let query = supabase
-            .from("government_inquiries")
+        let query = (supabase
+            .from("government_inquiries") as any)
             .select("*")
             .order("created_at", { ascending: false });
 

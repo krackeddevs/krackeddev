@@ -22,7 +22,7 @@ export async function PATCH(
             .from("profiles")
             .select("role")
             .eq("id", user.id)
-            .single();
+            .single<{ role: string }>();
 
         if (!profile || profile.role !== 'admin') {
             return NextResponse.json(
@@ -35,15 +35,15 @@ export async function PATCH(
         const { status, priority, notes, assigned_to } = body;
 
         // Build update object
-        const updateData: any = {};
+        const updateData: Record<string, any> = {};
         if (status) updateData.status = status;
         if (priority) updateData.priority = priority;
         if (notes !== undefined) updateData.notes = notes;
         if (assigned_to !== undefined) updateData.assigned_to = assigned_to;
 
         // Update inquiry
-        const { data, error } = await supabase
-            .from("government_inquiries")
+        const { data, error } = await (supabase
+            .from("government_inquiries") as any)
             .update(updateData)
             .eq("id", id)
             .select()
@@ -88,7 +88,7 @@ export async function GET(
             .from("profiles")
             .select("role")
             .eq("id", user.id)
-            .single();
+            .single<{ role: string }>();
 
         if (!profile || profile.role !== 'admin') {
             return NextResponse.json(
@@ -98,8 +98,8 @@ export async function GET(
         }
 
         // Get single inquiry
-        const { data, error } = await supabase
-            .from("government_inquiries")
+        const { data, error } = await (supabase
+            .from("government_inquiries") as any)
             .select("*")
             .eq("id", id)
             .single();
