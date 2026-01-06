@@ -38,7 +38,7 @@ export function TickerBar() {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee-infinite {
-          animation: marquee-kracked 40s linear infinite;
+          animation: marquee-kracked 80s linear infinite;
         }
       `}</style>
         </div>

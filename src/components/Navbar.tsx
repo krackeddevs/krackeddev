@@ -20,12 +20,14 @@ import { useTheme } from "next-themes";
 
 // Audio Toggle Button Component
 const AudioToggleButton = () => {
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Default to true (muted)
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const muted = localStorage.getItem("soundMuted") === "true";
+    // Default to muted (true) if not set in localStorage, otherwise use stored value
+    const storedMuted = localStorage.getItem("soundMuted");
+    const muted = storedMuted === null ? true : storedMuted === "true";
     setIsMuted(muted);
 
     const handleSoundToggle = (e: CustomEvent) => {
@@ -241,7 +243,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
                     100% { transform: translateX(-50%); }
                 }
                 .animate-marquee-ticker {
-                    animation: marquee-ticker 40s linear infinite;
+                    animation: marquee-ticker 80s linear infinite;
                 }
             `}</style>
     </div>
