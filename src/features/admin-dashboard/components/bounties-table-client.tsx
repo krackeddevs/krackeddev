@@ -4,6 +4,7 @@ import { AdminDataTable, Column } from "@/features/admin-dashboard/components/ad
 import { Badge } from "@/components/ui/badge";
 import { DollarSign } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { BountyRowActions } from "./bounty-row-actions";
 
 type Bounty = {
     id: string;
@@ -89,6 +90,12 @@ export function BountiesTableClient({ bounties }: BountiesTableClientProps) {
             sortable: true,
             render: (bounty) =>
                 formatDistanceToNow(new Date(bounty.created_at), { addSuffix: true }),
+        },
+        {
+            key: "actions",
+            label: "Actions",
+            sortable: false,
+            render: (bounty) => <BountyRowActions bountyId={bounty.id} />,
         },
     ];
 
