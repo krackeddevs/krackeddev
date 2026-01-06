@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const result = await db.select({ value: count() }).from(pageViews);
+    console.log("GET /api/page-views result:", result);
     return NextResponse.json({ count: result[0].value });
   } catch (error) {
     console.error("Error fetching page views:", error);
@@ -16,7 +17,9 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    console.log("POST /api/page-views body:", body);
     const { pagePath, visitorId, userAgent, referrer } = body;
+    // ... rest of the function
 
     await db.insert(pageViews).values({
       pagePath,
