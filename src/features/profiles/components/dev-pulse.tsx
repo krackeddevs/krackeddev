@@ -24,14 +24,23 @@ export function DevPulse({ data, className }: DevPulseProps) {
 
     // Run the animation loop
     useEffect(() => {
+        // Reset progress to 0 when timeframe changes to avoid jumps
+        progress.set(0);
+
+        const durationMap = {
+            daily: 8,
+            monthly: 16,
+            yearly: 24
+        };
+
         const controls = animate(progress, 1, {
-            duration: 8,
+            duration: durationMap[timeframe],
             ease: "linear",
             repeat: Infinity,
             repeatDelay: 0
         });
-        return controls.stop;
-    }, [progress]);
+        return () => controls.stop();
+    }, [progress, timeframe]);
 
     const currentData = useMemo(() => {
         switch (timeframe) {

@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserPlus, User, Code, ArrowRight } from "lucide-react";
+import { useSupabase } from "@/context/SupabaseContext";
+import { useRouter } from "next/navigation";
 
 const steps = [
     {
@@ -31,6 +33,8 @@ const steps = [
 ];
 
 export function DevelopersJourney() {
+    const { isAuthenticated, openLoginModal, profile } = useSupabase();
+    const router = useRouter();
     const [userCount, setUserCount] = useState<number | null>(null);
 
     useEffect(() => {
@@ -41,6 +45,18 @@ export function DevelopersJourney() {
     }, []);
 
     const displayCount = userCount ? `${userCount}+` : '400+';
+
+    const handleJoinClick = () => {
+        if (isAuthenticated) {
+            if (profile?.onboarding_completed) {
+                router.push("/dashboard");
+            } else {
+                router.push("/onboarding/form");
+            }
+        } else {
+            openLoginModal(true);
+        }
+    };
 
     return (
         <section className="py-24 bg-muted/30 relative overflow-hidden">
@@ -106,7 +122,9 @@ export function DevelopersJourney() {
                 >
                     <div className="bg-gradient-to-r from-neon-primary/10 via-transparent to-neon-primary/10 border border-neon-primary/30 rounded-xl p-8">
                         <h4 className="text-2xl font-bold font-mono text-foreground mb-4 uppercase">
-                            Join {displayCount} Developers Today
+                            {isAuthenticated && profile?.onboarding_completed
+                                ? "Welcome Back, Developer"
+                                : `Join ${displayCount} Developers Today`}
                         </h4>
                         <p className="text-lg text-muted-foreground mb-6">
                             Your next opportunity is waiting. The community is ready. <br />
@@ -115,12 +133,12 @@ export function DevelopersJourney() {
                         <Button
                             size="lg"
                             className="bg-neon-primary text-primary-foreground hover:bg-neon-primary/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(0,255,65,0.5)] hover:shadow-[0_0_30px_rgba(0,255,65,0.7)] transition-all duration-300"
-                            asChild
+                            onClick={handleJoinClick}
                         >
-                            <a href="/onboarding/form">
-                                Join Beta Now
-                                <ArrowRight className="w-5 h-5 ml-2" />
-                            </a>
+                            {isAuthenticated && profile?.onboarding_completed
+                                ? "Enter Dashboard"
+                                : "Join Beta Now"}
+                            <ArrowRight className="w-5 h-5 ml-2" />
                         </Button>
                         <p className="text-sm text-muted-foreground mt-6 font-mono">
                             Questions? Drop by our <a href="https://discord.gg/krackeddevs" className="text-neon-primary hover:underline">Discord</a> or email <a href="mailto:hello@krackeddevs.com" className="text-neon-primary hover:underline">hello@krackeddevs.com</a>

@@ -4,8 +4,12 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Code2, Users, Zap } from "lucide-react";
+import { useSupabase } from "@/context/SupabaseContext";
+import { useRouter } from "next/navigation";
 
 export function DevelopersHero() {
+    const { isAuthenticated, openLoginModal, profile } = useSupabase();
+    const router = useRouter();
     const [userCount, setUserCount] = useState<number | null>(null);
 
     useEffect(() => {
@@ -16,6 +20,18 @@ export function DevelopersHero() {
     }, []);
 
     const displayCount = userCount ? `${userCount}+` : '400+';
+
+    const handleJoinClick = () => {
+        if (isAuthenticated) {
+            if (profile?.onboarding_completed) {
+                router.push("/dashboard");
+            } else {
+                router.push("/onboarding/form");
+            }
+        } else {
+            openLoginModal(true);
+        }
+    };
 
     return (
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-16">
@@ -53,11 +69,11 @@ export function DevelopersHero() {
                         <Button
                             size="lg"
                             className="bg-neon-primary text-primary-foreground hover:bg-neon-primary/90 font-bold text-lg px-8 py-6 h-auto shadow-[0_0_20px_rgba(0,255,65,0.5)] hover:shadow-[0_0_30px_rgba(0,255,65,0.7)] transition-all duration-300 group min-w-[200px]"
-                            asChild
+                            onClick={handleJoinClick}
                         >
-                            <a href="/onboarding/form">
-                                Join Beta - It's Free
-                            </a>
+                            {isAuthenticated && profile?.onboarding_completed
+                                ? "Go to Dashboard"
+                                : "Join Beta - It's Free"}
                         </Button>
                     </div>
 
