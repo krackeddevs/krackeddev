@@ -132,6 +132,15 @@ const Navbar = () => {
             <Link href="/for-company">For Company</Link>
           </Button>
 
+          {/* For Developers Button */}
+          <Button
+            variant="ghost"
+            asChild
+            className="hidden md:flex py-2 h-auto w-auto px-2 sm:px-4 text-muted-foreground hover:text-foreground"
+          >
+            <Link href="/for-developers">For Developers</Link>
+          </Button>
+
           {/* For Government Button */}
           <Button
             variant="ghost"
@@ -348,6 +357,13 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 For Company
+              </Link>
+              <Link
+                href="/for-developers"
+                className="text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                For Developers
               </Link>
               <Link
                 href="/for-government"
