@@ -12,15 +12,26 @@ interface TopLanguagesProps {
 
 export function TopLanguages({ languages }: TopLanguagesProps) {
     const { theme } = useTheme();
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
 
     if (!languages || languages.length === 0) return null;
 
     // Helper to determine color based on theme
     const getLanguageColor = (langColor?: string) => {
+        if (!mounted) return langColor || "var(--neon-primary)";
         if (theme === 'blackwhite') {
-            return "var(--neon-primary)"; // Or "white" / "var(--foreground)" for strict B&W
+            return "var(--neon-primary)";
         }
         return langColor || "var(--neon-primary)";
+    };
+
+    const getDisplayNameClass = () => {
+        if (!mounted) return "text-zinc-300";
+        return theme === 'blackwhite' ? "text-foreground" : "text-zinc-300";
     };
 
     return (
@@ -38,7 +49,7 @@ export function TopLanguages({ languages }: TopLanguagesProps) {
                     return (
                         <div key={lang.name} className="space-y-1">
                             <div className="flex justify-between text-xs font-mono">
-                                <span className={theme === 'blackwhite' ? "text-foreground" : "text-zinc-300"}>
+                                <span className={getDisplayNameClass()}>
                                     {lang.name}
                                 </span>
                                 <span className="text-muted-foreground">{(lang.percentage * 100).toFixed(1)}%</span>
@@ -47,7 +58,7 @@ export function TopLanguages({ languages }: TopLanguagesProps) {
                                 <div
                                     className="h-full rounded-full transition-all duration-1000 ease-out"
                                     style={{
-                                        width: `${lang.percentage * 100}%`,
+                                        width: `${(lang.percentage * 100).toFixed(4)}%`,
                                         backgroundColor: displayColor,
                                         boxShadow: `0 0 10px ${displayColor}`
                                     }}

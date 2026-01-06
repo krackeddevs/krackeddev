@@ -190,6 +190,19 @@ export async function grantXP(
         });
 
     if (eventError) {
+        // Handle duplicate key error (unique constraint violation)
+        // This happens if multiple requests try to grant the same daily XP at once
+        // or if the user already received XP for this unique constraint.
+        if ((eventError as any).code === '23505') {
+            return {
+                success: true, // The goal was already achieved previously
+                newXP: currentXP,
+                newLevel: currentLevel,
+                leveledUp: false,
+                xpGained: 0
+            };
+        }
+
         console.error('Failed to create xp_event:', JSON.stringify(eventError, null, 2));
         console.error('Event details:', { userId, eventType, amount, metadata });
         // CRITICAL: Do NOT update user profile if event logging failed (likely unique constraint violation)

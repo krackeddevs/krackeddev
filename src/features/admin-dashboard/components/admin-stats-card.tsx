@@ -41,20 +41,20 @@ export function AdminStatsCard({
     }
 
     return (
-        <Card className="border-2 border-border bg-card/40 backdrop-blur-sm hover:border-neon-primary hover:bg-neon-primary/5 hover:shadow-[0_0_30px_var(--neon-primary)] hover:-translate-y-1 transition-all duration-300">
+        <Card className="border-2 border-border/50 bg-card/40 backdrop-blur-sm hover:border-[var(--neon-primary)] hover:bg-[var(--neon-primary)]/5 hover:shadow-[0_0_30px_rgba(var(--neon-primary-rgb),0.1)] hover:-translate-y-1 transition-all duration-300 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium font-mono text-neon-primary uppercase">{title}</CardTitle>
-                <Icon className="h-4 w-4 text-neon-primary" />
+                <CardTitle className="text-[10px] font-bold font-mono text-[var(--neon-primary)] uppercase tracking-wider">{title}</CardTitle>
+                <Icon className="h-4 w-4 text-[var(--neon-primary)] group-hover:scale-110 transition-transform" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold font-mono text-foreground">{value}</div>
+                <div className="text-2xl font-black font-mono text-foreground tracking-tight">{value}</div>
                 {(description || trend) && (
                     <div className="flex items-center gap-2 mt-1">
                         {trend && (
                             <span
                                 className={cn(
-                                    "flex items-center gap-1 text-xs font-medium font-mono",
-                                    trend.isPositive ? "text-neon-primary" : "text-red-500"
+                                    "flex items-center gap-1 text-[10px] font-bold font-mono uppercase",
+                                    trend.isPositive ? "text-[var(--neon-primary)]" : "text-red-500/80"
                                 )}
                             >
                                 {trend.isPositive ? (
@@ -66,7 +66,7 @@ export function AdminStatsCard({
                             </span>
                         )}
                         {description && (
-                            <p className="text-xs text-muted-foreground font-mono">{description}</p>
+                            <p className="text-[10px] text-foreground/40 font-mono uppercase tracking-tight">{description}</p>
                         )}
                     </div>
                 )}

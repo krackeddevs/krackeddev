@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import { AppShell } from "@/components/app-shell";
 import { cn } from "@/lib/utils";
 import { SupabaseProvider } from "@/context/SupabaseContext";
 import { LoginModal } from "@/components/LoginModal";
@@ -12,6 +12,7 @@ import QueryProvider from "@/components/providers/query-provider";
 import { ParallaxProvider } from "@/components/providers/parallax-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ChatOverlay } from "@/features/chat/components/chat-overlay";
+import { FloatingSocialNav } from "@/components/floating-social-nav";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -93,7 +94,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-mono antialiased flex flex-col"
+          "min-h-screen bg-background font-mono antialiased flex flex-col transition-colors duration-300 relative"
         )}
       >
         <ThemeProvider
@@ -102,25 +103,30 @@ export default function RootLayout({
           enableSystem={true}
           disableTransitionOnChange
           storageKey="krackeddev-theme"
-          themes={["light", "dark", "blackwhite"]}
+          themes={["light", "dark", "monochrome-light", "monochrome-dark"]}
         >
-          <ParallaxProvider>
-            <SupabaseProvider>
-              <QueryProvider>
-                <NuqsAdapter>
-                  <MusicPlayer startPlaying={true} />
-                  <SoundToggle />
-                  <Navbar />
-                  <div className="flex-grow">{children}</div>
-                  <Toaster theme="dark" position="top-center" offset={16} />
-                  <LoginModal />
-                  <ChatOverlay />
-                  <Analytics />
-                  <SpeedInsights />
-                </NuqsAdapter>
-              </QueryProvider>
-            </SupabaseProvider>
-          </ParallaxProvider>
+          <div className="absolute inset-0 pointer-events-none opacity-40 grid-background z-0" />
+          <div className="relative z-10 flex flex-col flex-grow">
+            <ParallaxProvider>
+              <SupabaseProvider>
+                <QueryProvider>
+                  <NuqsAdapter>
+                    <MusicPlayer startPlaying={true} />
+                    <SoundToggle />
+                    <AppShell>
+                      {children}
+                    </AppShell>
+                    <Toaster theme="dark" position="top-center" offset={16} />
+                    <LoginModal />
+                    <ChatOverlay />
+                    <FloatingSocialNav />
+                    <Analytics />
+                    <SpeedInsights />
+                  </NuqsAdapter>
+                </QueryProvider>
+              </SupabaseProvider>
+            </ParallaxProvider>
+          </div>
         </ThemeProvider>
       </body>
     </html>

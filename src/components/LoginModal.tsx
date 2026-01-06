@@ -15,7 +15,7 @@ type ViewState =
   | "forgot-password-success";
 
 const LastUsedBadge = () => (
-  <span className="absolute -top-2 -right-2 bg-neon-primary text-black text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-tighter shadow-[0_0_10px_rgba(21,128,61,0.5)] z-20">
+  <span className="absolute -top-2 -right-2 bg-neon-primary text-background text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-tighter shadow-[0_0_10px_rgba(21,128,61,0.5)] z-20">
     Last Used
   </span>
 );
@@ -193,13 +193,13 @@ export const LoginModal = () => {
       />
 
       {/* Modal Content */}
-      <div className="relative z-10 w-full max-w-md mx-4 animate-in fade-in-0 zoom-in-95 duration-200">
-        <div className="bg-card border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)]">
+      <div className="relative z-10 w-full max-w-md mx-4 animate-in fade-in-0 zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+        <div className="bg-card border border-neon-primary shadow-[0_0_30px_rgba(21,128,61,0.3)] flex flex-col max-h-full">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-neon-primary/30">
+          <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-neon-primary/30 shrink-0">
             <h2
               id="login-modal-title"
-              className="text-lg font-bold text-green-400 uppercase tracking-wider"
+              className="text-base md:text-lg font-bold text-green-400 uppercase tracking-wider"
             >
               {isAuthenticated
                 ? "Your Profile"
@@ -224,7 +224,7 @@ export const LoginModal = () => {
           </div>
 
           {/* Body */}
-          <div className="p-6">
+          <div className="p-4 md:p-6 overflow-y-auto">
             {isAuthenticated && user ? (
               // Logged in state
               <div className="space-y-6">
@@ -253,7 +253,7 @@ export const LoginModal = () => {
                   <Link
                     href="/profile"
                     onClick={closeLoginModal}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-background font-semibold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all"
                   >
                     <User className="w-4 h-4" />
                     View Profile
@@ -349,7 +349,7 @@ export const LoginModal = () => {
                   <button
                     type="submit"
                     disabled={loading || !email}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-background font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
                   >
                     <Mail className="w-4 h-4" />
                     {loading ? "Sending..." : "Send Reset Link"}
@@ -368,18 +368,19 @@ export const LoginModal = () => {
               // Logged out state - login/signup form
               <div className="space-y-6">
                 {/* Welcome Section */}
-                <div className="flex flex-col items-center text-center space-y-2 mb-4">
+                {/* Welcome Section */}
+                <div className="flex flex-col items-center text-center space-y-1 mb-2 md:space-y-2 md:mb-4">
                   <div className="relative">
                     <Image
                       src="/logo/logo-old.png"
                       alt="Kracked Devs Logo"
-                      width={96}
-                      height={96}
-                      className="w-24 h-24 object-cover p-0.5 bg-green-400"
+                      width={80}
+                      height={80}
+                      className="w-12 h-12 md:w-24 md:h-24 object-cover p-0.5 bg-green-400"
                     />
                   </div>
-                  <p className="text-sm text-white">Welcome to Kracked Devs!</p>
-                  <p className="text-white/50">
+                  <p className="text-sm text-white font-bold tracking-tight">Welcome to Kracked Devs</p>
+                  <p className="text-white/50 text-xs hidden md:block">
                     A community of cracked developers who want to level up
                     together.
                   </p>
@@ -390,11 +391,11 @@ export const LoginModal = () => {
                   <div className="relative">
                     <button
                       onClick={handleGithubLogin}
-                      className="bg-white text-black border border-black flex items-center justify-center gap-3 w-full px-4 py-4 font-bold uppercase tracking-wider text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
+                      className="bg-white text-black border border-black flex items-center justify-center gap-2 md:gap-3 w-full px-4 py-2.5 md:py-4 font-bold uppercase tracking-wider text-xs md:text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
                     >
                       <svg
                         viewBox="0 0 24 24"
-                        className="w-5 h-5 fill-current"
+                        className="w-4 h-4 md:w-5 md:h-5 fill-current"
                         aria-hidden="true"
                       >
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
@@ -412,7 +413,7 @@ export const LoginModal = () => {
                   <div className="relative">
                     <button
                       onClick={handleGoogleLogin}
-                      className="bg-white text-black border border-black flex items-center justify-center gap-3 w-full px-4 py-4 font-bold uppercase tracking-wider text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
+                      className="bg-white text-black border border-black flex items-center justify-center gap-2 md:gap-3 w-full px-4 py-2.5 md:py-4 font-bold uppercase tracking-wider text-xs md:text-sm hover:shadow-[0_0_30px_rgba(21,128,61,0.6)] transition-all group"
                     >
                       <svg
                         viewBox="0 0 24 24"
@@ -461,7 +462,7 @@ export const LoginModal = () => {
                         onKeyDown={(e) => e.stopPropagation()}
                         required
                         autoComplete="email"
-                        className="w-full px-4 py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                        className="w-full px-4 py-2.5 md:py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary text-sm"
                       />
                       <input
                         type="password"
@@ -476,12 +477,12 @@ export const LoginModal = () => {
                             ? "new-password"
                             : "current-password"
                         }
-                        className="w-full px-4 py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary"
+                        className="w-full px-4 py-2.5 md:py-3 bg-background border border-neon-primary/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-neon-primary text-sm"
                       />
                       <button
                         type="submit"
                         disabled={loading}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-neon-primary text-black font-bold uppercase tracking-wider text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 md:py-3 bg-neon-primary text-background font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-neon-primary/90 transition-all disabled:opacity-50"
                       >
                         <Mail className="w-4 h-4" />
                         {loading

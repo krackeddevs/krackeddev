@@ -64,7 +64,7 @@ export function JobsFilter() {
                 handleSearch();
               }
             }}
-            className="bg-background/80 border-border text-foreground placeholder:text-muted-foreground pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-neon-cyan transition-all group-hover:border-foreground/50 [color-scheme:dark]"
+            className="bg-background/80 border-border text-foreground placeholder:text-muted-foreground pl-4 pr-9 h-8 md:h-10 text-xs md:text-sm rounded-none focus-visible:ring-0 focus-visible:border-[var(--neon-cyan)] transition-all group-hover:border-foreground/50 [color-scheme:dark]"
             style={{ color: 'hsl(var(--foreground))' }}
           />
           {localSearch && (
@@ -73,15 +73,15 @@ export function JobsFilter() {
                 setLocalSearch("");
                 setSearch(null);
               }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-neon-cyan/20 rounded-sm transition-colors group"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-[var(--neon-cyan)]/20 rounded-sm transition-colors group"
               aria-label="Clear search"
             >
-              <X className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground group-hover:text-neon-cyan" />
+              <X className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground group-hover:text-[var(--neon-cyan)]" />
             </button>
           )}
         </div>
         <Button
-          className="bg-card text-neon-cyan border border-neon-cyan/50 hover:bg-neon-cyan hover:text-black h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm transition-all shadow-[0_0_10px_var(--neon-cyan)] hover:shadow-[0_0_20px_var(--neon-cyan)]"
+          className="bg-card text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/50 hover:bg-[var(--neon-cyan)] hover:text-black h-8 md:h-10 rounded-none px-6 font-mono text-xs md:text-sm transition-all shadow-[0_0_10px_var(--neon-cyan)] hover:shadow-[0_0_20px_var(--neon-cyan)]"
           variant="default"
           onClick={handleSearch}
         >
@@ -103,9 +103,9 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-card/50 border-border text-muted-foreground hover:text-neon-cyan hover:border-neon-cyan/50 hover:bg-neon-cyan/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  "bg-card/50 border-border text-muted-foreground hover:text-[var(--neon-cyan)] hover:border-[var(--neon-cyan)]/50 hover:bg-[var(--neon-cyan)]/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   location &&
-                  "text-neon-cyan border-neon-cyan bg-neon-cyan/10 shadow-[0_0_10px_var(--neon-cyan)]"
+                  "text-[var(--neon-cyan)] border-[var(--neon-cyan)] bg-[var(--neon-cyan)]/10 shadow-[0_0_10px_var(--neon-cyan)]"
                 )}
               >
                 <MapPin className="w-3 h-3 md:w-4 md:h-4" />
@@ -129,20 +129,20 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-popover border-neon-cyan/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+              className="w-56 bg-popover border-[var(--neon-cyan)]/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
-              <DropdownMenuLabel className="text-neon-cyan font-mono text-xs uppercase tracking-wider">
+              <DropdownMenuLabel className="text-[var(--neon-cyan)] font-mono text-xs uppercase tracking-wider">
                 Select Location
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-neon-cyan/20" />
+              <DropdownMenuSeparator className="bg-[var(--neon-cyan)]/20" />
               <DropdownMenuRadioGroup
                 value={location || ""}
                 onValueChange={(val) => setLocation(val || null)}
               >
                 <DropdownMenuRadioItem
                   value=""
-                  className="focus:bg-neon-cyan/10 focus:text-neon-cyan cursor-pointer font-mono text-xs"
+                  className="focus:bg-[var(--neon-cyan)]/10 focus:text-[var(--neon-cyan)] cursor-pointer font-mono text-xs"
                 >
                   Any Location
                 </DropdownMenuRadioItem>
@@ -150,7 +150,7 @@ export function JobsFilter() {
                   <DropdownMenuRadioItem
                     key={loc}
                     value={loc}
-                    className="focus:bg-neon-cyan/10 focus:text-neon-cyan cursor-pointer font-mono text-xs"
+                    className="focus:bg-[var(--neon-cyan)]/10 focus:text-[var(--neon-cyan)] cursor-pointer font-mono text-xs"
                   >
                     {loc}
                   </DropdownMenuRadioItem>
@@ -165,9 +165,9 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-card/50 border-border text-muted-foreground hover:text-neon-purple hover:border-neon-purple/50 hover:bg-neon-purple/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  "bg-card/50 border-border text-muted-foreground hover:text-[var(--neon-purple)] hover:border-[var(--neon-purple)]/50 hover:bg-[var(--neon-purple)]/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   type &&
-                  "text-neon-purple border-neon-purple bg-neon-purple/10 shadow-[0_0_10px_var(--neon-purple)]"
+                  "text-[var(--neon-purple)] border-[var(--neon-purple)] bg-[var(--neon-purple)]/10 shadow-[0_0_10px_var(--neon-purple)]"
                 )}
               >
                 <Briefcase className="w-3 h-3 md:w-4 md:h-4" />
@@ -191,13 +191,13 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-popover border-neon-purple/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+              className="w-56 bg-popover border-[var(--neon-purple)]/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
-              <DropdownMenuLabel className="text-neon-purple font-mono text-xs uppercase tracking-wider">
+              <DropdownMenuLabel className="text-[var(--neon-purple)] font-mono text-xs uppercase tracking-wider">
                 Select Type
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-neon-purple/20" />
+              <DropdownMenuSeparator className="bg-[var(--neon-purple)]/20" />
               <DropdownMenuRadioGroup
                 value={type || ""}
                 onValueChange={(val) => setType(val || null)}
@@ -227,9 +227,9 @@ export function JobsFilter() {
               <Button
                 variant="outline"
                 className={cn(
-                  "bg-card/50 border-border text-muted-foreground hover:text-neon-lime hover:border-neon-lime/50 hover:bg-neon-lime/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
+                  "bg-card/50 border-border text-muted-foreground hover:text-[var(--neon-lime)] hover:border-[var(--neon-lime)]/50 hover:bg-[var(--neon-lime)]/5 rounded-none h-8 md:h-10 text-xs md:text-sm gap-2 transition-all",
                   (salaryMin || 0) > 0 &&
-                  "text-neon-lime border-neon-lime bg-neon-lime/10 shadow-[0_0_10px_var(--neon-lime)]"
+                  "text-[var(--neon-lime)] border-[var(--neon-lime)] bg-[var(--neon-lime)]/10 shadow-[0_0_10px_var(--neon-lime)]"
                 )}
               >
                 <DollarSign className="w-3 h-3 md:w-4 md:h-4" />
@@ -255,13 +255,13 @@ export function JobsFilter() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 bg-popover border-neon-lime/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+              className="w-56 bg-popover border-[var(--neon-lime)]/20 text-popover-foreground rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)]"
               align="start"
             >
-              <DropdownMenuLabel className="text-neon-lime font-mono text-xs uppercase tracking-wider">
+              <DropdownMenuLabel className="text-[var(--neon-lime)] font-mono text-xs uppercase tracking-wider">
                 Minimum Salary
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-neon-lime/20" />
+              <DropdownMenuSeparator className="bg-[var(--neon-lime)]/20" />
               <DropdownMenuRadioGroup
                 value={(salaryMin || 0).toString()}
                 onValueChange={(v) => setSalaryMin(parseInt(v) || null)}

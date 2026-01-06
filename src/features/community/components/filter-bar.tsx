@@ -1,9 +1,10 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react"; // Removed useTransition as it might be overkill for now
+import { useCallback, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce"; // Assuming we have this or I'll implement simple timeout
 
@@ -65,12 +66,12 @@ export function FilterBar() {
     };
 
     return (
-        <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
-            <div className="relative w-full sm:w-[300px]">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-8">
+            <div className="relative w-full sm:w-[320px] group">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/50 group-focus-within:text-[var(--neon-primary)] transition-colors" />
                 <Input
-                    placeholder="Search questions..."
-                    className="pl-8 bg-muted/50 border-input/50 focus-visible:ring-1"
+                    placeholder="SEARCH INTERFACE..."
+                    className="pl-10 bg-card/40 border-border/50 focus-visible:ring-1 focus-visible:ring-[var(--neon-primary)]/50 font-mono text-[10px] tracking-widest uppercase h-10 rounded-none transition-all placeholder:text-foreground/40"
                     value={searchValue}
                     onChange={onSearchChange}
                     onKeyDown={onKeyDown}
@@ -78,18 +79,26 @@ export function FilterBar() {
                 />
             </div>
 
-            <div className="flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border">
-                {["newest", "top", "unanswered"].map((filter) => (
-                    <Button
-                        key={filter}
-                        variant={currentFilter === filter ? "secondary" : "ghost"}
-                        size="sm"
-                        onClick={() => handleFilterChange(filter)}
-                        className={`capitalize text-xs h-8 ${currentFilter === filter ? "bg-background shadow-sm" : "hover:bg-muted/50"}`}
-                    >
-                        {filter}
-                    </Button>
-                ))}
+            <div className="flex items-center gap-1 bg-card/20 p-1 border border-border/50 rounded-none backdrop-blur-sm">
+                {["newest", "top", "unanswered"].map((filter) => {
+                    const isActive = currentFilter === filter;
+                    return (
+                        <Button
+                            key={filter}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleFilterChange(filter)}
+                            className={cn(
+                                "capitalize text-[9px] h-8 font-bold font-mono tracking-widest px-4 rounded-none transition-all",
+                                isActive
+                                    ? "bg-[var(--neon-primary)] text-background shadow-[0_0_15px_rgba(var(--neon-primary-rgb),0.3)] hover:bg-[var(--neon-primary)]/90"
+                                    : "text-foreground/60 hover:text-foreground hover:bg-foreground/5"
+                            )}
+                        >
+                            {filter}
+                        </Button>
+                    );
+                })}
             </div>
         </div>
     );

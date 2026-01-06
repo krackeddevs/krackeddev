@@ -11,16 +11,18 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ startPlaying = true, o
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isMuted, setIsMuted] = useState(() => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem('soundMuted') === 'true';
+            const stored = localStorage.getItem('soundMuted');
+            return stored === null ? true : stored === 'true';
         }
-        return false;
+        return true; // Default to muted on server/initial render
     });
     const [audioReady, setAudioReady] = useState(false);
 
     // Check if audio is muted
     const isAudioMuted = () => {
-        if (typeof window === 'undefined') return false;
-        return localStorage.getItem('soundMuted') === 'true';
+        if (typeof window === 'undefined') return true;
+        const stored = localStorage.getItem('soundMuted');
+        return stored === null ? true : stored === 'true';
     };
 
     // Function to try playing audio
@@ -104,7 +106,7 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ startPlaying = true, o
         const handleSoundToggle = (e: CustomEvent) => {
             const newMuted = e.detail.muted;
             setIsMuted(newMuted);
-            
+
             const audio = audioRef.current;
             if (audio) {
                 if (newMuted) {

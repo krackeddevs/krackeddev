@@ -1,61 +1,26 @@
 "use client";
 
-import { ReactNode, useState } from 'react';
-import { AdminSidebar, AdminSidebarContent } from '../components/admin-sidebar';
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ReactNode } from 'react';
+import { AdminSidebar } from '../components/admin-sidebar';
 
 interface AdminLayoutProps {
     children: ReactNode;
 }
 
 export function AdminLayout({ children }: AdminLayoutProps) {
-    const [open, setOpen] = useState(false);
-
     return (
-        <div className="flex flex-col h-[calc(100vh-theme(spacing.16)-theme(spacing.8))] w-full bg-background text-foreground relative overflow-hidden">
-            {/* Grid Overlay */}
-            <div
-                className="fixed inset-0 pointer-events-none z-0 opacity-20"
-                style={{
-                    backgroundImage: 'var(--grid-background)',
-                    backgroundSize: '20px 20px'
-                }}
-            />
+        <div className="flex min-h-[calc(100vh-84px)] relative transition-colors duration-300">
+            {/* Background Effects (Admin Specific) */}
+            <div className="absolute inset-0 pointer-events-none z-0">
+                <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[var(--neon-primary)]/[0.02] rounded-full blur-3xl opacity-20" />
+                <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[var(--neon-cyan)]/[0.02] rounded-full blur-3xl opacity-20" />
+            </div>
 
-            {/* Scanlines Effect */}
-            <div
-                className="fixed inset-0 pointer-events-none z-10 opacity-10"
-                style={{
-                    background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scanline-color) 2px, var(--scanline-color) 4px)'
-                }}
-            />
-
-            <div className="flex flex-1 min-h-0 relative z-20">
-                {/* Desktop Sidebar */}
+            <div className="relative z-10 flex w-full">
                 <AdminSidebar />
 
-                <main className="flex-1 flex flex-col min-h-0">
-                    {/* Mobile Header */}
-                    <div className="md:hidden border-b border-border bg-card/95 backdrop-blur p-4 flex items-center shrink-0">
-                        <Sheet open={open} onOpenChange={setOpen}>
-                            <SheetTrigger asChild>
-                                <Button variant="ghost" size="icon" className="mr-2 hover:bg-neon-primary/10 hover:text-neon-primary">
-                                    <Menu className="h-5 w-5" />
-                                    <span className="sr-only">Toggle Menu</span>
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent side="left" className="w-[80%] max-w-[300px] p-0 bg-background border-border">
-                                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                                <AdminSidebarContent className="p-4" onLinkClick={() => setOpen(false)} />
-                            </SheetContent>
-                        </Sheet>
-                        <div className="font-bold text-lg font-mono text-neon-primary">ADMIN PANEL</div>
-                    </div>
-
-                    {/* Content Area - Scrollable */}
-                    <div className="flex-1 overflow-y-auto p-4 md:p-8">
+                <main className="flex-1 bg-transparent relative">
+                    <div className="flex-1 p-4 md:p-8">
                         {children}
                     </div>
                 </main>

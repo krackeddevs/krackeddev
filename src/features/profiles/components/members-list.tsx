@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { MapPin, User, Calendar, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Member } from "../actions";
+import { cn } from "@/lib/utils";
 
 interface MembersListProps {
     members: Member[];
@@ -76,33 +77,30 @@ export function MembersList({ members, currentPage, totalPages, total, searchQue
     return (
         <div className="space-y-6">
             {/* Search Input */}
-            <div className="relative group">
-                <div className="absolute inset-0 bg-primary/10 dark:bg-neon-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary dark:text-neon-primary" />
-                    <input
-                        type="text"
-                        placeholder="Search by name, role, or location..."
-                        value={searchInput}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-card/80 dark:bg-black/40 backdrop-blur-md border border-border dark:border-neon-primary/30 focus:border-primary dark:focus:border-neon-primary outline-none font-mono text-sm text-foreground placeholder:text-muted-foreground/70 transition-all rounded-lg shadow-sm dark:shadow-[0_0_10px_rgba(34,211,238,0.05)] focus:shadow-md dark:focus:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
-                    />
-                </div>
+            <div className="relative group max-w-2xl mx-auto mb-16">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/50 group-focus-within:text-[var(--neon-primary)] transition-colors" />
+                <input
+                    type="text"
+                    placeholder="LOCATE OPERATIVES (NAME, ROLE, LOCATION)..."
+                    value={searchInput}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 bg-card/40 backdrop-blur-md border border-border/50 focus:border-[var(--neon-primary)]/50 focus:ring-1 focus:ring-[var(--neon-primary)]/20 outline-none font-mono text-[10px] tracking-[0.2em] uppercase text-foreground placeholder:text-foreground/40 transition-all rounded-none"
+                />
             </div>
 
             {/* Results count */}
             {searchInput && (
-                <p className="text-primary dark:text-neon-primary font-mono text-sm tracking-widest uppercase">
-                    Detecting signatures: {members.length} of {total}
+                <p className="text-[var(--neon-primary)] font-mono text-[10px] tracking-[0.3em] uppercase mb-8 text-center animate-pulse">
+                    IDENTIFYING SIGNATURES: {members.length} OF {total} MATCHES
                 </p>
             )}
 
             {/* Members Grid */}
             {members.length === 0 ? (
-                <div className="text-center py-20 border border-dashed border-border/50 rounded-xl bg-muted/20 dark:bg-card/10">
-                    <User className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
-                    <p className="text-muted-foreground font-mono">
-                        {searchInput ? "No signatures match query protocols." : "No members found."}
+                <div className="text-center py-20 border border-border/30 rounded-none bg-card/5">
+                    <User className="w-12 h-12 text-foreground/10 mx-auto mb-4" />
+                    <p className="text-foreground/30 font-mono text-[10px] tracking-widest uppercase">
+                        {searchInput ? "NO SIGNATURES MATCH QUERY PROTOCOLS." : "NO OPERATIVES REGISTERED."}
                     </p>
                 </div>
             ) : (
@@ -113,51 +111,49 @@ export function MembersList({ members, currentPage, totalPages, total, searchQue
                             href={`/profile/${member.username}`}
                             className="block group relative"
                         >
-                            <div className="absolute inset-0 bg-primary/5 dark:bg-neon-primary/5 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
-                            <div className="relative flex items-center gap-4 p-5 bg-card/50 dark:bg-card/20 backdrop-blur-md border border-border dark:border-white/10 group-hover:border-primary/50 dark:group-hover:border-neon-primary/50 transition-all duration-300 rounded-xl h-[96px] overflow-hidden group-hover:-translate-y-1 group-hover:shadow-md dark:group-hover:shadow-[0_4px_20px_rgba(34,211,238,0.15)]">
+                            <div className="relative flex items-center gap-5 p-5 bg-card/40 backdrop-blur-md border border-border/50 group-hover:border-[var(--neon-primary)]/50 group-hover:bg-foreground/[0.02] transition-all duration-300 rounded-none h-[110px] overflow-hidden">
                                 {/* Level Badge */}
-                                <div className="absolute top-0 right-0 bg-primary/10 dark:bg-neon-primary/10 border-l border-b border-primary/20 dark:border-neon-primary/20 px-2 py-0.5 rounded-bl-lg">
-                                    <span className="text-[10px] font-mono text-primary dark:text-neon-primary font-bold">LVL {member.level || 1}</span>
+                                <div className="absolute top-0 right-0 bg-[var(--neon-primary)]/10 border-l border-b border-border/50 px-3 py-1">
+                                    <span className="text-[9px] font-mono text-[var(--neon-primary)] font-bold tracking-tight">LV. {member.level || 1}</span>
                                 </div>
 
                                 {/* Avatar */}
                                 <div className="relative shrink-0">
-                                    {member.avatar_url ? (
-                                        <div className="relative">
-                                            <div className="absolute inset-0 rounded-full bg-primary dark:bg-neon-primary blur-md opacity-20 group-hover:opacity-60 transition-opacity" />
+                                    <div className="w-16 h-16 rounded-none border border-border/50 p-1 group-hover:border-[var(--neon-primary)]/50 transition-colors bg-background/50">
+                                        {member.avatar_url ? (
                                             <img
                                                 src={member.avatar_url}
                                                 alt={member.username || "User"}
-                                                className="relative w-14 h-14 rounded-full border-2 border-background dark:border-white/20 group-hover:border-primary dark:group-hover:border-neon-primary transition-colors object-cover"
+                                                className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all"
                                             />
-                                        </div>
-                                    ) : (
-                                        <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center border-2 border-border dark:border-white/10 group-hover:border-primary/50 dark:group-hover:border-neon-primary/50 transition-colors">
-                                            <User className="w-6 h-6 text-muted-foreground" />
-                                        </div>
-                                    )}
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-muted/20">
+                                                <User className="w-6 h-6 text-foreground/20" />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 {/* Info */}
-                                <div className="flex-1 min-w-0 flex flex-col justify-center gap-1">
-                                    <h3 className="font-bold font-mono text-foreground group-hover:text-primary dark:group-hover:text-neon-primary transition-colors truncate text-base tracking-tight">
+                                <div className="flex-1 min-w-0 flex flex-col justify-center gap-1.5">
+                                    <h3 className="font-bold font-mono text-foreground uppercase group-hover:text-[var(--neon-primary)] transition-colors truncate text-sm tracking-tighter">
                                         {member.full_name || member.username || "Anonymous"}
                                     </h3>
 
-                                    <div className="text-xs text-primary/80 dark:text-neon-primary/70 font-mono uppercase tracking-wider truncate">
+                                    <div className="text-[9px] text-[var(--neon-primary)]/80 font-mono font-black uppercase tracking-[0.2em] truncate">
                                         {member.developer_role || "DEVELOPER"}
                                     </div>
 
-                                    <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono mt-1 truncate">
+                                    <div className="flex items-center gap-3 text-[9px] text-foreground/60 font-mono mt-1 truncate uppercase tracking-tight">
                                         {member.location ? (
                                             <span className="flex items-center gap-1 truncate">
-                                                <MapPin className="w-3 h-3 text-muted-foreground/70 dark:text-white/40" />
-                                                <span className="truncate max-w-[120px]">{member.location}</span>
+                                                <MapPin className="w-2.5 h-2.5 opacity-60" />
+                                                <span className="truncate">{member.location}</span>
                                             </span>
                                         ) : (
                                             <span className="flex items-center gap-1">
-                                                <Calendar className="w-3 h-3 text-muted-foreground/70 dark:text-white/40" />
-                                                <span>Joined {formatDate(member.created_at)}</span>
+                                                <Calendar className="w-2.5 h-2.5 opacity-60" />
+                                                <span>SINCE {formatDate(member.created_at)}</span>
                                             </span>
                                         )}
                                     </div>
@@ -170,37 +166,37 @@ export function MembersList({ members, currentPage, totalPages, total, searchQue
 
             {/* Pagination Controls */}
             {!searchInput && totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-8">
+                <div className="flex items-center justify-center gap-2 mt-16">
                     {/* Previous Button */}
                     <Link
                         href={currentPage > 1 ? `/members?page=${currentPage - 1}` : '#'}
-                        className={`flex items-center gap-1 px-4 py-2 font-mono text-sm border transition-all rounded ${currentPage > 1
-                            ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
-                            : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
+                        className={`group flex items-center gap-2 px-6 py-3 font-mono text-[10px] uppercase font-bold tracking-widest border transition-all rounded-none ${currentPage > 1
+                            ? 'border-border/50 text-foreground/60 hover:border-[var(--neon-primary)]/50 hover:text-[var(--neon-primary)] hover:bg-[var(--neon-primary)]/5'
+                            : 'border-border/20 text-foreground/20 cursor-not-allowed'
                             }`}
                         onClick={(e) => currentPage <= 1 && e.preventDefault()}
                     >
-                        <ChevronLeft className="w-4 h-4" />
-                        <span className="hidden sm:inline">Prev</span>
+                        <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+                        <span>PREV</span>
                     </Link>
 
                     {/* Page Numbers */}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                         {getPageNumbers().map((page, idx) =>
                             typeof page === 'number' ? (
                                 <Link
                                     key={idx}
                                     href={`/members?page=${page}`}
-                                    className={`px-3 py-2 font-mono text-sm border transition-all rounded min-w-[2.5rem] text-center ${currentPage === page
-                                        ? 'border-primary dark:border-neon-primary bg-primary/10 dark:bg-neon-primary/10 text-primary dark:text-neon-primary font-bold'
-                                        : 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
+                                    className={`px-4 py-3 font-mono text-[10px] font-bold border transition-all rounded-none min-w-[3rem] text-center ${currentPage === page
+                                        ? 'border-[var(--neon-primary)] bg-[var(--neon-primary)]/10 text-[var(--neon-primary)] shadow-[0_0_15px_rgba(var(--neon-primary-rgb),0.1)]'
+                                        : 'border-border/50 text-foreground/40 hover:border-[var(--neon-primary)]/30 hover:text-foreground'
                                         }`}
                                 >
-                                    {page}
+                                    {page.toString().padStart(2, '0')}
                                 </Link>
                             ) : (
-                                <span key={idx} className="px-2 text-muted-foreground">
-                                    ...
+                                <span key={idx} className="px-3 py-3 font-mono text-[10px] text-foreground/20">
+                                    ///
                                 </span>
                             )
                         )}
@@ -209,14 +205,14 @@ export function MembersList({ members, currentPage, totalPages, total, searchQue
                     {/* Next Button */}
                     <Link
                         href={currentPage < totalPages ? `/members?page=${currentPage + 1}` : '#'}
-                        className={`flex items-center gap-1 px-4 py-2 font-mono text-sm border transition-all rounded ${currentPage < totalPages
-                            ? 'border-border dark:border-neon-primary/30 text-foreground hover:border-primary dark:hover:border-neon-primary hover:bg-primary/5 dark:hover:bg-neon-primary/10'
-                            : 'border-border/50 text-muted-foreground cursor-not-allowed opacity-50'
+                        className={`group flex items-center gap-2 px-6 py-3 font-mono text-[10px] uppercase font-bold tracking-widest border transition-all rounded-none ${currentPage < totalPages
+                            ? 'border-border/50 text-foreground/60 hover:border-[var(--neon-primary)]/50 hover:text-[var(--neon-primary)] hover:bg-[var(--neon-primary)]/5'
+                            : 'border-border/20 text-foreground/20 cursor-not-allowed'
                             }`}
                         onClick={(e) => currentPage >= totalPages && e.preventDefault()}
                     >
-                        <span className="hidden sm:inline">Next</span>
-                        <ChevronRight className="w-4 h-4" />
+                        <span>NEXT</span>
+                        <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </div>
             )}

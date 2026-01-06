@@ -67,51 +67,38 @@ export function LeaderboardTabs({ initialAllTimeData, currentUserId }: Leaderboa
 
     return (
         <Tabs defaultValue="all-time" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex justify-center mb-8">
-                <TabsList className="grid w-full max-w-2xl grid-cols-4 h-12 bg-muted/30 border border-border/50 p-1 rounded-full backdrop-blur-sm">
-                    <TabsTrigger
-                        value="all-time"
-                        className="rounded-full text-xs sm:text-sm font-medium data-[state=active]:bg-neon-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:text-black transition-all"
-                    >
-                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        <span className="hidden sm:inline">All Time</span>
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="week"
-                        className="rounded-full text-xs sm:text-sm font-medium data-[state=active]:bg-neon-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:text-black transition-all"
-                    >
-                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        <span className="hidden sm:inline">Week</span>
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="active"
-                        className="rounded-full text-xs sm:text-sm font-medium data-[state=active]:bg-neon-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:text-black transition-all"
-                    >
-                        <Activity className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        <span className="hidden sm:inline">Active</span>
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="bounties"
-                        className="rounded-full text-xs sm:text-sm font-medium data-[state=active]:bg-neon-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:text-black transition-all"
-                    >
-                        <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        <span className="hidden sm:inline">Bounties</span>
-                    </TabsTrigger>
+            <div className="flex justify-center mb-16">
+                <TabsList className="grid w-full max-w-3xl grid-cols-4 h-12 bg-card/40 border border-border/50 p-1 rounded-none backdrop-blur-md">
+                    {[
+                        { value: "all-time", label: "Global", icon: Clock },
+                        { value: "week", label: "Weekly", icon: Calendar },
+                        { value: "active", label: "Active", icon: Activity },
+                        { value: "bounties", label: "Hunters", icon: Trophy },
+                    ].map((tab) => (
+                        <TabsTrigger
+                            key={tab.value}
+                            value={tab.value}
+                            className="rounded-none text-[10px] font-bold font-mono uppercase tracking-[0.2em] data-[state=active]:bg-[var(--neon-primary)] data-[state=active]:text-background transition-all"
+                        >
+                            <tab.icon className="w-3.5 h-3.5 mr-2 hidden sm:inline" />
+                            {tab.label}
+                        </TabsTrigger>
+                    ))}
                 </TabsList>
             </div>
 
-            <TabsContent value="all-time" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                <div className="mb-4 text-center">
-                    <h2 className="text-2xl font-bold font-mono neon-text mb-2">Legends of Code</h2>
-                    <p className="text-muted-foreground">Top developers ranked by total lifetime XP.</p>
+            <TabsContent value="all-time" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 outline-none">
+                <div className="mb-8 border-l-2 border-[var(--neon-primary)] pl-4">
+                    <h2 className="text-xl font-black font-mono text-foreground uppercase tracking-tight">LEGENDS OF THE STACK</h2>
+                    <p className="text-[10px] font-mono text-foreground/40 uppercase tracking-widest mt-0.5">TOP OPERATIVES RANKED BY TOTAL LIFETIME XP.</p>
                 </div>
                 <LeaderboardTable data={initialAllTimeData} currentUserId={currentUserId} showSkills />
             </TabsContent>
 
-            <TabsContent value="week" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                <div className="mb-4 text-center">
-                    <h2 className="text-2xl font-bold font-mono neon-text mb-2">Weekly Rising Stars</h2>
-                    <p className="text-muted-foreground">Top XP earners over the last 7 days.</p>
+            <TabsContent value="week" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 outline-none">
+                <div className="mb-8 border-l-2 border-[var(--neon-primary)] pl-4">
+                    <h2 className="text-xl font-black font-mono text-foreground uppercase tracking-tight">RISING SIGNATURES</h2>
+                    <p className="text-[10px] font-mono text-foreground/40 uppercase tracking-widest mt-0.5">MOST ACTIVE INTELLIGENCE EARNERS OVER THE LAST 7 DAYS.</p>
                 </div>
                 {weeklyLoading ? (
                     <LoadingSpinner />
@@ -120,10 +107,10 @@ export function LeaderboardTabs({ initialAllTimeData, currentUserId }: Leaderboa
                 )}
             </TabsContent>
 
-            <TabsContent value="active" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                <div className="mb-4 text-center">
-                    <h2 className="text-2xl font-bold font-mono neon-text mb-2">Active Contributors</h2>
-                    <p className="text-muted-foreground">Most active developers in the last 30 days (GitHub + Community).</p>
+            <TabsContent value="active" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 outline-none">
+                <div className="mb-8 border-l-2 border-[var(--neon-primary)] pl-4">
+                    <h2 className="text-xl font-black font-mono text-foreground uppercase tracking-tight">ACTIVE OPERATIVES</h2>
+                    <p className="text-[10px] font-mono text-foreground/40 uppercase tracking-widest mt-0.5">PEAK ACTIVITY DETECTED IN LAST 30 DAYS (GITHUB + COMMUNITY).</p>
                 </div>
                 {contributorsLoading ? (
                     <LoadingSpinner />
@@ -132,10 +119,10 @@ export function LeaderboardTabs({ initialAllTimeData, currentUserId }: Leaderboa
                 )}
             </TabsContent>
 
-            <TabsContent value="bounties" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300">
-                <div className="mb-4 text-center">
-                    <h2 className="text-2xl font-bold font-mono neon-text mb-2">Top Bounty Hunters</h2>
-                    <p className="text-muted-foreground">Most successful hunters by wins and earnings.</p>
+            <TabsContent value="bounties" className="mt-0 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 outline-none">
+                <div className="mb-8 border-l-2 border-[var(--neon-primary)] pl-4">
+                    <h2 className="text-xl font-black font-mono text-foreground uppercase tracking-tight">ELITE HUNTERS</h2>
+                    <p className="text-[10px] font-mono text-foreground/40 uppercase tracking-widest mt-0.5">TOP SUCCESS RATE FOR BOUNTY TARGETS AND SYSTEM REWARDS.</p>
                 </div>
                 {huntersLoading ? (
                     <LoadingSpinner />

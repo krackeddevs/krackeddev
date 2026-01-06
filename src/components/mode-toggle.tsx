@@ -18,24 +18,27 @@ export function ModeToggle() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="border border-primary/20 hover:border-primary hover:bg-primary/10">
+                <Button variant="ghost" size="icon" className="border border-border hover:border-[var(--neon-primary)] hover:bg-[var(--neon-primary)]/10">
                     <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                     <span className="sr-only">Toggle theme</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setTheme("light")}>
-                    Light
+                <DropdownMenuItem onClick={() => setTheme("light")} className="font-mono text-xs uppercase tracking-wider">
+                    LIGHT NEON
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
-                    Dark
+                <DropdownMenuItem onClick={() => setTheme("dark")} className="font-mono text-xs uppercase tracking-wider">
+                    DARK NEON
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
-                    System
+                <DropdownMenuItem onClick={() => setTheme("monochrome-light")} className="font-mono text-xs uppercase tracking-wider">
+                    LIGHT NOIR
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("blackwhite")}>
-                    Monochrome
+                <DropdownMenuItem onClick={() => setTheme("monochrome-dark")} className="font-mono text-xs uppercase tracking-wider">
+                    DARK NOIR
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")} className="font-mono text-xs uppercase tracking-wider">
+                    SYSTEM
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

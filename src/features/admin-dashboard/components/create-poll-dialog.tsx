@@ -19,7 +19,7 @@ export function CreatePollDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-neon-cyan text-black hover:bg-neon-cyan/80">
+                <Button className="bg-foreground text-background hover:bg-foreground/90">
                     <Plus className="w-4 h-4 mr-2" />
                     Create Poll
                 </Button>

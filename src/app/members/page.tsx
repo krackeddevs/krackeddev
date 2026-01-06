@@ -27,51 +27,45 @@ export default async function MembersPage({
   const totalPages = Math.ceil(total / MEMBERS_PER_PAGE);
 
   return (
-    <main
-      className="min-h-screen bg-background text-foreground"
-      style={{
-        backgroundImage: 'var(--grid-background)',
-        backgroundSize: '20px 20px'
-      }}
-    >
-
+    <main className="min-h-screen pb-12 relative transition-colors duration-300">
       <CommunitySubNav />
 
       {/* Hero Header */}
-      <div className="relative border-b border-border overflow-hidden">
-        {/* Background glow - Only visible in dark mode or subtle green in light */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-primary/5 dark:bg-neon-primary/10 blur-[100px] -z-10 rounded-full opacity-50 pointer-events-none" />
+      <div className="container mx-auto px-4 py-8 relative z-10 max-w-6xl">
+        <div className="text-center space-y-4 mb-20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--neon-primary)]/10 border border-[var(--neon-primary)]/20 rounded-none mb-4">
+            <Users className="w-3 h-3 text-[var(--neon-primary)]" />
+            <span className="text-[10px] font-bold font-mono text-[var(--neon-primary)] tracking-[0.2em] uppercase">VERIFIED OPERATIVES</span>
+          </div>
 
-        <div className="container mx-auto px-4 py-12 max-w-6xl">
-          <div className="text-center space-y-4 relative z-10">
-            <h1
-              className="text-4xl md:text-7xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary via-foreground to-primary dark:from-neon-primary dark:via-white dark:to-neon-primary animate-pulse-slow glitch-text uppercase"
-              data-text="ACTIVE OPERATIVES"
-            >
-              ACTIVE OPERATIVES
-            </h1>
-            <p className="text-muted-foreground font-mono text-sm md:text-base tracking-widest uppercase">
-              {total} registered developers in network
-            </p>
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-foreground font-mono uppercase leading-none">
+            ACTIVE <br className="sm:hidden" /> NETWORK
+          </h1>
+          <p className="text-foreground/40 font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase max-w-2xl mx-auto">
+            {total} CRACKED DEVELOPERS IDENTIFIED IN GLOBAL DATABASE
+          </p>
+
+          <div className="flex justify-center pt-8">
+            <div className="h-px w-24 bg-gradient-to-r from-transparent via-[var(--neon-primary)]/50 to-transparent" />
           </div>
         </div>
-      </div>
 
-      {/* Members Grid */}
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {error ? (
-          <div className="text-center py-12 text-red-400 font-mono">
-            {error}
-          </div>
-        ) : (
-          <MembersList
-            members={members}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            total={total}
-            searchQuery={searchQuery}
-          />
-        )}
+        {/* Members Grid Container */}
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {error ? (
+            <div className="text-center py-12 text-red-400 font-mono">
+              {error}
+            </div>
+          ) : (
+            <MembersList
+              members={members}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              total={total}
+              searchQuery={searchQuery}
+            />
+          )}
+        </div>
       </div>
     </main>
   );

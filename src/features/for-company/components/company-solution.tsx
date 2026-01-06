@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, Zap, DollarSign, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const features = [
     {
@@ -35,8 +36,8 @@ export function CompanySolution() {
     return (
         <section className="py-24 bg-background relative overflow-hidden">
             {/* Background elements */}
-            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-neon-primary/5 blur-[100px] rounded-full" />
-            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-neon-cyan/5 blur-[100px] rounded-full" />
+            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[var(--neon-primary)] opacity-[0.02] blur-[100px] rounded-full" />
+            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-[var(--neon-cyan)] opacity-[0.02] blur-[100px] rounded-full" />
 
             <div className="container px-4 mx-auto relative z-10">
                 <div className="text-center mb-16">
@@ -46,11 +47,11 @@ export function CompanySolution() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-sm font-mono text-neon-primary tracking-widest uppercase mb-4">The Kracked Devs Difference</h2>
+                        <h2 className="text-sm font-mono text-[var(--neon-primary)] tracking-widest uppercase mb-4">The Kracked Devs Difference</h2>
                         <h3 className="text-3xl md:text-5xl font-bold font-mono text-foreground mb-6 uppercase">
-                            We Connect You to <span className="text-neon-primary">Real Talent</span>
+                            We Connect You to <span className="text-[var(--neon-primary)]">Real Talent</span>
                         </h3>
-                        <p className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed">
+                        <p className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed font-mono uppercase">
                             Fast. Affordable. Proven. The modern way to build your dev team.
                         </p>
                     </motion.div>
@@ -65,14 +66,14 @@ export function CompanySolution() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                         >
-                            <Card className="h-full bg-card/40 backdrop-blur-md border-border hover:border-neon-primary/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(21,128,61,0.1)]">
+                            <Card className="h-full bg-card border-border hover:border-[var(--neon-primary)]/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.05)] rounded-none">
                                 <CardContent className="p-8 flex items-start gap-6">
-                                    <div className={`p-3 rounded-xl bg-background border border-border ${feature.color} shadow-sm`}>
+                                    <div className={cn("p-3 rounded-none bg-background border border-border shadow-sm", feature.color)}>
                                         <feature.icon className="w-8 h-8" />
                                     </div>
                                     <div>
                                         <h4 className="text-xl font-bold font-mono text-foreground mb-3 uppercase">{feature.title}</h4>
-                                        <p className="text-muted-foreground leading-relaxed">
+                                        <p className="text-muted-foreground leading-relaxed font-mono text-sm uppercase">
                                             {feature.description}
                                         </p>
                                     </div>

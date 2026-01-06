@@ -25,26 +25,26 @@ export function AdminPageHeader({
         <div className="mb-8">
             {/* Breadcrumbs */}
             {breadcrumbs.length > 0 && (
-                <nav className="flex items-center gap-2 text-sm text-neon-primary/70 mb-4 overflow-x-auto font-mono">
+                <nav className="flex items-center gap-2 text-[10px] text-[var(--neon-primary)]/70 mb-4 overflow-x-auto font-mono tracking-widest uppercase">
                     <Link
                         href="/admin/dashboard"
-                        className="flex items-center gap-1 hover:text-neon-primary transition-colors"
+                        className="flex items-center gap-1 hover:text-[var(--neon-primary)] transition-colors"
                     >
-                        <Home className="w-4 h-4" />
-                        <span className="hidden sm:inline">DASHBOARD</span>
+                        <Home className="w-3 h-3" />
+                        <span className="hidden sm:inline">TERMINAL</span>
                     </Link>
                     {breadcrumbs.map((crumb, index) => (
                         <div key={index} className="flex items-center gap-2">
-                            <ChevronRight className="w-4 h-4 flex-shrink-0 text-neon-primary/50" />
+                            <ChevronRight className="w-3 h-3 flex-shrink-0 text-[var(--neon-primary)]/30" />
                             {crumb.href ? (
                                 <Link
                                     href={crumb.href}
-                                    className="hover:text-neon-primary transition-colors whitespace-nowrap uppercase"
+                                    className="hover:text-[var(--neon-primary)] transition-colors whitespace-nowrap"
                                 >
                                     {crumb.label}
                                 </Link>
                             ) : (
-                                <span className="text-neon-primary font-medium whitespace-nowrap uppercase">
+                                <span className="text-[var(--neon-primary)] font-bold whitespace-nowrap">
                                     {crumb.label}
                                 </span>
                             )}
@@ -54,14 +54,14 @@ export function AdminPageHeader({
             )}
 
             {/* Header with neon accent line */}
-            <div className="border-l-4 border-neon-primary pl-4 mb-4">
+            <div className="border-l-4 border-[var(--neon-primary)] pl-6 mb-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight font-mono text-neon-primary uppercase">
+                        <h1 className="text-3xl font-black tracking-tighter font-mono text-foreground uppercase">
                             {title}
                         </h1>
                         {description && (
-                            <p className="text-muted-foreground mt-2 font-mono text-sm">{description}</p>
+                            <p className="text-foreground/40 mt-1 font-mono text-[10px] uppercase tracking-wider">{description}</p>
                         )}
                     </div>
                     {actions && (
@@ -73,7 +73,7 @@ export function AdminPageHeader({
             </div>
 
             {/* Decorative line */}
-            <div className="h-px bg-gradient-to-r from-neon-primary/50 via-neon-primary/20 to-transparent" />
+            <div className="h-px bg-gradient-to-r from-[var(--neon-primary)]/40 via-[var(--neon-primary)]/10 to-transparent" />
         </div>
     );
 }
