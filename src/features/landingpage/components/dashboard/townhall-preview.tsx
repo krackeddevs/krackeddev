@@ -21,7 +21,7 @@ export function TownhallPreview() {
     }, []);
 
     return (
-        <div className="bg-card/40 border border-border/30 rounded-sm p-5 flex flex-col h-full backdrop-blur-sm shadow-sm">
+        <div className="bg-[#F9F9F9] dark:bg-card/40 border border-border/30 rounded-sm p-5 flex flex-col h-full backdrop-blur-sm shadow-sm">
             <div className="flex items-center gap-2 mb-6 text-[var(--neon-primary)]">
                 <MessageSquare className="w-5 h-5" />
                 <h2 className="text-xl font-mono font-bold uppercase tracking-tighter">TOWNHALL</h2>
