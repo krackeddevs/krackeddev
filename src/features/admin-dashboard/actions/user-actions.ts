@@ -15,9 +15,10 @@ export async function banUser(userId: string) {
         return { success: false, error: error.message };
     }
 
-    revalidatePath('/');
-    revalidatePath('/leaderboard');
-    revalidatePath('/members');
+    // Clear all page caches aggressively
+    revalidatePath('/', 'layout');
+    revalidatePath('/leaderboard', 'page');
+    revalidatePath('/members', 'page');
     return { success: true };
 }
 
@@ -33,18 +34,18 @@ export async function unbanUser(userId: string) {
         return { success: false, error: error.message };
     }
 
-    revalidatePath('/');
-    revalidatePath('/leaderboard');
-    revalidatePath('/members');
+    // Clear all page caches aggressively
+    revalidatePath('/', 'layout');
+    revalidatePath('/leaderboard', 'page');
+    revalidatePath('/members', 'page');
     return { success: true };
 }
 
 export async function updateUserRole(userId: string, role: string) {
     const supabase = await createClient();
 
-    let label = '[RUNNER]';
-    if (role === 'admin') label = '[SYSTEM]';
-    else if (role === 'staff') label = '[MOD]';
+    // Map role to default label
+    const label = role === 'admin' ? '[SYSTEM]' : '[RUNNER]';
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (supabase.from("profiles") as any)
@@ -57,9 +58,10 @@ export async function updateUserRole(userId: string, role: string) {
         return { success: false, error: error.message };
     }
 
-    revalidatePath('/');
-    revalidatePath('/leaderboard');
-    revalidatePath('/members');
+    // Clear all page caches aggressively
+    revalidatePath('/', 'layout');
+    revalidatePath('/leaderboard', 'page');
+    revalidatePath('/members', 'page');
     return { success: true };
 }
 
@@ -75,8 +77,9 @@ export async function updateUserLabel(userId: string, label: string) {
         return { success: false, error: error.message };
     }
 
-    revalidatePath('/');
-    revalidatePath('/leaderboard');
-    revalidatePath('/members');
+    // Clear all page caches aggressively
+    revalidatePath('/', 'layout');
+    revalidatePath('/leaderboard', 'page');
+    revalidatePath('/members', 'page');
     return { success: true };
 }
