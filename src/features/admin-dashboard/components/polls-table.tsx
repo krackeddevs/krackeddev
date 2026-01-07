@@ -94,7 +94,7 @@ export function PollsTable({ polls }: { polls: Poll[] }) {
                                         ) : isExpired ? (
                                             <Badge variant="outline" className="text-orange-500 border-orange-500">Ended</Badge>
                                         ) : (
-                                            <Badge className="bg-neon-cyan text-black hover:bg-neon-cyan/80">Active</Badge>
+                                            <Badge className="bg-neon-cyan text-primary-foreground hover:bg-neon-cyan/80">Active</Badge>
                                         )}
                                     </TableCell>
                                     <TableCell>

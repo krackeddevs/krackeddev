@@ -1,7 +1,7 @@
 import { AskQuestionForm } from "@/features/community/components/ask-question-form";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { CommunitySubNav } from "@/features/community/components/shared/community-sub-nav";
+
 
 export const metadata = {
     title: "Ask a Question | Community",
@@ -17,16 +17,14 @@ export default async function AskQuestionPage() {
     }
 
     return (
-        <main className="min-h-screen pt-24 pb-12 relative overflow-hidden">
+        <div className="relative overflow-hidden py-8">
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50 pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
-                <CommunitySubNav />
-
                 <div className="mt-8">
                     <AskQuestionForm />
                 </div>
             </div>
-        </main>
+        </div>
     );
 }

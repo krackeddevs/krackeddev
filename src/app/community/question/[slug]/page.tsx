@@ -74,10 +74,22 @@ export default async function QuestionDetailPage({ params }: PageProps) {
                                 />
                             </div>
                             <div className="flex-1 min-w-0">
+                                <div className="flex sm:hidden mb-4 items-center gap-4 border-b pb-2">
+                                    <VotingControl
+                                        upvotes={question.upvotes}
+                                        resourceType="question"
+                                        resourceId={question.id}
+                                        orientation="horizontal"
+                                    />
+                                    <span className="text-xs text-muted-foreground font-mono">
+                                        {question.upvotes} votes
+                                    </span>
+                                </div>
+
                                 <MarkdownViewer content={question.body} className="min-h-[100px]" />
 
                                 <div className="flex flex-wrap items-center justify-between gap-4 mt-8 pt-4 border-t">
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2">
                                         {question.tags?.map(tag => (
                                             <Badge key={tag} variant="secondary" className="font-mono">{tag}</Badge>
                                         ))}

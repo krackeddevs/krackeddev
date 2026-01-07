@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Trophy, Coins, MapPin, User, Search } from "lucide-react";
 import { TopHunter } from "../actions";
+import { cn } from "@/lib/utils";
+
 
 interface TopHuntersListProps {
     hunters: TopHunter[];
@@ -122,13 +124,27 @@ export function TopHuntersList({ hunters }: TopHuntersListProps) {
                                     )}
 
                                     {/* Info */}
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="font-mono text-sm sm:text-base text-foreground group-hover:text-neon-primary transition-colors truncate">
-                                            {hunter.full_name || hunter.username || "Anonymous"}
-                                        </h3>
-                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-muted-foreground font-mono">
+                                    <div className="flex-1 min-w-0 mr-2 sm:mr-0">
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                            <div className="flex items-center gap-2 min-w-0">
+                                                <h3 className="font-mono text-sm sm:text-base text-foreground group-hover:text-neon-primary transition-colors truncate">
+                                                    {hunter.full_name || hunter.username || "Anonymous"}
+                                                </h3>
+                                            </div>
+                                            <span className={cn(
+                                                "text-[8px] px-1.5 py-0.5 rounded-[2px] leading-none tracking-wider font-black font-mono shrink-0 w-fit",
+                                                (hunter.leaderboard_label || '[RUNNER]') === '[SYSTEM]'
+                                                    ? "bg-[var(--neon-primary)] text-black"
+                                                    : (hunter.leaderboard_label || '[RUNNER]') === '[MOD]'
+                                                        ? "bg-[var(--neon-primary)]/10 text-[var(--neon-primary)] border border-[var(--neon-primary)]/30"
+                                                        : "bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20"
+                                            )}>
+                                                {(hunter.leaderboard_label || 'RUNNER').replace(/[\[\]]/g, '')}
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-muted-foreground font-mono mt-0.5 sm:mt-0">
                                             {hunter.developer_role && (
-                                                <span className="uppercase">{hunter.developer_role}</span>
+                                                <span className="uppercase hidden sm:inline">{hunter.developer_role}</span>
                                             )}
                                             {hunter.location && (
                                                 <span className="flex items-center gap-1">
@@ -147,16 +163,17 @@ export function TopHuntersList({ hunters }: TopHuntersListProps) {
                                                 style={originalRank <= 2 ? { color: rankStyle.color } : {}}
                                             >
                                                 <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
-                                                <span className="font-mono font-bold text-sm sm:text-base">{hunter.totalWins}</span>
+                                                <span className="font-mono font-bold text-xs sm:text-base">{hunter.totalWins}</span>
                                             </div>
-                                            <span className="text-[10px] sm:text-xs text-muted-foreground font-mono block">WINS</span>
+                                            {/* Hide label on very small screens if needed, but keeping for now */}
+                                            <span className="text-[9px] sm:text-xs text-muted-foreground font-mono block">WINS</span>
                                         </div>
                                         <div className="text-right sm:text-center">
                                             <div className="flex items-center justify-end sm:justify-center gap-1 text-neon-cyan/80 dark:text-neon-cyan">
                                                 <Coins className="w-3 h-3 sm:w-4 sm:h-4" />
-                                                <span className="font-mono font-bold text-sm sm:text-base">RM{hunter.totalEarnings}</span>
+                                                <span className="font-mono font-bold text-xs sm:text-base">RM{hunter.totalEarnings}</span>
                                             </div>
-                                            <span className="text-[10px] sm:text-xs text-muted-foreground font-mono block">EARNED</span>
+                                            <span className="text-[9px] sm:text-xs text-muted-foreground font-mono block">EARNED</span>
                                         </div>
                                     </div>
                                 </div>

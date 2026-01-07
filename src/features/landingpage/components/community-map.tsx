@@ -141,8 +141,8 @@ export function CommunityMap({ initialData }: { initialData?: LocationData[] }) 
             const isHovered = hoveredStateIndex === index;
 
             // Use opacity for intensity to support CSS variables (and B&W mode)
-            let fill = "var(--muted-foreground)";
-            let fillOpacity = 0.2; // Low opacity for states with 0 users
+            let fill = "var(--muted)";
+            let fillOpacity = 1;
 
             if (isActive) {
               fill = "var(--neon-primary)";

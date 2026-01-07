@@ -24,6 +24,7 @@ export interface TopHunter {
     location: string | null;
     totalWins: number;
     totalEarnings: number;
+    leaderboard_label?: string | null;
 }
 // Adding the container type for consistency
 export interface GithubContributionCalendar {
@@ -92,6 +93,7 @@ export interface LeaderboardEntry {
     xp: number;
     rank: number;
     developer_role: string | null;
+    leaderboard_label?: string | null;
     stack?: string[] | null;
 }
 
@@ -108,4 +110,8 @@ export interface ActiveContributor {
     level: number;
     rank: number;
     developer_role: string | null;
+    leaderboard_label?: string | null;
 }
+
+// Duplicate removal
+
