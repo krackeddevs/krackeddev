@@ -134,7 +134,7 @@ export function TopHuntersList({ hunters }: TopHuntersListProps) {
                                             <span className={cn(
                                                 "text-[8px] px-1.5 py-0.5 rounded-[2px] leading-none tracking-wider font-black font-mono shrink-0 w-fit",
                                                 (hunter.leaderboard_label || 'RUNNER').replace(/[\[\]]/g, '').trim().toUpperCase() === 'SYSTEM'
-                                                    ? "bg-[var(--neon-primary)] text-black"
+                                                    ? "bg-black dark:bg-[var(--neon-primary)] text-white dark:text-black border border-[var(--neon-primary)]"
                                                     : (hunter.leaderboard_label || 'RUNNER').replace(/[\[\]]/g, '').trim().toUpperCase() === 'MOD'
                                                         ? "bg-[var(--neon-primary)]/10 text-[var(--neon-primary)] border border-[var(--neon-primary)]/30"
                                                         : "bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20"
