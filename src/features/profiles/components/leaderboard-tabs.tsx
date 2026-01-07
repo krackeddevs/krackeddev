@@ -48,7 +48,7 @@ export function LeaderboardTabs({ initialAllTimeData, currentUserId }: Leaderboa
         queryKey: ['top-hunters'],
         queryFn: fetchTopHuntersData,
         enabled: activeTab === 'bounties',
-        staleTime: 1000 * 60 * 15,
+        staleTime: 1000 * 30, // 30 seconds
     });
 
     const { data: activeContributorsData, isLoading: contributorsLoading } = useQuery({
