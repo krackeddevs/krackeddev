@@ -80,7 +80,7 @@ export function AdminSidebarContent({ className, onLinkClick }: SidebarContentPr
 
 export function AdminSidebar() {
     return (
-        <aside className="hidden md:flex md:w-64 md:flex-col border-r border-border/50 bg-background/60 backdrop-blur-xl h-[calc(100vh-84px)] sticky top-[84px] transition-colors duration-300 z-20">
+        <aside className="!hidden md:!flex md:w-64 md:flex-col border-r border-border/50 bg-background/60 backdrop-blur-xl h-[calc(100vh-84px)] sticky top-[84px] transition-colors duration-300 z-20">
             <AdminSidebarContent className="p-6" />
         </aside>
     );

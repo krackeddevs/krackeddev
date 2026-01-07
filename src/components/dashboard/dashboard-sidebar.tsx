@@ -92,7 +92,7 @@ export function DashboardSidebar({ user, company, profile }: SidebarProps) {
     const avatarText = (profile?.full_name?.[0] || profile?.username?.[0] || user?.email?.[0] || "U").toUpperCase();
 
     return (
-        <div className="w-64 h-[calc(100vh-84px)] sticky top-[84px] flex-shrink-0 border-r border-border/50 bg-background/60 backdrop-blur-xl hidden md:flex flex-col transition-colors duration-300 z-20">
+        <div className="w-64 h-[calc(100vh-84px)] sticky top-[84px] flex-shrink-0 border-r border-border/50 bg-background/60 backdrop-blur-xl !hidden md:!flex flex-col transition-colors duration-300 z-20">
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto py-10 px-5 space-y-10">
                 {/* User Section */}
