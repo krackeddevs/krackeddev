@@ -99,7 +99,6 @@ function EditUserButton({ user }: { user: User }) {
     const handleRoleChange = (newRole: string) => {
         setRole(newRole);
         if (newRole === 'admin') setLabel('[SYSTEM]');
-        else if (newRole === 'staff') setLabel('[MOD]');
         else setLabel('[RUNNER]');
     };
 
@@ -129,7 +128,6 @@ function EditUserButton({ user }: { user: User }) {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="staff">Staff</SelectItem>
                                 <SelectItem value="admin">Admin</SelectItem>
                             </SelectContent>
                         </Select>
