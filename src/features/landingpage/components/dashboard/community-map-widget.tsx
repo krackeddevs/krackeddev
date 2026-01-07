@@ -67,7 +67,7 @@ export function CommunityMapWidget({ initialLocations }: MapWidgetProps) {
 
     return (
         <div
-            className="bg-[#F9F9F9] dark:bg-card/40 border border-border/30 rounded-sm p-6 relative overflow-hidden group h-full flex flex-col min-h-[500px] backdrop-blur-sm"
+            className="bg-[var(--dashboard-card-bg)] border border-border/30 rounded-sm p-6 relative overflow-hidden group h-full flex flex-col min-h-[500px] backdrop-blur-sm"
             onMouseMove={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
