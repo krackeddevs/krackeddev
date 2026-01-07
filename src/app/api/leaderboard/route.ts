@@ -14,7 +14,11 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error }, { status: 500 });
         }
 
-        return NextResponse.json({ data });
+        return NextResponse.json({ data }, {
+            headers: {
+                'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+            }
+        });
     } catch (error) {
         console.error('API Error:', error);
         return NextResponse.json(
