@@ -9,7 +9,7 @@ export function BountyBoard() {
     const { data: bounties, isLoading } = useRecentBounties();
 
     return (
-        <div className="bg-[#F9F9F9] dark:bg-card/40 border border-border/30 rounded-sm p-6 flex flex-col h-full backdrop-blur-sm">
+        <div className="bg-[var(--dashboard-card-bg)] border border-border/30 rounded-sm p-6 flex flex-col h-full backdrop-blur-sm">
             <div className="mb-8 text-center">
                 <div className="flex items-center justify-center gap-3 mb-2 text-[var(--neon-primary)]">
                     <Target className="w-5 h-5" />
