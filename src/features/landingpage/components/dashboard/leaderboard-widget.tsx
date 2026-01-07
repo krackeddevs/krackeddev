@@ -22,7 +22,7 @@ export function LeaderboardWidget() {
     }, []);
 
     return (
-        <div className="bg-card/40 border border-border/30 rounded-sm p-5 h-full flex flex-col backdrop-blur-sm">
+        <div className="bg-[#F9F9F9] dark:bg-card/40 border border-border/30 rounded-sm p-5 h-full flex flex-col backdrop-blur-sm">
             <div className="mb-6">
                 <div className="flex items-center gap-2 mb-1 text-[var(--neon-primary)]">
                     <Users className="w-5 h-5" />
