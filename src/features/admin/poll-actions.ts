@@ -100,13 +100,24 @@ export async function getActivePoll(userId?: string) {
         .limit(1)
         .single();
 
-    if (error || !poll) return { data: null };
+    if (error) {
+        console.error("Error fetching active poll:", error);
+        return { data: null };
+    }
+
+    if (!poll) return { data: null };
 
     // Fetch vote counts (using view or raw count)
     // Using simple count for now since view might not be accessible if migration failed
-    const { data: votes } = await supabase
+    const { data: votes, error: votesError } = await (supabase
         .from("poll_votes")
-        .select("option_id"); // simplified logic, ideally use proper count query
+        .select("option_id")
+        .eq("poll_id", poll.id)
+    );
+
+    if (votesError) {
+        console.error("Error fetching votes:", votesError);
+    }
 
     // Client-side counting for now to match constraints
     const results = poll.options.reduce((acc: any, opt: any) => {
