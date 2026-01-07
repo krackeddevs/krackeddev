@@ -85,7 +85,7 @@ export function ActiveContributorsTable({ data, currentUserId }: ActiveContribut
                                     <span className={cn(
                                         "text-[8px] px-1.5 py-0.5 rounded-[2px] leading-none tracking-wider font-black font-mono shrink-0",
                                         (contributor.leaderboard_label || '[RUNNER]') === '[SYSTEM]'
-                                            ? "bg-[var(--neon-primary)] text-black"
+                                            ? "bg-black dark:bg-[var(--neon-primary)] text-white dark:text-black border border-[var(--neon-primary)]"
                                             : (contributor.leaderboard_label || '[RUNNER]') === '[MOD]'
                                                 ? "bg-[var(--neon-primary)]/10 text-[var(--neon-primary)] border border-[var(--neon-primary)]/30"
                                                 : "bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20"
