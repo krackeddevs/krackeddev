@@ -58,7 +58,15 @@ export function LeaderboardWidget() {
                                     </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <div className="text-xs font-mono font-bold text-foreground group-hover:text-[var(--neon-primary)] transition-colors">
+                                    <div className="text-xs font-mono font-bold text-foreground group-hover:text-[var(--neon-primary)] transition-colors flex items-center gap-1.5 flex-wrap">
+                                        <span className={`text-[8px] px-1.5 py-0.5 rounded-[2px] leading-none tracking-wider font-black ${(entry.leaderboard_label || '[RUNNER]') === '[SYSTEM]'
+                                            ? "bg-[var(--neon-primary)] text-black"
+                                            : (entry.leaderboard_label || '[RUNNER]') === '[MOD]'
+                                                ? "bg-[var(--neon-primary)]/10 text-[var(--neon-primary)] border border-[var(--neon-primary)]/30"
+                                                : "bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20"
+                                            }`}>
+                                            {(entry.leaderboard_label || 'RUNNER').replace(/[\[\]]/g, '')}
+                                        </span>
                                         {entry.username}
                                     </div>
                                     <div className="text-[9px] font-mono text-foreground/40 uppercase">

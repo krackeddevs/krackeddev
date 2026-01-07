@@ -302,6 +302,7 @@ export type TopHunter = {
     location: string | null;
     totalWins: number;
     totalEarnings: number;
+    leaderboard_label?: string | null;
 };
 
 export type Member = {
@@ -406,7 +407,7 @@ export async function fetchTopHunters(limit: number = 20): Promise<{ data: TopHu
     // Step 3: Fetch profiles for these users
     const { data: profiles, error: profError } = await supabase
         .from("profiles")
-        .select("id, username, full_name, avatar_url, developer_role, location, status")
+        .select("id, username, full_name, avatar_url, developer_role, location, status, leaderboard_label")
         .in("id", userIds)
         .neq("status", "banned");
 
@@ -427,6 +428,7 @@ export async function fetchTopHunters(limit: number = 20): Promise<{ data: TopHu
             location: profile.location,
             totalWins: stats.wins,
             totalEarnings: stats.earnings,
+            leaderboard_label: profile.leaderboard_label,
         };
     });
 
@@ -733,6 +735,15 @@ export const fetchLeaderboard = unstable_cache(
                     return { data: [], error: "Failed to fetch leaderboard" };
                 }
 
+                // Fetch labels derived from profiles since RPC might not have it
+                const userIds = (data || []).map((r: any) => r.id);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const { data: labelsData } = await (supabase.from('profiles') as any).select('id, leaderboard_label').in('id', userIds);
+
+                const labelsMap = new Map();
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                if (labelsData) labelsData.forEach((l: any) => labelsMap.set(l.id, l.leaderboard_label));
+
                 // Map RPC result to LeaderboardEntry
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const entries: LeaderboardEntry[] = (data || []).map((row: any) => ({
@@ -743,7 +754,8 @@ export const fetchLeaderboard = unstable_cache(
                     xp: row.weekly_xp, // For weekly view, show weekly XP
                     rank: row.rank,
                     developer_role: row.developer_role,
-                    stack: row.stack
+                    stack: row.stack,
+                    leaderboard_label: labelsMap.get(row.id)
                 }));
 
                 return { data: entries };
@@ -751,7 +763,7 @@ export const fetchLeaderboard = unstable_cache(
                 // All-time leaderboard directly from profiles
                 let query = supabase
                     .from('profiles')
-                    .select('id, username, avatar_url, level, xp, developer_role, stack')
+                    .select('id, username, avatar_url, level, xp, developer_role, stack, leaderboard_label')
                     .order('xp', { ascending: false })
                     .limit(limit);
 
@@ -776,6 +788,7 @@ export const fetchLeaderboard = unstable_cache(
                     xp: entry.xp,
                     rank: index + 1,
                     developer_role: entry.developer_role,
+                    leaderboard_label: entry.leaderboard_label,
                     stack: entry.stack
                 }));
 
@@ -857,10 +870,26 @@ export const fetchActiveContributors = unstable_cache(
                 return { data: [] };
             }
 
+            // Fetch leaderboard labels since MV might not have them yet
+            const userIds = contributors.map((c: any) => c.id);
+            const { data: labelsData } = await supabase
+                .from('profiles')
+                .select('id, leaderboard_label')
+                .in('id', userIds);
+
+            const labelsMap = new Map();
+            if (labelsData) {
+                labelsData.forEach((l: any) => labelsMap.set(l.id, l.leaderboard_label));
+            }
+
             // Calculate GitHub commits from contribution_stats
             const contributorsWithActivity = contributors.map((contributor: any) => {
                 let githubCommits30d = 0;
                 let streakDays = 0;
+
+                // Get label from map
+                const leaderboard_label = labelsMap.get(contributor.id);
+
 
                 const contributionStats = contributor.contribution_stats as any;
 
@@ -897,6 +926,7 @@ export const fetchActiveContributors = unstable_cache(
                     level: contributor.level || 1,
                     rank: 0,
                     developer_role: contributor.developer_role,
+                    leaderboard_label: leaderboard_label,
                 };
             });
 

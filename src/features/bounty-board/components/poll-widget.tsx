@@ -39,6 +39,7 @@ interface PollData {
     options: PollOption[];
     results: Record<string, number>; // optionId -> count
     userVoteId: string | null;
+    status: "active" | "closed";
 }
 
 const difficultyColors = {
@@ -58,8 +59,9 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
     if (!poll) return null;
 
     const isExpired = new Date(poll.end_at) < new Date();
+    const isClosed = poll.status === 'closed';
     const hasVoted = !!poll.userVoteId;
-    const showResults = hasVoted || isExpired;
+    const showResults = hasVoted || isExpired || isClosed;
 
     const totalVotes = Object.values(poll.results).reduce((a, b) => a + b, 0);
 
@@ -126,7 +128,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse"></div>
                             <span className="text-xs font-mono text-neon-cyan tracking-widest uppercase">
-                                {isExpired ? "Poll Ended" : "Community Bounty Poll"}
+                                {isClosed ? "Poll Closed" : isExpired ? "Poll Ended" : "Community Bounty Poll"}
                             </span>
                         </div>
                         <span className="text-xs text-muted-foreground font-mono">
@@ -183,7 +185,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                             >
                                 <CardHeader className="pb-3">
                                     <div className="flex items-start justify-between gap-3">
-                                        <div className="flex-1 space-y-2">
+                                        <div className="flex-1 space-y-2 min-w-0">
                                             <div className="flex items-center gap-3">
                                                 {/* Selection Radio Button */}
                                                 {!showResults && (
@@ -203,15 +205,15 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                                                     </div>
                                                 )}
 
-                                                <div className="flex items-center gap-2 flex-1">
-                                                    <h3 className="font-bold text-lg leading-tight">{option.label}</h3>
+                                                <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
+                                                    <h3 className="font-bold text-lg leading-tight break-words min-w-0">{option.label}</h3>
                                                     {option.difficulty && (
-                                                        <Badge className={cn("text-xs uppercase flex-shrink-0", difficultyColors[option.difficulty as keyof typeof difficultyColors])}>
+                                                        <Badge className={cn("text-[10px] sm:text-xs uppercase flex-shrink-0 h-5 sm:h-6", difficultyColors[option.difficulty as keyof typeof difficultyColors])}>
                                                             {option.difficulty}
                                                         </Badge>
                                                     )}
                                                     {isUserVote && (
-                                                        <Badge className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50">
+                                                        <Badge className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50 text-[10px] h-5">
                                                             <CheckCircle2 className="w-3 h-3 mr-1" />
                                                             Your Vote
                                                         </Badge>
@@ -310,7 +312,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                         <Button
                             onClick={handleVote}
                             disabled={!selectedOption || isSubmitting}
-                            className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold uppercase tracking-wider"
+                            className="bg-neon-cyan hover:bg-neon-cyan/90 text-primary-foreground font-bold uppercase tracking-wider"
                         >
                             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Cast Vote
@@ -321,9 +323,9 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                 {/* Results Summary */}
                 {showResults && (
                     <div className="pt-4 border-t border-border/30">
-                        {isExpired ? (
+                        {isClosed || isExpired ? (
                             <p className="text-sm text-muted-foreground text-center font-mono">
-                                Poll ended. {totalVotes > 0 ? "The winning bounty will be created soon!" : "No votes were cast."}
+                                Poll {isClosed ? 'closed' : 'ended'}. {totalVotes > 0 ? "The winning bounty will be created soon!" : "No votes were cast."}
                             </p>
                         ) : hasVoted ? (
                             <p className="text-sm text-neon-cyan text-center font-mono">
@@ -366,7 +368,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                                     onClick={() => {
                                         window.location.href = "/auth/login?redirect=/code/bounty";
                                     }}
-                                    className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold"
+                                    className="bg-neon-cyan hover:bg-neon-cyan/90 text-primary-foreground font-bold"
                                 >
                                     Sign In
                                 </AlertDialogAction>
@@ -417,7 +419,7 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                     onClick={confirmVote}
-                                    className="bg-neon-cyan hover:bg-neon-cyan/90 text-black font-bold"
+                                    className="bg-neon-cyan hover:bg-neon-cyan/90 text-primary-foreground font-bold"
                                 >
                                     Confirm Vote
                                 </AlertDialogAction>

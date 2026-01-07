@@ -4,7 +4,7 @@ import { relations } from 'drizzle-orm';
 // ============================================
 // ENUMS
 // ============================================
-export const userRoleEnum = pgEnum('user_role', ['admin', 'user']);
+export const userRoleEnum = pgEnum('user_role', ['admin', 'staff', 'user']);
 
 // ============================================
 // PROFILES TABLE
@@ -22,6 +22,7 @@ export const profiles = pgTable(
     bio: text('bio'),
     level: integer('level').default(1),
     xp: integer('xp').default(0),
+    leaderboardLabel: text('leaderboard_label'),
     role: userRoleEnum('role').notNull().default('user'),
     isBanned: boolean('is_banned').notNull().default(false),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),

@@ -151,6 +151,16 @@ export async function votePoll(pollId: string, optionId: string) {
 
     if (!user) return { error: "Must be logged in to vote" };
 
+    // Check if poll is active
+    const { data: poll } = await (supabase.from("polls" as any) as any)
+        .select("status, end_at")
+        .eq("id", pollId)
+        .single();
+
+    if (!poll) return { error: "Poll not found" };
+    if (poll.status === 'closed') return { error: "This poll is closed" };
+    if (new Date(poll.end_at) < new Date()) return { error: "This poll has ended" };
+
     const { error } = await (supabase.from("poll_votes" as any) as any)
         .insert({
             poll_id: pollId,

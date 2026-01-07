@@ -48,39 +48,56 @@ export function ActiveContributorsTable({ data, currentUserId }: ActiveContribut
                     <div
                         key={contributor.id}
                         className={cn(
-                            "flex items-center gap-4 p-4 rounded-xl border backdrop-blur-sm transition-all duration-300",
+                            "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 relative overflow-hidden",
                             getRowStyle(contributor.rank, isCurrentUser),
                             isCurrentUser && "scale-[1.01] shadow-lg ring-1 ring-neon-primary/50"
                         )}
                     >
                         {/* Rank */}
-                        <div className="w-12 text-center flex justify-center items-center shrink-0">
+                        <div className="w-8 sm:w-12 text-center flex justify-center items-center shrink-0">
                             {getRankIcon(contributor.rank)}
                         </div>
 
                         {/* Avatar */}
-                        <Avatar className={cn("h-12 w-12 border-2", isCurrentUser ? "border-neon-primary" : "border-border/50")}>
+                        <Avatar className={cn("h-10 w-10 sm:h-12 sm:w-12 border-2 shrink-0", isCurrentUser ? "border-neon-primary" : "border-border/50")}>
                             <AvatarImage src={contributor.avatar_url || ""} />
                             <AvatarFallback>{contributor.username?.[0]?.toUpperCase() || "?"}</AvatarFallback>
                         </Avatar>
 
                         {/* User info */}
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                                <Link
-                                    href={`/profile/${contributor.username}`}
-                                    className={cn(
-                                        "font-bold font-mono text-lg truncate hover:underline underline-offset-4 decoration-2 decoration-neon-primary/50",
-                                        isCurrentUser ? "text-neon-primary" : "text-foreground"
+                        <div className="flex-1 min-w-0 mr-2 sm:mr-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <Link
+                                        href={`/profile/${contributor.username}`}
+                                        className={cn(
+                                            "font-bold font-mono text-sm sm:text-lg truncate hover:underline underline-offset-4 decoration-2 decoration-neon-primary/50",
+                                            isCurrentUser ? "text-neon-primary" : "text-foreground"
+                                        )}
+                                    >
+                                        {contributor.username}
+                                    </Link>
+                                    {isCurrentUser && (
+                                        <Badge variant="outline" className="sm:hidden text-[8px] h-4 border-neon-primary/50 text-neon-primary px-1">YOU</Badge>
                                     )}
-                                >
-                                    {contributor.username}
-                                </Link>
-                                {isCurrentUser && (
-                                    <Badge variant="outline" className="text-[10px] h-5 border-neon-primary/50 text-neon-primary">YOU</Badge>
-                                )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className={cn(
+                                        "text-[8px] px-1.5 py-0.5 rounded-[2px] leading-none tracking-wider font-black font-mono shrink-0",
+                                        (contributor.leaderboard_label || '[RUNNER]') === '[SYSTEM]'
+                                            ? "bg-[var(--neon-primary)] text-black"
+                                            : (contributor.leaderboard_label || '[RUNNER]') === '[MOD]'
+                                                ? "bg-[var(--neon-primary)]/10 text-[var(--neon-primary)] border border-[var(--neon-primary)]/30"
+                                                : "bg-[var(--neon-cyan)]/10 text-[var(--neon-cyan)] border border-[var(--neon-cyan)]/20"
+                                    )}>
+                                        {(contributor.leaderboard_label || 'RUNNER').replace(/[\[\]]/g, '')}
+                                    </span>
+                                    {isCurrentUser && (
+                                        <Badge variant="outline" className="hidden sm:inline-flex text-[10px] h-5 border-neon-primary/50 text-neon-primary">YOU</Badge>
+                                    )}
+                                </div>
                             </div>
-                            <div className="text-sm text-muted-foreground font-mono truncate">
+                            <div className="text-[10px] sm:text-sm text-muted-foreground font-mono truncate mt-0.5 hidden sm:block">
                                 {contributor.developer_role || "Developer"}
                             </div>
                         </div>
@@ -114,12 +131,12 @@ export function ActiveContributorsTable({ data, currentUserId }: ActiveContribut
                         {/* Mobile Stats */}
                         <div className="text-right shrink-0 sm:hidden">
                             <div className="flex flex-col items-end">
-                                <div className="text-sm uppercase text-muted-foreground font-mono tracking-wider mb-0.5">
+                                <div className="text-[9px] uppercase text-muted-foreground font-mono tracking-wider mb-0.5">
                                     Activity
                                 </div>
-                                <div className="flex items-center gap-1.5 bg-muted/30 px-2 py-1 rounded border border-border/30">
-                                    <Activity className="w-3.5 h-3.5 text-neon-primary" />
-                                    <span className="font-mono font-bold text-foreground tabular-nums">
+                                <div className="flex items-center gap-1 bg-muted/30 px-1.5 py-0.5 rounded border border-border/30">
+                                    <Activity className="w-3 h-3 text-neon-primary" />
+                                    <span className="font-mono font-bold text-xs text-foreground tabular-nums">
                                         {contributor.activity_score}
                                     </span>
                                 </div>

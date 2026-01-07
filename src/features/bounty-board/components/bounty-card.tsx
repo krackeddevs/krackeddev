@@ -45,7 +45,7 @@ export function BountyCard({ bounty }: BountyCardProps) {
 
                 {/* Reward Badge */}
                 <div
-                    className={`absolute -top-3 -right-3 px-3 py-1 font-mono text-sm font-bold ${isCompleted ? "bg-neon-primary text-black" : "bg-rank-gold text-black"
+                    className={`absolute -top-3 -right-3 px-3 py-1 font-mono text-sm font-bold ${isCompleted ? "bg-neon-primary text-primary-foreground" : "bg-rank-gold text-primary-foreground"
                         }`}
                     data-testid="reward-badge"
                 >

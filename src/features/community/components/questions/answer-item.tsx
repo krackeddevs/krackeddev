@@ -111,6 +111,20 @@ export function AnswerItem({
                 {/* Answer Body & User Card Side-by-Side */}
                 <div className="flex gap-4 sm:gap-8 flex-col sm:flex-row">
                     <div className="flex-1 min-w-0 space-y-4">
+                        {/* Mobile Voting */}
+                        <div className="flex sm:hidden items-center gap-4 border-b border-border/50 pb-2">
+                            <VotingControl
+                                upvotes={answer.upvotes}
+                                resourceType="answer"
+                                resourceId={answer.id}
+                                orientation="horizontal"
+                                initialVoteDirection={null}
+                            />
+                            <span className="text-xs text-muted-foreground font-mono">
+                                {answer.upvotes} votes
+                            </span>
+                        </div>
+
                         <MarkdownViewer content={answer.body} />
 
                         {/* Mobile User Card */}

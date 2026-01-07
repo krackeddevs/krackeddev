@@ -1,6 +1,6 @@
 // Supabase Database Types for KrackedDevs
 
-export type UserRole = 'admin' | 'user';
+export type UserRole = 'admin' | 'staff' | 'user';
 
 export type DeveloperRole = 'junior' | 'mid' | 'senior' | 'lead' | 'principal' | 'student';
 
@@ -29,6 +29,7 @@ export interface Profile {
   x_url: string | null;
   linkedin_url: string | null;
   website_url: string | null;
+  leaderboard_label: string | null;
   // Drizzle compatible fields (mapped)
   fullName?: string | null;
   avatarUrl?: string | null;
@@ -38,6 +39,7 @@ export interface Profile {
   xUrl?: string | null;
   linkedinUrl?: string | null;
   websiteUrl?: string | null;
+  leaderboardLabel?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
