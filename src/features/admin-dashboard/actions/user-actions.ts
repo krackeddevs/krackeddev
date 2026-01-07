@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function banUser(userId: string) {
     const supabase = await createClient();
@@ -14,6 +15,9 @@ export async function banUser(userId: string) {
         return { success: false, error: error.message };
     }
 
+    revalidatePath('/');
+    revalidatePath('/leaderboard');
+    revalidatePath('/members');
     return { success: true };
 }
 
@@ -29,6 +33,9 @@ export async function unbanUser(userId: string) {
         return { success: false, error: error.message };
     }
 
+    revalidatePath('/');
+    revalidatePath('/leaderboard');
+    revalidatePath('/members');
     return { success: true };
 }
 
@@ -50,6 +57,9 @@ export async function updateUserRole(userId: string, role: string) {
         return { success: false, error: error.message };
     }
 
+    revalidatePath('/');
+    revalidatePath('/leaderboard');
+    revalidatePath('/members');
     return { success: true };
 }
 
@@ -65,5 +75,8 @@ export async function updateUserLabel(userId: string, label: string) {
         return { success: false, error: error.message };
     }
 
+    revalidatePath('/');
+    revalidatePath('/leaderboard');
+    revalidatePath('/members');
     return { success: true };
 }
