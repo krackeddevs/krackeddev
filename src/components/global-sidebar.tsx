@@ -28,7 +28,7 @@ export function GlobalSidebar({ isOpen, onClose }: SidebarProps) {
                 .from('company_members')
                 .select('company_id')
                 .eq('user_id', user.id)
-                .single();
+                .maybeSingle();
 
             setHasCompany(!!data);
         };
