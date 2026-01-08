@@ -88,8 +88,8 @@ export function Pagination({
                             disabled={isLoading}
                             className={
                                 currentPage === page
-                                    ? "bg-neon-cyan text-black hover:bg-neon-cyan/90 min-w-[36px]"
-                                    : "border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 min-w-[36px]"
+                                    ? "bg-foreground text-background hover:bg-foreground/90 min-w-[36px]"
+                                    : "border-border/30 hover:border-foreground/10 hover:text-foreground hover:bg-muted/10 min-w-[36px]"
                             }
                         >
                             {page}

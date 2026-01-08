@@ -1,19 +1,16 @@
 "use client";
 
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import React from "react";
 import { useJobsPaginated } from "@/lib/hooks/jobs/use-jobs-paginated";
-import { columns } from "./columns";
 import { useRouter } from "next/navigation";
 import { useQueryStates, parseAsInteger } from "nuqs";
 import { jobSearchParams } from "@/lib/search-params";
 import { differenceInHours } from "date-fns";
 import { Pagination } from "./pagination";
+import { Briefcase, MapPin, DollarSign, Clock, Building2, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const JOBS_PER_PAGE = 20;
+const JOBS_PER_PAGE = 10; // Reduced for card view
 
 export function JobsTable() {
   const router = useRouter();
@@ -33,15 +30,7 @@ export function JobsTable() {
 
   const jobs = data?.data ?? [];
   const total = data?.total ?? 0;
-
-  // Calculate exact total pages from total count
   const totalPages = Math.ceil(total / JOBS_PER_PAGE);
-
-  const table = useReactTable({
-    data: jobs,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   const handlePageChange = (page: number) => {
     setFilters({ page });
@@ -50,133 +39,111 @@ export function JobsTable() {
 
   if (isLoading) {
     return (
-      <div className="text-foreground font-mono animate-pulse">Loading jobs...</div>
+      <div className="space-y-4">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="h-32 bg-muted/20 animate-pulse border border-border/10" />
+        ))}
+      </div>
+    );
+  }
+
+  if (jobs.length === 0) {
+    return (
+      <div className="text-center py-20 border border-dashed border-border/10 bg-muted/5">
+        <div className="flex flex-col items-center gap-4">
+          <Briefcase className="w-8 h-8 text-muted-foreground/20" />
+          <p className="font-mono text-sm text-muted-foreground uppercase tracking-widest">
+            No active contract signals detected.
+          </p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="w-full">
-      {/* Desktop Table View */}
-      <div className="hidden md:block w-full border border-border rounded-none bg-card/40 backdrop-blur-sm">
-        <div className="w-full">
-          <table className="w-full font-mono text-sm text-left">
-            <thead className="text-muted-foreground bg-muted/50 border-b border-border">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="px-6 py-4 font-semibold text-[var(--neon-cyan)] text-xs uppercase tracking-wider border-r border-border last:border-r-0"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {table.getRowModel().rows.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-6 py-12 text-center text-muted-foreground font-mono"
-                  >
-                    No signals detected in this sector. Try widening your search parameters.
-                  </td>
-                </tr>
-              )}
-              {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  onClick={() => router.push(`/jobs/${row.original.id}`)}
-                  className="group hover:bg-[var(--neon-cyan)]/5 transition-all cursor-pointer border-l-2 border-transparent hover:border-[var(--neon-cyan)]"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="px-6 py-4 border-r border-border last:border-r-0 align-middle"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <div className="space-y-4">
+        {jobs.map((job) => {
+          const isNew = job.postedAt && differenceInHours(new Date(), new Date(job.postedAt)) < 48;
 
-      {/* Mobile Card View */}
-      <div className="md:hidden space-y-4">
-        {jobs.length === 0 && !isLoading && (
-          <div className="text-center text-muted-foreground py-12 border border-dashed border-border rounded-sm font-mono text-sm">
-            No signals detected.
-          </div>
-        )}
-        {jobs.map((job, i) => {
           const formatSalary = () => {
             const min = job.salaryMin;
             const max = job.salaryMax;
-            const format = (num: number) => (num / 1000).toFixed(1) + "k";
-            if (!min && !max) return "-";
-            if (min && max) return `${format(min)} - ${format(max)}`;
-            if (min) return `> ${format(min)}`;
-            if (max) return `< ${format(max)}`;
-            return "-";
+            const format = (num: number) => (num / 1000).toFixed(0) + "k";
+            if (!min && !max) return "Competitive";
+            if (min && max) return `RM ${format(min)} - ${format(max)}`;
+            if (min) return `> RM ${format(min)}`;
+            return "Competitive";
           };
-
-          const isNew =
-            job.postedAt &&
-            differenceInHours(new Date(), new Date(job.postedAt)) < 48;
 
           return (
             <div
-              key={job.id || i}
+              key={job.id}
               onClick={() => router.push(`/jobs/${job.id}`)}
-              className="group border border-border p-5 space-y-4 bg-card/40 backdrop-blur-sm cursor-pointer hover:border-[var(--neon-cyan)]/50 hover:bg-[var(--neon-cyan)]/5 transition-all relative overflow-hidden"
+              className="group relative bg-card/40 border border-border/20 p-6 hover:border-[var(--neon-cyan)]/50 hover:bg-muted/10 transition-all cursor-pointer overflow-hidden"
             >
-              {/* Active Glitch Border (Pseudo-element alternative) */}
-              <div className="absolute top-0 left-0 w-1 h-full bg-[var(--neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity" />
+              {/* Left Highlight */}
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_var(--neon-cyan)]" />
 
-              <div className="flex justify-between items-start gap-4">
-                <div>
-                  <h3 className="text-foreground font-semibold text-lg leading-tight mb-1 group-hover:text-[var(--neon-cyan)] transition-colors">
-                    {job.title}
-                  </h3>
-                  <div className="flex items-center gap-2 mt-2">
-                    {job.companyLogo && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={job.companyLogo} alt={job.company} className="w-5 h-5 rounded-sm object-cover bg-muted" />
-                    )}
-                    <p className="text-muted-foreground text-sm font-mono">{job.company}</p>
+              <div className="flex flex-col md:flex-row justify-between gap-6">
+                <div className="flex gap-5 flex-grow">
+                  {/* Company Logo */}
+                  <div className="shrink-0">
+                    <div className="w-14 h-14 border border-border/20 bg-muted/20 flex items-center justify-center rounded-none overflow-hidden group-hover:border-[var(--neon-cyan)]/30 transition-colors">
+                      {job.companyLogo ? (
+                        <img src={job.companyLogo} alt={job.company} className="w-full h-full object-cover" />
+                      ) : (
+                        <Building2 className="w-6 h-6 text-muted-foreground/40" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Job Details */}
+                  <div className="space-y-2 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="text-xl font-bold font-mono tracking-tighter group-hover:text-[var(--neon-cyan)] transition-colors truncate">
+                        {job.title}
+                      </h3>
+                      {isNew && (
+                        <span className="text-[9px] px-1.5 py-0.5 border border-neon-lime/50 text-neon-lime bg-neon-lime/5 font-mono font-bold uppercase tracking-wider">NEW</span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-mono text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <Building2 className="w-3.5 h-3.5 text-[var(--neon-cyan)]/50" />
+                        <span className="text-foreground/80 font-bold uppercase">{job.company}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-muted-foreground/50" />
+                        <span>{job.location}</span>
+                      </div>
+                      {job.isRemote && (
+                        <div className="flex items-center gap-1.5 text-[var(--neon-purple)]">
+                          <span className="w-1 h-1 rounded-full bg-[var(--neon-purple)]" />
+                          <span>REMOTE</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  {isNew && (
-                    <span className="text-[10px] px-1.5 py-0.5 border border-[var(--neon-lime)] text-[var(--neon-lime)] bg-[var(--neon-lime)]/10">NEW</span>
-                  )}
-                  {job.isRemote && (
-                    <span className="text-[10px] px-1.5 py-0.5 border border-[var(--neon-purple)] text-[var(--neon-purple)] bg-[var(--neon-purple)]/10">REMOTE</span>
-                  )}
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border">
-                <div className="flex flex-col gap-1 text-xs font-mono">
-                  <span className="text-muted-foreground">Salary (MYR)</span>
-                  <span className="text-[var(--neon-lime)]">{formatSalary()}</span>
-                </div>
-                <div className="flex flex-col gap-1 text-xs font-mono">
-                  <span className="text-muted-foreground">Location</span>
-                  <span className="text-foreground/80 truncate">{job.location}</span>
+                {/* Right Side Stats */}
+                <div className="flex flex-row md:flex-col justify-between items-end md:shrink-0 gap-2 border-t md:border-t-0 md:border-l border-border/10 pt-4 md:pt-0 md:pl-6">
+                  <div className="text-right">
+                    <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest mb-1 opacity-50">Estimated Value</div>
+                    <div className="text-lg font-bold font-mono text-green-700 dark:text-[var(--neon-lime)] tracking-tighter">
+                      {formatSalary()}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      <span>{job.postedAt ? new Date(job.postedAt).toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                    <ExternalLink className="w-3 h-3 group-hover:text-[var(--neon-cyan)] transition-colors" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -184,8 +151,7 @@ export function JobsTable() {
         })}
       </div>
 
-      {/* Pagination Controls */}
-      {jobs.length > 0 && (
+      {totalPages > 1 && (
         <Pagination
           currentPage={filters.page}
           totalPages={totalPages}

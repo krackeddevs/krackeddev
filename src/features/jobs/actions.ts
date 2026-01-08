@@ -2,15 +2,41 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/db";
-import { jobApplications, jobs, profiles } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { companies, jobApplications, jobs, profiles } from "@/lib/db/schema";
+import { eq, and, count, gte } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { JobStats } from "./types";
 
 export type ApplicationInput = {
     jobId: string;
     resumeUrl: string;
     coverLetter?: string;
 };
+
+export async function fetchJobStats(): Promise<{ data: JobStats | null; error?: string }> {
+    try {
+        const [totalCount] = await db.select({ value: count() }).from(jobs).where(eq(jobs.isActive, true));
+        const [remoteCount] = await db.select({ value: count() }).from(jobs).where(and(eq(jobs.isActive, true), eq(jobs.isRemote, true)));
+        const [verifiedCompaniesCount] = await db.select({ value: count() }).from(companies).where(eq(companies.isVerified, true));
+
+        // Count jobs from last 7 days
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const [newJobsCount] = await db.select({ value: count() }).from(jobs).where(and(eq(jobs.isActive, true), gte(jobs.postedAt, sevenDaysAgo)));
+
+        return {
+            data: {
+                totalJobs: totalCount.value,
+                remoteJobs: remoteCount.value,
+                verifiedCompanies: verifiedCompaniesCount.value,
+                newJobs: newJobsCount.value,
+            }
+        };
+    } catch (error) {
+        console.error("Error fetching job stats:", error);
+        return { data: null, error: "Failed to fetch job stats" };
+    }
+}
 
 export async function submitApplication(data: ApplicationInput) {
     const supabase = await createClient();
@@ -61,7 +87,6 @@ export async function getUserApplications() {
     }
 
     // Fetch applications with Job details
-    // Note: Drizzle relation query or join needed
     const apps = await db.select({
         id: jobApplications.id,
         status: jobApplications.status,
@@ -76,9 +101,8 @@ export async function getUserApplications() {
         .from(jobApplications)
         .innerJoin(jobs, eq(jobApplications.jobId, jobs.id))
         .where(eq(jobApplications.userId, user.id))
-        .orderBy(jobApplications.createdAt); // Use desc
+        .orderBy(jobApplications.createdAt);
 
-    // Sort manual if needed, or update order query
     return { data: apps.reverse() };
 }
 
@@ -89,10 +113,6 @@ export async function getCompanyApplications(companyId: string) {
     if (!user) {
         return { error: "Not authenticated" };
     }
-
-    // Verify ownership (simplified, assumes caller checks layout access or db checks RLS)
-    // Ideally we re-verify user owns companyId here.
-    // For now, let's fetch.
 
     const apps = await db.select({
         id: jobApplications.id,
@@ -109,7 +129,7 @@ export async function getCompanyApplications(companyId: string) {
             fullName: profiles.fullName,
             username: profiles.username,
             avatarUrl: profiles.avatarUrl,
-            email: profiles.email, // Check if email is available on profile or need auth.users join
+            email: profiles.email,
         }
     })
         .from(jobApplications)
@@ -122,7 +142,6 @@ export async function getCompanyApplications(companyId: string) {
 }
 
 export async function updateApplicationStatus(applicationId: string, status: string) {
-    // Add logic later
     await db.update(jobApplications).set({ status }).where(eq(jobApplications.id, applicationId));
     revalidatePath("/dashboard/company/applicants");
     revalidatePath("/dashboard/applications");

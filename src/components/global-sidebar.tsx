@@ -45,7 +45,7 @@ export function GlobalSidebar({ isOpen, onClose }: SidebarProps) {
         { label: "Dashboard", icon: Home, href: "/" },
         { label: "Command Center", icon: LayoutDashboard, href: "/dashboard" },
         { label: "Townhall", icon: Users, href: "/community" },
-        { label: "Job Board", icon: Briefcase, href: "/jobs" },
+        { label: "Contract Ops", icon: Briefcase, href: "/jobs" },
         { label: "Leaderboard", icon: Trophy, href: "/leaderboard" },
         { label: "Bounty Board", icon: Code, href: "/code/bounty" },
         { label: "The Manifesto", icon: Info, href: "/about" },
@@ -63,7 +63,7 @@ export function GlobalSidebar({ isOpen, onClose }: SidebarProps) {
     const companyMenuItems = [
         { label: "Overview", icon: Building2, href: "/dashboard/company" },
         { label: "Company Profile", icon: Building2, href: "/dashboard/company/profile" },
-        { label: "Manage Jobs", icon: Briefcase, href: "/dashboard/company/jobs" },
+        { label: "Manage Contracts", icon: Briefcase, href: "/dashboard/company/jobs" },
         { label: "Applicants", icon: User, href: "/dashboard/company/applicants" },
         { label: "Bounty Inquiries", icon: Terminal, href: "/dashboard/company/inquiries" },
     ];
