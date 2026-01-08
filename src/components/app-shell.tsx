@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { GlobalSidebar } from "@/components/global-sidebar";
+import Footer from "@/components/Footer";
 
 interface AppShellProps {
     children: React.ReactNode;
@@ -18,6 +19,7 @@ export function AppShell({ children }: AppShellProps) {
             <main className="flex-grow flex flex-col relative z-0">
                 {children}
             </main>
+            <Footer />
         </div>
     );
 }
