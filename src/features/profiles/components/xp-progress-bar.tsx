@@ -2,23 +2,36 @@
 
 import { useEffect, useState } from "react";
 import { getXPProgress } from "@/features/profiles/actions";
-import { XPProgress } from "@/features/profiles/xp-system";
+import { XPProgress, calculateXPProgress } from "../utils/xp-calculations";
+import { ProfileData } from "../actions";
 
 interface XPProgressBarProps {
     showDetails?: boolean;
     compact?: boolean;
+    profile?: ProfileData;
 }
 
-export function XPProgressBar({ showDetails = false, compact = false }: XPProgressBarProps) {
-    const [progress, setProgress] = useState<XPProgress | null>(null);
-    const [loading, setLoading] = useState(true);
+export function XPProgressBar({ showDetails = false, compact = false, profile }: XPProgressBarProps) {
+    const [progress, setProgress] = useState<XPProgress | null>(() => {
+        if (profile) {
+            return calculateXPProgress(profile.xp || 0);
+        }
+        return null;
+    });
+    const [loading, setLoading] = useState(!profile);
 
     useEffect(() => {
+        if (profile) {
+            setProgress(calculateXPProgress(profile.xp || 0));
+            setLoading(false);
+            return;
+        }
+
         getXPProgress().then(({ data }) => {
             if (data) setProgress(data);
             setLoading(false);
         });
-    }, []);
+    }, [profile]);
 
     if (loading) {
         return <div className="animate-pulse h-16 bg-gray-800 rounded-lg w-full" />;
