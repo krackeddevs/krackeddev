@@ -249,32 +249,28 @@ export async function checkAndGrantDailyLoginXP(
     userId: string
 ): Promise<XPGrantResult | null> {
     const supabase = await createClient();
+    const today = new Date().toISOString().split('T')[0];
 
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('last_xp_grant_date')
-        .eq('id', userId)
-        .single();
-
-    if (!profile) return null;
-
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const lastGrantDate = (profile as any).last_xp_grant_date;
-
-    // Only grant if different day
-    if (lastGrantDate === today) {
-        return null; // Already granted today
-    }
-
-    // Update last_login_at and last_xp_grant_date
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('profiles') as any)
+    // Atomic update: only update if last_xp_grant_date is not today (or is null)
+    // We use .neq to catch both cases (NULL or different date)
+    const { data: updateResult, error: updateError } = await (supabase.from('profiles') as any)
         .update({
             last_login_at: new Date().toISOString(),
             last_xp_grant_date: today
         })
-        .eq('id', userId);
+        .match({ id: userId })
+        .not('last_xp_grant_date', 'eq', today)
+        .select();
+
+    if (updateError) {
+        console.error("Failed to update last_xp_grant_date:", updateError);
+        return null;
+    }
+
+    // If no rows were updated, it means the user already got XP today
+    if (!updateResult || updateResult.length === 0) {
+        return null;
+    }
 
     // Grant daily login XP
     return await grantXP(userId, 'daily_login', XP_RATES.DAILY_LOGIN, { date: today });
