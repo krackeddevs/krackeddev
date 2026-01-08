@@ -86,29 +86,36 @@ export function XPHistory() {
     }
 
     return (
-        <div className="xp-history max-h-80 overflow-y-auto pr-2 custom-scrollbar">
-            <h3 className="text-sm font-semibold text-gray-400 mb-3 uppercase tracking-wider">Recent Activity</h3>
-            <div className="space-y-2">
+        <div className="xp-history">
+            <div className="flex items-center gap-2 mb-4">
+                <div className="w-1 h-3 bg-[var(--neon-purple)]" />
+                <h3 className="text-[10px] font-mono font-black text-muted-foreground uppercase tracking-[0.2em]">Transaction_Logs</h3>
+            </div>
+            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar scrollbar-hide">
                 {events.map((event) => (
                     <div
                         key={event.id}
-                        className="flex items-center justify-between p-3 bg-card/40 rounded-lg border border-border hover:border-cyan-500/50 transition-colors backdrop-blur-md"
+                        className="flex items-center justify-between p-4 bg-card/40 border border-border/10 hover:border-[var(--neon-cyan)]/30 transition-all duration-300 relative group"
                     >
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-cyan-950/30 rounded-md border border-cyan-900/30">
-                                {EVENT_ICONS[event.eventType] || <ZapIcon className="w-5 h-5 text-gray-400" />}
+                        <div className="absolute top-0 right-0 p-1 opacity-0 group-hover:opacity-10 transition-opacity">
+                            <ZapIcon className="w-8 h-8 text-[var(--neon-cyan)]" />
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <div className="p-2.5 bg-background border border-border/20 text-muted-foreground group-hover:text-[var(--neon-cyan)] group-hover:border-[var(--neon-cyan)]/30 transition-colors">
+                                {EVENT_ICONS[event.eventType] || <ZapIcon className="w-5 h-5" />}
                             </div>
-                            <div>
-                                <div className="text-sm font-bold text-foreground tracking-wide">
+                            <div className="space-y-1">
+                                <div className="text-[11px] font-mono font-black text-foreground uppercase tracking-widest">
                                     {getEventLabel(event)}
                                 </div>
-                                <div className="text-xs text-muted-foreground font-mono">
-                                    {new Date(event.createdAt).toLocaleDateString()}
+                                <div className="text-[9px] text-muted-foreground font-mono uppercase opacity-40">
+                                    TIMESTAMP: {new Date(event.createdAt).toISOString().replace('T', ' ').slice(0, 19)}
                                 </div>
                             </div>
                         </div>
-                        <div className="text-cyan-400 font-bold text-xs bg-cyan-950/50 px-2 py-1 rounded border border-cyan-500/30 shadow-[0_0_10px_rgba(34,211,238,0.1)]">
-                            +{event.xpAmount} XP
+                        <div className="text-[var(--neon-cyan)] font-black font-mono text-xs px-3 py-1 bg-[var(--neon-cyan)]/5 border border-[var(--neon-cyan)]/20 italic">
+                            +{event.xpAmount} <span className="text-[8px] opacity-40 not-italic">XP</span>
                         </div>
                     </div>
                 ))}

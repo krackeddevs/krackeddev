@@ -15,6 +15,11 @@ type Timeframe = "daily" | "monthly" | "yearly";
 
 export function DevPulse({ data, className }: DevPulseProps) {
     const [timeframe, setTimeframe] = useState<Timeframe>("daily");
+    const [signalId, setSignalId] = useState("");
+
+    useEffect(() => {
+        setSignalId(Math.random().toString(16).slice(2, 10).toUpperCase());
+    }, []);
 
     // Shared Motion Value for synchronization
     const progress = useMotionValue(0);
@@ -55,7 +60,7 @@ export function DevPulse({ data, className }: DevPulseProps) {
 
     const pathD = useMemo(() => {
         const width = 1000;
-        const height = 200;
+        const height = 150; // Slightly shorter for HUD feel
         if (currentData.length === 0) return `M 0 ${height / 2} L ${width} ${height / 2}`;
 
         const segmentWidth = width / currentData.length;
@@ -83,96 +88,185 @@ export function DevPulse({ data, className }: DevPulseProps) {
     }, [currentData, maxCount]);
 
     return (
-        <div className={cn("w-full bg-card/40 border border-border rounded-xl overflow-hidden backdrop-blur-md shadow-sm flex flex-col min-h-[300px]", className)}>
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-b border-border/50 gap-3 shrink-0">
-                <div className="flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-neon-primary" />
-                    <h2 className="text-sm font-bold text-foreground tracking-tight uppercase">Activity Trends</h2>
+        <div className={cn("w-full bg-card/40 border border-[var(--neon-cyan)]/20 rounded-none overflow-hidden backdrop-blur-md shadow-[0_0_20px_rgba(var(--neon-cyan-rgb),0.05)] flex flex-col min-h-[350px] relative group", className)}>
+            {/* Corner Brackets */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[var(--neon-cyan)]/30 z-30" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[var(--neon-cyan)]/30 z-30" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[var(--neon-cyan)]/30 z-30" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[var(--neon-cyan)]/30 z-30" />
+
+            {/* Header / Telemetry Row */}
+            <div className="flex items-center justify-between p-4 border-b border-[var(--neon-cyan)]/10 gap-3 shrink-0 bg-[var(--neon-cyan)]/5">
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <Activity className="w-5 h-5 text-[var(--neon-cyan)] animate-pulse" />
+                        <div className="absolute inset-0 bg-[var(--neon-cyan)] blur-sm opacity-50 animate-pulse" />
+                    </div>
+                    <div>
+                        <h2 className="text-[11px] font-black text-[var(--neon-cyan)] tracking-[0.2em] uppercase font-mono">
+                            Neural Dev Pulse
+                        </h2>
+                        <div className="text-[8px] font-mono text-muted-foreground uppercase tracking-widest leading-none mt-1">
+                            Status: <span className="text-[var(--neon-lime)]">Syncing_</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex bg-muted/50 p-0.5 rounded-lg scale-90 origin-right">
+                <div className="flex bg-card/40 border border-[var(--neon-cyan)]/20 p-0.5 rounded-none scale-90 origin-right shadow-inner">
                     {(["daily", "monthly", "yearly"] as const).map(t => (
                         <button
                             key={t}
                             onClick={() => setTimeframe(t)}
                             className={cn(
-                                "px-2 py-1 rounded transition-colors text-[10px] font-mono uppercase",
-                                timeframe === t ? "bg-neon-primary text-black font-bold" : "text-muted-foreground hover:text-foreground"
+                                "px-3 py-1.5 transition-all duration-300 text-[9px] font-mono uppercase tracking-widest",
+                                timeframe === t
+                                    ? "bg-[var(--neon-cyan)] text-primary-foreground font-black shadow-[0_0_10px_var(--neon-cyan)]"
+                                    : "text-muted-foreground hover:text-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)]/10"
                             )}
                         >
-                            {t === 'daily' ? '7D' : t === 'monthly' ? '30D' : '1Y'}
+                            {t === 'daily' ? 'Live' : t === 'monthly' ? 'Burst' : 'History'}
                         </button>
                     ))}
                 </div>
             </div>
 
             {/* Body */}
-            <div className="relative flex-grow flex flex-col bg-muted/10 overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none z-0 opacity-20" style={{ backgroundImage: "var(--grid-background)", backgroundSize: "20px 20px" }} />
+            <div className="relative flex-grow flex flex-col overflow-hidden">
+                {/* HUD Grid Overlays */}
+                <div className="absolute inset-0 pointer-events-none z-0 opacity-10"
+                    style={{
+                        backgroundImage: `linear-gradient(to right, var(--neon-cyan) 1px, transparent 1px), linear-gradient(to bottom, var(--neon-cyan) 1px, transparent 1px)`,
+                        backgroundSize: "40px 40px"
+                    }}
+                />
 
-                <div className="relative w-full h-full p-4 flex items-center justify-center z-10">
-                    <div className="relative w-full h-full flex items-center overflow-hidden">
-                        <svg className="w-full h-full" viewBox="0 0 1000 200" preserveAspectRatio="none">
-                            <line x1="0" y1="100" x2="1000" y2="100" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" className="opacity-30" />
+                {/* Horizontal Scanline */}
+                <div className="absolute inset-x-0 h-[1px] bg-[var(--neon-cyan)]/20 z-10 animate-scanline pointer-events-none" />
+
+                {/* Telemetry Labels */}
+                <div className="absolute top-4 left-4 z-20 font-mono text-[7px] text-[var(--neon-cyan)]/40 uppercase space-y-1 select-none hidden sm:block">
+                    <div>Sector: PHANTOM_01</div>
+                    <div>Kernel: v4.2.0-STABLE</div>
+                    <div>Latency: 14ms</div>
+                </div>
+
+                <div className="absolute top-4 right-4 z-20 font-mono text-[7px] text-[var(--neon-cyan)]/40 uppercase text-right space-y-1 select-none hidden sm:block">
+                    <div>Signal_ID: {signalId || "INITIALIZING..."}</div>
+                    <div>Buffer: 0xCF42</div>
+                    <div>Uptime: 99.98%</div>
+                </div>
+
+                <div className="relative w-full h-[200px] mt-8 flex items-center justify-center z-10 px-8">
+                    <div className="relative w-full h-full flex items-center overflow-visible">
+                        <svg className="w-full h-full overflow-visible" viewBox="0 0 1000 150" preserveAspectRatio="none">
+                            <line x1="0" y1="75" x2="1000" y2="75" stroke="var(--neon-cyan)" strokeWidth="0.5" strokeDasharray="10 10" className="opacity-20" />
 
                             <defs>
-                                <linearGradient id="liveGradient" x1="0" y1="0" x2="1" y2="0">
-                                    <stop offset="0%" stopColor="var(--neon-primary)" stopOpacity="0" />
-                                    <stop offset="20%" stopColor="var(--neon-primary)" stopOpacity="0.5" />
-                                    <stop offset="100%" stopColor="var(--neon-primary)" stopOpacity="1" />
+                                <linearGradient id="liveGradientHUD" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stopColor="var(--neon-cyan)" stopOpacity="0" />
+                                    <stop offset="50%" stopColor="var(--neon-cyan)" stopOpacity="0.8" />
+                                    <stop offset="100%" stopColor="var(--neon-cyan)" stopOpacity="1" />
                                 </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
                             </defs>
 
-                            {/* Background Trace */}
+                            {/* Background Trace (Shadow) */}
                             <path
                                 d={pathD}
-                                stroke="var(--neon-primary)"
-                                strokeOpacity="0.1"
+                                stroke="var(--neon-cyan)"
+                                strokeOpacity="0.05"
+                                strokeWidth="4"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="transition-all duration-500"
+                            />
+
+                            {/* Static Trace base */}
+                            <path
+                                d={pathD}
+                                stroke="var(--neon-cyan)"
+                                strokeOpacity="0.15"
                                 strokeWidth="1"
                                 fill="none"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
+                                className="transition-all duration-500"
                             />
 
                             {/* Animated Trace (Driven by shared MotionValue) */}
                             <motion.path
                                 d={pathD}
-                                stroke="url(#liveGradient)"
-                                strokeWidth="3"
+                                stroke="url(#liveGradientHUD)"
+                                strokeWidth="2.5"
                                 fill="none"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
+                                filter="url(#glow)"
                                 style={{
-                                    pathLength: progress, // Syncs with progress 0-1
-                                    filter: "drop-shadow(0 0 4px var(--neon-primary))"
+                                    pathLength: progress,
                                 }}
                             />
 
-                            {/* Scanning Dot (Driven by shared MotionValue transformed to %) */}
+                            {/* Scanning Dot */}
                             <motion.circle
-                                key={timeframe} // Force remount when path changes to ensure offset-path updates correctly
-                                r="4"
+                                key={timeframe}
+                                r="3.5"
                                 fill="white"
                                 style={{
                                     offsetPath: `path("${pathD}")`,
-                                    // Use CSS variable to avoid React unknown prop warning for offsetDistance
                                     "--offset-distance": offsetDistance,
                                     offsetDistance: "var(--offset-distance)",
-                                    filter: "drop-shadow(0 0 8px var(--neon-primary))"
+                                    filter: "drop-shadow(0 0 8px var(--neon-cyan))"
                                 } as any}
                             />
                         </svg>
 
-                        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
+                        <div className="absolute inset-0 pointer-events-none" />
                     </div>
                 </div>
 
-                <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none z-20">
-                    <p className="text-[10px] text-muted-foreground font-mono bg-card/40 inline-block px-2 rounded backdrop-blur-sm border border-border/50">
-                        {cyclesInView} TOTAL CONTRIBUTIONS • LIVE SIGNAL
-                    </p>
+                {/* Bottom Activity Bar */}
+                <div className="mt-auto px-4 py-3 bg-[var(--neon-cyan)]/5 border-t border-[var(--neon-cyan)]/10 flex items-center justify-between z-20">
+                    <div className="flex items-center gap-4">
+                        <div className="flex flex-col">
+                            <span className="text-[7px] font-mono text-muted-foreground uppercase opacity-50 tracking-tighter">Total Sequence</span>
+                            <span className="text-xs font-black font-mono text-[var(--neon-cyan)] tracking-tighter shadow-none">
+                                {cyclesInView.toString().padStart(5, '0')} <span className="text-[8px] opacity-50">CYCLES</span>
+                            </span>
+                        </div>
+                        <div className="h-6 w-[1px] bg-[var(--neon-cyan)]/20" />
+                        <div className="flex flex-col">
+                            <span className="text-[7px] font-mono text-muted-foreground uppercase opacity-50 tracking-tighter">Peak Intensity</span>
+                            <span className="text-xs font-black font-mono text-[var(--neon-lime)] tracking-tighter">
+                                {maxCount.toString().padStart(2, '0')} <span className="text-[8px] opacity-50">PULSE/S</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-1 items-center">
+                        <div className="w-1.5 h-1.5 bg-[var(--neon-cyan)] animate-pulse shadow-[0_0_5px_var(--neon-cyan)]" />
+                        <span className="text-[9px] font-mono text-[var(--neon-cyan)] uppercase tracking-[0.2em] animate-pulse">Live Signal Stream</span>
+                    </div>
                 </div>
+
+                {/* Animation Styles */}
+                <style jsx>{`
+                    @keyframes scanline {
+                        0% { transform: translateY(-100%); opacity: 0; }
+                        50% { opacity: 1; }
+                        100% { transform: translateY(350px); opacity: 0; }
+                    }
+                    .animate-scanline {
+                        animation: scanline 4s linear infinite;
+                    }
+                `}</style>
             </div>
         </div>
     );

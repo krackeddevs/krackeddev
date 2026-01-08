@@ -107,118 +107,152 @@ export function EditProfileForm({ initialData, onCancel }: EditProfileFormProps)
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-2xl mx-auto p-6 bg-card/50 border border-border rounded-lg shadow-lg backdrop-blur-sm">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 max-w-3xl mx-auto p-8 sm:p-12 bg-card/60 border border-[var(--neon-cyan)]/20 rounded-none shadow-[0_0_50px_rgba(0,0,0,0.1)] backdrop-blur-xl relative overflow-hidden group/form selection:bg-[var(--neon-cyan)]/30">
+                {/* HUD Elements */}
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[var(--neon-cyan)]" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[var(--neon-cyan)]" />
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[var(--neon-cyan)]" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[var(--neon-cyan)]" />
+                <div className="absolute inset-0 bg-scanline pointer-events-none opacity-[0.03]" />
 
-                <div className="space-y-2">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-neon-primary to-neon-secondary bg-clip-text text-transparent">
-                        Edit Profile
+                <div className="space-y-2 border-b border-[var(--neon-cyan)]/10 pb-6 relative">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="w-2 h-2 bg-[var(--neon-cyan)] animate-pulse" />
+                        <span className="text-[10px] font-mono text-[var(--neon-cyan)] tracking-[0.5em] uppercase font-black">Configuration_Console</span>
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-foreground uppercase italic leading-none">
+                        Identity <span className="text-transparent" style={{ WebkitTextStroke: '1px currentColor' }}>Calibration</span>
                     </h2>
-                    <p className="text-muted-foreground">
-                        Update your developer persona and stats.
+                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest opacity-60">
+                        Adjusting neural parameters and sectors...
                     </p>
+                    <div className="absolute top-0 right-0 text-[10px] font-mono text-[var(--neon-cyan)] opacity-20 hidden sm:block">
+                        SEC_LEV: 0xROOT
+                    </div>
                 </div>
 
-                <div className="grid gap-6">
-                    <FormField
-                        control={form.control}
-                        name="fullName"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Display Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="e.g. John Doe" {...field} className="bg-background/50" />
-                                </FormControl>
-                                <FormDescription>
-                                    Your real name (optional).
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="username"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Codename</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="e.g. CyberPunk_2077" {...field} className="bg-background/50" />
-                                </FormControl>
-                                <FormDescription>
-                                    Your display name in the directory.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="location"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Attributes: Location</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="e.g. Neo Tokyo, Digital Void" {...field} className="bg-background/50" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="developerRole"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Class</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <div className="grid gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <FormField
+                            control={form.control}
+                            name="fullName"
+                            render={({ field }) => (
+                                <FormItem className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none">01_Display_Name</span>
+                                    </div>
                                     <FormControl>
-                                        <SelectTrigger className="bg-background/50">
-                                            <SelectValue placeholder="Select your class" />
-                                        </SelectTrigger>
+                                        <Input
+                                            placeholder="UNIDENTIFIED_OPERATIVE"
+                                            {...field}
+                                            className="bg-black/40 border-[var(--neon-cyan)]/20 rounded-none font-mono text-sm focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--neon-cyan)]/20 transition-all placeholder:opacity-20 uppercase"
+                                        />
                                     </FormControl>
-                                    <SelectContent>
-                                        {developerRoles.map((role) => (
-                                            <SelectItem key={role.value} value={role.value}>
-                                                {role.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                                    <FormMessage className="text-[10px] font-mono uppercase text-red-500" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none">02_Owner_Handle</span>
+                                    </div>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="NETRUNNER_X"
+                                            {...field}
+                                            className="bg-black/40 border-[var(--neon-cyan)]/20 rounded-none font-mono text-sm focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--neon-cyan)]/20 transition-all placeholder:opacity-20"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-[10px] font-mono uppercase text-red-500" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <FormField
+                            control={form.control}
+                            name="location"
+                            render={({ field }) => (
+                                <FormItem className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none">03_Sector_Lat</span>
+                                    </div>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="NEO_KUALA_LUMPUR"
+                                            {...field}
+                                            className="bg-black/40 border-[var(--neon-cyan)]/20 rounded-none font-mono text-sm focus:border-[var(--neon-cyan)] focus:ring-1 focus:ring-[var(--neon-cyan)]/20 transition-all placeholder:opacity-20 uppercase"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-[10px] font-mono uppercase text-red-500" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="developerRole"
+                            render={({ field }) => (
+                                <FormItem className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none">04_Specialization_Class</span>
+                                    </div>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger className="bg-card/40 border-[var(--neon-cyan)]/20 rounded-none font-mono text-sm focus:border-[var(--neon-cyan)] transition-all uppercase italic font-bold">
+                                                <SelectValue placeholder="CHOOSE_CLASS" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className="bg-card border-[var(--neon-cyan)]/20 rounded-none font-mono">
+                                            {developerRoles.map((role) => (
+                                                <SelectItem key={role.value} value={role.value} className="focus:bg-[var(--neon-cyan)] focus:text-primary-foreground uppercase">
+                                                    {role.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage className="text-[10px] font-mono uppercase text-red-500" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
 
                     <FormField
                         control={form.control}
                         name="stack"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Tech Arsenal (Select Multiple)</FormLabel>
+                            <FormItem className="space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none shrink-0">05_Tech_Arsenal</span>
+                                    <div className="h-px w-full bg-[var(--neon-cyan)]/10" />
+                                </div>
                                 <FormControl>
                                     <ToggleGroup
                                         type="multiple"
                                         variant="outline"
                                         value={field.value}
                                         onValueChange={field.onChange}
-                                        className="flex flex-wrap justify-start gap-2"
+                                        className="flex flex-wrap justify-start gap-3"
                                     >
                                         {techStacks.map((tech) => (
                                             <ToggleGroupItem
                                                 key={tech}
                                                 value={tech}
                                                 aria-label={`Toggle ${tech}`}
-                                                className="border-primary/20 data-[state=on]:bg-neon-primary/20 data-[state=on]:text-neon-primary hover:bg-neon-primary/10 hover:text-neon-primary transition-all duration-300"
+                                                className="border-[var(--neon-cyan)]/20 rounded-none font-mono text-[10px] uppercase tracking-widest data-[state=on]:bg-[var(--neon-cyan)] data-[state=on]:text-primary-foreground hover:border-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)]/10 hover:text-[var(--neon-cyan)] transition-all px-4 py-2"
                                             >
                                                 {tech}
                                             </ToggleGroupItem>
                                         ))}
                                     </ToggleGroup>
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-[10px] font-mono uppercase text-red-500" />
                             </FormItem>
                         )}
                     />
@@ -227,94 +261,128 @@ export function EditProfileForm({ initialData, onCancel }: EditProfileFormProps)
                         control={form.control}
                         name="bio"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Lore (Bio)</FormLabel>
+                            <FormItem className="space-y-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none">06_Identity_Lore</span>
+                                </div>
                                 <FormControl>
                                     <Textarea
-                                        placeholder="Tell us your backstory..."
-                                        className="resize-none bg-background/50 min-h-[100px]"
+                                        placeholder="DECRYPTING_LORE..."
+                                        className="resize-none bg-black/40 border-[var(--neon-cyan)]/20 rounded-none font-mono text-sm min-h-[120px] focus:border-[var(--neon-cyan)] italic focus:ring-1 focus:ring-[var(--neon-cyan)]/20"
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormDescription>
-                                    Brief description displayed on your profile card.
-                                </FormDescription>
-                                <FormMessage />
+                                <FormMessage className="text-[10px] font-mono uppercase text-red-500" />
                             </FormItem>
                         )}
                     />
 
-                    {/* Social Links Section */}
-                    <div className="space-y-4 pt-4 border-t border-border/50">
-                        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Social Links</h3>
+                    {/* Social Uplink Section */}
+                    <div className="space-y-10 pt-10 border-t border-[var(--neon-cyan)]/10">
+                        <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-mono text-[var(--neon-purple)] uppercase tracking-[0.4em] font-black shrink-0">External_Uplinks</span>
+                            <div className="h-[1px] w-full bg-[var(--neon-purple)]/20" />
+                        </div>
 
-                        <FormField
-                            control={form.control}
-                            name="xUrl"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>X (Twitter)</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="https://x.com/username" {...field} className="bg-background/50" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                            <FormField
+                                control={form.control}
+                                name="xUrl"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-3">
+                                        <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest opacity-60">X_Signal_ID</div>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="https://x.com/..."
+                                                {...field}
+                                                className="bg-black/20 border-[var(--neon-purple)]/20 rounded-none font-mono text-[11px] focus:border-[var(--neon-purple)]"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-[9px] font-mono text-red-500" />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            control={form.control}
-                            name="linkedinUrl"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>LinkedIn</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="https://linkedin.com/in/username" {...field} className="bg-background/50" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormField
+                                control={form.control}
+                                name="linkedinUrl"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-3">
+                                        <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest opacity-60">Link_Access</div>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="https://linkedin.com/..."
+                                                {...field}
+                                                className="bg-black/20 border-[var(--neon-purple)]/20 rounded-none font-mono text-[11px] focus:border-[var(--neon-purple)]"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-[9px] font-mono text-red-500" />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            control={form.control}
-                            name="websiteUrl"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Website / Portfolio</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="https://yoursite.com" {...field} className="bg-background/50" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormField
+                                control={form.control}
+                                name="websiteUrl"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-3">
+                                        <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest opacity-60">Net_Node</div>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="https://..."
+                                                {...field}
+                                                className="bg-black/20 border-[var(--neon-purple)]/20 rounded-none font-mono text-[11px] focus:border-[var(--neon-purple)]"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-[9px] font-mono text-red-500" />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-6 pt-10 border-t border-[var(--neon-cyan)]/10">
                     {onCancel && (
                         <Button
                             type="button"
                             variant="outline"
                             onClick={onCancel}
-                            className="w-full text-white border-white/20 hover:bg-white/10 hover:text-white"
+                            disabled={isLoading}
+                            className="w-full sm:w-[200px] border-border/20 hover:border-white hover:bg-white/5 text-muted-foreground hover:text-white font-mono text-xs uppercase tracking-[0.2em] rounded-none py-6"
                         >
-                            Cancel
+                            Abort_Sequence
                         </Button>
                     )}
-                    <Button type="submit" disabled={isLoading} className="w-full bg-neon-primary hover:bg-neon-secondary text-black font-bold transition-all duration-300 shadow-[0_0_10px_rgba(34,197,94,0.5)]">
+                    <Button
+                        type="submit"
+                        disabled={isLoading}
+                        variant="cyberpunk"
+                        className="flex-1 bg-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)]/80 text-primary-foreground font-mono font-black uppercase tracking-[0.3em] rounded-none py-6 shadow-[0_0_30px_rgba(var(--neon-cyan-rgb),0.2)] hover:shadow-[0_0_40px_rgba(var(--neon-cyan-rgb),0.4)] transition-all"
+                    >
                         {isLoading ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Saving...
-                            </>
+                            <div className="flex items-center gap-3">
+                                <Loader2 className="h-4 w-4 animate-spin text-primary-foreground" />
+                                <span>Calibrating...</span>
+                            </div>
                         ) : (
-                            "Save Changes"
+                            "Execute_Calibration"
                         )}
                     </Button>
                 </div>
+
+                <style jsx global>{`
+                    .bg-scanline {
+                        background: linear-gradient(to bottom, transparent, rgba(34, 211, 238, 0.1) 50%, transparent);
+                        background-size: 100% 4px;
+                        animation: scan 10s linear infinite;
+                    }
+                    @keyframes scan {
+                        from { transform: translateY(-100%); }
+                        to { transform: translateY(100%); }
+                    }
+                `}</style>
             </form>
-        </Form>
+        </Form >
     );
 }

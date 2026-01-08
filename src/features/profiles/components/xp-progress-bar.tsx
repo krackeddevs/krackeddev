@@ -27,44 +27,49 @@ export function XPProgressBar({ showDetails = false, compact = false }: XPProgre
     if (!progress) return null;
 
     return (
-        <div className="xp-progress-container w-full relative">
+        <div className="xp-progress-container w-full relative space-y-3">
             {/* Level Badge Header */}
-            <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                    <span className="text-cyan-400 font-bold text-lg">Level {progress.currentLevel}</span>
+            <div className="flex items-end justify-between">
+                <div className="flex flex-col">
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none">Neural Progression</span>
+                    <span className="text-xl font-black font-mono text-[var(--neon-cyan)] uppercase italic mt-1 leading-none">LEVEL_0{progress.currentLevel}</span>
                 </div>
                 {showDetails && (
-                    <div className="text-sm text-muted-foreground">
-                        <span className="text-foreground">{Math.floor(progress.xpInCurrentLevel)}</span>
-                        <span className="mx-1">/</span>
-                        <span>{Math.floor(progress.xpForNextLevel - progress.xpForCurrentLevel)} XP</span>
+                    <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+                        <span className="text-foreground font-bold">{Math.floor(progress.xpInCurrentLevel)}</span>
+                        <span className="mx-1 opacity-30">/</span>
+                        <span>{Math.floor(progress.xpForNextLevel - progress.xpForCurrentLevel)} UNIT_XP</span>
                     </div>
                 )}
             </div>
 
-            {/* Progress Bar */}
-            <div className="relative w-full h-3 bg-muted/30 rounded-full overflow-hidden border border-border/50">
+            {/* Progress Bar - HUD Variant */}
+            <div className="relative w-full h-4 bg-background border border-[var(--neon-cyan)]/20 rounded-none overflow-hidden p-0.5">
+                {/* Background Grid */}
+                <div className="absolute inset-0 flex justify-between px-1 opacity-10 z-0">
+                    {[...Array(20)].map((_, i) => (
+                        <div key={i} className="w-[1px] h-full bg-[var(--neon-cyan)]" />
+                    ))}
+                </div>
+
                 <div
-                    className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-600 transition-all duration-500 ease-out"
+                    className="h-full bg-gradient-to-r from-[var(--neon-cyan)] to-[var(--neon-purple)] transition-all duration-1000 ease-out relative z-10 shadow-[0_0_15px_rgba(34,211,238,0.3)]"
                     style={{ width: `${progress.progressPercentage}%` }}
-                />
-                {/* Glow effect overlay */}
-                <div
-                    className="absolute inset-0 bg-cyan-400 opacity-20 blur-sm pointer-events-none"
-                    style={{
-                        width: `${progress.progressPercentage}%`,
-                        boxShadow: '0 0 10px rgba(34, 211, 238, 0.5)'
-                    }}
-                />
+                >
+                    <div className="absolute inset-0 bg-white/20 animate-shimmer" />
+                </div>
             </div>
 
             {showDetails && (
-                <div className="flex justify-between mt-1">
-                    <div className="text-xs text-muted-foreground">
-                        Current XP: {progress.currentXP}
+                <div className="flex justify-between items-center bg-background/20 p-2 border border-border/10">
+                    <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">
+                        Total Accumulation: <span className="text-foreground">{progress.currentXP}</span>
                     </div>
-                    <div className="text-xs text-cyan-500/80">
-                        {Math.floor(progress.xpNeededForNext)} XP to next level
+                    <div className="flex items-center gap-1">
+                        <div className="w-1 h-1 bg-[var(--neon-lime)] animate-pulse" />
+                        <div className="text-[9px] font-mono text-[var(--neon-lime)] uppercase tracking-widest">
+                            {Math.floor(progress.xpNeededForNext)} XP_TO_NEXT_LVL
+                        </div>
                     </div>
                 </div>
             )}
