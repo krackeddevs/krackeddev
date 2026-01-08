@@ -48,14 +48,14 @@ export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="w-full border-t border-border/20 bg-background pt-16 pb-8 px-4 transition-colors duration-300 relative overflow-hidden">
+        <footer className="w-full border-t border-border/20 bg-background pt-10 pb-6 px-4 transition-colors duration-300 relative overflow-hidden">
             {/* Grid Pattern Background */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.03] grid-background z-0" />
 
             <div className="container mx-auto max-w-7xl relative z-10">
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-16">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-10">
                     {/* Brand Section */}
-                    <div className="col-span-2 space-y-6">
+                    <div className="col-span-2 space-y-4">
                         <Link href="/" className="group inline-flex items-center gap-2">
                             <span className="font-mono text-xl font-bold tracking-tighter text-foreground group-hover:text-[var(--neon-primary)] transition-colors duration-300">
                                 &lt;Kracked Devs /&gt;
@@ -85,11 +85,11 @@ export default function Footer() {
 
                     {/* Links Sections */}
                     {FOOTER_LINKS.map((group) => (
-                        <div key={group.title} className="space-y-4">
+                        <div key={group.title} className="space-y-3">
                             <h3 className="font-mono text-[11px] font-bold tracking-[0.2em] text-foreground/40 uppercase">
                                 {group.title}
                             </h3>
-                            <ul className="space-y-2">
+                            <ul className="space-y-1">
                                 {group.links.map((link) => (
                                     <li key={link.name}>
                                         <Link
@@ -106,7 +106,7 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="pt-8 border-t border-border/10 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="pt-6 border-t border-border/10 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="flex items-center gap-6">
                         <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest">
                             © {currentYear} KRACKED_OS v1.4.0
