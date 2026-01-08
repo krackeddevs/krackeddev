@@ -115,7 +115,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
           </Button>
 
           <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <span className="font-mono text-lg font-bold tracking-tighter text-foreground group-hover:text-[var(--neon-primary)] transition-colors duration-300 whitespace-nowrap">
+            <span className="font-mono text-sm sm:text-base md:text-lg font-bold tracking-tighter text-foreground group-hover:text-[var(--neon-primary)] transition-colors duration-300 whitespace-nowrap">
               &lt;Kracked Devs /&gt;
             </span>
             <span className="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider bg-[var(--beta-badge)] text-[var(--beta-badge-text)]">
