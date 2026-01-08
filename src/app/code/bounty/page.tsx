@@ -133,7 +133,7 @@ export default function BountyListPage() {
             {/* Header Section */}
             <div>
               <Link
-                href="/code"
+                href="/"
                 className="inline-flex items-center text-muted-foreground hover:text-[var(--neon-primary)] transition-colors font-mono text-[9px] mb-4 uppercase tracking-[0.2em]"
               >
                 <ArrowLeft className="w-3 h-3 mr-2" />
@@ -205,7 +205,7 @@ export default function BountyListPage() {
             {!loading && (
               <div className="lg:sticky lg:top-24">
                 <BountySidebar
-                  bounties={allBounties}
+                  bounties={filteredBounties}
                   filters={filters}
                   onFiltersChange={setFilters}
                 />
