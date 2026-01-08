@@ -27,8 +27,9 @@ export function BountyBoard() {
                     ))
                 ) : (
                     bounties?.slice(0, 2).map((bounty) => (
-                        <div
+                        <Link
                             key={bounty.id}
+                            href={`/code/bounty/${bounty.slug}`}
                             className="bg-background border border-border/20 rounded-sm overflow-hidden hover:border-[var(--neon-primary)] transition-all duration-300 group flex flex-col shadow-sm"
                         >
                             {/* Card Header Style from Figma */}
@@ -66,7 +67,7 @@ export function BountyBoard() {
                                     {bounty.createdAt ? new Date(bounty.createdAt).toLocaleDateString() : 'N/A'}
                                 </span>
                             </div>
-                        </div>
+                        </Link>
                     ))
                 )}
             </div>
