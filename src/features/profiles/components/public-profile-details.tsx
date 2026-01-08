@@ -5,7 +5,7 @@ import { ContributionStats, GithubStats, BountyStats as BountyStatsType } from "
 import { ProfileData } from "../actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Terminal, Code2, User, ExternalLink, Linkedin, Trophy, Coins, ArrowLeft } from "lucide-react";
+import { MapPin, Terminal, Code2, User, ExternalLink, Linkedin, Trophy, Coins, ArrowLeft, Globe } from "lucide-react";
 import { GithubGraph } from "./github-graph";
 import { TopLanguages } from "./top-languages";
 import Link from "next/link";
@@ -29,230 +29,275 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
     const hasSocialLinks = profile.x_url || profile.linkedin_url || profile.website_url;
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-8 animate-in fade-in duration-500">
-            {/* Back Button */}
-            <Link
-                href="/members"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-white transition-colors font-mono text-sm"
-            >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Members
-            </Link>
-
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6 border-b border-white/10 pb-6">
-                {/* Avatar */}
-                {profile.avatar_url && (
-                    <img
-                        src={profile.avatar_url}
-                        alt={profile.username || "User"}
-                        className="w-24 h-24 rounded-full border-2 border-neon-primary"
-                    />
-                )}
-                <div className="space-y-1 flex-1">
-                    {profile.full_name && (
-                        <h1 className="text-2xl font-bold font-mono tracking-tighter bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-                            {profile.full_name}
-                        </h1>
-                    )}
-                    <p className="text-lg text-muted-foreground font-mono">
-                        @{profile.username || "anonymous"}
-                    </p>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                        <User className="w-4 h-4" />
-                        <span className="font-mono text-sm uppercase tracking-widest">
-                            {profile.developer_role || profile.role || "Developer"}
-                        </span>
+        <div className="max-w-7xl mx-auto p-4 space-y-10 animate-in fade-in duration-500 selection:bg-[var(--neon-cyan)]/30">
+            {/* Header / Identity HUD */}
+            <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-[var(--neon-purple)] to-transparent opacity-10 blur-sm group-hover:opacity-20 transition-opacity" />
+                <div className="relative bg-background/50 border border-[var(--neon-cyan)]/20 p-6 md:p-10 flex flex-col md:flex-row items-center md:items-end gap-8 backdrop-blur-xl">
+                    {/* Scanning Avatar */}
+                    <div className="relative shrink-0">
+                        <div className="absolute -inset-2 border-2 border-[var(--neon-purple)]/30 border-dashed rounded-full animate-spin-slow" />
+                        <div className="absolute inset-0 bg-[var(--neon-purple)] blur-xl opacity-10 animate-pulse" />
+                        <div className="relative w-32 h-32 rounded-full border-4 border-foreground/10 overflow-hidden shadow-[0_0_30px_rgba(168,85,247,0.1)]">
+                            {profile.avatar_url ? (
+                                <img
+                                    src={profile.avatar_url}
+                                    alt={profile.username || "User"}
+                                    className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700 hover:scale-110"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-muted/20 flex items-center justify-center">
+                                    <User className="w-12 h-12 text-muted-foreground/30" />
+                                </div>
+                            )}
+                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-20" />
+                        </div>
+                        {/* Status Blip */}
+                        <div className="absolute bottom-1 right-1 w-6 h-6 bg-background border-2 border-[var(--neon-lime)] rounded-full flex items-center justify-center shadow-lg">
+                            <div className="w-2.5 h-2.5 bg-[var(--neon-lime)] rounded-full animate-pulse shadow-[0_0_8px_var(--neon-lime)]" />
+                        </div>
                     </div>
-                    {/* Social Links */}
-                    {hasSocialLinks && (
-                        <div className="flex items-center gap-3 pt-2">
-                            {profile.x_url && (
-                                <a href={profile.x_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-                                </a>
-                            )}
-                            {profile.linkedin_url && (
-                                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
-                                    <Linkedin className="w-4 h-4" />
-                                </a>
-                            )}
-                            {profile.website_url && (
-                                <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-neon-primary transition-colors">
-                                    <ExternalLink className="w-4 h-4" />
-                                </a>
+
+                    <div className="flex-1 space-y-4 text-center md:text-left">
+                        <div className="space-y-1">
+                            <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+                                <span className="text-[10px] font-mono text-[var(--neon-cyan)] bg-[var(--neon-cyan)]/10 px-2 py-0.5 border border-[var(--neon-cyan)]/20 tracking-widest uppercase">
+                                    ID: 0x{profile.id.slice(0, 8).toUpperCase()}
+                                </span>
+                                <span className="text-[10px] font-mono text-muted-foreground uppercase opacity-50">Authorized_User</span>
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black font-mono tracking-tighter text-foreground uppercase italic leading-none">
+                                {profile.full_name || profile.username}
+                            </h1>
+                            <p className="text-xl md:text-2xl text-muted-foreground font-mono font-light tracking-widest">
+                                @{profile.username || "anonymous"}
+                            </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 text-muted-foreground">
+                            <div className="flex items-center gap-2 group/role transition-colors hover:text-[var(--neon-cyan)]">
+                                <Terminal className="w-4 h-4 text-[var(--neon-cyan)]" />
+                                <span className="font-mono text-xs uppercase tracking-[0.3em] font-bold">
+                                    {profile.developer_role || profile.role || "Specialist"}
+                                </span>
+                            </div>
+                            {profile.location && (
+                                <div className="flex items-center gap-2 transition-colors hover:text-[var(--neon-purple)]">
+                                    <MapPin className="w-4 h-4 text-[var(--neon-purple)]" />
+                                    <span className="font-mono text-xs uppercase tracking-widest">{profile.location}</span>
+                                </div>
                             )}
                         </div>
-                    )}
+
+                        {/* Social Signals */}
+                        {hasSocialLinks && (
+                            <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+                                {profile.x_url && (
+                                    <a href={profile.x_url} target="_blank" rel="noopener noreferrer" className="p-2 border border-border/20 bg-muted/5 hover:border-[var(--neon-purple)] hover:bg-[var(--neon-purple)]/10 text-muted-foreground hover:text-white transition-all group">
+                                        <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                                    </a>
+                                )}
+                                {profile.linkedin_url && (
+                                    <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="p-2 border border-border/20 bg-muted/5 hover:border-[var(--neon-purple)] hover:bg-[var(--neon-purple)]/10 text-muted-foreground hover:text-white transition-all group">
+                                        <Linkedin className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                    </a>
+                                )}
+                                {profile.website_url && (
+                                    <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="p-2 border border-border/20 bg-muted/5 hover:border-[var(--neon-purple)] hover:bg-[var(--neon-purple)]/10 text-muted-foreground hover:text-white transition-all group">
+                                        <Globe className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                    </a>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* XP/Level HUD Module */}
+                    <div className="w-full md:w-64 space-y-3 bg-transparent border border-border/20 p-5 backdrop-blur-md relative overflow-hidden group/hud">
+                        <div className="absolute top-0 left-0 w-2 h-[1px] bg-[var(--neon-cyan)]" />
+                        <div className="absolute top-0 left-0 w-[1px] h-2 bg-[var(--neon-cyan)]" />
+                        <div className="flex justify-between items-end mb-1">
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest leading-none">Protocol Grade</span>
+                                <span className="text-[7px] font-mono text-[var(--neon-cyan)]/40 uppercase mt-1">Class: SR_DEV_V3</span>
+                            </div>
+                            <span className="text-[10px] font-mono text-[var(--neon-cyan)] font-black italic">LVL {(profile.level || 1).toString().padStart(2, '0')}</span>
+                        </div>
+                        <div className="h-4 w-full bg-background/50 border border-[var(--neon-cyan)]/20 rounded-none overflow-hidden p-0.5 relative">
+                            <div
+                                className="h-full bg-gradient-to-r from-[var(--neon-cyan)] to-[var(--neon-purple)] relative shadow-[0_0_15px_rgba(var(--neon-cyan-rgb),0.4)] z-10 transition-all duration-1000"
+                                style={{ width: `${Math.min(100, ((profile.xp || 0) % 100))}%` }}
+                            />
+                        </div>
+                        <div className="flex justify-between items-center relative z-10">
+                            <span className="text-[11px] font-mono font-black text-foreground">{profile.xp || 0} <span className="opacity-40 font-normal">XP</span></span>
+                            <div className="flex gap-1 items-center">
+                                <div className="w-1 h-1 bg-[var(--neon-cyan)] animate-pulse" />
+                                <span className="text-[9px] font-mono text-muted-foreground uppercase opacity-40">Uplink Active</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* XP and Level Section */}
-            <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md overflow-hidden relative group">
-                {/* Glow effect */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-neon-primary/5 rounded-full blur-[100px] -z-10 group-hover:bg-neon-primary/10 transition-all duration-500" />
-
-                <CardContent className="p-6">
-                    <div className="flex flex-col md:flex-row items-center gap-6">
-                        {/* Level Badge */}
-                        <div className="flex-shrink-0">
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-neon-primary blur-md opacity-20 animate-pulse" />
-                                <div className="relative z-10 w-20 h-20 rounded-full bg-card border-2 border-neon-primary flex flex-col items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.3)]">
-                                    <span className="text-[10px] uppercase tracking-widest text-neon-primary font-mono mb-1">Level</span>
-                                    <span className="text-3xl font-bold font-mono text-foreground leading-none">{profile.level}</span>
-                                </div>
-                            </div>
+            {/* Main Content Grid (9:3) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                {/* Left Column (9) */}
+                <div className="lg:col-span-9 space-y-10">
+                    {/* Activity & Progress */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+                        <div className="md:col-span-4 bg-background/30 border border-[var(--neon-cyan)]/20 p-6 flex flex-col justify-center gap-6 relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-scanline opacity-[0.03] pointer-events-none" />
+                            <XPProgressBar showDetails profile={profile} />
                         </div>
-
-                        {/* Progress Info */}
-                        <div className="flex-1 w-full space-y-3">
-                            <div className="flex justify-between items-end">
-                                <div>
-                                    <h3 className="text-sm font-mono text-muted-foreground uppercase tracking-widest mb-1">Experience</h3>
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-2xl font-bold font-mono text-foreground">{profile.xp}</span>
-                                        <span className="text-xs font-mono text-neon-primary">XP</span>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Next Level</div>
-                                    <div className="text-sm font-mono text-muted-foreground">
-                                        Progressing
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Simple Progress Bar Visual */}
-                            <div className="h-2 w-full bg-muted/30 rounded-full overflow-hidden border border-border/50">
-                                <div
-                                    className="h-full bg-gradient-to-r from-neon-primary to-neon-secondary relative"
-                                    style={{ width: `${Math.min(100, ((profile.xp || 0) % 100))}%` }}
-                                >
-                                    <div className="absolute inset-0 bg-white/20 animate-shimmer" />
-                                </div>
-                            </div>
+                        <div className="md:col-span-8">
+                            <ContributionStatsCard
+                                stats={contributionStats || null}
+                            />
                         </div>
                     </div>
-                </CardContent>
-            </Card>
 
-            {/* Contribution Stats */}
-            <div>
-                <ContributionStatsCard
-                    stats={contributionStats || null}
-                    isOwnProfile={false}
-                // Don't pass XP/Level here to avoid incorrect internal display if needed, 
-                // though duplicate simple display might be fine.
-                />
-            </div>
+                    {/* Dev Pulse Section */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Dev Pulse Grid</span>
+                            <div className="h-px w-full bg-border/10" />
+                        </div>
+                        {pulseData && <DevPulse data={pulseData} />}
+                    </div>
 
-            {/* Dev Pulse moved to main column */}
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Main Info Column */}
-                <div className="col-span-1 md:col-span-2 space-y-6">
-                    {/* Bio */}
-                    {profile.bio && (
-                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
-                                    <Terminal className="w-4 h-4" />
-                                    Bio / Lore
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-muted-foreground leading-relaxed font-mono text-sm">
-                                    {profile.bio}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Bounty Stats */}
+                    {/* Bounty Success Board */}
                     {bountyStats && (bountyStats.totalWins > 0 || bountyStats.totalEarnings > 0) && (
-                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
-                            <CardContent className="pt-6">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="text-center p-4 bg-muted/40 border border-border/50 rounded-lg">
-                                        <Trophy className="w-6 h-6 text-rank-gold mx-auto mb-2" />
-                                        <p className="text-2xl font-bold font-mono text-foreground">{bountyStats.totalWins}</p>
-                                        <p className="text-xs text-muted-foreground font-mono uppercase">Bounties Won</p>
-                                    </div>
-                                    <div className="text-center p-4 bg-muted/40 border border-border/50 rounded-lg">
-                                        <Coins className="w-6 h-6 text-neon-cyan mx-auto mb-2" />
-                                        <p className="text-2xl font-bold font-mono text-foreground">RM {bountyStats.totalEarnings}</p>
-                                        <p className="text-xs text-muted-foreground font-mono uppercase">Total Earnings</p>
-                                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-background/20 border border-[var(--neon-cyan)]/20 p-6 flex items-center justify-between group hover:border-[var(--neon-cyan)]/50 transition-colors">
+                                <div className="space-y-1">
+                                    <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Contracts Archived</div>
+                                    <div className="text-3xl font-black font-mono text-foreground uppercase italic tracking-tighter shadow-none">{bountyStats.totalWins.toString().padStart(2, '0')}</div>
                                 </div>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Dev Pulse Visualization - Main Column */}
-                    {pulseData && (
-                        <div className="border border-neon-primary/30 rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_var(--neon-primary)]">
-                            <DevPulse data={pulseData} />
+                                <Trophy className="w-10 h-10 text-[var(--neon-cyan)] opacity-20 group-hover:opacity-100 transition-all duration-500 scale-125" />
+                            </div>
+                            <div className="bg-background/20 border border-[var(--neon-purple)]/20 p-6 flex items-center justify-between group hover:border-[var(--neon-purple)]/50 transition-colors">
+                                <div className="space-y-1">
+                                    <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Total Reward Payout</div>
+                                    <div className="text-3xl font-black font-mono text-foreground uppercase italic tracking-tighter shadow-none">RM {bountyStats.totalEarnings}</div>
+                                </div>
+                                <Coins className="w-10 h-10 text-[var(--neon-purple)] opacity-20 group-hover:opacity-100 transition-all duration-500 scale-125" />
+                            </div>
                         </div>
                     )}
 
-                    {/* GitHub Graph */}
-                    {githubStats && (
-                        <GithubGraph
-                            data={githubStats.contributionCalendar}
-                            totalContributions={githubStats.totalContributions}
-                        />
+                    {/* Bio / Lore Section */}
+                    {profile.bio && (
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Identity Lore</span>
+                                <div className="h-px w-full bg-border/10" />
+                            </div>
+                            <div className="bg-background/50 border-l-4 border-l-[var(--neon-purple)] p-6 font-mono text-sm text-foreground/70 italic leading-relaxed backdrop-blur-sm">
+                                "{profile.bio || "ACCESS_DENIED: User lore not found in sector database."}"
+                            </div>
+                        </div>
                     )}
+
+                    {/* Contribution History */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Network Matrix</span>
+                            <div className="h-px w-full bg-border/10" />
+                        </div>
+                        {githubStats && (
+                            <GithubGraph
+                                data={githubStats.contributionCalendar}
+                                totalContributions={githubStats.totalContributions}
+                            />
+                        )}
+                    </div>
                 </div>
 
-                {/* Side Column */}
-                <div className="col-span-1 space-y-6">
-                    {/* Location */}
-                    {profile.location && (
-                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
-                                    <MapPin className="w-4 h-4" />
-                                    Location
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-muted-foreground font-mono text-sm">{profile.location}</p>
-                            </CardContent>
-                        </Card>
-                    )}
+                {/* Right Column (3) */}
+                <div className="lg:col-span-3 space-y-10">
+                    {/* Activity Feed / Terminal */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--neon-cyan)] font-bold uppercase tracking-widest">
+                            <Terminal className="w-3 h-3" />
+                            <span>Recent Logs</span>
+                        </div>
+                        <div className="bg-background/80 border border-[var(--neon-purple)]/20 p-4 h-[450px] overflow-y-auto custom-scrollbar scrollbar-hide relative group/term">
+                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-5" />
+                            <div className="space-y-3 opacity-60">
+                                <div className="text-[var(--neon-cyan)]">[08:42:01] UPLINK_STABLE</div>
+                                <div>[09:15:33] Fetched sector data...</div>
+                                <div className="text-[var(--neon-lime)]">[10:04:15] Mission verified: DEV_PULSE_UP</div>
+                                <div>[11:30:00] Buffer overflow resolved.</div>
+                                <div className="text-[var(--neon-cyan)]">[12:45:10] Identity HUD refreshed.</div>
+                                <div>[14:22:05] Analyzing contribution matrix...</div>
+                                <div className="text-[var(--neon-lime)]">[15:40:12] User high-score detected.</div>
+                                <div>[16:11:44] Waiting for contract signals...</div>
+                                <div className="text-[var(--neon-cyan)]">[18:05:22] SYSCALL: PROFILE_HUD_REGEN</div>
+                                <div className="animate-pulse">_</div>
+                            </div>
+                        </div>
+                    </div>
 
-                    {/* Tech Stack */}
+                    {/* Tech Arsenal */}
                     {profile.stack && profile.stack.length > 0 && (
-                        <Card className="bg-card/40 border-neon-primary/30 backdrop-blur-md">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-neon-primary font-mono text-sm uppercase tracking-widest">
-                                    <Code2 className="w-4 h-4" />
-                                    Tech Arsenal
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex flex-wrap gap-2">
-                                    {profile.stack.map((tech) => (
-                                        <Badge
-                                            key={tech}
-                                            variant="outline"
-                                            className="bg-muted/40 text-muted-foreground border-border/50 font-mono text-xs"
-                                        >
-                                            {tech}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--neon-purple)] font-bold uppercase tracking-widest">
+                                <Code2 className="w-3 h-3" />
+                                <span>Tech Arsenal</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {profile.stack.map((tech) => (
+                                    <div
+                                        key={tech}
+                                        className="px-2 py-1 bg-background/30 border border-border/20 text-foreground/70 font-mono text-[10px] uppercase tracking-wider hover:border-[var(--neon-cyan)]/50 hover:text-[var(--neon-cyan)] transition-colors cursor-default"
+                                    >
+                                        {tech}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     )}
 
-                    {/* Top Languages */}
-                    {githubStats?.topLanguages && githubStats.topLanguages.length > 0 && (
-                        <TopLanguages languages={githubStats.topLanguages} />
-                    )}
+                    {/* Global Stats */}
+                    <div className="bg-[var(--neon-cyan)]/[0.02] border border-border/10 p-6 space-y-4">
+                        <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em] mb-4">// System Summary</div>
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                <span className="text-muted-foreground uppercase">Signal Stability</span>
+                                <span className="text-[var(--neon-lime)] font-bold">EXCELLENT</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                <span className="text-muted-foreground uppercase">Archive Grade</span>
+                                <span className="text-[var(--neon-cyan)] font-bold">LEGACY+</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                <span className="text-muted-foreground uppercase">Node Uptime</span>
+                                <span className="text-[var(--neon-purple)] font-bold">100%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            {/* Scanning Animation Styles */}
+            <style jsx global>{`
+                .animate-spin-slow {
+                    animation: spin 8s linear infinite;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .bg-scanline {
+                    background: linear-gradient(to bottom, transparent, rgba(34, 211, 238, 0.1) 50%, transparent);
+                    background-size: 100% 4px;
+                    animation: scan 6s linear infinite;
+                }
+                @keyframes scan {
+                    from { transform: translateY(-100%); }
+                    to { transform: translateY(100%); }
+                }
+            `}</style>
         </div>
     );
 }

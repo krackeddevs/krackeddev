@@ -32,6 +32,7 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
         totalContributions: githubStats.totalContributions,
         weeks: githubStats.contributionCalendar
     } : null), [githubStats]);
+
     const handleLinkGithub = () => {
         const supabase = createClient();
         supabase.auth.signInWithOAuth({
@@ -45,192 +46,262 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
     const hasSocialLinks = profile.x_url || profile.linkedin_url || profile.website_url;
 
     return (
-        <div className="w-full space-y-8 animate-in fade-in duration-500">
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border pb-6">
-                <div className="space-y-1">
-                    {profile.full_name && (
-                        <p className="text-sm text-muted-foreground font-mono">{profile.full_name}</p>
-                    )}
-                    <h1 className="text-3xl font-bold font-mono tracking-tighter bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-                        {profile.username || "Anonymous Netrunner"}
-                    </h1>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                        <User className="w-4 h-4" />
-                        <span className="font-mono text-sm uppercase tracking-widest">
-                            {profile.developer_role || profile.role || "Unclassified"}
-                        </span>
+        <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in duration-500 selection:bg-[var(--neon-cyan)]/30">
+            {/* Header / Identity HUD */}
+            <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-[var(--neon-purple)] to-transparent opacity-10 blur-sm group-hover:opacity-20 transition-opacity" />
+                <div className="relative bg-background/50 border border-[var(--neon-cyan)]/20 p-6 md:p-10 flex flex-col md:flex-row items-center md:items-end gap-8 backdrop-blur-xl">
+                    {/* Scanning Avatar */}
+                    <div className="relative shrink-0">
+                        <div className="absolute -inset-2 border-2 border-[var(--neon-purple)]/30 border-dashed rounded-full animate-spin-slow" />
+                        <div className="absolute inset-0 bg-[var(--neon-purple)] blur-xl opacity-10 animate-pulse" />
+                        <div className="relative w-32 h-32 rounded-full border-4 border-foreground/10 overflow-hidden shadow-[0_0_30px_rgba(168,85,247,0.1)]">
+                            {profile.avatar_url ? (
+                                <img
+                                    src={profile.avatar_url}
+                                    alt={profile.username || "User"}
+                                    className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700 hover:scale-110"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-muted/20 flex items-center justify-center">
+                                    <User className="w-12 h-12 text-muted-foreground/30" />
+                                </div>
+                            )}
+                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-20" />
+                        </div>
+                        {/* Status Blip */}
+                        <div className="absolute bottom-1 right-1 w-6 h-6 bg-background border-2 border-[var(--neon-lime)] rounded-full flex items-center justify-center shadow-lg">
+                            <div className="w-2.5 h-2.5 bg-[var(--neon-lime)] rounded-full animate-pulse shadow-[0_0_8px_var(--neon-lime)]" />
+                        </div>
                     </div>
-                    {/* Social Links */}
-                    {hasSocialLinks && (
-                        <div className="flex items-center gap-3 pt-2">
-                            {/* ... existing social links code ... */}
-                            {profile.x_url && (
-                                <a href={profile.x_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[var(--neon-primary)] transition-colors">
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-                                </a>
+
+                    <div className="flex-1 space-y-4 text-center md:text-left">
+                        <div className="space-y-1">
+                            <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+                                <span className="text-[10px] font-mono text-[var(--neon-purple)] bg-[var(--neon-purple)]/10 px-2 py-0.5 border border-[var(--neon-purple)]/20 tracking-widest uppercase">
+                                    OWNER_ACCESS_GRANTED
+                                </span>
+                                <span className="text-[10px] font-mono text-muted-foreground uppercase opacity-50">Node: Local_Auth</span>
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black font-mono tracking-tighter text-foreground uppercase italic leading-none">
+                                {profile.full_name || profile.username || "ANONYMOUS"}
+                            </h1>
+                            <p className="text-xl md:text-2xl text-muted-foreground font-mono font-light tracking-widest">
+                                @{profile.username || "netrunner"}
+                            </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 text-muted-foreground">
+                            <div className="flex items-center gap-2 group/role transition-colors hover:text-[var(--neon-cyan)]">
+                                <Terminal className="w-4 h-4 text-[var(--neon-cyan)]" />
+                                <span className="font-mono text-xs uppercase tracking-[0.3em] font-bold">
+                                    {profile.developer_role || profile.role || "Specialist"}
+                                </span>
+                            </div>
+                            {profile.location && (
+                                <div className="flex items-center gap-2 transition-colors hover:text-[var(--neon-purple)]">
+                                    <MapPin className="w-4 h-4 text-[var(--neon-purple)]" />
+                                    <span className="font-mono text-xs uppercase tracking-widest">{profile.location}</span>
+                                </div>
                             )}
-                            {profile.linkedin_url && (
-                                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[var(--neon-primary)] transition-colors">
-                                    <Linkedin className="w-4 h-4" />
-                                </a>
+                        </div>
+                    </div>
+
+                    {/* Action HUD Module */}
+                    <div className="w-full md:w-auto flex flex-col gap-3">
+                        <Button
+                            onClick={onEdit}
+                            variant="cyberpunk"
+                            className="bg-[var(--neon-cyan)] hover:bg-[var(--neon-cyan)]/80 text-black font-mono font-black uppercase tracking-widest px-8 shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                        >
+                            Configure Identity
+                        </Button>
+                        <div className="flex justify-between items-center px-1">
+                            <span className="text-[8px] font-mono text-muted-foreground uppercase tracking-widest">Last Sync: Just Now</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-[var(--neon-lime)] animate-pulse" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Content Grid (9:3) */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                {/* Left Column (9) */}
+                <div className="lg:col-span-9 space-y-12">
+                    {/* Activity & Progress */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+                        <div className="md:col-span-4 bg-background/30 border border-[var(--neon-cyan)]/20 p-6 flex flex-col justify-center gap-6 relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-scanline opacity-[0.03] pointer-events-none" />
+                            <XPProgressBar showDetails />
+                        </div>
+                        <div className="md:col-span-8">
+                            <ContributionStatsCard
+                                stats={contributionStats || null}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Dev Pulse Section */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Neural Dev Pulse</span>
+                            <div className="h-px w-full bg-border/10" />
+                        </div>
+                        {pulseData && <DevPulse data={pulseData} />}
+                    </div>
+
+                    {/* GitHub Network Matrix */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Network Matrix</span>
+                            <div className="h-px w-full bg-border/10" />
+                        </div>
+                        {githubStats && (
+                            <GithubGraph
+                                data={githubStats.contributionCalendar}
+                                totalContributions={githubStats.totalContributions}
+                            />
+                        )}
+                    </div>
+
+                    {/* Bio / Mission Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+                        <div className="md:col-span-7 space-y-4">
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Identity Lore</span>
+                                <div className="h-px w-full bg-border/10" />
+                            </div>
+                            <div className="bg-background/50 border-l-4 border-l-[var(--neon-purple)] p-6 font-mono text-sm text-foreground/70 italic leading-relaxed backdrop-blur-sm">
+                                "{profile.bio || "ACCESS_DENIED: User lore not found in sector database."}"
+                            </div>
+                        </div>
+
+                        <div className="md:col-span-5 space-y-4">
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Bounty Archives</span>
+                                <div className="h-px w-full bg-border/10" />
+                            </div>
+                            {bountyStats ? (
+                                <BountyStats stats={bountyStats} />
+                            ) : (
+                                <div className="bg-background/30 border border-border/10 p-6 text-center font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+                                    No archive data detected
+                                </div>
                             )}
-                            {profile.website_url && (
-                                <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-[var(--neon-primary)] transition-colors">
-                                    <ExternalLink className="w-4 h-4" />
-                                </a>
-                            )}
+                        </div>
+                    </div>
+
+                    {/* Mission Submissions */}
+                    {userSubmissions && (
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-mono font-black uppercase tracking-[0.4em] text-foreground shrink-0">Active Operations</span>
+                                <div className="h-px w-full bg-border/10" />
+                            </div>
+                            <MySubmissions submissions={userSubmissions} />
                         </div>
                     )}
                 </div>
-                <Button
-                    onClick={onEdit}
-                    variant="cyberpunk"
-                    className="w-full md:w-auto min-w-[120px]"
-                >
-                    Edit Profile
-                </Button>
-            </div>
 
-            {/* Contribution Stats Section */}
-            <div>
-                <ContributionStatsCard
-                    stats={contributionStats || null}
-                    isOwnProfile={true}
-                    xp={profile.xp}
-                    level={profile.level}
-                />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Main Info Column */}
-                <div className="col-span-1 md:col-span-2 space-y-6">
-
-                    {/* XP Progress & History Section */}
-                    <Card className="bg-card/40 border-border backdrop-blur-md overflow-hidden">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-[var(--neon-primary)] font-mono text-sm uppercase tracking-widest">
-                                <TrophyIcon className="w-4 h-4" />
-                                Level Progress
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <XPProgressBar showDetails={true} />
-                            <div className="pt-4 border-t border-border">
+                {/* Right Column (3) */}
+                <div className="lg:col-span-3 space-y-12">
+                    {/* System Log Terminal */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--neon-purple)] font-bold uppercase tracking-widest">
+                            <Terminal className="w-3 h-3" />
+                            <span>Authorization Logs</span>
+                        </div>
+                        <div className="bg-background/80 border border-[var(--neon-purple)]/20 p-4 h-[450px] overflow-y-auto custom-scrollbar scrollbar-hide relative group/term">
+                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-5" />
+                            <div className="relative z-10">
                                 <XPHistory />
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
 
-                    {/* Dev Pulse Visualization - Main Column */}
-                    {pulseData && (
-                        <div className="border border-border rounded-xl p-6 bg-card/40 backdrop-blur-md shadow-[0_0_30px_rgba(var(--neon-primary-rgb),0.1)]">
-                            <DevPulse data={pulseData} />
+                    {/* Tech Arsenal */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--neon-cyan)] font-bold uppercase tracking-widest">
+                            <Code2 className="w-3 h-3" />
+                            <span>Tech Arsenal</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {profile.stack && profile.stack.length > 0 ? (
+                                profile.stack.map((tech) => (
+                                    <div
+                                        key={tech}
+                                        className="px-2 py-1 bg-background/30 border border-border/20 text-foreground/70 font-mono text-[10px] uppercase tracking-wider hover:border-[var(--neon-cyan)]/50 hover:text-[var(--neon-cyan)] transition-colors cursor-default"
+                                    >
+                                        {tech}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest italic opacity-40">No arsenal declared</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* GitHub Connection */}
+                    {(!githubStats || !contributionStats) && (
+                        <div className="bg-[var(--neon-purple)]/[0.03] border border-[var(--neon-purple)]/20 p-6 space-y-4 relative overflow-hidden group/uplink">
+                            <div className="absolute inset-0 bg-scanline opacity-[0.02] pointer-events-none" />
+                            <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--neon-purple)] font-bold uppercase tracking-widest mb-2">
+                                <Github className="w-3 h-3" />
+                                <span>External Uplink</span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground font-mono leading-relaxed">
+                                {contributionStats ? "GitHub grid data missing. Establish a live uplink to track full neural matrix." : "Sync GitHub to monitor contribution streaks and neural uptime."}
+                            </p>
+                            <Button
+                                variant="outline"
+                                className="w-full border-[var(--neon-purple)]/30 hover:bg-[var(--neon-purple)]/10 text-[var(--neon-purple)] font-mono text-[10px] uppercase tracking-widest rounded-none py-6 group-hover/uplink:border-[var(--neon-purple)] transition-all"
+                                onClick={handleLinkGithub}
+                            >
+                                {contributionStats ? "Recalibrate Uplink" : "Connect Uplink"}
+                            </Button>
                         </div>
                     )}
 
-                    {githubStats && (
-                        <GithubGraph
-                            data={githubStats.contributionCalendar}
-                            totalContributions={githubStats.totalContributions}
-                        />
-                    )}
-
-                    <Card className="bg-card/40 border-border backdrop-blur-md">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-[var(--neon-primary)] font-mono text-sm uppercase tracking-widest">
-                                <Terminal className="w-4 h-4" />
-                                Bio / Lore
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground leading-relaxed font-mono text-sm">
-                                {profile.bio || "No lore data available for this user."}
-                            </p>
-                        </CardContent>
-                    </Card>
-
-                    {bountyStats && (
-                        <BountyStats stats={bountyStats} />
-                    )}
-
-                    {userSubmissions && (
-                        <MySubmissions submissions={userSubmissions} />
-                    )}
-                </div>
-
-                {/* Stats / Attributes Column */}
-                <div className="space-y-6">
-                    {/* Location */}
-                    <Card className="bg-card/40 border-border backdrop-blur-md">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-[var(--neon-secondary)] font-mono text-sm uppercase tracking-widest">
-                                <MapPin className="w-4 h-4" />
-                                Location
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p className="text-muted-foreground font-mono text-sm">
-                                {profile.location || "Unknown Location"}
-                            </p>
-
-                            {/* Dev Pulse moved to main column */}
-                        </CardContent>
-                    </Card>
-
-                    {/* Tech Stack */}
-                    <Card className="bg-card/40 border-border backdrop-blur-md">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-[var(--neon-cyan)] font-mono text-sm uppercase tracking-widest">
-                                <Code2 className="w-4 h-4" />
-                                Tech Arsenal
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-wrap gap-2">
-                                {profile.stack && profile.stack.length > 0 ? (
-                                    profile.stack.map((tech) => (
-                                        <Badge
-                                            key={tech}
-                                            variant="outline"
-                                            className="border-border text-muted-foreground font-mono text-xs hover:border-[var(--neon-cyan)] hover:text-[var(--neon-cyan)] transition-colors"
-                                        >
-                                            {tech}
-                                        </Badge>
-                                    ))
-                                ) : (
-                                    <span className="text-muted-foreground text-xs font-mono">No tech stack declared</span>
-                                )}
+                    {/* System Summary */}
+                    <div className="bg-[var(--neon-cyan)]/[0.02] border border-border/10 p-6 space-y-4">
+                        <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em] mb-4">// Dashboard Summary</div>
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                <span className="text-muted-foreground uppercase">Identity Integrity</span>
+                                <span className="text-[var(--neon-lime)] font-bold">100%</span>
                             </div>
-                        </CardContent>
-                    </Card>
-
-                    {githubStats ? (
-                        <TopLanguages languages={githubStats.topLanguages} />
-                    ) : (
-                        <Card className="bg-card/40 border-border backdrop-blur-md">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-muted-foreground font-mono text-sm uppercase tracking-widest">
-                                    <Github className="w-4 h-4" />
-                                    GitHub Sync
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <p className="text-xs text-muted-foreground font-mono">
-                                    Link your GitHub account to display your contribution graph and top languages.
-                                </p>
-                                <Button
-                                    variant="outline"
-                                    className="w-full border-border hover:bg-muted text-muted-foreground font-mono text-xs"
-                                    onClick={handleLinkGithub}
-                                >
-                                    Connect GitHub
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    )}
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                <span className="text-muted-foreground uppercase">Sector Latency</span>
+                                <span className="text-[var(--neon-cyan)] font-bold">12ms</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                <span className="text-muted-foreground uppercase">Neural Stability</span>
+                                <span className="text-[var(--neon-purple)] font-bold">STABLE</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            {/* Scanning Animation Styles */}
+            <style jsx global>{`
+                .animate-spin-slow {
+                    animation: spin 8s linear infinite;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .bg-scanline {
+                    background: linear-gradient(to bottom, transparent, rgba(34, 211, 238, 0.1) 50%, transparent);
+                    background-size: 100% 4px;
+                    animation: scan 6s linear infinite;
+                }
+                @keyframes scan {
+                    from { transform: translateY(-100%); }
+                    to { transform: translateY(100%); }
+                }
+            `}</style>
         </div>
     );
 }
