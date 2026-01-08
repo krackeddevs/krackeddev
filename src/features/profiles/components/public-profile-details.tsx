@@ -12,6 +12,7 @@ import Link from "next/link";
 import { DevPulse } from "./dev-pulse";
 import { processDevPulseData } from "../utils/pulse-utils";
 import { useMemo } from "react";
+import { XPProgressBar } from "./xp-progress-bar";
 
 interface PublicProfileDetailsProps {
     profile: ProfileData & { avatar_url?: string };
