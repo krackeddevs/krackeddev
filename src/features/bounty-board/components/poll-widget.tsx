@@ -156,8 +156,8 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                     )}
                 </div>
 
-                {/* Bounty Options */}
-                <div className="grid gap-4">
+                {/* Bounty Options Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {poll.options.map((option) => {
                         const isSelected = selectedOption === option.id;
                         const isUserVote = poll.userVoteId === option.id;
@@ -170,12 +170,12 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                             <Card
                                 key={option.id}
                                 className={cn(
-                                    "border transition-all group/card relative overflow-hidden",
+                                    "border-2 transition-all group/card relative overflow-hidden h-full flex flex-col shadow-sm",
                                     showResults
-                                        ? "border-border/50 bg-card/40"
+                                        ? "border-border/40 bg-muted/50"
                                         : isSelected
-                                            ? "border-neon-cyan bg-neon-cyan/5 shadow-lg shadow-neon-cyan/20 cursor-pointer"
-                                            : "border-border/50 bg-card/40 hover:border-neon-cyan/50 hover:bg-card/60 cursor-pointer"
+                                            ? "border-[var(--neon-primary)] bg-[var(--neon-primary)]/10 shadow-[0_0_15px_rgba(var(--neon-primary-rgb),0.3)]"
+                                            : "border-border/30 bg-card hover:border-[var(--neon-primary)]/60 hover:bg-muted/10 cursor-pointer"
                                 )}
                                 onClick={() => {
                                     if (!showResults) {
@@ -183,139 +183,85 @@ export function PollWidget({ poll, userId }: { poll: PollData | null; userId?: s
                                     }
                                 }}
                             >
-                                <CardHeader className="pb-3">
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="flex-1 space-y-2 min-w-0">
-                                            <div className="flex items-center gap-3">
-                                                {/* Selection Radio Button */}
-                                                {!showResults && (
-                                                    <div className="flex-shrink-0">
-                                                        <div
-                                                            className={cn(
-                                                                "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                                                                isSelected
-                                                                    ? "border-neon-cyan bg-neon-cyan"
-                                                                    : "border-muted-foreground/50 group-hover/card:border-neon-cyan/70"
-                                                            )}
-                                                        >
-                                                            {isSelected && (
-                                                                <div className="w-2 h-2 rounded-full bg-black" />
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
-                                                    <h3 className="font-bold text-lg leading-tight break-words min-w-0">{option.label}</h3>
-                                                    {option.difficulty && (
-                                                        <Badge className={cn("text-[10px] sm:text-xs uppercase flex-shrink-0 h-5 sm:h-6", difficultyColors[option.difficulty as keyof typeof difficultyColors])}>
-                                                            {option.difficulty}
-                                                        </Badge>
-                                                    )}
-                                                    {isUserVote && (
-                                                        <Badge className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50 text-[10px] h-5">
-                                                            <CheckCircle2 className="w-3 h-3 mr-1" />
-                                                            Your Vote
-                                                        </Badge>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {option.estimated_reward && (
-                                                <div className="flex items-center gap-1 text-sm text-rank-gold pl-8">
-                                                    <DollarSign className="w-4 h-4" />
-                                                    <span className="font-mono font-bold">RM {option.estimated_reward}</span>
+                                <CardHeader className="p-5 flex-grow">
+                                    <div className="space-y-4">
+                                        <div className="flex items-start justify-between">
+                                            <h3 className="font-bold text-base leading-tight font-mono tracking-tight uppercase">
+                                                {option.label}
+                                            </h3>
+                                            {option.difficulty && (
+                                                <div className={cn("text-[9px] px-2 py-0.5 border font-mono uppercase tracking-widest",
+                                                    option.difficulty === 'beginner' ? 'border-green-500/50 text-green-500' :
+                                                        option.difficulty === 'intermediate' ? 'border-rank-gold/50 text-rank-gold' :
+                                                            'border-rank-bronze/50 text-rank-bronze'
+                                                )}>
+                                                    {option.difficulty}
                                                 </div>
                                             )}
                                         </div>
 
-                                        {/* Expand/Collapse Button */}
-                                        {(option.description || (option.requirements && option.requirements.length > 0)) && (
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="flex-shrink-0 h-8 w-8 p-0"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleExpanded(option.id);
-                                                }}
-                                            >
-                                                {isExpanded ? (
-                                                    <ChevronUp className="h-4 w-4" />
-                                                ) : (
-                                                    <ChevronDown className="h-4 w-4" />
-                                                )}
-                                            </Button>
-                                        )}
-                                    </div>
-                                </CardHeader>
-
-                                {isExpanded && hasDetails && (
-                                    <CardContent className="pt-0 space-y-3 border-t border-border/30">
                                         {option.description && (
-                                            <div className="pt-3">
-                                                <p className="text-sm text-muted-foreground leading-relaxed">
-                                                    {option.description}
-                                                </p>
-                                            </div>
+                                            <p className="text-[11px] text-muted-foreground leading-relaxed font-mono line-clamp-4">
+                                                {option.description}
+                                            </p>
                                         )}
 
                                         {option.requirements && option.requirements.length > 0 && (
                                             <div className="space-y-2">
-                                                <p className="text-xs font-mono text-neon-primary uppercase tracking-wider">Key Requirements:</p>
-                                                <ul className="space-y-1 text-sm text-muted-foreground">
-                                                    {option.requirements.map((req, idx) => (
-                                                        <li key={idx} className="flex items-start gap-2">
-                                                            <span className="text-neon-cyan mt-1">•</span>
-                                                            <span>{req}</span>
+                                                <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-widest">Requirements:</p>
+                                                <ul className="text-[10px] text-muted-foreground/80 font-mono space-y-1">
+                                                    {option.requirements.slice(0, 3).map((req, idx) => (
+                                                        <li key={idx} className="flex gap-2">
+                                                            <span className="text-[var(--neon-primary)] text-[11px]">-</span>
+                                                            {req}
                                                         </li>
                                                     ))}
                                                 </ul>
                                             </div>
                                         )}
-                                    </CardContent>
-                                )}
+                                    </div>
+                                </CardHeader>
 
-                                {/* Results */}
-                                {showResults && (
-                                    <CardContent className="pt-0 pb-4">
+                                {/* Results or Selection Indicator */}
+                                <div className="p-5 pt-0 mt-auto">
+                                    {showResults ? (
                                         <div className="space-y-2">
-                                            <div className="flex items-center justify-between text-xs font-mono">
-                                                <span className="text-muted-foreground">
-                                                    {voteCount} vote{voteCount !== 1 ? 's' : ''}
-                                                </span>
-                                                <span className={cn(
-                                                    "font-bold",
-                                                    isUserVote ? "text-neon-cyan" : "text-foreground"
-                                                )}>
-                                                    {votePercentage.toFixed(1)}%
-                                                </span>
+                                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                                <span className="text-muted-foreground">{voteCount} votes</span>
+                                                <span className="font-bold text-[var(--neon-primary)]">{votePercentage.toFixed(1)}%</span>
                                             </div>
-                                            <Progress
-                                                value={votePercentage}
-                                                className="h-2 bg-muted/50"
-                                            />
+                                            <div className="h-1.5 bg-muted/20 w-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-[var(--neon-primary)] transition-all duration-1000"
+                                                    style={{ width: `${votePercentage}%` }}
+                                                />
+                                            </div>
                                         </div>
-                                    </CardContent>
-                                )}
+                                    ) : (
+                                        <div className={cn(
+                                            "w-full h-1 transition-all",
+                                            isSelected ? "bg-[var(--neon-primary)]" : "bg-transparent"
+                                        )} />
+                                    )}
+                                </div>
                             </Card>
                         );
                     })}
                 </div>
 
-                {/* Vote Button */}
+                {/* Confirm Vote Button at Bottom Center */}
                 {!showResults && (
-                    <div className="flex items-center justify-between pt-2">
-                        <p className="text-xs text-muted-foreground">
-                            {selectedOption ? "Ready to vote!" : "Select a bounty proposal to vote"}
-                        </p>
+                    <div className="flex justify-center pt-8">
                         <Button
                             onClick={handleVote}
                             disabled={!selectedOption || isSubmitting}
-                            className="bg-neon-cyan hover:bg-neon-cyan/90 text-primary-foreground font-bold uppercase tracking-wider"
+                            className="bg-[var(--neon-primary)] hover:bg-[var(--neon-primary)]/90 text-primary-foreground font-bold uppercase tracking-[0.2em] px-12 py-6 rounded-none shadow-[0_0_20px_rgba(var(--neon-primary-rgb),0.3)] transition-all active:scale-95"
                         >
-                            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Cast Vote
+                            {isSubmitting ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                "Confirm Your Vote"
+                            )}
                         </Button>
                     </div>
                 )}

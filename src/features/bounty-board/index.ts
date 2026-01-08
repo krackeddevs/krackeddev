@@ -42,6 +42,7 @@ export * from "./components/bounty-stats-bar";
 export * from "./components/bounty-list";
 export * from "./components/poll-widget";
 export { PollWidgetSkeleton } from "./components/poll-widget-skeleton";
+export { BountySidebar } from "./components/bounty-sidebar";
 
 // Detail Page Components
 export { BountyDetail } from "./components/bounty-detail";
