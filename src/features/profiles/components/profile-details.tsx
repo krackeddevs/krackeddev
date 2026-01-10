@@ -14,7 +14,8 @@ import { TopLanguages } from "./top-languages";
 import { BountyStats } from "./bounty-stats";
 import { MySubmissions } from "./my-submissions";
 import { XPProgressBar } from "./xp-progress-bar";
-import { XPHistory } from "./xp-history";
+import { TerminalFeed } from "./terminal-feed";
+import { useHUDData } from "../hooks/use-hud-data";
 import { TrophyIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -28,6 +29,8 @@ interface ProfileDetailsProps {
 }
 
 export function ProfileDetails({ profile, githubStats, bountyStats, contributionStats, userSubmissions, onEdit }: ProfileDetailsProps) {
+    const { logs, metrics } = useHUDData(profile.id, contributionStats, bountyStats, profile);
+
     const pulseData = useMemo(() => processDevPulseData(githubStats?.contributionCalendar ? {
         totalContributions: githubStats.totalContributions,
         weeks: githubStats.contributionCalendar
@@ -211,11 +214,9 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                             <Terminal className="w-3 h-3" />
                             <span>Authorization Logs</span>
                         </div>
-                        <div className="bg-background/80 border border-[var(--neon-purple)]/20 p-4 h-[450px] overflow-y-auto custom-scrollbar scrollbar-hide relative group/term">
-                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-5" />
-                            <div className="relative z-10">
-                                <XPHistory />
-                            </div>
+                        <div className="bg-background/80 border border-[var(--neon-purple)]/20 p-0 h-[450px] overflow-hidden relative group/term">
+                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-5 z-20" />
+                            <TerminalFeed logs={logs} />
                         </div>
                     </div>
 
@@ -271,12 +272,18 @@ export function ProfileDetails({ profile, githubStats, bountyStats, contribution
                                 <span className="text-[var(--neon-lime)] font-bold">100%</span>
                             </div>
                             <div className="flex justify-between items-center text-[10px] font-mono">
-                                <span className="text-muted-foreground uppercase">Sector Latency</span>
-                                <span className="text-[var(--neon-cyan)] font-bold">12ms</span>
+                                <span className="text-muted-foreground uppercase">Signal Stability</span>
+                                <span className={`${metrics.signalStability > 80 ? 'text-[var(--neon-lime)]' : metrics.signalStability > 50 ? 'text-[var(--neon-cyan)]' : 'text-orange-500'} font-bold`}>
+                                    {metrics.signalStability}% {metrics.signalStability > 90 ? 'EXCELLENT' : metrics.signalStability > 70 ? 'STABLE' : 'DEGRADED'}
+                                </span>
                             </div>
                             <div className="flex justify-between items-center text-[10px] font-mono">
-                                <span className="text-muted-foreground uppercase">Neural Stability</span>
-                                <span className="text-[var(--neon-purple)] font-bold">STABLE</span>
+                                <span className="text-muted-foreground uppercase">Archive Grade</span>
+                                <span className="text-[var(--neon-cyan)] font-bold">GRADE_{metrics.archiveGrade}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] font-mono">
+                                <span className="text-muted-foreground uppercase">Node Uptime</span>
+                                <span className="text-[var(--neon-purple)] font-bold">{metrics.nodeUptime}%</span>
                             </div>
                         </div>
                     </div>

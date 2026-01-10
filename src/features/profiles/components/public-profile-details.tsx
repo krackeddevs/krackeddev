@@ -13,6 +13,8 @@ import { DevPulse } from "./dev-pulse";
 import { processDevPulseData } from "../utils/pulse-utils";
 import { useMemo } from "react";
 import { XPProgressBar } from "./xp-progress-bar";
+import { useHUDData } from "../hooks/use-hud-data";
+import { TerminalFeed } from "./terminal-feed";
 
 interface PublicProfileDetailsProps {
     profile: ProfileData & { avatar_url?: string };
@@ -22,6 +24,8 @@ interface PublicProfileDetailsProps {
 }
 
 export function PublicProfileDetails({ profile, githubStats, bountyStats, contributionStats }: PublicProfileDetailsProps) {
+    const { logs, metrics } = useHUDData(profile.id, contributionStats, bountyStats, profile);
+
     const pulseData = useMemo(() => processDevPulseData(githubStats?.contributionCalendar ? {
         totalContributions: githubStats.totalContributions,
         weeks: githubStats.contributionCalendar
@@ -222,20 +226,9 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                             <Terminal className="w-3 h-3" />
                             <span>Recent Logs</span>
                         </div>
-                        <div className="bg-background/80 border border-[var(--neon-purple)]/20 p-4 h-[450px] overflow-y-auto custom-scrollbar scrollbar-hide relative group/term">
-                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-5" />
-                            <div className="space-y-3 opacity-60">
-                                <div className="text-[var(--neon-cyan)]">[08:42:01] UPLINK_STABLE</div>
-                                <div>[09:15:33] Fetched sector data...</div>
-                                <div className="text-[var(--neon-lime)]">[10:04:15] Mission verified: DEV_PULSE_UP</div>
-                                <div>[11:30:00] Buffer overflow resolved.</div>
-                                <div className="text-[var(--neon-cyan)]">[12:45:10] Identity HUD refreshed.</div>
-                                <div>[14:22:05] Analyzing contribution matrix...</div>
-                                <div className="text-[var(--neon-lime)]">[15:40:12] User high-score detected.</div>
-                                <div>[16:11:44] Waiting for contract signals...</div>
-                                <div className="text-[var(--neon-cyan)]">[18:05:22] SYSCALL: PROFILE_HUD_REGEN</div>
-                                <div className="animate-pulse">_</div>
-                            </div>
+                        <div className="bg-background/80 border border-[var(--neon-purple)]/20 p-0 h-[450px] overflow-hidden relative group/term">
+                            <div className="absolute inset-0 bg-scanline pointer-events-none opacity-5 z-20" />
+                            <TerminalFeed logs={logs} />
                         </div>
                     </div>
 
@@ -265,15 +258,17 @@ export function PublicProfileDetails({ profile, githubStats, bountyStats, contri
                         <div className="space-y-4">
                             <div className="flex justify-between items-center text-[10px] font-mono">
                                 <span className="text-muted-foreground uppercase">Signal Stability</span>
-                                <span className="text-[var(--neon-lime)] font-bold">EXCELLENT</span>
+                                <span className={`${metrics.signalStability > 80 ? 'text-[var(--neon-lime)]' : metrics.signalStability > 50 ? 'text-[var(--neon-cyan)]' : 'text-orange-500'} font-bold`}>
+                                    {metrics.signalStability}% {metrics.signalStability > 90 ? 'EXCELLENT' : metrics.signalStability > 70 ? 'STABLE' : 'DEGRADED'}
+                                </span>
                             </div>
                             <div className="flex justify-between items-center text-[10px] font-mono">
                                 <span className="text-muted-foreground uppercase">Archive Grade</span>
-                                <span className="text-[var(--neon-cyan)] font-bold">LEGACY+</span>
+                                <span className="text-[var(--neon-cyan)] font-bold">GRADE_{metrics.archiveGrade}</span>
                             </div>
                             <div className="flex justify-between items-center text-[10px] font-mono">
                                 <span className="text-muted-foreground uppercase">Node Uptime</span>
-                                <span className="text-[var(--neon-purple)] font-bold">100%</span>
+                                <span className="text-[var(--neon-purple)] font-bold">{metrics.nodeUptime}%</span>
                             </div>
                         </div>
                     </div>
