@@ -2,6 +2,7 @@
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { cn } from "@/lib/utils";
 import { CodeBlock } from "@/components/code-block";
 
@@ -14,7 +15,7 @@ export function MarkdownViewer({ content, className }: MarkdownViewerProps) {
     return (
         <article className={cn("prose dark:prose-invert prose-green max-w-none break-words", className)}>
             <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkBreaks]}
                 components={{
                     h1: ({ children, ...props }: any) => (
                         <h1 className="text-3xl font-bold mt-6 mb-4" {...props}>{children}</h1>
@@ -29,6 +30,15 @@ export function MarkdownViewer({ content, className }: MarkdownViewerProps) {
                         <blockquote className="border-l-4 border-primary/50 pl-4 italic my-4 text-muted-foreground" {...props}>
                             {children}
                         </blockquote>
+                    ),
+                    ul: ({ children, ...props }: any) => (
+                        <ul className="list-disc pl-6 my-4 space-y-1" {...props}>{children}</ul>
+                    ),
+                    ol: ({ children, ...props }: any) => (
+                        <ol className="list-decimal pl-6 my-4 space-y-1" {...props}>{children}</ol>
+                    ),
+                    li: ({ children, ...props }: any) => (
+                        <li className="text-foreground/90" {...props}>{children}</li>
                     ),
                     code({ node, inline, className, children, ...props }: any) {
                         const match = /language-(\w+)/.exec(className || "");

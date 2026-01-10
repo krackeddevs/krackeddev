@@ -36,8 +36,14 @@
     margin: 0.5em 0;
 }
 
-.tiptap-editor ul,
+.tiptap-editor ul {
+    list-style-type: disc !important;
+    padding-left: 1.5rem;
+    margin: 0.5em 0;
+}
+
 .tiptap-editor ol {
+    list-style-type: decimal !important;
     padding-left: 1.5rem;
     margin: 0.5em 0;
 }
