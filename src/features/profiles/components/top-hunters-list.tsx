@@ -95,7 +95,7 @@ export function TopHuntersList({ hunters }: TopHuntersListProps) {
                         return (
                             <Link
                                 key={hunter.id}
-                                href={`/profile/${hunter.username}`}
+                                href={`/profile/${encodeURIComponent(hunter.username || "")}`}
                                 className="block group"
                             >
                                 <div

@@ -108,7 +108,7 @@ export function MembersList({ members, currentPage, totalPages, total, searchQue
                     {members.map((member) => (
                         <Link
                             key={member.id}
-                            href={`/profile/${member.username}`}
+                            href={`/profile/${encodeURIComponent(member.username || "")}`}
                             className="block group relative"
                         >
                             <div className="relative flex items-center gap-5 p-5 bg-card/40 backdrop-blur-md border border-border/50 group-hover:border-[var(--neon-primary)]/50 group-hover:bg-foreground/[0.02] transition-all duration-300 rounded-none h-[110px] overflow-hidden">

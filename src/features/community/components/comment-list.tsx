@@ -37,7 +37,7 @@ export function CommentList({ comments, answerId }: CommentListProps) {
                         <div className="flex-1 flex flex-col">
                             <div className="flex items-center gap-2 mb-0.5">
                                 <Link
-                                    href={`/profile/${comment.author.username}`}
+                                    href={`/profile/${encodeURIComponent(comment.author.username || "")}`}
                                     className="font-semibold text-foreground/90 hover:underline hover:text-primary text-xs"
                                 >
                                     {comment.author.username || "Anonymous"}
