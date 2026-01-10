@@ -27,7 +27,7 @@ export function WinnerDisplay({ winner, completedAt }: WinnerDisplayProps) {
         if (winner.username) {
             return (
                 <Link
-                    href={`/profile/${winner.username}`}
+                    href={`/profile/${encodeURIComponent(winner.username || "")}`}
                     className="text-white hover:text-neon-primary font-mono text-xl mb-1 flex items-center gap-2 transition-colors group"
                     data-testid="winner-name"
                 >

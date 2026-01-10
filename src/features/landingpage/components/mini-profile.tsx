@@ -20,7 +20,7 @@ export function MiniProfile({ data, className }: MiniProfileProps) {
 
     return (
         <div
-            onClick={() => router.push("/profile/")}
+            onClick={() => router.push(`/profile/${encodeURIComponent(data.username || "")}`)}
             className={cn(
                 "group relative w-full overflow-hidden rounded-xl border border-border bg-card/40 backdrop-blur-sm transition-all duration-300 hover:border-neon-primary/50 hover:shadow-[0_0_20px_var(--neon-primary)] cursor-pointer",
                 className

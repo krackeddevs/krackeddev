@@ -164,7 +164,7 @@ function UserCard({
         <div className={`flex items-center gap-3 ${isLeft ? "flex-row" : "flex-row-reverse"}`}>
             <div className={`flex flex-col ${isLeft ? "items-start" : "items-end"} text-xs`}>
                 <span className="text-muted-foreground">{label} <span className="text-foreground/80">{formatDistanceToNow(new Date(date), { addSuffix: true })}</span></span>
-                <Link href={`/profile/${user.username}`} className="font-semibold text-primary hover:underline">
+                <Link href={`/profile/${encodeURIComponent(user.username || "")}`} className="font-semibold text-primary hover:underline">
                     {user.username || "Anonymous"}
                 </Link>
             </div>

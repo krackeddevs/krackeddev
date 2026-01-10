@@ -69,7 +69,7 @@ export function ActiveContributorsTable({ data, currentUserId }: ActiveContribut
                             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                                 <div className="flex items-center gap-2 min-w-0">
                                     <Link
-                                        href={`/profile/${contributor.username}`}
+                                        href={`/profile/${encodeURIComponent(contributor.username || "")}`}
                                         className={cn(
                                             "font-bold font-mono text-sm sm:text-lg truncate hover:underline underline-offset-4 decoration-2 decoration-neon-primary/50",
                                             isCurrentUser ? "text-neon-primary" : "text-foreground"

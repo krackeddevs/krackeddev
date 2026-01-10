@@ -70,7 +70,7 @@ export function LeaderboardTable({ data, currentUserId, showSkills = false }: Le
                             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                                 <div className="flex items-center gap-2 min-w-0">
                                     <Link
-                                        href={`/profile/${entry.username}`}
+                                        href={`/profile/${encodeURIComponent(entry.username || "")}`}
                                         className={cn(
                                             "font-bold font-mono text-sm sm:text-lg truncate uppercase tracking-tighter transition-colors",
                                             isCurrentUser ? "text-[var(--neon-primary)]" : "text-foreground group-hover:text-[var(--neon-primary)]"

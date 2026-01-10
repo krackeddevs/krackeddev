@@ -59,12 +59,13 @@ export async function getProfile(): Promise<{ data?: ProfileData; error?: string
  * Returns only public-safe fields
  */
 export async function fetchPublicProfile(username: string): Promise<{ data?: ProfileData & { avatar_url?: string }; error?: string }> {
+    const decodedUsername = decodeURIComponent(username).trim();
     const supabase = await createClient();
 
     const { data, error } = await supabase
         .from("profiles")
         .select("id, username, full_name, avatar_url, developer_role, role, stack, bio, location, x_url, linkedin_url, website_url, level, xp, contribution_stats")
-        .eq("username", username)
+        .ilike("username", decodedUsername)
         .eq("status", "active")  // Only show active users
         .single();
 
@@ -483,10 +484,11 @@ export async function fetchContributionStats(username: string): Promise<{ data?:
     const { data: { user } } = await supabase.auth.getUser();
 
     // 1. Fetch Profile from DB to get cached stats and ID
+    const decodedUsername = decodeURIComponent(username).trim();
     const { data, error: profileError } = await supabase
         .from("profiles")
         .select("id, contribution_stats, portfolio_synced_at")
-        .eq("username", username)
+        .ilike("username", decodedUsername)
         .single();
 
     // Explicitly cast to avoid 'never' inference if schema types are missing
