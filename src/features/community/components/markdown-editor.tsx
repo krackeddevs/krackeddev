@@ -202,8 +202,8 @@ export function MarkdownEditor({
 
 // Helper functions for markdown conversion
 function markdownToHtml(markdown: string): string {
-    // Basic markdown to HTML conversion
-    // This is a simplified version - in production you might want to use a library
+    if (!markdown) return "";
+
     let html = markdown;
 
     // Headers
@@ -213,9 +213,11 @@ function markdownToHtml(markdown: string): string {
 
     // Bold
     html = html.replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>");
+    html = html.replace(/__(.*?)__/gim, "<strong>$1</strong>");
 
     // Italic
     html = html.replace(/\*(.*?)\*/gim, "<em>$1</em>");
+    html = html.replace(/_(.*?)_/gim, "<em>$1</em>");
 
     // Code blocks
     html = html.replace(/```([\s\S]*?)```/gim, "<pre><code>$1</code></pre>");
@@ -229,58 +231,70 @@ function markdownToHtml(markdown: string): string {
     // Links
     html = html.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
 
-    // Lists
-    html = html.replace(/^\* (.*$)/gim, "<li>$1</li>");
-    // Wrap consecutive list items in ul tags
-    html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>");
+    // Unordered lists (- or *)
+    html = html.replace(/^[*-] (.*$)/gim, "<li>$1</li>");
+    html = html.replace(/((?:<li>.*?<\/li>\s*)+)/g, "<ul>$1</ul>");
+
+    // Ordered lists (1. 2. etc)
+    html = html.replace(/^\d+\. (.*$)/gim, "<li>$1</li>");
+    html = html.replace(/(?<!<ul>)((?:<li>.*?<\/li>\s*)+)(?!<\/ul>)/g, (match) => {
+        if (match.includes("<ul>")) return match;
+        return `<ol>${match}</ol>`;
+    });
 
     // Paragraphs
-    html = html.replace(/\n\n/g, "</p><p>");
-    html = `<p>${html}</p>`;
+    const blockTags = ['h1', 'h2', 'h3', 'ul', 'ol', 'li', 'blockquote', 'pre', 'p', 'div', 'img'];
+    const lines = html.split('\n');
+    html = lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return "";
+        const startsWithBlock = blockTags.some(tag => trimmed.toLowerCase().startsWith(`<${tag}`));
+        if (startsWithBlock) return trimmed;
+        return `<p>${trimmed}</p>`;
+    }).join('\n');
 
-    return html;
+    return html.trim();
 }
 
 function editorToMarkdown(html: string): string {
     let markdown = html;
 
-    // Code blocks - MUST be processed FIRST before anything else
-    // Handle code blocks with language
-    markdown = markdown.replace(/<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/gi, (match, lang, code) => {
+    // Line breaks
+    markdown = markdown.replace(/<br\s*\/?>/gi, '\n');
+
+    // Code blocks
+    markdown = markdown.replace(/<pre[^>]*><code[^>]*class="language-(\w+)"[^>]*>([\s\S]*?)<\/code><\/pre>/gi, (match, lang, code) => {
         return `\n\`\`\`${lang}\n${code}\n\`\`\`\n\n`;
     });
-    // Handle code blocks without language
-    markdown = markdown.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/gi, (match, code) => {
+    markdown = markdown.replace(/<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, (match, code) => {
         return `\n\`\`\`\n${code}\n\`\`\`\n\n`;
     });
 
-    // Blockquotes - process before paragraphs
-    markdown = markdown.replace(/<blockquote>([\s\S]*?)<\/blockquote>/gi, (match, content) => {
-        // Remove paragraph tags inside blockquote
-        const cleanContent = content.replace(/<\/?p>/gi, '').trim();
+    // Blockquotes
+    markdown = markdown.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, (match, content) => {
+        const cleanContent = content.replace(/<p[^>]*>/gi, '').replace(/<\/p>/gi, '\n').trim();
         return `> ${cleanContent}\n\n`;
     });
 
-    // Headers - process before paragraphs
-    markdown = markdown.replace(/<h1>([\s\S]*?)<\/h1>/gi, (match, content) => {
-        const cleanContent = content.replace(/<\/?p>/gi, '').trim();
-        return `# ${cleanContent}\n\n`;
+    // Headers
+    markdown = markdown.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, (match, content) => {
+        return `# ${content.replace(/<[^>]*>/g, '').trim()}\n\n`;
     });
-    markdown = markdown.replace(/<h2>([\s\S]*?)<\/h2>/gi, (match, content) => {
-        const cleanContent = content.replace(/<\/?p>/gi, '').trim();
-        return `## ${cleanContent}\n\n`;
+    markdown = markdown.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, (match, content) => {
+        return `## ${content.replace(/<[^>]*>/g, '').trim()}\n\n`;
     });
-    markdown = markdown.replace(/<h3>([\s\S]*?)<\/h3>/gi, (match, content) => {
-        const cleanContent = content.replace(/<\/?p>/gi, '').trim();
-        return `### ${cleanContent}\n\n`;
+    markdown = markdown.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, (match, content) => {
+        return `### ${content.replace(/<[^>]*>/g, '').trim()}\n\n`;
     });
 
     // Unordered lists
-    markdown = markdown.replace(/<ul>([\s\S]*?)<\/ul>/gi, (match, content) => {
-        const items = content.match(/<li>([\s\S]*?)<\/li>/gi);
+    markdown = markdown.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (match, content) => {
+        const items = content.match(/<li[^>]*>([\s\S]*?)<\/li>/gi);
         if (items) {
             return items.map((item: string) => {
-                let text = item.replace(/<\/?li>/gi, '').replace(/<\/?p>/gi, '').trim();
+                // Preserve content, then replace internal paragraph tags with newlines
+                let text = item.replace(/<li[^>]*>/gi, '').replace(/<\/li>/gi, '');
+                text = text.replace(/<p[^>]*>/gi, '').replace(/<\/p>/gi, '\n').trim();
                 return `- ${text}`;
             }).join('\n') + '\n\n';
         }
@@ -288,11 +302,12 @@ function editorToMarkdown(html: string): string {
     });
 
     // Ordered lists
-    markdown = markdown.replace(/<ol>([\s\S]*?)<\/ol>/gi, (match, content) => {
-        const items = content.match(/<li>([\s\S]*?)<\/li>/gi);
+    markdown = markdown.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (match, content) => {
+        const items = content.match(/<li[^>]*>([\s\S]*?)<\/li>/gi);
         if (items) {
             return items.map((item: string, index: number) => {
-                let text = item.replace(/<\/?li>/gi, '').replace(/<\/?p>/gi, '').trim();
+                let text = item.replace(/<li[^>]*>/gi, '').replace(/<\/li>/gi, '');
+                text = text.replace(/<p[^>]*>/gi, '').replace(/<\/p>/gi, '\n').trim();
                 return `${index + 1}. ${text}`;
             }).join('\n') + '\n\n';
         }
@@ -300,22 +315,24 @@ function editorToMarkdown(html: string): string {
     });
 
     // Bold
-    markdown = markdown.replace(/<strong>(.*?)<\/strong>/gi, '**$1**');
+    markdown = markdown.replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**');
+    markdown = markdown.replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**');
 
     // Italic
-    markdown = markdown.replace(/<em>(.*?)<\/em>/gi, '*$1*');
+    markdown = markdown.replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*');
+    markdown = markdown.replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*');
 
-    // Inline code - only process after code blocks are handled
-    markdown = markdown.replace(/<code>(.*?)<\/code>/gi, '`$1`');
+    // Inline code
+    markdown = markdown.replace(/<code[^>]*>(.*?)<\/code>/gi, '`$1`');
 
     // Images
-    markdown = markdown.replace(/<img[^>]+src="([^"]*)"[^>]*>/gi, '![]($1)\n\n');
+    markdown = markdown.replace(/<img[^>]+src="([^"]*)"[^>]*>/gi, '\n![]($1)\n\n');
 
     // Links
     markdown = markdown.replace(/<a[^>]+href="([^"]*)"[^>]*>(.*?)<\/a>/gi, '[$2]($1)');
 
-    // Paragraphs - process last
-    markdown = markdown.replace(/<p>([\s\S]*?)<\/p>/gi, '$1\n\n');
+    // Paragraphs
+    markdown = markdown.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '$1\n\n');
 
     // Clean up extra newlines
     markdown = markdown.replace(/\n{3,}/g, '\n\n');
