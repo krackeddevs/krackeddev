@@ -29,7 +29,7 @@ interface ProfileDetailsProps {
 }
 
 export function ProfileDetails({ profile, githubStats, bountyStats, contributionStats, userSubmissions, onEdit }: ProfileDetailsProps) {
-    const { logs, metrics } = useHUDData(profile.id, contributionStats, bountyStats, profile);
+    const { logs, metrics } = useHUDData(profile.id, contributionStats ?? null, bountyStats ?? null, profile);
 
     const pulseData = useMemo(() => processDevPulseData(githubStats?.contributionCalendar ? {
         totalContributions: githubStats.totalContributions,

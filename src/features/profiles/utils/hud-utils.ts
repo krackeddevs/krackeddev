@@ -31,7 +31,7 @@ export function mapEventToSystemSpeak(event: XPEvent): string {
         case 'manual_adjustment':
             return `${prefix}KERNEL_OVERRIDE: ${event.xpAmount > 0 ? '+' : ''}${event.xpAmount}XP - System administrator adjustment.`;
         default:
-            return `${prefix}DATA_PACKET: +${event.xpAmount}XP - Type: ${event.eventType.toUpperCase()}`;
+            return `${prefix}DATA_PACKET: +${event.xpAmount}XP - Type: ${(event.eventType as string).toUpperCase()}`;
     }
 }
 
