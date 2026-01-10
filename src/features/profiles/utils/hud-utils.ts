@@ -43,37 +43,41 @@ export function calculateSystemMetrics(
     contributionStats: ContributionStats | null,
     bountyStats: BountyStats | null
 ) {
-    // Signal Stability: Based on portfolio_synced_at vs current time
+    // Signal Stability: Based on freshest available timestamp (sync or last contribution)
     let signalStability = 0;
-    if (profile?.portfolio_synced_at) {
-        const lastSync = new Date(profile.portfolio_synced_at).getTime();
+    const lastSyncStr = profile?.portfolio_synced_at || contributionStats?.lastContributionDate;
+
+    if (lastSyncStr) {
+        const lastSync = new Date(lastSyncStr).getTime();
         const now = Date.now();
         const diffHours = (now - lastSync) / (1000 * 60 * 60);
 
         if (diffHours < 24) signalStability = 95 + Math.random() * 5;
-        else if (diffHours < 24 * 7) signalStability = 70 + Math.random() * 20;
-        else signalStability = 30 + Math.random() * 30;
+        else if (diffHours < 72) signalStability = 85 + Math.random() * 10; // 3 days
+        else if (diffHours < 24 * 7) signalStability = 70 + Math.random() * 15;
+        else signalStability = 40 + Math.random() * 20;
     } else {
-        signalStability = 20 + Math.random() * 20;
+        signalStability = 30 + Math.random() * 20;
     }
 
-    // Archive Grade: Based on level and totalWins
+    // Archive Grade: Based on level, wins, AND consistency (streak)
     let archiveGrade = "D";
     const level = profile?.level || 1;
     const wins = bountyStats?.totalWins || 0;
+    const streak = contributionStats?.currentStreak || 0;
 
-    if (level >= 50 || wins >= 10) archiveGrade = "S";
-    else if (level >= 30 || wins >= 5) archiveGrade = "A";
-    else if (level >= 15 || wins >= 2) archiveGrade = "B";
-    else if (level >= 5) archiveGrade = "C";
+    // Highest wins/level or massive streak
+    if (level >= 50 || wins >= 10 || streak >= 100) archiveGrade = "S";
+    else if (level >= 30 || wins >= 5 || streak >= 50) archiveGrade = "A";
+    else if (level >= 15 || wins >= 2 || streak >= 21) archiveGrade = "B";
+    else if (level >= 5 || streak >= 7) archiveGrade = "C";
 
     // Node Uptime: Based on currentStreak
     let nodeUptime = 0;
-    const streak = contributionStats?.currentStreak || 0;
-    if (streak === 0) nodeUptime = 0;
-    else if (streak <= 3) nodeUptime = 20 + (streak * 10);
-    else if (streak <= 7) nodeUptime = 60 + ((streak - 3) * 6);
-    else nodeUptime = 90 + Math.min(10, (streak - 7));
+    if (streak === 0) nodeUptime = 10 + Math.random() * 10; // Even 0 has some baseline heart-beat
+    else if (streak <= 3) nodeUptime = 30 + (streak * 10);
+    else if (streak <= 7) nodeUptime = 70 + ((streak - 3) * 5);
+    else nodeUptime = 92 + Math.min(8, (streak - 7) * 0.5);
 
     return {
         signalStability: Math.round(signalStability),
